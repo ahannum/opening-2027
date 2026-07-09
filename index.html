@@ -1,0 +1,1938 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Opening 2027</title>
+  <style>
+    :root {
+      --paper: #fbfaf7;
+      --surface: #f4f2ee;
+      --panel: #ffffff;
+      --ink: #1f2529;
+      --muted: #697077;
+      --line: #b8b2a8;
+      --guide: #8f8a82;
+      --blue: #2368a2;
+      --blue-dark: #18476f;
+      --coral: #d45d4f;
+      --green: #307a63;
+      --shadow: 0 18px 40px rgba(31, 37, 41, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      color: var(--ink);
+      background: var(--surface);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(420px, 1fr) 296px;
+      gap: 18px;
+      padding: 18px;
+    }
+
+    .stage {
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      background: var(--paper);
+      border: 1px solid #d3cec5;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      height: calc(100vh - 36px);
+    }
+
+    svg {
+      width: min(100%, calc(100vh - 36px));
+      max-width: 780px;
+      aspect-ratio: 1;
+      display: block;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+      max-height: calc(100vh - 36px);
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+    }
+
+    .panel-section {
+      background: var(--panel);
+      border: 1px solid #d8d3cb;
+      box-shadow: 0 10px 24px rgba(31, 37, 41, 0.08);
+      padding: 14px;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      font-size: 18px;
+    }
+
+    h2 {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    button {
+      min-height: 40px;
+      border: 1px solid #bfc5c9;
+      background: #ffffff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 13px;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 10px;
+    }
+
+    button:hover {
+      border-color: var(--blue);
+      color: var(--blue-dark);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button.active {
+      background: #e8f1f8;
+      border-color: var(--blue);
+      color: var(--blue-dark);
+      font-weight: 700;
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    .toggles {
+      display: grid;
+      gap: 10px;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 30px;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--blue);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid #bfc5c9;
+      padding: 8px 10px;
+      color: var(--ink);
+      background: #ffffff;
+      font: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(35, 104, 162, 0.16);
+    }
+
+    .selected-label {
+      min-height: 24px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      margin: 0 0 8px;
+    }
+
+    .status {
+      margin-top: auto;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      min-height: 38px;
+    }
+
+    .guide-line,
+    .guide-circle,
+    .guide-box {
+      fill: none;
+      stroke: var(--guide);
+      stroke-width: 1;
+      stroke-dasharray: 1 6;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .guide-circle {
+      stroke-dasharray: 2 6;
+    }
+
+    .inner-circle {
+      stroke: #b8b2a8;
+    }
+
+    .slot-marker {
+      fill: var(--coral);
+      opacity: 0.48;
+    }
+
+    .half-marker {
+      fill: #6f7478;
+      opacity: 0.28;
+    }
+
+    .center-dot {
+      fill: var(--green);
+    }
+
+    .guest-text {
+      fill: #878178;
+      font-size: 17px;
+      text-anchor: middle;
+    }
+
+    .piece {
+      cursor: grab;
+      outline: none;
+    }
+
+    .piece.dragging {
+      cursor: grabbing;
+    }
+
+    .piece .token-base,
+    .piece .solo-fill {
+      filter: drop-shadow(0 2px 3px rgba(31, 37, 41, 0.18));
+    }
+
+    .piece .token-base {
+      fill: #ffffff;
+    }
+
+    .piece.couple.partner-symbol .token-base {
+      fill: #d9d9d8;
+    }
+
+    .piece.couple.partner-symbol .black-half {
+      display: none;
+    }
+
+    .piece .black-half,
+    .piece.lead .solo-fill {
+      fill: #050505;
+    }
+
+    .piece.follow .solo-fill {
+      fill: #ffffff;
+    }
+
+    .piece .outline {
+      fill: none;
+      stroke: #4e5358;
+      stroke-width: 1.5;
+      transition: stroke 120ms ease, stroke-width 120ms ease;
+    }
+
+    .piece.selected .outline {
+      stroke: var(--blue);
+      stroke-width: 3;
+    }
+
+    .piece.active .outline {
+      stroke: var(--coral);
+      stroke-width: 3.5;
+    }
+
+    .piece text {
+      fill: #101416;
+      font-size: 16px;
+      font-weight: 750;
+      dominant-baseline: central;
+      text-anchor: middle;
+      pointer-events: none;
+      paint-order: stroke;
+      stroke: #ffffff;
+      stroke-linejoin: round;
+      stroke-width: 4;
+    }
+
+    .piece.lead text {
+      fill: #ffffff;
+      stroke: #050505;
+      stroke-width: 3;
+    }
+
+    @media (max-width: 760px) {
+      body {
+        overflow: hidden;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(300px, 52vh) minmax(0, 1fr);
+        height: 100vh;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .stage {
+        min-height: 0;
+        height: auto;
+      }
+
+      svg {
+        width: min(100%, 720px);
+        max-height: 100%;
+      }
+
+      .panel {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-height: none;
+        min-height: 0;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+
+      .status {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .app {
+        padding: 10px;
+        grid-template-rows: minmax(280px, 46vh) minmax(0, 1fr);
+      }
+
+      .panel {
+        grid-template-columns: 1fr;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="stage" aria-label="Couple circle board">
+      <svg id="board" viewBox="0 0 720 720" role="img" aria-label="Opening 2027 couple circle">
+        <g id="guides"></g>
+        <g id="pieces"></g>
+      </svg>
+    </section>
+
+    <aside class="panel">
+      <section class="panel-section">
+        <h1>Opening 2027</h1>
+        <div class="button-grid">
+          <button id="resetBtn" type="button" title="Reset">Reset</button>
+          <button id="shuffleBtn" type="button" title="Shuffle">Shuffle</button>
+          <button id="ccwBtn" type="button" title="Rotate counterclockwise">Rotate CCW</button>
+          <button id="cwBtn" type="button" title="Rotate clockwise">Rotate CW</button>
+          <button id="halfCcwBtn" type="button" title="Half-space counterclockwise">Half CCW</button>
+          <button id="halfCwBtn" type="button" title="Half-space clockwise">Half CW</button>
+          <button id="stopBtn" class="wide" type="button" title="Stop animation">Stop Animation</button>
+        </div>
+      </section>
+
+      <section class="panel-section toggles">
+        <label><input id="snapToggle" type="checkbox" checked> Snap to lock points</label>
+        <label><input id="innerLockToggle" type="checkbox" checked> Use inner lock points</label>
+        <label><input id="ringToggle" type="checkbox"> Drag along locked rings</label>
+      </section>
+
+      <section class="panel-section">
+        <h2>Selection</h2>
+        <div class="button-grid">
+          <button id="selectAllBtn" type="button" title="Select all pieces">Select All</button>
+          <button id="clearSelectionBtn" type="button" title="Clear selection">Clear</button>
+          <button id="stepInBtn" type="button" title="Move selected inward">Step In</button>
+          <button id="stepOutBtn" type="button" title="Move selected outward">Step Out</button>
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <h2>Formations</h2>
+        <div class="button-grid">
+          <button id="outerFormationBtn" type="button" title="Outer circle">Outer Circle</button>
+          <button id="innerFormationBtn" type="button" title="Inner circle">Inner Circle</button>
+          <button id="lineFormationBtn" type="button" title="Line formation">Line</button>
+          <button id="twoLineFormationBtn" type="button" title="Two-line formation">Two Lines</button>
+          <button id="gridFormationBtn" type="button" title="Grid formation">Grid</button>
+          <button id="squareFormationBtn" type="button" title="Square formation">Square</button>
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <h2>Custom Path</h2>
+        <div class="button-grid">
+          <button id="saveFormationBtn" type="button" title="Save current layout">Save Layout</button>
+          <button id="goFormationBtn" type="button" title="Go to saved layout">Go Saved</button>
+          <button id="addPathStepBtn" type="button" title="Add path step">Add Step</button>
+          <button id="playPathBtn" type="button" title="Play custom path">Play Path</button>
+          <button id="clearPathBtn" class="wide" type="button" title="Clear custom path">Clear Path</button>
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <h2>Partner Pairs</h2>
+        <div class="button-grid">
+          <button id="splitSelectedBtn" type="button" title="Split selected">Split Selected</button>
+          <button id="joinSelectedBtn" type="button" title="Join selected">Join Selected</button>
+          <button id="splitAllBtn" type="button" title="Split all">Split All</button>
+          <button id="joinAllBtn" type="button" title="Join all">Join All</button>
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <h2>Joined Symbol</h2>
+        <div class="button-grid">
+          <button class="display-btn" data-display="leadFollow" type="button" title="Show lead and follow halves">Lead/Follow</button>
+          <button class="display-btn" data-display="partner" type="button" title="Show as one combined partner">Partner</button>
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <h2>Lead Facing</h2>
+        <div class="button-grid">
+          <button class="facing-btn" data-facing="out" type="button" title="Lead faces out">Out</button>
+          <button class="facing-btn" data-facing="in" type="button" title="Lead faces in">In</button>
+          <button class="facing-btn" data-facing="cw" type="button" title="Lead faces clockwise">CW</button>
+          <button class="facing-btn" data-facing="ccw" type="button" title="Lead faces counterclockwise">CCW</button>
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <p id="selectedLabel" class="selected-label">Selected: none</p>
+        <input id="nameInput" type="text" placeholder="Couple name">
+        <div class="button-grid">
+          <button id="renameBtn" class="wide" type="button" title="Rename selected">Rename Selected</button>
+          <button id="copyBtn" class="wide" type="button" title="Copy positions">Copy Positions</button>
+        </div>
+      </section>
+
+      <p id="status" class="status">Ready</p>
+    </aside>
+  </main>
+
+  <script>
+    const COUPLE_COUNT = 16;
+    const HALF_STEPS = COUPLE_COUNT * 2;
+    const SIZE = 720;
+    const CENTER = { x: SIZE / 2, y: SIZE / 2 };
+    const OUTER_RADIUS = 282;
+    const INNER_RADIUS = 140;
+    const MIDDLE_RADIUS = (OUTER_RADIUS + INNER_RADIUS) / 2;
+    const CENTER_RING_RADIUS = 70;
+    const PIECE_RADIUS = 19;
+    const SPLIT_OFFSET = 29;
+    const MAX_MOVE_DISTANCE = OUTER_RADIUS * Math.sin(Math.PI / COUPLE_COUNT);
+    const TAU = Math.PI * 2;
+    const RING_RADII = {
+      outer: OUTER_RADIUS,
+      middle: MIDDLE_RADIUS,
+      inner: INNER_RADIUS,
+      center: CENTER_RING_RADIUS,
+    };
+    const RADIAL_RING_ORDER = ["outer", "middle", "inner", "center"];
+
+    const svg = document.querySelector("#board");
+    const guides = document.querySelector("#guides");
+    const pieceLayer = document.querySelector("#pieces");
+    const statusEl = document.querySelector("#status");
+    const selectedLabel = document.querySelector("#selectedLabel");
+    const nameInput = document.querySelector("#nameInput");
+    const snapToggle = document.querySelector("#snapToggle");
+    const innerLockToggle = document.querySelector("#innerLockToggle");
+    const ringToggle = document.querySelector("#ringToggle");
+    const facingButtons = [...document.querySelectorAll(".facing-btn")];
+    const displayButtons = [...document.querySelectorAll(".display-btn")];
+
+    const tokens = [];
+    const coupleLabels = new Map();
+    const selectedTokens = new Set();
+    let selectedToken = null;
+    let dragState = null;
+    let animationFrame = null;
+    let defaultFacingMode = "out";
+    let defaultCoupleDisplayMode = "leadFollow";
+    let savedCustomFormation = null;
+    let customPathSteps = [];
+
+    function svgElement(name, attrs = {}) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", name);
+      Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+      return el;
+    }
+
+    function stepAngle(step) {
+      return ((45 - wrapStep(step) * (360 / HALF_STEPS)) * Math.PI) / 180;
+    }
+
+    function slotAngle(slot) {
+      return stepAngle((slot - 1) * 2);
+    }
+
+    function stepPosition(step, ring = "outer") {
+      const angle = stepAngle(step);
+      const radius = RING_RADII[ring];
+      return {
+        x: CENTER.x + radius * Math.cos(angle),
+        y: CENTER.y + radius * Math.sin(angle),
+      };
+    }
+
+    function slotPosition(slot, radius = OUTER_RADIUS) {
+      const angle = slotAngle(slot);
+      return {
+        x: CENTER.x + radius * Math.cos(angle),
+        y: CENTER.y + radius * Math.sin(angle),
+      };
+    }
+
+    function wrapStep(step) {
+      return ((Math.round(step) % HALF_STEPS) + HALF_STEPS) % HALF_STEPS;
+    }
+
+    function stepToSlot(step) {
+      if (step === null || step % 2 !== 0) return null;
+      return step / 2 + 1;
+    }
+
+    function drawGuides() {
+      guides.replaceChildren();
+
+      const min = CENTER.x - OUTER_RADIUS;
+      const max = CENTER.x + OUTER_RADIUS;
+      guides.append(
+        svgElement("rect", {
+          x: min,
+          y: min,
+          width: OUTER_RADIUS * 2,
+          height: OUTER_RADIUS * 2,
+          class: "guide-box",
+        }),
+        svgElement("circle", {
+          cx: CENTER.x,
+          cy: CENTER.y,
+          r: OUTER_RADIUS,
+          class: "guide-circle",
+        }),
+        svgElement("circle", {
+          cx: CENTER.x,
+          cy: CENTER.y,
+          r: MIDDLE_RADIUS,
+          class: "guide-circle inner-circle",
+        }),
+        svgElement("circle", {
+          cx: CENTER.x,
+          cy: CENTER.y,
+          r: INNER_RADIUS,
+          class: "guide-circle inner-circle",
+        }),
+        svgElement("circle", {
+          cx: CENTER.x,
+          cy: CENTER.y,
+          r: CENTER_RING_RADIUS,
+          class: "guide-circle inner-circle",
+        }),
+        svgElement("line", {
+          x1: min,
+          y1: CENTER.y,
+          x2: max,
+          y2: CENTER.y,
+          class: "guide-line",
+        }),
+        svgElement("line", {
+          x1: CENTER.x,
+          y1: min,
+          x2: CENTER.x,
+          y2: max,
+          class: "guide-line",
+        }),
+        svgElement("circle", {
+          cx: CENTER.x,
+          cy: CENTER.y,
+          r: 3,
+          class: "center-dot",
+        })
+      );
+
+      for (let step = 0; step < HALF_STEPS; step += 1) {
+        const isMain = step % 2 === 0;
+        const outer = stepPosition(step, "outer");
+
+        if (isMain) {
+          guides.append(
+            svgElement("line", {
+              x1: CENTER.x,
+              y1: CENTER.y,
+              x2: outer.x,
+              y2: outer.y,
+              class: "guide-line",
+            })
+          );
+        }
+
+        RADIAL_RING_ORDER.forEach((ring) => {
+          const point = stepPosition(step, ring);
+          guides.append(
+            svgElement("circle", {
+              cx: point.x,
+              cy: point.y,
+              r: isMain ? 3 : 2,
+              class: isMain ? "slot-marker" : "half-marker",
+            })
+          );
+        });
+      }
+
+      const guestText = svgElement("text", {
+        x: CENTER.x,
+        y: CENTER.y + OUTER_RADIUS + 28,
+        class: "guest-text",
+      });
+      guestText.textContent = "Honored Guests";
+      guides.append(guestText);
+    }
+
+    function createInitialTokens() {
+      stopAnimation();
+      pieceLayer.replaceChildren();
+      tokens.length = 0;
+      selectedTokens.clear();
+      selectedToken = null;
+
+      for (let number = 1; number <= COUPLE_COUNT; number += 1) {
+        if (!coupleLabels.has(number)) {
+          coupleLabels.set(number, `Couple ${number}`);
+        }
+
+        const step = (number - 1) * 2;
+        const point = stepPosition(step, "outer");
+        const token = createToken({
+          number,
+          role: "couple",
+          x: point.x,
+          y: point.y,
+          ring: "outer",
+          step,
+          facingMode: defaultFacingMode,
+          displayMode: defaultCoupleDisplayMode,
+        });
+        tokens.push(token);
+      }
+
+      refreshSelection();
+      setStatus("Ready");
+    }
+
+    function createToken({
+      number,
+      role,
+      x,
+      y,
+      ring = null,
+      step = null,
+      facingMode = defaultFacingMode,
+      displayMode = defaultCoupleDisplayMode,
+    }) {
+      const group = svgElement("g", {
+        class: `piece ${role}`,
+        tabindex: "0",
+        "data-number": number,
+        "data-role": role,
+      });
+
+      const token = {
+        number,
+        role,
+        ring,
+        step: step === null ? null : wrapStep(step),
+        x,
+        y,
+        facingMode,
+        displayMode,
+        group,
+        blackHalf: null,
+        text: null,
+      };
+
+      if (role === "couple") {
+        const base = svgElement("circle", {
+          cx: 0,
+          cy: 0,
+          r: PIECE_RADIUS,
+          class: "token-base",
+        });
+        const blackHalf = svgElement("path", {
+          class: "black-half",
+        });
+        const outline = svgElement("circle", {
+          cx: 0,
+          cy: 0,
+          r: PIECE_RADIUS,
+          class: "outline",
+        });
+        const text = svgElement("text", { x: 0, y: 1 });
+        text.textContent = String(number);
+
+        group.append(base, blackHalf, outline, text);
+        token.blackHalf = blackHalf;
+        token.text = text;
+      } else {
+        const fill = svgElement("circle", {
+          cx: 0,
+          cy: 0,
+          r: PIECE_RADIUS,
+          class: "solo-fill",
+        });
+        const outline = svgElement("circle", {
+          cx: 0,
+          cy: 0,
+          r: PIECE_RADIUS,
+          class: "outline",
+        });
+        const text = svgElement("text", { x: 0, y: 1 });
+        text.textContent = String(number);
+
+        group.append(fill, outline, text);
+        token.text = text;
+      }
+
+      pieceLayer.append(group);
+      setTokenPosition(token, x, y);
+
+      group.addEventListener("pointerdown", (event) => startDrag(event, token));
+      group.addEventListener("focus", () => {
+        if (!dragState && selectedTokens.size === 0) selectToken(token);
+      });
+
+      return token;
+    }
+
+    function setTokenPosition(token, x, y) {
+      token.x = x;
+      token.y = y;
+      token.group.setAttribute("transform", `translate(${round(x)} ${round(y)})`);
+
+      if (token.role === "couple") {
+        updateCoupleHalf(token);
+      }
+    }
+
+    function updateCoupleHalf(token) {
+      if (!token.blackHalf) return;
+      token.group.classList.toggle("partner-symbol", token.displayMode === "partner");
+      token.group.classList.toggle("lead-follow-symbol", token.displayMode !== "partner");
+
+      if (token.displayMode === "partner") {
+        token.blackHalf.setAttribute("d", "");
+        return;
+      }
+
+      token.blackHalf.setAttribute("d", halfCirclePath(PIECE_RADIUS, blackDirectionAngle(token)));
+    }
+
+    function halfCirclePath(radius, direction) {
+      const start = polarPoint(radius, direction - Math.PI / 2);
+      const end = polarPoint(radius, direction + Math.PI / 2);
+      return [
+        `M ${round(start.x)} ${round(start.y)}`,
+        `A ${radius} ${radius} 0 0 1 ${round(end.x)} ${round(end.y)}`,
+        `L ${round(start.x)} ${round(start.y)}`,
+        "Z",
+      ].join(" ");
+    }
+
+    function blackDirectionAngle(token) {
+      const radial = Math.atan2(token.y - CENTER.y, token.x - CENTER.x);
+
+      if (token.facingMode === "in") return radial + Math.PI;
+      if (token.facingMode === "cw") return radial + Math.PI / 2;
+      if (token.facingMode === "ccw") return radial - Math.PI / 2;
+      return radial;
+    }
+
+    function polarPoint(radius, angle) {
+      return {
+        x: radius * Math.cos(angle),
+        y: radius * Math.sin(angle),
+      };
+    }
+
+    function selectToken(token, options = {}) {
+      const { preserveGroup = false } = options;
+
+      if (!preserveGroup) {
+        selectedTokens.clear();
+      }
+
+      selectedTokens.add(token);
+      selectedToken = token;
+      token.group.parentNode.append(token.group);
+      refreshSelection();
+    }
+
+    function toggleTokenSelection(token) {
+      if (selectedTokens.has(token)) {
+        selectedTokens.delete(token);
+        if (selectedToken === token) {
+          selectedToken = selectedTokens.values().next().value || null;
+        }
+      } else {
+        selectedTokens.add(token);
+        selectedToken = token;
+      }
+
+      token.group.parentNode.append(token.group);
+      refreshSelection();
+    }
+
+    function selectAllTokens() {
+      selectedTokens.clear();
+      tokens.forEach((token) => selectedTokens.add(token));
+      selectedToken = tokens[0] || null;
+      refreshSelection();
+      setStatus(`Selected ${selectedTokens.size} pieces`);
+    }
+
+    function clearSelection() {
+      selectedTokens.clear();
+      selectedToken = null;
+      refreshSelection();
+      setStatus("Selection cleared");
+    }
+
+    function refreshSelection() {
+      tokens.forEach((item) => {
+        item.group.classList.toggle("selected", selectedTokens.has(item));
+        item.group.classList.toggle("active", item === selectedToken);
+      });
+
+      if (!selectedToken) {
+        selectedLabel.textContent = "Selected: none";
+        nameInput.value = "";
+      } else if (selectedTokens.size > 1) {
+        selectedLabel.textContent = `Selected: ${selectedTokens.size} pieces; active ${displayLabel(selectedToken)}`;
+        nameInput.value = coupleLabels.get(selectedToken.number) || `Couple ${selectedToken.number}`;
+      } else {
+        selectedLabel.textContent = `Selected: ${displayLabel(selectedToken)}`;
+        nameInput.value = coupleLabels.get(selectedToken.number) || `Couple ${selectedToken.number}`;
+      }
+
+      refreshFacingButtons();
+      refreshDisplayButtons();
+    }
+
+    function refreshFacingButtons() {
+      const selectedCouples = [...selectedTokens].filter((token) => token.role === "couple");
+      const mode = selectedToken && selectedToken.role === "couple"
+        ? selectedToken.facingMode
+        : selectedCouples[0]?.facingMode || defaultFacingMode;
+      facingButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.facing === mode);
+      });
+    }
+
+    function refreshDisplayButtons() {
+      const selectedCouples = [...selectedTokens].filter((token) => token.role === "couple");
+      const mode = selectedToken && selectedToken.role === "couple"
+        ? selectedToken.displayMode
+        : selectedCouples[0]?.displayMode || defaultCoupleDisplayMode;
+
+      displayButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.display === mode);
+      });
+    }
+
+    function displayLabel(token) {
+      const label = coupleLabels.get(token.number) || `Couple ${token.number}`;
+      if (token.role === "lead") return `${label} Lead`;
+      if (token.role === "follow") return `${label} Follow`;
+      return label;
+    }
+
+    function getPointerPoint(event) {
+      const point = svg.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      return point.matrixTransform(svg.getScreenCTM().inverse());
+    }
+
+    function startDrag(event, token) {
+      stopAnimation();
+
+      const additive = event.shiftKey || event.metaKey || event.ctrlKey;
+      if (additive) {
+        toggleTokenSelection(token);
+      } else if (selectedTokens.has(token) && selectedTokens.size > 1) {
+        selectedToken = token;
+        refreshSelection();
+      } else {
+        selectToken(token);
+      }
+
+      if (!selectedTokens.has(token)) return;
+
+      token.group.classList.add("dragging");
+      token.group.setPointerCapture(event.pointerId);
+
+      const point = getPointerPoint(event);
+      dragState = {
+        token,
+        tokens: [...selectedTokens],
+        pointerId: event.pointerId,
+        startX: point.x,
+        startY: point.y,
+        starts: new Map([...selectedTokens].map((item) => [item, { x: item.x, y: item.y }])),
+      };
+    }
+
+    function dragToken(event) {
+      if (!dragState || event.pointerId !== dragState.pointerId) return;
+
+      const point = getPointerPoint(event);
+      const dx = point.x - dragState.startX;
+      const dy = point.y - dragState.startY;
+
+      dragState.tokens.forEach((token) => {
+        const start = dragState.starts.get(token);
+        let x = start.x + dx;
+        let y = start.y + dy;
+
+        if (ringToggle.checked) {
+          const projected = projectToAllowedRing(x, y);
+          x = projected.x;
+          y = projected.y;
+          token.ring = projected.ring;
+        } else {
+          x = clamp(x, PIECE_RADIUS, SIZE - PIECE_RADIUS);
+          y = clamp(y, PIECE_RADIUS, SIZE - PIECE_RADIUS);
+          token.ring = null;
+        }
+
+        token.step = null;
+        setTokenPosition(token, x, y);
+      });
+    }
+
+    function endDrag(event) {
+      if (!dragState || event.pointerId !== dragState.pointerId) return;
+
+      const token = dragState.token;
+      const movedTokens = dragState.tokens.filter((item) => tokens.includes(item));
+      token.group.classList.remove("dragging");
+      dragState = null;
+
+      if (snapToggle.checked) {
+        const targets = new Map();
+        movedTokens.forEach((item) => {
+          targets.set(item, anchorToTarget(nearestAnchor(item.x, item.y)));
+        });
+        animateToTargets(targets, 220, () => {
+          setStatus(movedTokens.length > 1 ? `${movedTokens.length} pieces locked` : `${displayLabel(token)} locked`);
+        });
+      } else {
+        setStatus(movedTokens.length > 1 ? `${movedTokens.length} pieces moved` : `${displayLabel(token)} moved`);
+      }
+    }
+
+    function projectToAllowedRing(x, y) {
+      const polar = polarFromCenter(x, y);
+      const rings = allowedRings();
+      const ring = rings.reduce((best, candidate) => {
+        const distance = Math.abs(RING_RADII[candidate] - polar.radius);
+        return distance < best.distance ? { ring: candidate, distance } : best;
+      }, { ring: rings[0], distance: Infinity }).ring;
+
+      const radius = RING_RADII[ring];
+      return {
+        x: CENTER.x + radius * Math.cos(polar.angle),
+        y: CENTER.y + radius * Math.sin(polar.angle),
+        ring,
+      };
+    }
+
+    function allowedRings() {
+      return innerLockToggle.checked ? RADIAL_RING_ORDER : ["outer"];
+    }
+
+    function nearestAnchor(x, y) {
+      let best = null;
+      let bestDistance = Infinity;
+
+      allowedRings().forEach((ring) => {
+        for (let step = 0; step < HALF_STEPS; step += 1) {
+          const point = stepPosition(step, ring);
+          const distance = (point.x - x) ** 2 + (point.y - y) ** 2;
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            best = { ring, step, x: point.x, y: point.y, locked: true };
+          }
+        }
+      });
+
+      return best;
+    }
+
+    function anchorToTarget(anchor) {
+      return {
+        x: anchor.x,
+        y: anchor.y,
+        ring: anchor.ring,
+        step: anchor.step,
+        locked: true,
+      };
+    }
+
+    function pointToFreeTarget(x, y) {
+      return {
+        x: clamp(x, PIECE_RADIUS, SIZE - PIECE_RADIUS),
+        y: clamp(y, PIECE_RADIUS, SIZE - PIECE_RADIUS),
+        ring: null,
+        step: null,
+        locked: false,
+      };
+    }
+
+    function animateToTargets(targets, duration = 650, onDone = null) {
+      stopAnimation();
+      const startedAt = performance.now();
+      const motions = [...targets.entries()].map(([token, target]) => {
+        const startPolar = polarFromCenter(token.x, token.y);
+        const targetPolar = polarFromCenter(target.x, target.y);
+        const deltaAngle = shortestAngleDelta(startPolar.angle, targetPolar.angle);
+
+        return {
+          token,
+          target,
+          startX: token.x,
+          startY: token.y,
+          targetX: target.x,
+          targetY: target.y,
+          startRadius: startPolar.radius,
+          targetRadius: targetPolar.radius,
+          startAngle: startPolar.angle,
+          deltaAngle,
+          usePolar: target.locked && startPolar.radius > 45,
+        };
+      });
+
+      function frame(now) {
+        const progress = clamp((now - startedAt) / duration, 0, 1);
+        const eased = easeInOut(progress);
+
+        motions.forEach((motion) => {
+          let x;
+          let y;
+
+          if (motion.usePolar) {
+            const radius = lerp(motion.startRadius, motion.targetRadius, eased);
+            const angle = motion.startAngle + motion.deltaAngle * eased;
+            x = CENTER.x + radius * Math.cos(angle);
+            y = CENTER.y + radius * Math.sin(angle);
+          } else {
+            x = lerp(motion.startX, motion.targetX, eased);
+            y = lerp(motion.startY, motion.targetY, eased);
+          }
+
+          setTokenPosition(motion.token, x, y);
+        });
+
+        if (progress < 1) {
+          animationFrame = requestAnimationFrame(frame);
+          return;
+        }
+
+        motions.forEach((motion) => {
+          setTokenPosition(motion.token, motion.targetX, motion.targetY);
+          motion.token.ring = motion.target.ring;
+          motion.token.step = motion.target.step === null ? null : wrapStep(motion.target.step);
+        });
+
+        animationFrame = null;
+        if (onDone) onDone();
+      }
+
+      animationFrame = requestAnimationFrame(frame);
+    }
+
+    function animateConstrainedTargets(targets, onDone = null) {
+      const stages = buildConstrainedStages(targets);
+      if (!stages.length) {
+        if (onDone) onDone();
+        return;
+      }
+
+      playConstrainedStages(stages, 0, onDone);
+    }
+
+    function buildConstrainedStages(targets) {
+      const entries = [...targets.entries()].filter(([token]) => tokens.includes(token));
+      if (!entries.length) return [];
+
+      let segmentCount = 1;
+      entries.forEach(([token, target]) => {
+        const moveDistance = distanceBetween(token, target);
+        segmentCount = Math.max(segmentCount, Math.ceil(moveDistance / MAX_MOVE_DISTANCE));
+      });
+
+      const stages = [];
+      for (let segment = 1; segment <= segmentCount; segment += 1) {
+        const progress = segment / segmentCount;
+        const isFinal = segment === segmentCount;
+        const stage = new Map();
+
+        entries.forEach(([token, target]) => {
+          stage.set(token, {
+            x: lerp(token.x, target.x, progress),
+            y: lerp(token.y, target.y, progress),
+            ring: isFinal ? target.ring : null,
+            step: isFinal ? target.step : null,
+            locked: false,
+          });
+        });
+
+        stages.push(stage);
+      }
+
+      return stages;
+    }
+
+    function playConstrainedStages(stages, index, onDone) {
+      animateToTargets(stages[index], 220, () => {
+        if (index + 1 < stages.length) {
+          playConstrainedStages(stages, index + 1, onDone);
+          return;
+        }
+
+        if (onDone) onDone();
+      });
+    }
+
+    function applyFormation(kind) {
+      const formationMap = {
+        outer: ["outer circle", formationCircleTargets("outer")],
+        inner: ["inner circle", formationCircleTargets("inner")],
+        line: ["line", formationLineTargets()],
+        twoLines: ["two lines", formationTwoLineTargets()],
+        grid: ["grid", formationGridTargets()],
+        square: ["square", formationSquareTargets()],
+      };
+      const [label, targets] = formationMap[kind];
+
+      animateConstrainedTargets(targets, () => {
+        setStatus(`${capitalize(label)} formation ready`);
+      });
+      setStatus(`Moving to ${label}`);
+    }
+
+    function formationCircleTargets(ring) {
+      const activeTokens = orderedTokens();
+      const targets = new Map();
+
+      activeTokens.forEach((token, index) => {
+        const step = wrapStep(index * (HALF_STEPS / activeTokens.length));
+        const point = stepPosition(step, ring);
+        targets.set(token, anchorToTarget({
+          ring,
+          step,
+          x: point.x,
+          y: point.y,
+          locked: true,
+        }));
+      });
+
+      return targets;
+    }
+
+    function formationLineTargets() {
+      const activeTokens = orderedTokens();
+      const rowCount = Math.max(1, Math.ceil(activeTokens.length / 16));
+      return rowFormationTargets(splitEvenly(activeTokens, rowCount), 82);
+    }
+
+    function formationTwoLineTargets() {
+      const leads = orderedTokens().filter((token) => token.role === "lead");
+      const follows = orderedTokens().filter((token) => token.role === "follow");
+
+      if (leads.length && follows.length && leads.length + follows.length === tokens.length) {
+        return rowFormationTargets([leads, follows], 92);
+      }
+
+      return rowFormationTargets(splitEvenly(orderedTokens(), 2), 92);
+    }
+
+    function formationGridTargets() {
+      const activeTokens = orderedTokens();
+      const columns = activeTokens.length <= 16 ? 4 : 8;
+      const rows = splitEvenly(activeTokens, Math.ceil(activeTokens.length / columns));
+      const targets = new Map();
+      const startY = CENTER.y - ((rows.length - 1) * 78) / 2;
+
+      rows.forEach((row, rowIndex) => {
+        row.forEach((token, columnIndex) => {
+          const x = spreadValue(columnIndex, row.length, CENTER.x - 235, CENTER.x + 235);
+          const y = startY + rowIndex * 78;
+          targets.set(token, pointToFreeTarget(x, y));
+        });
+      });
+
+      return targets;
+    }
+
+    function formationSquareTargets() {
+      const activeTokens = orderedTokens();
+      const targets = new Map();
+      const left = CENTER.x - 235;
+      const right = CENTER.x + 235;
+      const top = CENTER.y - 235;
+      const bottom = CENTER.y + 235;
+      const width = right - left;
+      const height = bottom - top;
+      const perimeter = width * 2 + height * 2;
+
+      activeTokens.forEach((token, index) => {
+        const offset = (index / activeTokens.length) * perimeter;
+        let x = left;
+        let y = top;
+
+        if (offset < width) {
+          x = left + offset;
+        } else if (offset < width + height) {
+          x = right;
+          y = top + (offset - width);
+        } else if (offset < width * 2 + height) {
+          x = right - (offset - width - height);
+          y = bottom;
+        } else {
+          y = bottom - (offset - width * 2 - height);
+        }
+
+        targets.set(token, pointToFreeTarget(x, y));
+      });
+
+      return targets;
+    }
+
+    function rowFormationTargets(rows, rowGap) {
+      const targets = new Map();
+      const startY = CENTER.y - ((rows.length - 1) * rowGap) / 2;
+
+      rows.forEach((row, rowIndex) => {
+        row.forEach((token, columnIndex) => {
+          const x = spreadValue(columnIndex, row.length, CENTER.x - 305, CENTER.x + 305);
+          const y = startY + rowIndex * rowGap;
+          targets.set(token, pointToFreeTarget(x, y));
+        });
+      });
+
+      return targets;
+    }
+
+    function saveCustomFormation() {
+      savedCustomFormation = snapshotCurrentLayout();
+      setStatus("Saved current layout");
+    }
+
+    function goToSavedFormation() {
+      if (!savedCustomFormation) {
+        setStatus("No saved layout yet");
+        return;
+      }
+
+      const targets = targetsFromSnapshot(savedCustomFormation);
+      if (!targets) return;
+
+      applySnapshotFacing(savedCustomFormation);
+      animateConstrainedTargets(targets, () => setStatus("Saved layout ready"));
+      setStatus("Moving to saved layout");
+    }
+
+    function addPathStep() {
+      customPathSteps.push(snapshotCurrentLayout());
+      setStatus(`Added path step ${customPathSteps.length}`);
+    }
+
+    function playCustomPath() {
+      if (!customPathSteps.length) {
+        setStatus("No custom path steps yet");
+        return;
+      }
+
+      const sequence = [];
+      for (const snapshot of customPathSteps) {
+        const targets = targetsFromSnapshot(snapshot);
+        if (!targets) return;
+        sequence.push({ snapshot, targets });
+      }
+
+      setStatus("Playing custom path");
+      playTargetSequence(sequence, 0, () => setStatus("Custom path complete"));
+    }
+
+    function clearCustomPath() {
+      customPathSteps = [];
+      setStatus("Cleared custom path");
+    }
+
+    function playTargetSequence(sequence, index, onDone) {
+      const item = sequence[index];
+      applySnapshotFacing(item.snapshot);
+      animateConstrainedTargets(item.targets, () => {
+        if (index + 1 < sequence.length) {
+          playTargetSequence(sequence, index + 1, onDone);
+          return;
+        }
+
+        if (onDone) onDone();
+      });
+    }
+
+    function snapshotCurrentLayout() {
+      return {
+        count: tokens.length,
+        items: tokens.map((token) => ({
+          key: tokenKey(token),
+          number: token.number,
+          role: token.role,
+          ring: token.ring,
+          step: token.step,
+          facingMode: token.facingMode,
+          displayMode: token.displayMode,
+          x: Number(token.x.toFixed(3)),
+          y: Number(token.y.toFixed(3)),
+        })),
+      };
+    }
+
+    function targetsFromSnapshot(snapshot) {
+      if (!snapshot || snapshot.count !== tokens.length) {
+        setStatus("Saved layout needs the same split/join state");
+        return null;
+      }
+
+      const tokensByKey = new Map(tokens.map((token) => [tokenKey(token), token]));
+      const targets = new Map();
+
+      for (const item of snapshot.items) {
+        const token = tokensByKey.get(item.key);
+        if (!token) {
+          setStatus("Saved layout needs the same split/join state");
+          return null;
+        }
+
+        if (item.ring && item.step !== null) {
+          const point = stepPosition(item.step, item.ring);
+          targets.set(token, anchorToTarget({
+            ring: item.ring,
+            step: item.step,
+            x: point.x,
+            y: point.y,
+            locked: true,
+          }));
+        } else {
+          targets.set(token, pointToFreeTarget(item.x, item.y));
+        }
+      }
+
+      return targets;
+    }
+
+    function applySnapshotFacing(snapshot) {
+      const tokensByKey = new Map(tokens.map((token) => [tokenKey(token), token]));
+      snapshot.items.forEach((item) => {
+        const token = tokensByKey.get(item.key);
+        if (!token || token.role !== "couple" || !item.facingMode) return;
+
+        token.facingMode = item.facingMode;
+        token.displayMode = item.displayMode || defaultCoupleDisplayMode;
+        updateCoupleHalf(token);
+      });
+      refreshFacingButtons();
+      refreshDisplayButtons();
+    }
+
+    function tokenKey(token) {
+      return `${token.number}:${token.role}`;
+    }
+
+    function orderedTokens() {
+      const roleOrder = { couple: 0, lead: 1, follow: 2 };
+      return [...tokens].sort((a, b) => {
+        if (a.number !== b.number) return a.number - b.number;
+        return roleOrder[a.role] - roleOrder[b.role];
+      });
+    }
+
+    function splitEvenly(items, rowCount) {
+      const rows = Array.from({ length: rowCount }, () => []);
+      items.forEach((item, index) => {
+        rows[Math.floor((index * rowCount) / items.length)].push(item);
+      });
+      return rows.filter((row) => row.length);
+    }
+
+    function spreadValue(index, count, min, max) {
+      if (count <= 1) return (min + max) / 2;
+      return min + ((max - min) * index) / (count - 1);
+    }
+
+    function stopAnimation() {
+      if (animationFrame !== null) {
+        cancelAnimationFrame(animationFrame);
+        animationFrame = null;
+        setStatus("Animation stopped");
+      }
+    }
+
+    function resetLayout() {
+      createInitialTokens();
+      setStatus("Reset layout");
+    }
+
+    function rotateByHalfSteps(stepDelta, duration = 520) {
+      const scopedTokens = movementScope();
+      if (!scopedTokens.length || stepDelta === 0) return;
+
+      const halfStepCount = Math.max(1, Math.abs(stepDelta));
+      const direction = Math.sign(stepDelta);
+      const stageDuration = Math.max(120, duration / halfStepCount);
+      const anchors = new Map(scopedTokens.map((token) => [token, currentOrNearestAnchor(token)]));
+
+      function playHalfStep(index) {
+        if (index >= halfStepCount) return;
+
+        const targets = new Map();
+        scopedTokens.forEach((token) => {
+          const anchor = anchors.get(token);
+          const nextStep = wrapStep(anchor.step + direction);
+          const point = stepPosition(nextStep, anchor.ring);
+          const nextAnchor = {
+            ring: anchor.ring,
+            step: nextStep,
+            x: point.x,
+            y: point.y,
+            locked: true,
+          };
+
+          anchors.set(token, nextAnchor);
+          targets.set(token, anchorToTarget(nextAnchor));
+        });
+
+        animateToTargets(targets, stageDuration, () => playHalfStep(index + 1));
+      }
+
+      playHalfStep(0);
+      setStatus(stepDelta > 0 ? "Moved counterclockwise" : "Moved clockwise");
+    }
+
+    function movementScope() {
+      const scopedTokens = [...selectedTokens].filter((token) => tokens.includes(token));
+      return scopedTokens.length ? scopedTokens : [...tokens];
+    }
+
+    function currentOrNearestAnchor(token) {
+      if (token.ring && token.step !== null) {
+        const point = stepPosition(token.step, token.ring);
+        return {
+          ring: token.ring,
+          step: token.step,
+          x: point.x,
+          y: point.y,
+          locked: true,
+        };
+      }
+
+      const step = nearestStep(token.x, token.y);
+      const ring = nearestRadialRing(token.x, token.y);
+      return {
+        ring,
+        step,
+        ...stepPosition(step, ring),
+        locked: true,
+      };
+    }
+
+    function nearestStep(x, y) {
+      const angleDegrees = (Math.atan2(y - CENTER.y, x - CENTER.x) * 180) / Math.PI;
+      return wrapStep((45 - angleDegrees) / (360 / HALF_STEPS));
+    }
+
+    function nearestRadialRing(x, y) {
+      const radius = Math.hypot(x - CENTER.x, y - CENTER.y);
+      return RADIAL_RING_ORDER.reduce((best, ring) => {
+        const distance = Math.abs(RING_RADII[ring] - radius);
+        return distance < best.distance ? { ring, distance } : best;
+      }, { ring: "outer", distance: Infinity }).ring;
+    }
+
+    function shuffleTokens() {
+      const anchors = [];
+      allowedRings().forEach((ring) => {
+        for (let step = 0; step < HALF_STEPS; step += 1) {
+          anchors.push({ ring, step, ...stepPosition(step, ring), locked: true });
+        }
+      });
+
+      for (let index = anchors.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [anchors[index], anchors[swapIndex]] = [anchors[swapIndex], anchors[index]];
+      }
+
+      const targets = new Map();
+      tokens.forEach((token, index) => {
+        targets.set(token, anchorToTarget(anchors[index % anchors.length]));
+      });
+      animateToTargets(targets, 850);
+      setStatus("Shuffling lock points");
+    }
+
+    function splitSelected() {
+      if (!selectedToken || selectedToken.role !== "couple") {
+        setStatus("Select a joined couple first");
+        return;
+      }
+
+      splitTokens([selectedToken]);
+    }
+
+    function splitAll() {
+      const joined = tokens.filter((token) => token.role === "couple");
+      if (!joined.length) {
+        setStatus("All couples are already split");
+        return;
+      }
+
+      splitTokens(joined);
+    }
+
+    function splitTokens(joinedTokens) {
+      stopAnimation();
+      const targets = new Map();
+      let firstLead = null;
+
+      joinedTokens.forEach((token) => {
+        if (!tokens.includes(token) || token.role !== "couple") return;
+
+        const direction = blackDirectionAngle(token);
+        const leadPoint = pointToFreeTarget(
+          token.x + SPLIT_OFFSET * Math.cos(direction),
+          token.y + SPLIT_OFFSET * Math.sin(direction)
+        );
+        const followPoint = pointToFreeTarget(
+          token.x - SPLIT_OFFSET * Math.cos(direction),
+          token.y - SPLIT_OFFSET * Math.sin(direction)
+        );
+
+        const index = tokens.indexOf(token);
+        token.group.remove();
+        tokens.splice(index, 1);
+
+        const lead = createToken({
+          number: token.number,
+          role: "lead",
+          x: token.x,
+          y: token.y,
+          facingMode: token.facingMode,
+          displayMode: token.displayMode,
+        });
+        const follow = createToken({
+          number: token.number,
+          role: "follow",
+          x: token.x,
+          y: token.y,
+          facingMode: token.facingMode,
+          displayMode: token.displayMode,
+        });
+
+        tokens.splice(index, 0, lead, follow);
+        targets.set(lead, leadPoint);
+        targets.set(follow, followPoint);
+        if (!firstLead) firstLead = lead;
+      });
+
+      if (firstLead) {
+        selectToken(firstLead);
+        animateToTargets(targets, 280, () => setStatus("Split partner pairs"));
+      }
+    }
+
+    function joinSelected() {
+      if (!selectedToken || selectedToken.role === "couple") {
+        setStatus("Select a split partner first");
+        return;
+      }
+
+      joinCoupleNumbers([selectedToken.number]);
+    }
+
+    function joinAll() {
+      const splitNumbers = unique(tokens.filter((token) => token.role !== "couple").map((token) => token.number));
+      if (!splitNumbers.length) {
+        setStatus("All couples are already joined");
+        return;
+      }
+
+      joinCoupleNumbers(splitNumbers);
+    }
+
+    function joinCoupleNumbers(numbers) {
+      stopAnimation();
+      const targets = new Map();
+      const pending = [];
+
+      numbers.forEach((number) => {
+        const partners = tokens.filter((token) => token.number === number && token.role !== "couple");
+        if (partners.length < 2) return;
+
+        const midpoint = {
+          x: average(partners.map((token) => token.x)),
+          y: average(partners.map((token) => token.y)),
+        };
+        const target = snapToggle.checked
+          ? anchorToTarget(nearestAnchor(midpoint.x, midpoint.y))
+          : pointToFreeTarget(midpoint.x, midpoint.y);
+
+        partners.forEach((token) => targets.set(token, target));
+        pending.push({
+          number,
+          target,
+          facingMode: partners[0].facingMode || defaultFacingMode,
+          displayMode: partners[0].displayMode || defaultCoupleDisplayMode,
+        });
+      });
+
+      if (!pending.length) {
+        setStatus("Could not find partner pair");
+        return;
+      }
+
+      animateToTargets(targets, 320, () => {
+        pending.forEach(({ number, target, facingMode, displayMode }) => {
+          const partners = tokens.filter((token) => token.number === number && token.role !== "couple");
+          const insertIndex = Math.min(...partners.map((token) => tokens.indexOf(token)));
+
+          partners.forEach((token) => {
+            token.group.remove();
+            tokens.splice(tokens.indexOf(token), 1);
+          });
+
+          const joined = createToken({
+            number,
+            role: "couple",
+            x: target.x,
+            y: target.y,
+            ring: target.ring,
+            step: target.step,
+            facingMode,
+            displayMode,
+          });
+          tokens.splice(insertIndex, 0, joined);
+          selectedToken = joined;
+        });
+
+        if (selectedToken) selectToken(selectedToken);
+        setStatus("Joined partner pairs");
+      });
+    }
+
+    function setFacing(mode) {
+      defaultFacingMode = mode;
+      const selectedCouples = [...selectedTokens].filter((token) => token.role === "couple");
+      const scope = selectedCouples.length
+        ? selectedCouples
+        : tokens.filter((token) => token.role === "couple");
+
+      scope.forEach((token) => {
+        token.facingMode = mode;
+        updateCoupleHalf(token);
+      });
+
+      refreshFacingButtons();
+      setStatus(scope.length === 1 ? "Changed selected facing" : "Changed facing");
+    }
+
+    function setCoupleDisplayMode(mode) {
+      defaultCoupleDisplayMode = mode;
+      const selectedCouples = [...selectedTokens].filter((token) => token.role === "couple");
+      const scope = selectedCouples.length
+        ? selectedCouples
+        : tokens.filter((token) => token.role === "couple");
+
+      scope.forEach((token) => {
+        token.displayMode = mode;
+        updateCoupleHalf(token);
+      });
+
+      refreshDisplayButtons();
+      setStatus(mode === "partner" ? "Showing joined couples as partners" : "Showing joined couples as lead/follow");
+    }
+
+    function renameSelected() {
+      if (!selectedToken) {
+        setStatus("Select a piece first");
+        return;
+      }
+
+      const label = nameInput.value.trim();
+      if (!label) {
+        setStatus("Label cannot be blank");
+        return;
+      }
+
+      coupleLabels.set(selectedToken.number, label);
+      selectedLabel.textContent = `Selected: ${displayLabel(selectedToken)}`;
+      setStatus(`Renamed couple ${selectedToken.number}`);
+    }
+
+    async function copyPositions() {
+      const payload = tokens.map((token) => ({
+        number: token.number,
+        label: coupleLabels.get(token.number) || `Couple ${token.number}`,
+        role: token.role,
+        ring: token.ring,
+        halfStep: token.step,
+        slot: stepToSlot(token.step),
+        facing: token.role === "couple" ? token.facingMode : null,
+        display: token.role === "couple" ? token.displayMode : null,
+        x: Number(token.x.toFixed(2)),
+        y: Number(token.y.toFixed(2)),
+      }));
+      const text = JSON.stringify(payload, null, 2);
+
+      try {
+        await navigator.clipboard.writeText(text);
+        setStatus("Copied positions as JSON");
+      } catch {
+        window.prompt("Copy positions:", text);
+        setStatus("Positions ready to copy");
+      }
+    }
+
+    function handleKeyDown(event) {
+      if (event.target.matches("input, textarea, select")) return;
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        rotateByHalfSteps(-1, 260);
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        rotateByHalfSteps(1, 260);
+      }
+
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        moveScopeRadially("in");
+      }
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        moveScopeRadially("out");
+      }
+    }
+
+    function moveScopeRadially(direction) {
+      if (direction === "in" && !innerLockToggle.checked) {
+        innerLockToggle.checked = true;
+      }
+
+      const scopedTokens = movementScope();
+      if (!scopedTokens.length) return;
+
+      const targetOffset = direction === "in" ? 1 : -1;
+      const targets = new Map();
+      let movedCount = 0;
+
+      scopedTokens.forEach((token) => {
+        const anchor = currentOrNearestAnchor(token);
+        const currentIndex = Math.max(0, RADIAL_RING_ORDER.indexOf(anchor.ring));
+        const targetIndex = clamp(currentIndex + targetOffset, 0, RADIAL_RING_ORDER.length - 1);
+        const targetRing = RADIAL_RING_ORDER[targetIndex];
+        const point = stepPosition(anchor.step, targetRing);
+
+        if (targetRing !== anchor.ring) movedCount += 1;
+        targets.set(token, anchorToTarget({
+          ring: targetRing,
+          step: anchor.step,
+          x: point.x,
+          y: point.y,
+          locked: true,
+        }));
+      });
+
+      if (!movedCount) {
+        setStatus(direction === "in" ? "Already on inner ring" : "Already on outer ring");
+        return;
+      }
+
+      animateConstrainedTargets(targets, () => {
+        setStatus(direction === "in" ? "Moved one step inward" : "Moved one step outward");
+      });
+      setStatus(direction === "in" ? "Moving inward" : "Moving outward");
+    }
+
+    function moveScopeToRing(ring) {
+      if (ring === "inner" && !innerLockToggle.checked) {
+        innerLockToggle.checked = true;
+      }
+
+      const scopedTokens = movementScope();
+      const targets = new Map();
+      scopedTokens.forEach((token) => {
+        const anchor = currentOrNearestAnchor(token);
+        targets.set(token, anchorToTarget({
+          ring,
+          step: anchor.step,
+          ...stepPosition(anchor.step, ring),
+          locked: true,
+        }));
+      });
+
+      animateConstrainedTargets(targets);
+      setStatus(ring === "inner" ? "Moved to inner ring" : "Moved to outer ring");
+    }
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+    }
+
+    function polarFromCenter(x, y) {
+      const dx = x - CENTER.x;
+      const dy = y - CENTER.y;
+      return {
+        radius: Math.hypot(dx, dy),
+        angle: Math.atan2(dy, dx),
+      };
+    }
+
+    function shortestAngleDelta(start, target) {
+      const diff = target - start;
+      return Math.atan2(Math.sin(diff), Math.cos(diff));
+    }
+
+    function easeInOut(progress) {
+      return 0.5 - 0.5 * Math.cos(Math.PI * progress);
+    }
+
+    function lerp(start, end, progress) {
+      return start + (end - start) * progress;
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function distanceBetween(a, b) {
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    }
+
+    function average(values) {
+      return values.reduce((total, value) => total + value, 0) / values.length;
+    }
+
+    function unique(values) {
+      return [...new Set(values)];
+    }
+
+    function capitalize(value) {
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    }
+
+    function round(value) {
+      return Number(value.toFixed(3));
+    }
+
+    document.addEventListener("pointermove", dragToken);
+    document.addEventListener("pointerup", endDrag);
+    document.addEventListener("pointercancel", endDrag);
+    document.addEventListener("keydown", handleKeyDown);
+
+    document.querySelector("#resetBtn").addEventListener("click", resetLayout);
+    document.querySelector("#shuffleBtn").addEventListener("click", shuffleTokens);
+    document.querySelector("#cwBtn").addEventListener("click", () => rotateByHalfSteps(-2));
+    document.querySelector("#ccwBtn").addEventListener("click", () => rotateByHalfSteps(2));
+    document.querySelector("#halfCwBtn").addEventListener("click", () => rotateByHalfSteps(-1, 300));
+    document.querySelector("#halfCcwBtn").addEventListener("click", () => rotateByHalfSteps(1, 300));
+    document.querySelector("#stopBtn").addEventListener("click", stopAnimation);
+    document.querySelector("#selectAllBtn").addEventListener("click", selectAllTokens);
+    document.querySelector("#clearSelectionBtn").addEventListener("click", clearSelection);
+    document.querySelector("#stepInBtn").addEventListener("click", () => moveScopeRadially("in"));
+    document.querySelector("#stepOutBtn").addEventListener("click", () => moveScopeRadially("out"));
+    document.querySelector("#outerFormationBtn").addEventListener("click", () => applyFormation("outer"));
+    document.querySelector("#innerFormationBtn").addEventListener("click", () => applyFormation("inner"));
+    document.querySelector("#lineFormationBtn").addEventListener("click", () => applyFormation("line"));
+    document.querySelector("#twoLineFormationBtn").addEventListener("click", () => applyFormation("twoLines"));
+    document.querySelector("#gridFormationBtn").addEventListener("click", () => applyFormation("grid"));
+    document.querySelector("#squareFormationBtn").addEventListener("click", () => applyFormation("square"));
+    document.querySelector("#saveFormationBtn").addEventListener("click", saveCustomFormation);
+    document.querySelector("#goFormationBtn").addEventListener("click", goToSavedFormation);
+    document.querySelector("#addPathStepBtn").addEventListener("click", addPathStep);
+    document.querySelector("#playPathBtn").addEventListener("click", playCustomPath);
+    document.querySelector("#clearPathBtn").addEventListener("click", clearCustomPath);
+    document.querySelector("#splitSelectedBtn").addEventListener("click", splitSelected);
+    document.querySelector("#joinSelectedBtn").addEventListener("click", joinSelected);
+    document.querySelector("#splitAllBtn").addEventListener("click", splitAll);
+    document.querySelector("#joinAllBtn").addEventListener("click", joinAll);
+    document.querySelector("#renameBtn").addEventListener("click", renameSelected);
+    document.querySelector("#copyBtn").addEventListener("click", copyPositions);
+    displayButtons.forEach((button) => {
+      button.addEventListener("click", () => setCoupleDisplayMode(button.dataset.display));
+    });
+    facingButtons.forEach((button) => {
+      button.addEventListener("click", () => setFacing(button.dataset.facing));
+    });
+
+    drawGuides();
+    createInitialTokens();
+    refreshFacingButtons();
+    refreshDisplayButtons();
+  </script>
+</body>
+</html>
