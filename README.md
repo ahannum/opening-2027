@@ -1,6 +1,6 @@
 # Opening 2027
 
-Interactive formation planner for 16 couples.
+Interactive formation planner for Stanford Viennese Ball Opening Committee
 
 ## Use
 
