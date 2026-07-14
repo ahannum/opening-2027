@@ -197,7 +197,7 @@
     .guide-circle,
     .guide-box {
       fill: none;
-      stroke: var(--guide);
+      stroke: #aaa49b;
       stroke-width: 1;
       stroke-dasharray: 1 6;
       vector-effect: non-scaling-stroke;
@@ -207,8 +207,21 @@
       stroke-dasharray: 2 6;
     }
 
-    .inner-circle {
-      stroke: #b8b2a8;
+    .boundary-circle {
+      stroke: #625e58;
+      stroke-width: 2.25;
+      stroke-dasharray: 4 7;
+    }
+
+    .middle-circle,
+    .center-circle {
+      stroke: #aaa49b;
+      stroke-width: 1;
+      stroke-dasharray: 2 7;
+    }
+
+    .center-circle {
+      stroke: #8e8880;
     }
 
     .slot-marker {
@@ -250,7 +263,7 @@
     }
 
     .piece.couple.partner-symbol .token-base {
-      fill: #d9d9d8;
+      fill: var(--group-color, #d9d9d8);
     }
 
     .piece.couple.partner-symbol .black-half {
@@ -264,6 +277,37 @@
 
     .piece.follow .solo-fill {
       fill: #ffffff;
+    }
+
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .swatch-btn {
+      min-width: 0;
+      min-height: 38px;
+      padding: 0;
+      border: 2px solid #ffffff;
+      background: var(--swatch);
+      box-shadow: 0 0 0 1px #bfc5c9;
+      border-radius: 50%;
+      aspect-ratio: 1;
+    }
+
+    .swatch-btn:hover,
+    .swatch-btn.active {
+      border-color: #ffffff;
+      box-shadow: 0 0 0 3px var(--blue);
+    }
+
+    .section-help {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
     }
 
     .piece .outline {
@@ -401,9 +445,13 @@
           <button id="innerFormationBtn" type="button" title="Inner circle">Inner Circle</button>
           <button id="lineFormationBtn" type="button" title="Line formation">Line</button>
           <button id="twoLineFormationBtn" type="button" title="Two-line formation">Two Lines</button>
+          <button id="advanceLinesBtn" type="button" title="Move both lines toward and through the center">Advance Lines</button>
+          <button id="crossFormationBtn" type="button" title="Cross formation on radial lock points">Cross</button>
+          <button id="pyramidFormationBtn" type="button" title="Pyramid formation">Pyramid</button>
           <button id="gridFormationBtn" type="button" title="Grid formation">Grid</button>
           <button id="squareFormationBtn" type="button" title="Square formation">Square</button>
         </div>
+        <p class="section-help">Cross uses the circle lock points, so Rotate or the arrow keys can turn it diagonally. Advance Lines moves both rows one equal step.</p>
       </section>
 
       <section class="panel-section">
@@ -433,6 +481,18 @@
           <button class="display-btn" data-display="leadFollow" type="button" title="Show lead and follow halves">Lead/Follow</button>
           <button class="display-btn" data-display="partner" type="button" title="Show as one combined partner">Partner</button>
         </div>
+      </section>
+
+      <section class="panel-section">
+        <h2>Group Color</h2>
+        <div class="swatch-grid" role="group" aria-label="Color selected couples">
+          <button class="swatch-btn" data-color="neutral" type="button" title="Neutral gray" aria-label="Neutral gray" style="--swatch:#d9d9d8"></button>
+          <button class="swatch-btn" data-color="amber" type="button" title="Amber group" aria-label="Amber group" style="--swatch:#f2bd72"></button>
+          <button class="swatch-btn" data-color="blue" type="button" title="Blue group" aria-label="Blue group" style="--swatch:#78b9e6"></button>
+          <button class="swatch-btn" data-color="green" type="button" title="Green group" aria-label="Green group" style="--swatch:#9bcf85"></button>
+          <button class="swatch-btn" data-color="rose" type="button" title="Rose group" aria-label="Rose group" style="--swatch:#ee9694"></button>
+        </div>
+        <p class="section-help">Select joined couples, then choose an optional group color. Split lead/follow pairs always stay black and white.</p>
       </section>
 
       <section class="panel-section">
@@ -477,6 +537,13 @@
       inner: INNER_RADIUS,
       center: CENTER_RING_RADIUS,
     };
+    const GROUP_COLORS = {
+      neutral: "#d9d9d8",
+      amber: "#f2bd72",
+      blue: "#78b9e6",
+      green: "#9bcf85",
+      rose: "#ee9694",
+    };
     const RADIAL_RING_ORDER = ["outer", "middle", "inner", "center"];
 
     const svg = document.querySelector("#board");
@@ -490,6 +557,7 @@
     const ringToggle = document.querySelector("#ringToggle");
     const facingButtons = [...document.querySelectorAll(".facing-btn")];
     const displayButtons = [...document.querySelectorAll(".display-btn")];
+    const colorButtons = [...document.querySelectorAll(".swatch-btn")];
 
     const tokens = [];
     const coupleLabels = new Map();
@@ -499,8 +567,10 @@
     let animationFrame = null;
     let defaultFacingMode = "out";
     let defaultCoupleDisplayMode = "leadFollow";
+    let defaultGroupColor = "neutral";
     let savedCustomFormation = null;
     let customPathSteps = [];
+    let twoLineState = null;
 
     function svgElement(name, attrs = {}) {
       const el = document.createElementNS("http://www.w3.org/2000/svg", name);
@@ -559,25 +629,25 @@
           cx: CENTER.x,
           cy: CENTER.y,
           r: OUTER_RADIUS,
-          class: "guide-circle",
+          class: "guide-circle boundary-circle outer-circle",
         }),
         svgElement("circle", {
           cx: CENTER.x,
           cy: CENTER.y,
           r: MIDDLE_RADIUS,
-          class: "guide-circle inner-circle",
+          class: "guide-circle middle-circle",
         }),
         svgElement("circle", {
           cx: CENTER.x,
           cy: CENTER.y,
           r: INNER_RADIUS,
-          class: "guide-circle inner-circle",
+          class: "guide-circle boundary-circle inner-circle",
         }),
         svgElement("circle", {
           cx: CENTER.x,
           cy: CENTER.y,
           r: CENTER_RING_RADIUS,
-          class: "guide-circle inner-circle",
+          class: "guide-circle center-circle",
         }),
         svgElement("line", {
           x1: min,
@@ -679,6 +749,7 @@
       step = null,
       facingMode = defaultFacingMode,
       displayMode = defaultCoupleDisplayMode,
+      groupColor = defaultGroupColor,
     }) {
       const group = svgElement("g", {
         class: `piece ${role}`,
@@ -696,6 +767,7 @@
         y,
         facingMode,
         displayMode,
+        groupColor,
         group,
         blackHalf: null,
         text: null,
@@ -744,6 +816,7 @@
       }
 
       pieceLayer.append(group);
+      updateTokenColor(token);
       setTokenPosition(token, x, y);
 
       group.addEventListener("pointerdown", (event) => startDrag(event, token));
@@ -752,6 +825,11 @@
       });
 
       return token;
+    }
+
+    function updateTokenColor(token) {
+      const color = GROUP_COLORS[token.groupColor] || GROUP_COLORS.neutral;
+      token.group.style.setProperty("--group-color", color);
     }
 
     function setTokenPosition(token, x, y) {
@@ -866,6 +944,7 @@
 
       refreshFacingButtons();
       refreshDisplayButtons();
+      refreshColorButtons();
     }
 
     function refreshFacingButtons() {
@@ -886,6 +965,14 @@
 
       displayButtons.forEach((button) => {
         button.classList.toggle("active", button.dataset.display === mode);
+      });
+    }
+
+    function refreshColorButtons() {
+      const color = selectedToken?.groupColor || defaultGroupColor;
+      colorButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.color === color);
+        button.setAttribute("aria-pressed", String(button.dataset.color === color));
       });
     }
 
@@ -1156,14 +1243,21 @@
 
     function applyFormation(kind) {
       const formationMap = {
-        outer: ["outer circle", formationCircleTargets("outer")],
-        inner: ["inner circle", formationCircleTargets("inner")],
-        line: ["line", formationLineTargets()],
-        twoLines: ["two lines", formationTwoLineTargets()],
-        grid: ["grid", formationGridTargets()],
-        square: ["square", formationSquareTargets()],
+        outer: ["outer circle", () => formationCircleTargets("outer")],
+        inner: ["inner circle", () => formationCircleTargets("inner")],
+        line: ["line", formationLineTargets],
+        twoLines: ["two lines", formationTwoLineTargets],
+        cross: ["cross", formationCrossTargets],
+        pyramid: ["pyramid", formationPyramidTargets],
+        grid: ["grid", formationGridTargets],
+        square: ["square", formationSquareTargets],
       };
-      const [label, targets] = formationMap[kind];
+      const formation = formationMap[kind];
+      if (!formation) return;
+
+      if (kind !== "twoLines") twoLineState = null;
+      const [label, createTargets] = formation;
+      const targets = createTargets();
 
       animateConstrainedTargets(targets, () => {
         setStatus(`${capitalize(label)} formation ready`);
@@ -1199,12 +1293,121 @@
     function formationTwoLineTargets() {
       const leads = orderedTokens().filter((token) => token.role === "lead");
       const follows = orderedTokens().filter((token) => token.role === "follow");
+      const rows = leads.length && follows.length && leads.length + follows.length === tokens.length
+        ? [leads, follows]
+        : splitEvenly(orderedTokens(), 2);
+      const targets = new Map();
+      const sides = [-1, 1];
+      const xPositions = [CENTER.x - 210, CENTER.x + 210];
 
-      if (leads.length && follows.length && leads.length + follows.length === tokens.length) {
-        return rowFormationTargets([leads, follows], 92);
+      twoLineState = { step: 0, entries: new Map() };
+      rows.forEach((row, rowIndex) => {
+        row.forEach((token, pointIndex) => {
+          const side = sides[rowIndex] || 1;
+          const yMin = rowIndex === 0 ? CENTER.y - 270 : CENTER.y - 310;
+          const yMax = rowIndex === 0 ? CENTER.y + 270 : CENTER.y + 310;
+          const y = spreadValue(pointIndex, row.length, yMin, yMax);
+          const x = xPositions[rowIndex] || CENTER.x + 210;
+          targets.set(token, pointToFreeTarget(x, y));
+          twoLineState.entries.set(token, { side, y });
+        });
+      });
+
+      return targets;
+    }
+
+    function advanceTwoLines() {
+      if (!twoLineState || !twoLineState.entries.size) {
+        setStatus("Choose Two Lines first");
+        return;
       }
 
-      return rowFormationTargets(splitEvenly(orderedTokens(), 2), 92);
+      if (twoLineState.step >= 6) {
+        setStatus("Lines have crossed; choose Two Lines to reset them");
+        return;
+      }
+
+      twoLineState.step += 1;
+      const targets = new Map();
+      twoLineState.entries.forEach(({ side, y }, token) => {
+        const x = CENTER.x + side * (210 - twoLineState.step * 70);
+        targets.set(token, pointToFreeTarget(x, y));
+      });
+
+      animateConstrainedTargets(targets, () => {
+        if (twoLineState.step === 3) {
+          setStatus("Lines intersected at center");
+        } else if (twoLineState.step === 6) {
+          setStatus("Lines crossed to opposite sides");
+        } else {
+          setStatus(`Lines advanced ${twoLineState.step} of 6 steps`);
+        }
+      });
+      setStatus("Advancing both lines");
+    }
+
+    function formationCrossTargets() {
+      const activeTokens = orderedTokens();
+      const targets = new Map();
+      const armSteps = [28, 4, 12, 20];
+
+      if (activeTokens.length <= armSteps.length * RADIAL_RING_ORDER.length) {
+        activeTokens.forEach((token, index) => {
+          const armIndex = Math.floor(index / RADIAL_RING_ORDER.length) % armSteps.length;
+          const ringIndex = index % RADIAL_RING_ORDER.length;
+          const ring = RADIAL_RING_ORDER[ringIndex];
+          const step = armSteps[armIndex];
+          targets.set(token, anchorToTarget({
+            ring,
+            step,
+            ...stepPosition(step, ring),
+            locked: true,
+          }));
+        });
+        return targets;
+      }
+
+      const arms = splitEvenly(activeTokens, 4);
+      arms.forEach((arm, armIndex) => {
+        const angle = stepAngle(armSteps[armIndex]);
+        arm.forEach((token, pointIndex) => {
+          const radius = spreadValue(pointIndex, arm.length, CENTER_RING_RADIUS, OUTER_RADIUS);
+          targets.set(token, pointToFreeTarget(
+            CENTER.x + radius * Math.cos(angle),
+            CENTER.y + radius * Math.sin(angle)
+          ));
+        });
+      });
+      return targets;
+    }
+
+    function formationPyramidTargets() {
+      const activeTokens = orderedTokens();
+      const rows = [];
+      let cursor = 0;
+      let rowSize = 1;
+
+      while (cursor < activeTokens.length) {
+        const remaining = activeTokens.length - cursor;
+        const size = remaining <= rowSize * 2 ? remaining : rowSize;
+        rows.push(activeTokens.slice(cursor, cursor + size));
+        cursor += size;
+        rowSize += 1;
+      }
+
+      const targets = new Map();
+      const rowGap = Math.min(82, 500 / Math.max(1, rows.length - 1));
+      const startY = CENTER.y - ((rows.length - 1) * rowGap) / 2;
+      rows.forEach((row, rowIndex) => {
+        const width = Math.min(520, Math.max(0, (row.length - 1) * 74));
+        row.forEach((token, pointIndex) => {
+          const x = spreadValue(pointIndex, row.length, CENTER.x - width / 2, CENTER.x + width / 2);
+          const y = startY + rowIndex * rowGap;
+          targets.set(token, pointToFreeTarget(x, y));
+        });
+      });
+
+      return targets;
     }
 
     function formationGridTargets() {
@@ -1344,6 +1547,7 @@
           step: token.step,
           facingMode: token.facingMode,
           displayMode: token.displayMode,
+          groupColor: token.groupColor,
           x: Number(token.x.toFixed(3)),
           y: Number(token.y.toFixed(3)),
         })),
@@ -1387,7 +1591,11 @@
       const tokensByKey = new Map(tokens.map((token) => [tokenKey(token), token]));
       snapshot.items.forEach((item) => {
         const token = tokensByKey.get(item.key);
-        if (!token || token.role !== "couple" || !item.facingMode) return;
+        if (!token) return;
+
+        token.groupColor = item.groupColor || defaultGroupColor;
+        updateTokenColor(token);
+        if (token.role !== "couple" || !item.facingMode) return;
 
         token.facingMode = item.facingMode;
         token.displayMode = item.displayMode || defaultCoupleDisplayMode;
@@ -1431,6 +1639,7 @@
     }
 
     function resetLayout() {
+      twoLineState = null;
       createInitialTokens();
       setStatus("Reset layout");
     }
@@ -1580,6 +1789,7 @@
           y: token.y,
           facingMode: token.facingMode,
           displayMode: token.displayMode,
+          groupColor: token.groupColor,
         });
         const follow = createToken({
           number: token.number,
@@ -1588,6 +1798,7 @@
           y: token.y,
           facingMode: token.facingMode,
           displayMode: token.displayMode,
+          groupColor: token.groupColor,
         });
 
         tokens.splice(index, 0, lead, follow);
@@ -1644,6 +1855,7 @@
           target,
           facingMode: partners[0].facingMode || defaultFacingMode,
           displayMode: partners[0].displayMode || defaultCoupleDisplayMode,
+          groupColor: partners[0].groupColor || defaultGroupColor,
         });
       });
 
@@ -1653,7 +1865,7 @@
       }
 
       animateToTargets(targets, 320, () => {
-        pending.forEach(({ number, target, facingMode, displayMode }) => {
+        pending.forEach(({ number, target, facingMode, displayMode, groupColor }) => {
           const partners = tokens.filter((token) => token.number === number && token.role !== "couple");
           const insertIndex = Math.min(...partners.map((token) => tokens.indexOf(token)));
 
@@ -1671,6 +1883,7 @@
             step: target.step,
             facingMode,
             displayMode,
+            groupColor,
           });
           tokens.splice(insertIndex, 0, joined);
           selectedToken = joined;
@@ -1713,6 +1926,25 @@
       setStatus(mode === "partner" ? "Showing joined couples as partners" : "Showing joined couples as lead/follow");
     }
 
+    function setGroupColor(color) {
+      if (!GROUP_COLORS[color]) return;
+      if (!selectedTokens.size) {
+        setStatus("Select one or more couples before choosing a group color");
+        return;
+      }
+
+      defaultGroupColor = color;
+      selectedTokens.forEach((token) => {
+        const pair = tokens.filter((item) => item.number === token.number);
+        pair.forEach((item) => {
+          item.groupColor = color;
+          updateTokenColor(item);
+        });
+      });
+      refreshColorButtons();
+      setStatus(`Colored ${unique([...selectedTokens].map((token) => token.number)).length} selected couple(s)`);
+    }
+
     function renameSelected() {
       if (!selectedToken) {
         setStatus("Select a piece first");
@@ -1740,6 +1972,7 @@
         slot: stepToSlot(token.step),
         facing: token.role === "couple" ? token.facingMode : null,
         display: token.role === "couple" ? token.displayMode : null,
+        groupColor: token.groupColor,
         x: Number(token.x.toFixed(2)),
         y: Number(token.y.toFixed(2)),
       }));
@@ -1909,6 +2142,9 @@
     document.querySelector("#innerFormationBtn").addEventListener("click", () => applyFormation("inner"));
     document.querySelector("#lineFormationBtn").addEventListener("click", () => applyFormation("line"));
     document.querySelector("#twoLineFormationBtn").addEventListener("click", () => applyFormation("twoLines"));
+    document.querySelector("#advanceLinesBtn").addEventListener("click", advanceTwoLines);
+    document.querySelector("#crossFormationBtn").addEventListener("click", () => applyFormation("cross"));
+    document.querySelector("#pyramidFormationBtn").addEventListener("click", () => applyFormation("pyramid"));
     document.querySelector("#gridFormationBtn").addEventListener("click", () => applyFormation("grid"));
     document.querySelector("#squareFormationBtn").addEventListener("click", () => applyFormation("square"));
     document.querySelector("#saveFormationBtn").addEventListener("click", saveCustomFormation);
@@ -1925,6 +2161,9 @@
     displayButtons.forEach((button) => {
       button.addEventListener("click", () => setCoupleDisplayMode(button.dataset.display));
     });
+    colorButtons.forEach((button) => {
+      button.addEventListener("click", () => setGroupColor(button.dataset.color));
+    });
     facingButtons.forEach((button) => {
       button.addEventListener("click", () => setFacing(button.dataset.facing));
     });
@@ -1933,6 +2172,7 @@
     createInitialTokens();
     refreshFacingButtons();
     refreshDisplayButtons();
+    refreshColorButtons();
   </script>
 </body>
 </html>
