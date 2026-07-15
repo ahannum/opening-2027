@@ -36,7 +36,7 @@
     .app {
       height: 100vh;
       display: grid;
-      grid-template-columns: minmax(420px, 1fr) 296px;
+      grid-template-columns: minmax(420px, 1fr) 336px;
       gap: 18px;
       padding: 18px;
     }
@@ -188,9 +188,14 @@
     .status {
       margin-top: auto;
       color: var(--muted);
+      background: var(--surface);
       font-size: 13px;
       line-height: 1.4;
       min-height: 38px;
+      padding: 10px 4px;
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
     }
 
     .guide-line,
@@ -310,6 +315,154 @@
       line-height: 1.4;
     }
 
+    .intro {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .step-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-number {
+      display: inline-grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      flex: 0 0 24px;
+      border-radius: 50%;
+      color: #ffffff;
+      background: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .scope-label {
+      margin: 10px 0 0;
+      padding: 9px 10px;
+      border-left: 4px solid var(--blue);
+      background: #edf4f9;
+      color: var(--blue-dark);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .folder-status {
+      margin: 9px 0 0;
+      padding: 8px 10px;
+      border: 1px solid #d8d3cb;
+      background: #f8f7f4;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .folder-status.ready {
+      border-color: #9ac9b8;
+      background: #edf7f3;
+      color: #245d4c;
+    }
+
+    details.panel-section {
+      padding: 0;
+    }
+
+    details.panel-section > summary {
+      padding: 14px;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+      text-transform: uppercase;
+      list-style-position: inside;
+    }
+
+    details.panel-section[open] > summary {
+      border-bottom: 1px solid #e2ded7;
+    }
+
+    .details-content {
+      padding: 0 14px 14px;
+    }
+
+    .primary-action {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #ffffff;
+      font-weight: 750;
+    }
+
+    .primary-action:hover {
+      background: var(--blue-dark);
+      color: #ffffff;
+    }
+
+    .shot-strip {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      padding-bottom: 4px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .shot-card {
+      flex: 0 0 112px;
+      border: 1px solid #cfcac1;
+      background: #f8f7f4;
+      padding: 5px;
+    }
+
+    .shot-card.active {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 2px rgba(35, 104, 162, 0.18);
+    }
+
+    .shot-preview {
+      width: 100%;
+      min-height: 0;
+      aspect-ratio: 1;
+      padding: 0;
+      border: 0;
+      background: var(--paper);
+    }
+
+    .shot-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .shot-title {
+      margin: 5px 0;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .shot-actions {
+      display: grid;
+      grid-template-columns: 24px 24px 1fr 24px;
+      gap: 3px;
+    }
+
+    .shot-actions button {
+      min-height: 26px;
+      padding: 0;
+      font-size: 12px;
+    }
+
+    .empty-shots {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
     .piece .outline {
       fill: none;
       stroke: #4e5358;
@@ -410,80 +563,115 @@
 
     <aside class="panel">
       <section class="panel-section">
-        <h1>Opening 2027</h1>
+        <h1>Opening 2027 Planner</h1>
+        <p class="intro">Build one formation at a time. Work down the numbered steps, then capture each finished formation as a shot.</p>
         <div class="button-grid">
-          <button id="resetBtn" type="button" title="Reset">Reset</button>
-          <button id="shuffleBtn" type="button" title="Shuffle">Shuffle</button>
-          <button id="ccwBtn" type="button" title="Rotate counterclockwise">Rotate CCW</button>
-          <button id="cwBtn" type="button" title="Rotate clockwise">Rotate CW</button>
-          <button id="halfCcwBtn" type="button" title="Half-space counterclockwise">Half CCW</button>
-          <button id="halfCwBtn" type="button" title="Half-space clockwise">Half CW</button>
-          <button id="stopBtn" class="wide" type="button" title="Stop animation">Stop Animation</button>
-        </div>
-      </section>
-
-      <section class="panel-section toggles">
-        <label><input id="snapToggle" type="checkbox" checked> Snap to lock points</label>
-        <label><input id="innerLockToggle" type="checkbox" checked> Use inner lock points</label>
-        <label><input id="ringToggle" type="checkbox"> Drag along locked rings</label>
-      </section>
-
-      <section class="panel-section">
-        <h2>Selection</h2>
-        <div class="button-grid">
-          <button id="selectAllBtn" type="button" title="Select all pieces">Select All</button>
-          <button id="clearSelectionBtn" type="button" title="Clear selection">Clear</button>
-          <button id="stepInBtn" type="button" title="Move selected inward">Step In</button>
-          <button id="stepOutBtn" type="button" title="Move selected outward">Step Out</button>
+          <button id="resetBtn" type="button" title="Return to the starting circle">Start Over</button>
+          <button id="stopBtn" type="button" title="Stop any movement">Stop Movement</button>
         </div>
       </section>
 
       <section class="panel-section">
-        <h2>Formations</h2>
+        <div class="step-heading"><span class="step-number">1</span><h2>Set up the dancers</h2></div>
         <div class="button-grid">
-          <button id="outerFormationBtn" type="button" title="Outer circle">Outer Circle</button>
-          <button id="innerFormationBtn" type="button" title="Inner circle">Inner Circle</button>
-          <button id="lineFormationBtn" type="button" title="Line formation">Line</button>
-          <button id="twoLineFormationBtn" type="button" title="Two-line formation">Two Lines</button>
-          <button id="advanceLinesBtn" type="button" title="Move both lines toward and through the center">Advance Lines</button>
-          <button id="crossFormationBtn" type="button" title="Cross formation on radial lock points">Cross</button>
-          <button id="pyramidFormationBtn" type="button" title="Pyramid formation">Pyramid</button>
-          <button id="gridFormationBtn" type="button" title="Grid formation">Grid</button>
-          <button id="squareFormationBtn" type="button" title="Square formation">Square</button>
+          <button id="joinAllBtn" type="button" title="Show each couple as one token">Joined Couples</button>
+          <button id="splitAllBtn" type="button" title="Separate every lead and follow">Split Leads/Follows</button>
         </div>
-        <p class="section-help">Cross uses the circle lock points, so Rotate or the arrow keys can turn it diagonally. Advance Lines moves both rows one equal step.</p>
+        <p class="section-help">Use joined couples for simple planning, or split them when leads and follows need different paths.</p>
       </section>
 
       <section class="panel-section">
-        <h2>Custom Path</h2>
-        <div class="button-grid">
-          <button id="saveFormationBtn" type="button" title="Save current layout">Save Layout</button>
-          <button id="goFormationBtn" type="button" title="Go to saved layout">Go Saved</button>
-          <button id="addPathStepBtn" type="button" title="Add path step">Add Step</button>
-          <button id="playPathBtn" type="button" title="Play custom path">Play Path</button>
-          <button id="clearPathBtn" class="wide" type="button" title="Clear custom path">Clear Path</button>
+        <div class="step-heading"><span class="step-number">2</span><h2>Choose who moves</h2></div>
+        <div class="button-grid" role="group" aria-label="Movement scope">
+          <button id="scopeAllBtn" class="scope-btn" type="button">Everyone</button>
+          <button id="selectLeadsBtn" class="scope-btn" type="button">All Leads</button>
+          <button id="selectFollowsBtn" class="scope-btn" type="button">All Follows</button>
+          <button id="clearSelectionBtn" class="scope-btn" type="button">Pick on Board</button>
         </div>
+        <p id="scopeLabel" class="scope-label">Moving: everyone</p>
+        <p class="section-help">For a custom group, choose Pick on Board, then click dancers. Shift-click adds or removes dancers.</p>
       </section>
 
       <section class="panel-section">
-        <h2>Partner Pairs</h2>
+        <div class="step-heading"><span class="step-number">3</span><h2>Choose a formation</h2></div>
         <div class="button-grid">
+          <button id="outerFormationBtn" type="button">Outer Circle</button>
+          <button id="innerFormationBtn" type="button">Inner Circle</button>
+          <button id="squareFormationBtn" type="button">Square</button>
+          <button id="lineFormationBtn" type="button">One Line</button>
+          <button id="twoLineFormationBtn" type="button">Two Lines</button>
+          <button id="gridFormationBtn" type="button">Grid</button>
+          <button id="crossFormationBtn" type="button">Cross</button>
+          <button id="pyramidFormationBtn" type="button">Pyramid</button>
+        </div>
+        <p class="section-help">Only the group shown above moves. Choose another group and formation to layer shapes.</p>
+      </section>
+
+      <section class="panel-section">
+        <div class="step-heading"><span class="step-number">4</span><h2>Fine-tune positions</h2></div>
+        <div class="button-grid">
+          <button id="ccwBtn" type="button">Rotate ↺</button>
+          <button id="cwBtn" type="button">Rotate ↻</button>
+          <button id="stepInBtn" type="button">Move In</button>
+          <button id="stepOutBtn" type="button">Move Out</button>
+          <button id="halfCcwBtn" type="button">Half-step ↺</button>
+          <button id="halfCwBtn" type="button">Half-step ↻</button>
+          <button id="advanceLinesBtn" class="wide" type="button">Advance Two Lines</button>
+        </div>
+        <p class="section-help">Drag dancers directly, or use these controls for even spacing. Arrow keys also move the chosen group.</p>
+      </section>
+
+      <section class="panel-section">
+        <div class="step-heading"><span class="step-number">5</span><h2>Capture the formation</h2></div>
+        <div class="button-grid">
+          <button id="captureShotBtn" class="primary-action wide" type="button">+ Add Screenshot</button>
+          <button id="chooseShotFolderBtn" class="wide" type="button">Choose Screenshot Folder</button>
+          <button id="previousShotBtn" type="button" title="Show previous shot">Previous</button>
+          <button id="nextShotBtn" type="button" title="Show next shot">Next</button>
+          <button id="playShotsBtn" type="button" title="Play shots as stop motion">Play Shots</button>
+          <button id="stopShotsBtn" type="button" title="Stop shot playback">Stop</button>
+        </div>
+        <p id="folderStatus" class="folder-status">Screenshots stay in the storyboard. Choose a folder to also save PNG files.</p>
+        <div id="shotStrip" class="shot-strip" aria-label="Formation screenshots"></div>
+        <p class="section-help">Each screenshot remembers the exact formation. Reorder shots with their arrow buttons, then step through or play them.</p>
+      </section>
+
+      <details class="panel-section">
+        <summary>Advanced movement &amp; snapping</summary>
+        <div class="details-content">
+          <div class="toggles">
+            <label><input id="snapToggle" type="checkbox" checked> Snap to lock points</label>
+            <label><input id="innerLockToggle" type="checkbox" checked> Use inner lock points</label>
+            <label><input id="ringToggle" type="checkbox"> Drag along locked rings</label>
+          </div>
+          <div class="button-grid" role="group" aria-label="Arrow-key movement mode">
+            <button class="movement-mode-btn" data-movement-mode="circle" type="button">Arrows: Circles</button>
+            <button class="movement-mode-btn" data-movement-mode="straight" type="button">Arrows: Straight</button>
+            <button id="shuffleBtn" class="wide" type="button">Shuffle</button>
+          </div>
+          <p class="section-help">Press M to switch arrow modes. WASD always moves in a straight line.</p>
+        </div>
+      </details>
+
+      <details class="panel-section">
+        <summary>Advanced selection &amp; partner tools</summary>
+        <div class="details-content">
+        <div class="button-grid">
+          <button id="selectAllBtn" type="button">Select Every Token</button>
           <button id="splitSelectedBtn" type="button" title="Split selected">Split Selected</button>
           <button id="joinSelectedBtn" type="button" title="Join selected">Join Selected</button>
-          <button id="splitAllBtn" type="button" title="Split all">Split All</button>
-          <button id="joinAllBtn" type="button" title="Join all">Join All</button>
         </div>
-      </section>
+        </div>
+      </details>
 
-      <section class="panel-section">
+      <details class="panel-section">
+        <summary>Appearance &amp; facing</summary>
+        <div class="details-content">
         <h2>Joined Symbol</h2>
         <div class="button-grid">
           <button class="display-btn" data-display="leadFollow" type="button" title="Show lead and follow halves">Lead/Follow</button>
           <button class="display-btn" data-display="partner" type="button" title="Show as one combined partner">Partner</button>
         </div>
-      </section>
-
-      <section class="panel-section">
         <h2>Group Color</h2>
         <div class="swatch-grid" role="group" aria-label="Color selected couples">
           <button class="swatch-btn" data-color="neutral" type="button" title="Neutral gray" aria-label="Neutral gray" style="--swatch:#d9d9d8"></button>
@@ -492,27 +680,43 @@
           <button class="swatch-btn" data-color="green" type="button" title="Green group" aria-label="Green group" style="--swatch:#9bcf85"></button>
           <button class="swatch-btn" data-color="rose" type="button" title="Rose group" aria-label="Rose group" style="--swatch:#ee9694"></button>
         </div>
-        <p class="section-help">Select joined couples, then choose an optional group color. Split lead/follow pairs always stay black and white.</p>
-      </section>
-
-      <section class="panel-section">
         <h2>Lead Facing</h2>
         <div class="button-grid">
           <button class="facing-btn" data-facing="out" type="button" title="Lead faces out">Out</button>
           <button class="facing-btn" data-facing="in" type="button" title="Lead faces in">In</button>
           <button class="facing-btn" data-facing="cw" type="button" title="Lead faces clockwise">CW</button>
           <button class="facing-btn" data-facing="ccw" type="button" title="Lead faces counterclockwise">CCW</button>
+          <button class="facing-btn" data-facing="north" type="button" title="Lead faces north">North</button>
+          <button class="facing-btn" data-facing="east" type="button" title="Lead faces east">East</button>
+          <button class="facing-btn" data-facing="south" type="button" title="Lead faces south">South</button>
+          <button class="facing-btn" data-facing="west" type="button" title="Lead faces west">West</button>
+          <button class="facing-btn" data-facing="squareOut" type="button" title="Lead faces toward the nearest edge of the square">Square Out</button>
+          <button class="facing-btn" data-facing="squareIn" type="button" title="Lead faces inward from the nearest edge of the square">Square In</button>
         </div>
-      </section>
+        <p class="section-help">Square Out/In points each lead toward or away from the audience along the nearest side of a square formation.</p>
+        </div>
+      </details>
 
-      <section class="panel-section">
+      <details class="panel-section">
+        <summary>Saved paths, files &amp; labels</summary>
+        <div class="details-content">
+        <h2>Custom Path</h2>
+        <div class="button-grid">
+          <button id="saveFormationBtn" type="button">Save Layout</button>
+          <button id="goFormationBtn" type="button">Go Saved</button>
+          <button id="addPathStepBtn" type="button">Add Path Step</button>
+          <button id="playPathBtn" type="button">Play Path</button>
+          <button id="clearPathBtn" class="wide" type="button">Clear Path</button>
+          <button id="clearShotsBtn" type="button">Clear Storyboard</button>
+        </div>
         <p id="selectedLabel" class="selected-label">Selected: none</p>
         <input id="nameInput" type="text" placeholder="Couple name">
         <div class="button-grid">
           <button id="renameBtn" class="wide" type="button" title="Rename selected">Rename Selected</button>
           <button id="copyBtn" class="wide" type="button" title="Copy positions">Copy Positions</button>
         </div>
-      </section>
+        </div>
+      </details>
 
       <p id="status" class="status">Ready</p>
     </aside>
@@ -527,9 +731,12 @@
     const INNER_RADIUS = 140;
     const MIDDLE_RADIUS = (OUTER_RADIUS + INNER_RADIUS) / 2;
     const CENTER_RING_RADIUS = 70;
+    const SQUARE_MIN = CENTER.x - OUTER_RADIUS;
+    const SQUARE_MAX = CENTER.x + OUTER_RADIUS;
     const PIECE_RADIUS = 19;
     const SPLIT_OFFSET = 29;
     const MAX_MOVE_DISTANCE = OUTER_RADIUS * Math.sin(Math.PI / COUPLE_COUNT);
+    const STRAIGHT_STEP = OUTER_RADIUS / 4;
     const TAU = Math.PI * 2;
     const RING_RADII = {
       outer: OUTER_RADIUS,
@@ -558,6 +765,12 @@
     const facingButtons = [...document.querySelectorAll(".facing-btn")];
     const displayButtons = [...document.querySelectorAll(".display-btn")];
     const colorButtons = [...document.querySelectorAll(".swatch-btn")];
+    const movementModeButtons = [...document.querySelectorAll(".movement-mode-btn")];
+    const scopeButtons = [...document.querySelectorAll(".scope-btn")];
+    const scopeLabel = document.querySelector("#scopeLabel");
+    const folderStatus = document.querySelector("#folderStatus");
+    const chooseShotFolderBtn = document.querySelector("#chooseShotFolderBtn");
+    const shotStrip = document.querySelector("#shotStrip");
 
     const tokens = [];
     const coupleLabels = new Map();
@@ -568,9 +781,16 @@
     let defaultFacingMode = "out";
     let defaultCoupleDisplayMode = "leadFollow";
     let defaultGroupColor = "neutral";
+    let movementMode = "circle";
     let savedCustomFormation = null;
     let customPathSteps = [];
     let twoLineState = null;
+    let storyboardShots = [];
+    let activeShotIndex = -1;
+    let storyboardTimer = null;
+    let shotFolderHandle = null;
+    let downloadFallbackEnabled = false;
+    let manualSelectionMode = false;
 
     function svgElement(name, attrs = {}) {
       const el = document.createElementNS("http://www.w3.org/2000/svg", name);
@@ -615,8 +835,8 @@
     function drawGuides() {
       guides.replaceChildren();
 
-      const min = CENTER.x - OUTER_RADIUS;
-      const max = CENTER.x + OUTER_RADIUS;
+      const min = SQUARE_MIN;
+      const max = SQUARE_MAX;
       guides.append(
         svgElement("rect", {
           x: min,
@@ -715,6 +935,7 @@
       tokens.length = 0;
       selectedTokens.clear();
       selectedToken = null;
+      manualSelectionMode = false;
 
       for (let number = 1; number <= COUPLE_COUNT; number += 1) {
         if (!coupleLabels.has(number)) {
@@ -869,9 +1090,23 @@
     function blackDirectionAngle(token) {
       const radial = Math.atan2(token.y - CENTER.y, token.x - CENTER.x);
 
+      if (token.facingMode === "north") return -Math.PI / 2;
+      if (token.facingMode === "east") return 0;
+      if (token.facingMode === "south") return Math.PI / 2;
+      if (token.facingMode === "west") return Math.PI;
       if (token.facingMode === "in") return radial + Math.PI;
       if (token.facingMode === "cw") return radial + Math.PI / 2;
       if (token.facingMode === "ccw") return radial - Math.PI / 2;
+      if (token.facingMode === "squareOut" || token.facingMode === "squareIn") {
+        const distances = [
+          { distance: Math.abs(token.y - SQUARE_MIN), angle: -Math.PI / 2 },
+          { distance: Math.abs(token.x - SQUARE_MAX), angle: 0 },
+          { distance: Math.abs(token.y - SQUARE_MAX), angle: Math.PI / 2 },
+          { distance: Math.abs(token.x - SQUARE_MIN), angle: Math.PI },
+        ];
+        const outward = distances.reduce((best, item) => item.distance < best.distance ? item : best).angle;
+        return token.facingMode === "squareIn" ? outward + Math.PI : outward;
+      }
       return radial;
     }
 
@@ -911,6 +1146,7 @@
     }
 
     function selectAllTokens() {
+      manualSelectionMode = true;
       selectedTokens.clear();
       tokens.forEach((token) => selectedTokens.add(token));
       selectedToken = tokens[0] || null;
@@ -918,11 +1154,32 @@
       setStatus(`Selected ${selectedTokens.size} pieces`);
     }
 
+    function selectRole(role) {
+      manualSelectionMode = false;
+      const roleTokens = tokens.filter((token) => token.role === role);
+      selectedTokens.clear();
+      roleTokens.forEach((token) => selectedTokens.add(token));
+      selectedToken = roleTokens[0] || null;
+      refreshSelection();
+      setStatus(roleTokens.length
+        ? `Selected all ${roleTokens.length} ${role === "lead" ? "leads" : "follows"}`
+        : `Split partner pairs first to select ${role === "lead" ? "leads" : "follows"}`);
+    }
+
     function clearSelection() {
+      manualSelectionMode = true;
       selectedTokens.clear();
       selectedToken = null;
       refreshSelection();
-      setStatus("Selection cleared");
+      setStatus("Pick dancers on the board; Shift-click to choose more than one");
+    }
+
+    function chooseEveryone() {
+      manualSelectionMode = false;
+      selectedTokens.clear();
+      selectedToken = null;
+      refreshSelection();
+      setStatus("Formation controls will move everyone");
     }
 
     function refreshSelection() {
@@ -945,6 +1202,35 @@
       refreshFacingButtons();
       refreshDisplayButtons();
       refreshColorButtons();
+      refreshPlanningScope();
+    }
+
+    function refreshPlanningScope() {
+      const selected = [...selectedTokens].filter((token) => tokens.includes(token));
+      const roles = new Set(selected.map((token) => token.role));
+      let label = "Moving: everyone";
+      let activeId = "scopeAllBtn";
+
+      if (manualSelectionMode && !selected.length) {
+        label = "Moving: choose dancers on the board";
+        activeId = "clearSelectionBtn";
+      } else if (selected.length && roles.size === 1 && roles.has("lead") && selected.length === tokens.filter((token) => token.role === "lead").length) {
+        label = `Moving: all ${selected.length} leads`;
+        activeId = "selectLeadsBtn";
+      } else if (selected.length && roles.size === 1 && roles.has("follow") && selected.length === tokens.filter((token) => token.role === "follow").length) {
+        label = `Moving: all ${selected.length} follows`;
+        activeId = "selectFollowsBtn";
+      } else if (selected.length) {
+        label = `Moving: ${selected.length} selected dancer${selected.length === 1 ? "" : "s"}`;
+        activeId = "clearSelectionBtn";
+      }
+
+      scopeLabel.textContent = label;
+      scopeButtons.forEach((button) => {
+        const active = button.id === activeId;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
     }
 
     function refreshFacingButtons() {
@@ -976,6 +1262,23 @@
       });
     }
 
+    function setMovementMode(mode) {
+      if (!['circle', 'straight'].includes(mode)) return;
+      movementMode = mode;
+      refreshMovementModeButtons();
+      setStatus(mode === "circle"
+        ? "Arrow keys follow the circle"
+        : "Arrow keys move north, south, east, and west");
+    }
+
+    function refreshMovementModeButtons() {
+      movementModeButtons.forEach((button) => {
+        const isActive = button.dataset.movementMode === movementMode;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+    }
+
     function displayLabel(token) {
       const label = coupleLabels.get(token.number) || `Couple ${token.number}`;
       if (token.role === "lead") return `${label} Lead`;
@@ -992,6 +1295,7 @@
 
     function startDrag(event, token) {
       stopAnimation();
+      manualSelectionMode = true;
 
       const additive = event.shiftKey || event.metaKey || event.ctrlKey;
       if (additive) {
@@ -1258,6 +1562,10 @@
       if (kind !== "twoLines") twoLineState = null;
       const [label, createTargets] = formation;
       const targets = createTargets();
+      if (!targets.size) {
+        setStatus("Choose Everyone, Leads, Follows, or pick dancers on the board first");
+        return;
+      }
 
       animateConstrainedTargets(targets, () => {
         setStatus(`${capitalize(label)} formation ready`);
@@ -1266,7 +1574,7 @@
     }
 
     function formationCircleTargets(ring) {
-      const activeTokens = orderedTokens();
+      const activeTokens = formationScope();
       const targets = new Map();
 
       activeTokens.forEach((token, index) => {
@@ -1285,29 +1593,38 @@
     }
 
     function formationLineTargets() {
-      const activeTokens = orderedTokens();
+      const activeTokens = formationScope();
       const rowCount = Math.max(1, Math.ceil(activeTokens.length / 16));
       return rowFormationTargets(splitEvenly(activeTokens, rowCount), 82);
     }
 
     function formationTwoLineTargets() {
-      const leads = orderedTokens().filter((token) => token.role === "lead");
-      const follows = orderedTokens().filter((token) => token.role === "follow");
-      const rows = leads.length && follows.length && leads.length + follows.length === tokens.length
+      const activeTokens = formationScope();
+      const leads = activeTokens.filter((token) => token.role === "lead");
+      const follows = activeTokens.filter((token) => token.role === "follow");
+      const rows = leads.length && follows.length && leads.length + follows.length === activeTokens.length
         ? [leads, follows]
-        : splitEvenly(orderedTokens(), 2);
+        : splitEvenly(activeTokens, 2);
       const targets = new Map();
       const sides = [-1, 1];
-      const xPositions = [CENTER.x - 210, CENTER.x + 210];
+      const lineOffset = OUTER_RADIUS;
+      const xPositions = [SQUARE_MIN, SQUARE_MAX];
 
-      twoLineState = { step: 0, entries: new Map() };
+      twoLineState = { step: 0, offset: lineOffset, entries: new Map() };
       rows.forEach((row, rowIndex) => {
         row.forEach((token, pointIndex) => {
           const side = sides[rowIndex] || 1;
-          const yMin = rowIndex === 0 ? CENTER.y - 270 : CENTER.y - 310;
-          const yMax = rowIndex === 0 ? CENTER.y + 270 : CENTER.y + 310;
-          const y = spreadValue(pointIndex, row.length, yMin, yMax);
-          const x = xPositions[rowIndex] || CENTER.x + 210;
+          const equalRows = rows.length === 2 && rows[0].length === rows[1].length;
+          const landmarkIndex = rowIndex === 0 ? pointIndex * 2 : pointIndex * 2 + 1;
+          const y = equalRows
+            ? spreadValue(landmarkIndex, rows[0].length * 2, SQUARE_MIN, SQUARE_MAX)
+            : spreadValue(
+              pointIndex,
+              row.length,
+              rowIndex === 0 ? SQUARE_MIN : SQUARE_MIN + 38,
+              rowIndex === 0 ? SQUARE_MAX - 38 : SQUARE_MAX
+            );
+          const x = xPositions[rowIndex] || CENTER.x + lineOffset;
           targets.set(token, pointToFreeTarget(x, y));
           twoLineState.entries.set(token, { side, y });
         });
@@ -1330,7 +1647,8 @@
       twoLineState.step += 1;
       const targets = new Map();
       twoLineState.entries.forEach(({ side, y }, token) => {
-        const x = CENTER.x + side * (210 - twoLineState.step * 70);
+        const intersectionNudge = twoLineState.step === 3 ? side * 3 : 0;
+        const x = CENTER.x + side * twoLineState.offset * (1 - twoLineState.step / 3) + intersectionNudge;
         targets.set(token, pointToFreeTarget(x, y));
       });
 
@@ -1347,7 +1665,7 @@
     }
 
     function formationCrossTargets() {
-      const activeTokens = orderedTokens();
+      const activeTokens = formationScope();
       const targets = new Map();
       const armSteps = [28, 4, 12, 20];
 
@@ -1382,7 +1700,7 @@
     }
 
     function formationPyramidTargets() {
-      const activeTokens = orderedTokens();
+      const activeTokens = formationScope();
       const rows = [];
       let cursor = 0;
       let rowSize = 1;
@@ -1396,8 +1714,9 @@
       }
 
       const targets = new Map();
-      const rowGap = Math.min(82, 500 / Math.max(1, rows.length - 1));
-      const startY = CENTER.y - ((rows.length - 1) * rowGap) / 2;
+      const startY = CENTER.y - INNER_RADIUS;
+      const endY = SQUARE_MAX;
+      const rowGap = rows.length <= 1 ? 0 : (endY - startY) / (rows.length - 1);
       rows.forEach((row, rowIndex) => {
         const width = Math.min(520, Math.max(0, (row.length - 1) * 74));
         row.forEach((token, pointIndex) => {
@@ -1411,16 +1730,28 @@
     }
 
     function formationGridTargets() {
-      const activeTokens = orderedTokens();
+      const activeTokens = formationScope();
       const columns = activeTokens.length <= 16 ? 4 : 8;
       const rows = splitEvenly(activeTokens, Math.ceil(activeTokens.length / columns));
       const targets = new Map();
-      const startY = CENTER.y - ((rows.length - 1) * 78) / 2;
+      const outerDiagonal = OUTER_RADIUS / Math.sqrt(2);
+      const innerDiagonal = INNER_RADIUS / Math.sqrt(2);
+      const fourPointLevels = [
+        CENTER.x - outerDiagonal,
+        CENTER.x - innerDiagonal,
+        CENTER.x + innerDiagonal,
+        CENTER.x + outerDiagonal,
+      ];
 
       rows.forEach((row, rowIndex) => {
         row.forEach((token, columnIndex) => {
-          const x = spreadValue(columnIndex, row.length, CENTER.x - 235, CENTER.x + 235);
-          const y = startY + rowIndex * 78;
+          const usesFourByFourLandmarks = rows.length === 4 && row.length === 4;
+          const x = usesFourByFourLandmarks
+            ? fourPointLevels[columnIndex]
+            : spreadValue(columnIndex, row.length, CENTER.x - outerDiagonal, CENTER.x + outerDiagonal);
+          const y = rows.length === 4
+            ? fourPointLevels[rowIndex]
+            : spreadValue(rowIndex, rows.length, CENTER.y - outerDiagonal, CENTER.y + outerDiagonal);
           targets.set(token, pointToFreeTarget(x, y));
         });
       });
@@ -1429,12 +1760,12 @@
     }
 
     function formationSquareTargets() {
-      const activeTokens = orderedTokens();
+      const activeTokens = formationScope();
       const targets = new Map();
-      const left = CENTER.x - 235;
-      const right = CENTER.x + 235;
-      const top = CENTER.y - 235;
-      const bottom = CENTER.y + 235;
+      const left = SQUARE_MIN;
+      const right = SQUARE_MAX;
+      const top = SQUARE_MIN;
+      const bottom = SQUARE_MAX;
       const width = right - left;
       const height = bottom - top;
       const perimeter = width * 2 + height * 2;
@@ -1468,7 +1799,7 @@
 
       rows.forEach((row, rowIndex) => {
         row.forEach((token, columnIndex) => {
-          const x = spreadValue(columnIndex, row.length, CENTER.x - 305, CENTER.x + 305);
+          const x = spreadValue(columnIndex, row.length, SQUARE_MIN, SQUARE_MAX);
           const y = startY + rowIndex * rowGap;
           targets.set(token, pointToFreeTarget(x, y));
         });
@@ -1521,6 +1852,297 @@
     function clearCustomPath() {
       customPathSteps = [];
       setStatus("Cleared custom path");
+    }
+
+    async function chooseShotFolder() {
+      if (!("showDirectoryPicker" in window) || !window.isSecureContext) {
+        enableDownloadFallback();
+        return;
+      }
+
+      try {
+        shotFolderHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+        downloadFallbackEnabled = false;
+        chooseShotFolderBtn.textContent = `Folder: ${shotFolderHandle.name}`;
+        folderStatus.textContent = `New screenshots will be saved as PNG files in “${shotFolderHandle.name}”.`;
+        folderStatus.classList.add("ready");
+        setStatus(`Screenshot folder: ${shotFolderHandle.name}`);
+      } catch (error) {
+        if (error.name === "AbortError") {
+          setStatus("Folder selection canceled");
+          return;
+        }
+        enableDownloadFallback();
+      }
+    }
+
+    function enableDownloadFallback() {
+      shotFolderHandle = null;
+      downloadFallbackEnabled = true;
+      chooseShotFolderBtn.textContent = "Saving to Downloads";
+      folderStatus.textContent = "This browser cannot open folders. New screenshots will download to Downloads. If a download is blocked, press Save on that shot.";
+      folderStatus.classList.add("ready");
+      setStatus("Folder picker unavailable; screenshots will save to Downloads instead");
+    }
+
+    async function renderBoardPngBlob(size = 720) {
+      const clone = svg.cloneNode(true);
+      clone.setAttribute("width", String(size));
+      clone.setAttribute("height", String(size));
+      clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      const style = svgElement("style");
+      style.textContent = [...document.querySelectorAll("style")].map((node) => node.textContent).join("\n");
+      clone.insertBefore(style, clone.firstChild);
+
+      const source = new XMLSerializer().serializeToString(clone);
+      const svgBlob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(svgBlob);
+
+      try {
+        const image = new Image();
+        await new Promise((resolve, reject) => {
+          image.onload = resolve;
+          image.onerror = reject;
+          image.src = url;
+        });
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        const context = canvas.getContext("2d");
+        context.fillStyle = "#fbfaf7";
+        context.fillRect(0, 0, size, size);
+        context.drawImage(image, 0, 0, size, size);
+        return await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    function blobToDataUrl(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function saveBlobToFolder(blob, filename) {
+      if (!shotFolderHandle) return false;
+      const fileHandle = await shotFolderHandle.getFileHandle(filename, { create: true });
+      const writable = await fileHandle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      return true;
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    async function screenshot() {
+      stopStoryboard(false);
+      setStatus("Capturing formation screenshot");
+      try {
+        const blob = await renderBoardPngBlob();
+        const number = storyboardShots.length + 1;
+        const shot = {
+          id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+          name: `Shot ${number}`,
+          filename: `formation-shot-${String(number).padStart(2, "0")}.png`,
+          thumbnail: await blobToDataUrl(blob),
+          snapshot: snapshotCurrentLayout(),
+        };
+        storyboardShots.push(shot);
+        activeShotIndex = storyboardShots.length - 1;
+        renderStoryboard();
+
+        let saved = false;
+        if (shotFolderHandle) {
+          try {
+            saved = await saveBlobToFolder(blob, shot.filename);
+          } catch {
+            enableDownloadFallback();
+          }
+        }
+        if (!saved && downloadFallbackEnabled) {
+          downloadBlob(blob, shot.filename);
+          setStatus(`Captured ${shot.name} and downloaded its PNG`);
+        } else {
+          setStatus(saved ? `Captured and saved ${shot.name}` : `Captured ${shot.name}`);
+        }
+      } catch (error) {
+        setStatus(`Could not capture screenshot: ${error.message || "unknown error"}`);
+      }
+    }
+
+    function renderStoryboard() {
+      shotStrip.replaceChildren();
+      if (!storyboardShots.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty-shots";
+        empty.textContent = "No shots captured yet.";
+        shotStrip.append(empty);
+        return;
+      }
+
+      storyboardShots.forEach((shot, index) => {
+        const card = document.createElement("article");
+        card.className = `shot-card${index === activeShotIndex ? " active" : ""}`;
+        const preview = document.createElement("button");
+        preview.className = "shot-preview";
+        preview.type = "button";
+        preview.title = `Show ${shot.name}`;
+        const image = document.createElement("img");
+        image.src = shot.thumbnail;
+        image.alt = `${shot.name} formation preview`;
+        preview.append(image);
+        preview.addEventListener("click", () => showShot(index));
+
+        const title = document.createElement("p");
+        title.className = "shot-title";
+        title.textContent = shot.name;
+
+        const actions = document.createElement("div");
+        actions.className = "shot-actions";
+        [
+          ["←", "Move earlier", () => moveShot(index, -1)],
+          ["→", "Move later", () => moveShot(index, 1)],
+          ["Save", "Download PNG", () => downloadShot(index)],
+          ["×", "Delete shot", () => deleteShot(index)],
+        ].forEach(([label, titleText, handler]) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = label;
+          button.title = titleText;
+          button.addEventListener("click", handler);
+          actions.append(button);
+        });
+
+        card.append(preview, title, actions);
+        shotStrip.append(card);
+      });
+
+      shotStrip.querySelector(".shot-card.active")?.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
+
+    function restoreStoryboardSnapshot(snapshot) {
+      stopAnimation();
+      pieceLayer.replaceChildren();
+      tokens.length = 0;
+      selectedTokens.clear();
+      selectedToken = null;
+      manualSelectionMode = false;
+      twoLineState = null;
+
+      snapshot.items.forEach((item) => {
+        tokens.push(createToken({
+          number: item.number,
+          role: item.role,
+          x: item.x,
+          y: item.y,
+          ring: item.ring,
+          step: item.step,
+          facingMode: item.facingMode,
+          displayMode: item.displayMode,
+          groupColor: item.groupColor,
+        }));
+      });
+      refreshSelection();
+    }
+
+    function showShot(index, announce = true) {
+      if (!storyboardShots.length) {
+        setStatus("No storyboard shots yet");
+        return;
+      }
+      activeShotIndex = (index + storyboardShots.length) % storyboardShots.length;
+      restoreStoryboardSnapshot(storyboardShots[activeShotIndex].snapshot);
+      renderStoryboard();
+      if (announce) setStatus(`Showing ${storyboardShots[activeShotIndex].name}`);
+    }
+
+    function stepShot(direction) {
+      stopStoryboard(false);
+      const start = activeShotIndex < 0 ? (direction > 0 ? -1 : 0) : activeShotIndex;
+      showShot(start + direction);
+    }
+
+    function playStoryboard() {
+      if (!storyboardShots.length) {
+        setStatus("Capture a storyboard shot first");
+        return;
+      }
+      stopStoryboard(false);
+      let index = activeShotIndex < 0 || activeShotIndex >= storyboardShots.length - 1
+        ? 0
+        : activeShotIndex;
+
+      const advance = () => {
+        showShot(index, false);
+        setStatus(`Playing ${storyboardShots[index].name}`);
+        index += 1;
+        if (index < storyboardShots.length) {
+          storyboardTimer = window.setTimeout(advance, 900);
+        } else {
+          storyboardTimer = null;
+          setStatus("Storyboard complete");
+        }
+      };
+      advance();
+    }
+
+    function stopStoryboard(announce = true) {
+      if (storyboardTimer !== null) {
+        clearTimeout(storyboardTimer);
+        storyboardTimer = null;
+        if (announce) setStatus("Storyboard stopped");
+      }
+    }
+
+    function moveShot(index, direction) {
+      stopStoryboard(false);
+      const target = clamp(index + direction, 0, storyboardShots.length - 1);
+      if (target === index) return;
+      [storyboardShots[index], storyboardShots[target]] = [storyboardShots[target], storyboardShots[index]];
+      activeShotIndex = target;
+      storyboardShots.forEach((shot, shotIndex) => { shot.name = `Shot ${shotIndex + 1}`; });
+      renderStoryboard();
+      setStatus(`Moved shot to position ${target + 1}`);
+    }
+
+    function deleteShot(index) {
+      stopStoryboard(false);
+      storyboardShots.splice(index, 1);
+      storyboardShots.forEach((shot, shotIndex) => { shot.name = `Shot ${shotIndex + 1}`; });
+      activeShotIndex = storyboardShots.length ? clamp(index, 0, storyboardShots.length - 1) : -1;
+      renderStoryboard();
+      setStatus("Deleted storyboard shot");
+    }
+
+    function downloadShot(index) {
+      const shot = storyboardShots[index];
+      if (!shot) return;
+      const link = document.createElement("a");
+      link.href = shot.thumbnail;
+      link.download = shot.filename;
+      link.click();
+      setStatus(`Downloaded ${shot.name}`);
+    }
+
+    function clearStoryboard() {
+      stopStoryboard(false);
+      storyboardShots = [];
+      activeShotIndex = -1;
+      renderStoryboard();
+      setStatus("Cleared screenshot storyboard");
     }
 
     function playTargetSequence(sequence, index, onDone) {
@@ -1617,6 +2239,12 @@
       });
     }
 
+    function formationScope() {
+      const scoped = movementScope();
+      const scopedSet = new Set(scoped);
+      return orderedTokens().filter((token) => scopedSet.has(token));
+    }
+
     function splitEvenly(items, rowCount) {
       const rows = Array.from({ length: rowCount }, () => []);
       items.forEach((item, index) => {
@@ -1682,7 +2310,8 @@
 
     function movementScope() {
       const scopedTokens = [...selectedTokens].filter((token) => tokens.includes(token));
-      return scopedTokens.length ? scopedTokens : [...tokens];
+      if (scopedTokens.length) return scopedTokens;
+      return manualSelectionMode ? [] : [...tokens];
     }
 
     function currentOrNearestAnchor(token) {
@@ -1757,10 +2386,10 @@
         return;
       }
 
-      splitTokens(joined);
+      splitTokens(joined, false);
     }
 
-    function splitTokens(joinedTokens) {
+    function splitTokens(joinedTokens, keepSelection = true) {
       stopAnimation();
       const targets = new Map();
       let firstLead = null;
@@ -1808,8 +2437,15 @@
       });
 
       if (firstLead) {
-        selectToken(firstLead);
-        animateToTargets(targets, 280, () => setStatus("Split partner pairs"));
+        if (keepSelection) {
+          selectToken(firstLead);
+        } else {
+          manualSelectionMode = false;
+          selectedTokens.clear();
+          selectedToken = null;
+          refreshSelection();
+        }
+        animateToTargets(targets, 280, () => setStatus("Leads and follows are ready; now choose who moves"));
       }
     }
 
@@ -1829,10 +2465,10 @@
         return;
       }
 
-      joinCoupleNumbers(splitNumbers);
+      joinCoupleNumbers(splitNumbers, false);
     }
 
-    function joinCoupleNumbers(numbers) {
+    function joinCoupleNumbers(numbers, keepSelection = true) {
       stopAnimation();
       const targets = new Map();
       const pending = [];
@@ -1889,8 +2525,12 @@
           selectedToken = joined;
         });
 
-        if (selectedToken) selectToken(selectedToken);
-        setStatus("Joined partner pairs");
+        if (keepSelection && selectedToken) {
+          selectToken(selectedToken);
+        } else {
+          chooseEveryone();
+        }
+        setStatus("Couples are joined; formation controls will move everyone");
       });
     }
 
@@ -1990,6 +2630,34 @@
     function handleKeyDown(event) {
       if (event.target.matches("input, textarea, select")) return;
 
+      const key = event.key.toLowerCase();
+      const straightDirections = {
+        w: [0, -1],
+        a: [-1, 0],
+        s: [0, 1],
+        d: [1, 0],
+        arrowup: [0, -1],
+        arrowleft: [-1, 0],
+        arrowdown: [0, 1],
+        arrowright: [1, 0],
+      };
+
+      if (key === "m") {
+        event.preventDefault();
+        setMovementMode(movementMode === "circle" ? "straight" : "circle");
+        return;
+      }
+
+      const isWasd = ["w", "a", "s", "d"].includes(key);
+      const useStraightMovement = isWasd
+        || (key.startsWith("arrow") && (movementMode === "straight" || event.shiftKey));
+
+      if (useStraightMovement && straightDirections[key]) {
+        event.preventDefault();
+        moveScopeStraight(...straightDirections[key]);
+        return;
+      }
+
       if (event.key === "ArrowRight") {
         event.preventDefault();
         rotateByHalfSteps(-1, 260);
@@ -2009,6 +2677,30 @@
         event.preventDefault();
         moveScopeRadially("out");
       }
+    }
+
+    function moveScopeStraight(horizontal, vertical) {
+      const scopedTokens = movementScope();
+      if (!scopedTokens.length) return;
+
+      const targets = new Map();
+      let movedCount = 0;
+      scopedTokens.forEach((token) => {
+        const x = clamp(token.x + horizontal * STRAIGHT_STEP, SQUARE_MIN, SQUARE_MAX);
+        const y = clamp(token.y + vertical * STRAIGHT_STEP, SQUARE_MIN, SQUARE_MAX);
+        if (x !== token.x || y !== token.y) movedCount += 1;
+        targets.set(token, pointToFreeTarget(x, y));
+      });
+
+      if (!movedCount) {
+        setStatus("Selected points are already at the square boundary");
+        return;
+      }
+
+      animateToTargets(targets, 220, () => {
+        const direction = horizontal < 0 ? "west" : horizontal > 0 ? "east" : vertical < 0 ? "north" : "south";
+        setStatus(`Moved ${movedCount} point${movedCount === 1 ? "" : "s"} ${direction}`);
+      });
     }
 
     function moveScopeRadially(direction) {
@@ -2134,8 +2826,11 @@
     document.querySelector("#halfCwBtn").addEventListener("click", () => rotateByHalfSteps(-1, 300));
     document.querySelector("#halfCcwBtn").addEventListener("click", () => rotateByHalfSteps(1, 300));
     document.querySelector("#stopBtn").addEventListener("click", stopAnimation);
+    document.querySelector("#scopeAllBtn").addEventListener("click", chooseEveryone);
     document.querySelector("#selectAllBtn").addEventListener("click", selectAllTokens);
     document.querySelector("#clearSelectionBtn").addEventListener("click", clearSelection);
+    document.querySelector("#selectLeadsBtn").addEventListener("click", () => selectRole("lead"));
+    document.querySelector("#selectFollowsBtn").addEventListener("click", () => selectRole("follow"));
     document.querySelector("#stepInBtn").addEventListener("click", () => moveScopeRadially("in"));
     document.querySelector("#stepOutBtn").addEventListener("click", () => moveScopeRadially("out"));
     document.querySelector("#outerFormationBtn").addEventListener("click", () => applyFormation("outer"));
@@ -2152,6 +2847,13 @@
     document.querySelector("#addPathStepBtn").addEventListener("click", addPathStep);
     document.querySelector("#playPathBtn").addEventListener("click", playCustomPath);
     document.querySelector("#clearPathBtn").addEventListener("click", clearCustomPath);
+    document.querySelector("#chooseShotFolderBtn").addEventListener("click", chooseShotFolder);
+    document.querySelector("#captureShotBtn").addEventListener("click", screenshot);
+    document.querySelector("#previousShotBtn").addEventListener("click", () => stepShot(-1));
+    document.querySelector("#nextShotBtn").addEventListener("click", () => stepShot(1));
+    document.querySelector("#playShotsBtn").addEventListener("click", playStoryboard);
+    document.querySelector("#stopShotsBtn").addEventListener("click", () => stopStoryboard(true));
+    document.querySelector("#clearShotsBtn").addEventListener("click", clearStoryboard);
     document.querySelector("#splitSelectedBtn").addEventListener("click", splitSelected);
     document.querySelector("#joinSelectedBtn").addEventListener("click", joinSelected);
     document.querySelector("#splitAllBtn").addEventListener("click", splitAll);
@@ -2164,6 +2866,9 @@
     colorButtons.forEach((button) => {
       button.addEventListener("click", () => setGroupColor(button.dataset.color));
     });
+    movementModeButtons.forEach((button) => {
+      button.addEventListener("click", () => setMovementMode(button.dataset.movementMode));
+    });
     facingButtons.forEach((button) => {
       button.addEventListener("click", () => setFacing(button.dataset.facing));
     });
@@ -2173,6 +2878,8 @@
     refreshFacingButtons();
     refreshDisplayButtons();
     refreshColorButtons();
+    refreshMovementModeButtons();
+    renderStoryboard();
   </script>
 </body>
 </html>
