@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Circle of 16</title>
+  <style>
+    :root {
+      --paper: #fbfaf7;
+      --surface: #f4f2ee;
+      --panel: #ffffff;
+      --ink: #1f2529;
+      --muted: #697077;
+      --line: #b8b2a8;
+      --guide: #8f8a82;
+      --blue: #2368a2;
+      --blue-dark: #18476f;
+      --coral: #d45d4f;
+      --green: #307a63;
+      --shadow: 0 18px 40px rgba(31, 37, 41, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--surface);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) 320px;
+      gap: 18px;
+      padding: 18px;
+    }
+
+    .stage {
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      background: var(--paper);
+      border: 1px solid #d3cec5;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      height: calc(100vh - 36px);
+    }
+
+    svg {
+      width: min(100%, calc(100vh - 36px));
+      max-width: 780px;
+      aspect-ratio: 1;
+      display: block;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+      max-height: calc(100vh - 36px);
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+    }
+
+    .panel-section {
+      background: var(--panel);
+      border: 1px solid #d8d3cb;
+      box-shadow: 0 10px 24px rgba(31, 37, 41, 0.08);
+      padding: 14px;
+    }
+
+    h1, h2 { margin: 0; line-height: 1.2; }
+    h1 { font-size: 18px; }
+    h2 { font-size: 13px; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+
+    .help { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    button {
+      min-height: 38px;
+      border: 1px solid #bfc5c9;
+      background: #ffffff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 13px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 10px;
+    }
+
+    button:hover { border-color: var(--blue); }
+    button.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    button.primary:hover { background: var(--blue-dark); }
+    button.active { background: #e7f0f8; border-color: var(--blue); color: var(--blue-dark); font-weight: 600; }
+    button.wide { grid-column: 1 / -1; }
+
+    .segmented { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 12px; }
+    .segmented button { min-height: 34px; font-size: 12px; }
+    .segmented button + button { border-left: 0; }
+
+    label.check { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; }
+
+    .names { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
+    .names label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+    .names input {
+      width: 100%;
+      min-width: 0;
+      height: 30px;
+      border: 1px solid #cfd3d6;
+      padding: 0 6px;
+      font: inherit;
+      font-size: 12px;
+      color: var(--ink);
+    }
+
+    .shots { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 6px; }
+    .shots li { display: flex; gap: 6px; }
+    .shots li button:first-child { flex: 1; justify-content: flex-start; text-align: left; }
+    .shots li.current button:first-child { border-color: var(--blue); background: #e7f0f8; }
+
+    .status { min-height: 18px; margin-top: 10px; font-size: 12px; color: var(--green); }
+
+    .guide { fill: none; stroke: var(--line); stroke-width: 2; }
+    .guide.faint { stroke-dasharray: 4 6; stroke-width: 1.2; }
+    .spot { fill: var(--guide); }
+    .half-spot { fill: #cbc6bd; }
+    .compass { font-size: 13px; font-weight: 700; fill: var(--guide); text-anchor: middle; dominant-baseline: central; }
+
+    .person { cursor: grab; }
+    .person:active { cursor: grabbing; }
+    .person circle.body { stroke: #fff; stroke-width: 3; }
+    .person circle.ring { fill: none; stroke: none; }
+    .person.selected circle.ring { stroke: var(--ink); stroke-width: 3; }
+    .person text.num { fill: #fff; font-weight: 700; font-size: 23px; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+    .person text.name { fill: var(--ink); font-size: 12px; text-anchor: middle; dominant-baseline: central; pointer-events: none; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; }
+
+    @media (max-width: 820px) {
+      .app { grid-template-columns: 1fr; padding: 16px; }
+      .stage { height: auto; }
+      svg { width: 100%; }
+      .panel { max-height: none; overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="stage" aria-label="Circle board">
+      <svg id="board" viewBox="0 0 720 720" role="img" aria-label="16 people evenly spaced on a circle"></svg>
+    </section>
+
+    <aside class="panel">
+      <section class="panel-section">
+        <h1>Circle of 16</h1>
+        <p class="help">16 spots, 22.5° apart. Drag someone to a spot (dropping on a taken spot swaps them). Click to select, Shift-click to add. ← / → move the selection (or everyone) one spot. Esc clears.</p>
+        <div class="button-grid">
+          <button id="ccwBtn" type="button" title="Left arrow">↺ One spot CCW</button>
+          <button id="cwBtn" type="button" title="Right arrow">One spot CW ↻</button>
+          <button id="selectOddBtn" type="button">Select odd</button>
+          <button id="selectEvenBtn" type="button">Select even</button>
+          <button id="selectAllBtn" type="button">Select all</button>
+          <button id="clearSelBtn" type="button">Clear selection</button>
+          <button id="reverseBtn" type="button" title="Mirror across the north–south line">Mirror order</button>
+          <button id="resetBtn" type="button">Start over</button>
+        </div>
+        <div class="status" id="status" role="status"></div>
+      </section>
+
+      <section class="panel-section">
+        <h2>Circle size</h2>
+        <div class="segmented" id="radiusButtons">
+          <button type="button" data-radius="290">Large</button>
+          <button type="button" data-radius="230">Medium</button>
+          <button type="button" data-radius="170">Small</button>
+          <button type="button" data-radius="110">Tight</button>
+        </div>
+        <label class="check"><input type="checkbox" id="halfSpotsToggle"> Allow half spots (32 positions)</label>
+        <label class="check"><input type="checkbox" id="namesToggle" checked> Show names</label>
+        <label class="check"><input type="checkbox" id="colorToggle" checked> Color odd / even</label>
+      </section>
+
+      <section class="panel-section">
+        <h2>Shots</h2>
+        <p class="help">Capture formations, then click one to jump back to it. Play animates through them.</p>
+        <div class="button-grid">
+          <button id="captureBtn" class="primary" type="button">Capture shot</button>
+          <button id="playBtn" type="button">▶ Play</button>
+        </div>
+        <ol class="shots" id="shotList"></ol>
+      </section>
+
+      <section class="panel-section">
+        <h2>Names</h2>
+        <div class="names" id="names"></div>
+      </section>
+
+      <section class="panel-section">
+        <h2>Export</h2>
+        <div class="button-grid">
+          <button id="pngBtn" type="button">Save PNG</button>
+          <button id="jsonBtn" type="button">Copy JSON</button>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <script>
+    const COUNT = 16;
+    const CENTER = 360;
+    const PERSON_RADIUS = 20;
+    const STORAGE_KEY = "circle16-state";
+    const NS = "http://www.w3.org/2000/svg";
+
+    const board = document.getElementById("board");
+    const statusEl = document.getElementById("status");
+    const halfSpotsToggle = document.getElementById("halfSpotsToggle");
+    const namesToggle = document.getElementById("namesToggle");
+    const colorToggle = document.getElementById("colorToggle");
+
+    // Each person sits at a "slot" along the circle: 0 is north, slots increase clockwise.
+    // Whole slots are the 16 spots; halves are allowed when half spots are on.
+    let state = defaultState();
+    let selected = new Set();
+    let currentShot = -1;
+    let animating = null;
+    let playing = false;
+
+    function defaultState() {
+      return {
+        radius: 230,
+        slots: Array.from({ length: COUNT }, (_, i) => i),
+        names: Array.from({ length: COUNT }, () => ""),
+        shots: [],
+        halfSpots: false,
+        showNames: true,
+        color: true,
+      };
+    }
+
+    function load() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (saved && Array.isArray(saved.slots) && saved.slots.length === COUNT) {
+          state = { ...defaultState(), ...saved };
+        }
+      } catch (_) { /* start fresh */ }
+    }
+
+    function save() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) { /* storage unavailable */ }
+    }
+
+    function setStatus(text) {
+      statusEl.textContent = text;
+    }
+
+    const step = () => (state.halfSpots ? 0.5 : 1);
+    const wrap = (slot) => ((slot % COUNT) + COUNT) % COUNT;
+
+    function slotPoint(slot, radius = state.radius) {
+      const angle = (slot / COUNT) * Math.PI * 2 - Math.PI / 2;
+      return { x: CENTER + radius * Math.cos(angle), y: CENTER + radius * Math.sin(angle) };
+    }
+
+    function el(tag, attrs = {}, text) {
+      const node = document.createElementNS(NS, tag);
+      for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    // ---------- drawing ----------
+
+    let guideLayer, peopleLayer;
+    const tokens = [];
+
+    function buildBoard() {
+      board.replaceChildren();
+      board.appendChild(el("rect", { x: 0, y: 0, width: 720, height: 720, fill: "#fbfaf7" }));
+      guideLayer = el("g");
+      peopleLayer = el("g");
+      board.append(guideLayer, peopleLayer);
+
+      for (let i = 0; i < COUNT; i += 1) {
+        const g = el("g", { class: "person", "data-index": i, tabindex: 0 });
+        g.append(
+          el("circle", { class: "ring", r: PERSON_RADIUS + 5 }),
+          el("circle", { class: "body", r: PERSON_RADIUS }),
+          el("text", { class: "num" }, String(i + 1)),
+          el("text", { class: "name" }),
+        );
+        g.addEventListener("pointerdown", (event) => startDrag(event, i));
+        peopleLayer.appendChild(g);
+        tokens.push(g);
+      }
+    }
+
+    function drawGuides() {
+      guideLayer.replaceChildren();
+      const r = state.radius;
+      guideLayer.append(
+        el("circle", { class: "guide", cx: CENTER, cy: CENTER, r }),
+        el("circle", { class: "guide faint", cx: CENTER, cy: CENTER, r: 6 }),
+        el("line", { class: "guide faint", x1: CENTER, y1: CENTER - r, x2: CENTER, y2: CENTER + r }),
+        el("line", { class: "guide faint", x1: CENTER - r, y1: CENTER, x2: CENTER + r, y2: CENTER }),
+      );
+
+      if (state.halfSpots) {
+        for (let i = 0; i < COUNT; i += 1) {
+          const p = slotPoint(i + 0.5);
+          guideLayer.appendChild(el("circle", { class: "half-spot", cx: p.x, cy: p.y, r: 3 }));
+        }
+      }
+
+      for (let i = 0; i < COUNT; i += 1) {
+        const p = slotPoint(i);
+        guideLayer.appendChild(el("circle", { class: "spot", cx: p.x, cy: p.y, r: 5 }));
+      }
+
+      const edge = 22;
+      guideLayer.append(
+        el("text", { class: "compass", x: CENTER, y: edge }, "N"),
+        el("text", { class: "compass", x: CENTER, y: 720 - edge }, "S"),
+        el("text", { class: "compass", x: 720 - edge, y: CENTER }, "E"),
+        el("text", { class: "compass", x: edge, y: CENTER }, "W"),
+      );
+    }
+
+    // Positions can be overridden mid-drag or mid-animation.
+    let displayOverride = null;
+
+    function positionOf(i) {
+      if (displayOverride && displayOverride[i]) return displayOverride[i];
+      return slotPoint(state.slots[i]);
+    }
+
+    function drawPeople() {
+      tokens.forEach((g, i) => {
+        const p = positionOf(i);
+        g.setAttribute("transform", `translate(${p.x.toFixed(2)} ${p.y.toFixed(2)})`);
+        const odd = (i + 1) % 2 === 1;
+        g.querySelector(".body").setAttribute("fill", state.color ? (odd ? "var(--blue)" : "var(--coral)") : "var(--blue)");
+        g.classList.toggle("selected", selected.has(i));
+
+        // Push the name label outward from the center so it never sits on the circle line.
+        const name = state.names[i].trim();
+        const label = g.querySelector(".name");
+        const dx = p.x - CENTER;
+        const dy = p.y - CENTER;
+        const len = Math.hypot(dx, dy) || 1;
+        label.setAttribute("x", (dx / len) * (PERSON_RADIUS + 26));
+        label.setAttribute("y", (dy / len) * (PERSON_RADIUS + 18));
+        label.textContent = state.showNames ? name : "";
+        g.setAttribute("aria-label", `Person ${i + 1}${name ? ` (${name})` : ""}, spot ${formatSlot(state.slots[i])}`);
+      });
+    }
+
+    function formatSlot(slot) {
+      return Number.isInteger(slot) ? String(slot + 1) : `${Math.floor(slot) + 1}½`;
+    }
+
+    function render() {
+      drawGuides();
+      drawPeople();
+      syncControls();
+      renderShots();
+    }
+
+    // ---------- animation ----------
+
+    // Animate from one set of slots/radius to another, travelling along the circle the short way.
+    function animateTo(targetSlots, targetRadius = state.radius, duration = 450) {
+      return new Promise((resolve) => {
+        if (animating) cancelAnimationFrame(animating);
+        const fromSlots = state.slots.slice();
+        const fromRadius = state.radius;
+        const deltas = targetSlots.map((to, i) => {
+          let d = to - fromSlots[i];
+          if (d > COUNT / 2) d -= COUNT;
+          if (d < -COUNT / 2) d += COUNT;
+          return d;
+        });
+        const start = performance.now();
+        const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+
+        state.slots = targetSlots.slice();
+        state.radius = targetRadius;
+        drawGuides();
+
+        function frame(now) {
+          const t = Math.min(1, (now - start) / duration);
+          const k = ease(t);
+          const radius = fromRadius + (targetRadius - fromRadius) * k;
+          displayOverride = fromSlots.map((from, i) => slotPoint(from + deltas[i] * k, radius));
+          drawPeople();
+          if (t < 1) {
+            animating = requestAnimationFrame(frame);
+          } else {
+            animating = null;
+            displayOverride = null;
+            render();
+            save();
+            resolve();
+          }
+        }
+        animating = requestAnimationFrame(frame);
+      });
+    }
+
+    // ---------- moves ----------
+
+    function rotate(direction) {
+      const group = selected.size ? [...selected] : state.slots.map((_, i) => i);
+      const target = state.slots.slice();
+      group.forEach((i) => { target[i] = wrap(target[i] + direction * step()); });
+
+      // Moving only some people can land them on someone who stayed put; block that.
+      const taken = new Map();
+      for (let i = 0; i < COUNT; i += 1) {
+        const key = target[i];
+        if (taken.has(key)) {
+          setStatus(`Spot ${formatSlot(key)} is taken — select that person too, or move them first`);
+          return;
+        }
+        taken.set(key, i);
+      }
+      currentShot = -1;
+      animateTo(target);
+      const who = selected.size ? `${selected.size} selected` : "Everyone";
+      setStatus(`${who} moved ${direction > 0 ? "clockwise" : "counterclockwise"}`);
+    }
+
+    function mirror() {
+      animateTo(state.slots.map((s) => wrap(COUNT - s)));
+      currentShot = -1;
+      setStatus("Mirrored across the north–south line");
+    }
+
+    function reset() {
+      selected.clear();
+      currentShot = -1;
+      animateTo(Array.from({ length: COUNT }, (_, i) => i), 230);
+      setStatus("Back to the starting circle");
+    }
+
+    // ---------- dragging ----------
+
+    function pointerToSvg(event) {
+      const pt = board.createSVGPoint();
+      pt.x = event.clientX;
+      pt.y = event.clientY;
+      return pt.matrixTransform(board.getScreenCTM().inverse());
+    }
+
+    function nearestSlot(p) {
+      const angle = Math.atan2(p.y - CENTER, p.x - CENTER) + Math.PI / 2;
+      const raw = (angle / (Math.PI * 2)) * COUNT;
+      return wrap(Math.round(raw / step()) * step());
+    }
+
+    function startDrag(event, index) {
+      if (playing) return;
+      event.preventDefault();
+      const start = pointerToSvg(event);
+      let moved = false;
+      const token = tokens[index];
+      token.setPointerCapture(event.pointerId);
+
+      function onMove(e) {
+        const p = pointerToSvg(e);
+        if (!moved && Math.hypot(p.x - start.x, p.y - start.y) < 4) return;
+        moved = true;
+        displayOverride = [];
+        displayOverride[index] = p;
+        peopleLayer.appendChild(token);
+        drawPeople();
+      }
+
+      function onUp(e) {
+        token.removeEventListener("pointermove", onMove);
+        token.removeEventListener("pointerup", onUp);
+        token.removeEventListener("pointercancel", onUp);
+        displayOverride = null;
+
+        if (!moved) {
+          if (e.shiftKey || e.metaKey || e.ctrlKey) {
+            selected.has(index) ? selected.delete(index) : selected.add(index);
+          } else if (selected.size === 1 && selected.has(index)) {
+            selected.clear();
+          } else {
+            selected = new Set([index]);
+          }
+          drawPeople();
+          return;
+        }
+
+        const slot = nearestSlot(pointerToSvg(e));
+        const other = state.slots.findIndex((s, i) => i !== index && s === slot);
+        if (other >= 0) {
+          state.slots[other] = state.slots[index];
+          setStatus(`Swapped ${index + 1} and ${other + 1}`);
+        } else {
+          setStatus(`${index + 1} moved to spot ${formatSlot(slot)}`);
+        }
+        state.slots[index] = slot;
+        currentShot = -1;
+        save();
+        render();
+      }
+
+      token.addEventListener("pointermove", onMove);
+      token.addEventListener("pointerup", onUp);
+      token.addEventListener("pointercancel", onUp);
+    }
+
+    board.addEventListener("pointerdown", (event) => {
+      if (event.target.closest(".person")) return;
+      selected.clear();
+      drawPeople();
+    });
+
+    // ---------- shots ----------
+
+    function capture() {
+      state.shots.push({ slots: state.slots.slice(), radius: state.radius });
+      currentShot = state.shots.length - 1;
+      save();
+      renderShots();
+      setStatus(`Captured shot ${state.shots.length}`);
+    }
+
+    function renderShots() {
+      const list = document.getElementById("shotList");
+      list.replaceChildren();
+      state.shots.forEach((shot, i) => {
+        const li = document.createElement("li");
+        li.classList.toggle("current", i === currentShot);
+        const open = document.createElement("button");
+        open.type = "button";
+        open.textContent = `Shot ${i + 1}`;
+        open.addEventListener("click", () => goToShot(i));
+        const del = document.createElement("button");
+        del.type = "button";
+        del.textContent = "✕";
+        del.title = `Delete shot ${i + 1}`;
+        del.addEventListener("click", () => {
+          state.shots.splice(i, 1);
+          if (currentShot >= state.shots.length) currentShot = -1;
+          save();
+          renderShots();
+        });
+        li.append(open, del);
+        list.appendChild(li);
+      });
+      document.getElementById("playBtn").disabled = state.shots.length < 2;
+    }
+
+    function goToShot(i) {
+      const shot = state.shots[i];
+      currentShot = i;
+      renderShots();
+      return animateTo(shot.slots, shot.radius, 700);
+    }
+
+    async function play() {
+      if (playing) { playing = false; return; }
+      playing = true;
+      const btn = document.getElementById("playBtn");
+      btn.textContent = "■ Stop";
+      for (let i = 0; i < state.shots.length && playing; i += 1) {
+        await goToShot(i);
+        await new Promise((r) => setTimeout(r, 500));
+      }
+      playing = false;
+      btn.textContent = "▶ Play";
+    }
+
+    // ---------- controls ----------
+
+    function syncControls() {
+      document.querySelectorAll("#radiusButtons button").forEach((b) => {
+        b.classList.toggle("active", Number(b.dataset.radius) === state.radius);
+      });
+      halfSpotsToggle.checked = state.halfSpots;
+      namesToggle.checked = state.showNames;
+      colorToggle.checked = state.color;
+    }
+
+    function buildNames() {
+      const wrapEl = document.getElementById("names");
+      state.names.forEach((name, i) => {
+        const label = document.createElement("label");
+        label.textContent = `${i + 1}`;
+        const input = document.createElement("input");
+        input.value = name;
+        input.placeholder = "Name";
+        input.addEventListener("input", () => {
+          state.names[i] = input.value;
+          save();
+          drawPeople();
+        });
+        label.appendChild(input);
+        wrapEl.appendChild(label);
+      });
+    }
+
+    document.getElementById("cwBtn").addEventListener("click", () => rotate(1));
+    document.getElementById("ccwBtn").addEventListener("click", () => rotate(-1));
+    document.getElementById("selectOddBtn").addEventListener("click", () => {
+      selected = new Set(state.slots.map((_, i) => i).filter((i) => i % 2 === 0));
+      drawPeople();
+    });
+    document.getElementById("selectEvenBtn").addEventListener("click", () => {
+      selected = new Set(state.slots.map((_, i) => i).filter((i) => i % 2 === 1));
+      drawPeople();
+    });
+    document.getElementById("selectAllBtn").addEventListener("click", () => {
+      selected = new Set(state.slots.map((_, i) => i));
+      drawPeople();
+    });
+    document.getElementById("clearSelBtn").addEventListener("click", () => { selected.clear(); drawPeople(); });
+    document.getElementById("reverseBtn").addEventListener("click", mirror);
+    document.getElementById("resetBtn").addEventListener("click", reset);
+    document.getElementById("captureBtn").addEventListener("click", capture);
+    document.getElementById("playBtn").addEventListener("click", play);
+
+    document.querySelectorAll("#radiusButtons button").forEach((b) => {
+      b.addEventListener("click", () => animateTo(state.slots, Number(b.dataset.radius)));
+    });
+
+    halfSpotsToggle.addEventListener("change", () => {
+      state.halfSpots = halfSpotsToggle.checked;
+      if (!state.halfSpots) {
+        // Snap anyone on a half spot to a free whole spot.
+        const used = new Set(state.slots.filter(Number.isInteger));
+        state.slots = state.slots.map((s) => {
+          if (Number.isInteger(s)) return s;
+          for (const c of [Math.floor(s), wrap(Math.ceil(s))]) {
+            if (!used.has(c)) { used.add(c); return c; }
+          }
+          for (let k = 0; k < COUNT; k += 1) if (!used.has(k)) { used.add(k); return k; }
+          return s;
+        });
+      }
+      save();
+      render();
+    });
+    namesToggle.addEventListener("change", () => { state.showNames = namesToggle.checked; save(); drawPeople(); });
+    colorToggle.addEventListener("change", () => { state.color = colorToggle.checked; save(); drawPeople(); });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.target.closest("input, textarea")) return;
+      if (event.key === "ArrowRight") { event.preventDefault(); rotate(1); }
+      else if (event.key === "ArrowLeft") { event.preventDefault(); rotate(-1); }
+      else if (event.key === "Escape") { selected.clear(); drawPeople(); }
+    });
+
+    // ---------- export ----------
+
+    document.getElementById("jsonBtn").addEventListener("click", async () => {
+      const data = state.slots.map((slot, i) => {
+        const p = slotPoint(slot);
+        return {
+          person: i + 1,
+          name: state.names[i] || null,
+          spot: formatSlot(slot),
+          degreesFromNorth: (slot / COUNT) * 360,
+          x: Math.round(p.x - CENTER),
+          y: Math.round(CENTER - p.y),
+        };
+      });
+      try {
+        await navigator.clipboard.writeText(JSON.stringify({ radius: state.radius, people: data }, null, 2));
+        setStatus("Copied positions as JSON");
+      } catch (_) {
+        setStatus("Couldn't reach the clipboard");
+      }
+    });
+
+    document.getElementById("pngBtn").addEventListener("click", () => {
+      const clone = board.cloneNode(true);
+      clone.setAttribute("width", 1440);
+      clone.setAttribute("height", 1440);
+      // Inline the styles and colors so the exported image matches the screen.
+      const css = [...document.styleSheets[0].cssRules].map((r) => r.cssText).join("\n");
+      const vars = getComputedStyle(document.documentElement);
+      const resolved = css + "\n" + `svg{--blue:${vars.getPropertyValue("--blue")};--coral:${vars.getPropertyValue("--coral")};--paper:${vars.getPropertyValue("--paper")};--ink:${vars.getPropertyValue("--ink")};--muted:${vars.getPropertyValue("--muted")};--line:${vars.getPropertyValue("--line")};--guide:${vars.getPropertyValue("--guide")};}`;
+      const style = document.createElementNS(NS, "style");
+      style.textContent = resolved;
+      clone.insertBefore(style, clone.firstChild);
+      clone.querySelectorAll(".person").forEach((g) => g.classList.remove("selected"));
+
+      const blob = new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml" });
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = 1440;
+        canvas.height = 1440;
+        canvas.getContext("2d").drawImage(img, 0, 0, 1440, 1440);
+        URL.revokeObjectURL(url);
+        const a = document.createElement("a");
+        a.download = currentShot >= 0 ? `circle16-shot-${currentShot + 1}.png` : "circle16.png";
+        a.href = canvas.toDataURL("image/png");
+        a.click();
+        setStatus("Saved PNG");
+      };
+      img.src = url;
+    });
+
+    // ---------- start ----------
+
+    load();
+    buildBoard();
+    buildNames();
+    render();
+  </script>
+</body>
+</html>

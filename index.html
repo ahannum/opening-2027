@@ -6,8 +6,8 @@
   <title>Opening 2027</title>
   <style>
     :root {
-      --paper: #fbfaf7;
-      --surface: #f4f2ee;
+      --paper: #ffffff;
+      --surface: #ffffff;
       --panel: #ffffff;
       --ink: #1f2529;
       --muted: #697077;
@@ -36,7 +36,7 @@
     .app {
       height: 100vh;
       display: grid;
-      grid-template-columns: minmax(420px, 1fr) 336px;
+      grid-template-columns: minmax(420px, 1fr) 460px;
       gap: 18px;
       padding: 18px;
     }
@@ -62,11 +62,12 @@
     }
 
     .panel {
+      zoom: var(--panel-text-scale, 0.9);
       display: flex;
       flex-direction: column;
       gap: 12px;
       min-width: 0;
-      max-height: calc(100vh - 36px);
+      max-height: calc((100vh - 36px) / var(--panel-text-scale, 0.9));
       overflow-y: auto;
       padding-right: 4px;
       scrollbar-width: thin;
@@ -87,11 +88,11 @@
     }
 
     h1 {
-      font-size: 18px;
+      font-size: 27px;
     }
 
     h2 {
-      font-size: 13px;
+      font-size: 20px;
       color: var(--muted);
       font-weight: 700;
       text-transform: uppercase;
@@ -110,7 +111,7 @@
       background: #ffffff;
       color: var(--ink);
       font: inherit;
-      font-size: 13px;
+      font-size: 20px;
       line-height: 1;
       cursor: pointer;
       display: inline-flex;
@@ -129,6 +130,12 @@
       transform: translateY(1px);
     }
 
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.48;
+      transform: none;
+    }
+
     button.active {
       background: #e8f1f8;
       border-color: var(--blue);
@@ -136,8 +143,142 @@
       font-weight: 700;
     }
 
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.46;
+    }
+
+    .button-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .button-grid.compact {
+      gap: 6px;
+    }
+
+    .button-grid.compact button {
+      min-height: 34px;
+      padding: 0 6px;
+    }
+
+    .button-grid + .button-grid {
+      margin-top: 8px;
+    }
+
+    .mini-heading {
+      margin: 12px 0 -4px;
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
     .wide {
       grid-column: 1 / -1;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .scope-bar {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      padding: 12px 14px;
+    }
+
+    .scope-bar .button-grid {
+      margin-top: 10px;
+    }
+
+    .scope-bar .scope-label {
+      margin-top: 8px;
+      padding: 6px 10px;
+    }
+
+    .arrow-controls {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 6px 8px;
+      margin-top: 10px;
+    }
+
+    .arrow-controls-label {
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .segmented {
+      display: flex;
+      border: 1px solid #bfc5c9;
+    }
+
+    .segmented button {
+      flex: 1 1 0;
+      min-width: 0;
+      min-height: 32px;
+      padding: 0 4px;
+      border: 0;
+      border-left: 1px solid #bfc5c9;
+      font-size: 18px;
+    }
+
+    .segmented button:first-child {
+      border-left: 0;
+    }
+
+    .segmented button.active {
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .segmented button.active:hover {
+      color: #ffffff;
+    }
+
+    /* Step size only matters for straight moves, so soften it while arrows follow the circle. */
+    .arrow-controls.circle-mode .straight-step-btn.active {
+      background: #e8f1f8;
+      color: var(--blue-dark);
+    }
+
+    .arrow-hint {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .panel-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border: 1px solid #d8d3cb;
+      background: var(--panel);
+    }
+
+    .panel-tabs .panel-tab {
+      min-height: 36px;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .panel-tabs .panel-tab.active {
+      background: #ffffff;
+      border-bottom-color: var(--blue);
+      color: var(--blue-dark);
+    }
+
+    .tab-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .toggles {
@@ -151,7 +292,7 @@
       gap: 10px;
       min-height: 30px;
       color: var(--ink);
-      font-size: 14px;
+      font-size: 21px;
     }
 
     input[type="checkbox"] {
@@ -160,7 +301,8 @@
       accent-color: var(--blue);
     }
 
-    input[type="text"] {
+    input[type="text"],
+    input[type="number"] {
       width: 100%;
       min-height: 40px;
       border: 1px solid #bfc5c9;
@@ -168,11 +310,12 @@
       color: var(--ink);
       background: #ffffff;
       font: inherit;
-      font-size: 14px;
+      font-size: 21px;
       outline: none;
     }
 
-    input[type="text"]:focus {
+    input[type="text"]:focus,
+    input[type="number"]:focus {
       border-color: var(--blue);
       box-shadow: 0 0 0 3px rgba(35, 104, 162, 0.16);
     }
@@ -180,7 +323,7 @@
     .selected-label {
       min-height: 24px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 20px;
       line-height: 1.4;
       margin: 0 0 8px;
     }
@@ -189,7 +332,7 @@
       margin-top: auto;
       color: var(--muted);
       background: var(--surface);
-      font-size: 13px;
+      font-size: 20px;
       line-height: 1.4;
       min-height: 38px;
       padding: 10px 4px;
@@ -229,14 +372,43 @@
       stroke: #8e8880;
     }
 
+    .quarter-circle {
+      stroke: #c4beb5;
+      stroke-width: 1;
+      stroke-dasharray: 1 8;
+    }
+
     .slot-marker {
       fill: var(--coral);
       opacity: 0.48;
     }
 
-    .half-marker {
-      fill: #6f7478;
-      opacity: 0.28;
+    .slot-marker.tape-marker {
+      opacity: 0.62;
+    }
+
+    /* Halfway and quarter rings: still snap points, just quiet. */
+    .slot-marker.minor-marker {
+      opacity: 0.32;
+    }
+
+    .range-control {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4px 10px;
+      margin-top: 10px;
+      font-size: 20px;
+    }
+
+    .range-control input[type="range"] {
+      grid-column: 1 / -1;
+      width: 100%;
+      accent-color: var(--blue);
+    }
+
+    .range-control output {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
     }
 
     .center-dot {
@@ -247,6 +419,37 @@
       fill: #878178;
       font-size: 17px;
       text-anchor: middle;
+    }
+
+    .annotation-text {
+      fill: #2d3236;
+      font-size: 18px;
+      font-weight: 800;
+      dominant-baseline: hanging;
+      text-anchor: start;
+      paint-order: stroke;
+      stroke: var(--paper);
+      stroke-linejoin: round;
+      stroke-width: 6px;
+      pointer-events: none;
+    }
+
+    .annotation-subheading {
+      font-size: 15px;
+      font-weight: 500;
+      dominant-baseline: hanging;
+    }
+
+    .annotation-controls {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .story-controls {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0 2px;
     }
 
     .piece {
@@ -311,14 +514,14 @@
     .section-help {
       margin: 9px 0 0;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 18px;
       line-height: 1.4;
     }
 
     .intro {
       margin: 7px 0 0;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 20px;
       line-height: 1.45;
     }
 
@@ -337,7 +540,7 @@
       border-radius: 50%;
       color: #ffffff;
       background: var(--blue);
-      font-size: 12px;
+      font-size: 18px;
       font-weight: 800;
     }
 
@@ -347,7 +550,7 @@
       border-left: 4px solid var(--blue);
       background: #edf4f9;
       color: var(--blue-dark);
-      font-size: 13px;
+      font-size: 20px;
       font-weight: 750;
     }
 
@@ -357,8 +560,46 @@
       border: 1px solid #d8d3cb;
       background: #f8f7f4;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 18px;
       line-height: 1.4;
+    }
+
+    .folder-status a {
+      color: var(--blue-dark);
+      font-weight: 700;
+    }
+
+    .drive-dialog {
+      width: min(420px, calc(100vw - 32px));
+      border: 1px solid #d8d3cb;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .drive-dialog::backdrop {
+      background: rgba(31, 37, 41, 0.35);
+    }
+
+    .drive-file-list {
+      list-style: none;
+      margin: 12px 0;
+      padding: 0;
+      display: grid;
+      gap: 6px;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+
+    .drive-file-list button {
+      width: 100%;
+      justify-content: space-between;
+      padding: 0 12px;
+      font-weight: 700;
+    }
+
+    .drive-file-list small {
+      color: var(--muted);
+      font-weight: 400;
     }
 
     .folder-status.ready {
@@ -375,7 +616,7 @@
       padding: 14px;
       cursor: pointer;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 20px;
       font-weight: 750;
       text-transform: uppercase;
       list-style-position: inside;
@@ -441,7 +682,7 @@
     .shot-title {
       margin: 5px 0;
       color: var(--muted);
-      font-size: 11px;
+      font-size: 16px;
       text-align: center;
     }
 
@@ -454,13 +695,71 @@
     .shot-actions button {
       min-height: 26px;
       padding: 0;
-      font-size: 12px;
+      font-size: 18px;
+    }
+
+    .gif-settings {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 8px 10px;
+      margin-top: 12px;
+      font-size: 20px;
+    }
+
+    .gif-settings > label {
+      min-height: 0;
+      font-size: 20px;
+    }
+
+    .gif-settings select {
+      min-height: 34px;
+      border: 1px solid #bfc5c9;
+      background: #ffffff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 20px;
+      padding: 0 8px;
+    }
+
+    .unit-input {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .gif-settings .unit-input input {
+      min-height: 34px;
+      padding: 4px 8px;
+      font-size: 20px;
+    }
+
+    .gif-settings .gif-loop {
+      grid-column: 1 / -1;
+    }
+
+    .shot-hold {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      min-height: 0;
+      margin: 0 0 5px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .shot-hold input[type="number"] {
+      min-height: 24px;
+      padding: 2px 4px;
+      font-size: 16px;
     }
 
     .empty-shots {
       margin: 0;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 18px;
     }
 
     .piece .outline {
@@ -482,7 +781,7 @@
 
     .piece text {
       fill: #101416;
-      font-size: 16px;
+      font-size: 30px;
       font-weight: 750;
       dominant-baseline: central;
       text-anchor: middle;
@@ -531,8 +830,14 @@
         padding-right: 4px;
       }
 
-      .status {
+      .status,
+      .scope-bar,
+      .panel-tabs {
         grid-column: 1 / -1;
+      }
+
+      .tab-panel {
+        display: contents;
       }
     }
 
@@ -558,6 +863,10 @@
       <svg id="board" viewBox="0 0 720 720" role="img" aria-label="Opening 2027 couple circle">
         <g id="guides"></g>
         <g id="pieces"></g>
+        <g id="annotations">
+          <text id="annotationTitle" x="22" y="22" class="annotation-text"></text>
+          <text id="annotationSubheading" x="22" y="48" class="annotation-text annotation-subheading"></text>
+        </g>
       </svg>
     </section>
 
@@ -565,36 +874,71 @@
       <section class="panel-section">
         <h1>Opening 2027 Planner</h1>
         <p class="intro">Build one formation at a time. Work down the numbered steps, then capture each finished formation as a shot.</p>
-        <div class="button-grid">
+        <div class="annotation-controls">
+          <input id="annotationTitleInput" type="text" maxlength="80" placeholder="Top-left title" aria-label="Top-left annotation title">
+          <input id="annotationSubheadingInput" type="text" maxlength="80" placeholder="Top-left subheading" aria-label="Top-left annotation subheading">
+        </div>
+        <div class="button-grid three">
           <button id="resetBtn" type="button" title="Return to the starting circle">Start Over</button>
-          <button id="stopBtn" type="button" title="Stop any movement">Stop Movement</button>
+          <button id="stopBtn" type="button" title="Stop any movement">Stop</button>
+          <button id="undoBtn" type="button" title="Undo the previous movement (⌘Z / Ctrl-Z)" disabled>Undo</button>
         </div>
       </section>
 
-      <section class="panel-section">
-        <div class="step-heading"><span class="step-number">1</span><h2>Set up the dancers</h2></div>
-        <div class="button-grid">
-          <button id="joinAllBtn" type="button" title="Show each couple as one token">Joined Couples</button>
-          <button id="splitAllBtn" type="button" title="Separate every lead and follow">Split Leads/Follows</button>
-        </div>
-        <p class="section-help">Use joined couples for simple planning, or split them when leads and follows need different paths.</p>
-      </section>
-
-      <section class="panel-section">
-        <div class="step-heading"><span class="step-number">2</span><h2>Choose who moves</h2></div>
-        <div class="button-grid" role="group" aria-label="Movement scope">
+      <section class="panel-section scope-bar">
+        <div class="step-heading"><span class="step-number">1</span><h2>Who moves</h2></div>
+        <div class="button-grid three compact" role="group" aria-label="Movement scope">
           <button id="scopeAllBtn" class="scope-btn" type="button">Everyone</button>
-          <button id="selectLeadsBtn" class="scope-btn" type="button">All Leads</button>
-          <button id="selectFollowsBtn" class="scope-btn" type="button">All Follows</button>
-          <button id="clearSelectionBtn" class="scope-btn" type="button">Pick on Board</button>
+          <button id="selectLeadsBtn" class="scope-btn" type="button">Leads</button>
+          <button id="selectFollowsBtn" class="scope-btn" type="button">Follows</button>
+          <button id="selectOddBtn" class="scope-btn" type="button">Odd</button>
+          <button id="selectEvenBtn" class="scope-btn" type="button">Even</button>
+          <button id="clearSelectionBtn" class="scope-btn" type="button" title="Click dancers on the board to build a custom group">Pick…</button>
         </div>
         <p id="scopeLabel" class="scope-label">Moving: everyone</p>
-        <p class="section-help">For a custom group, choose Pick on Board, then click dancers. Shift-click adds or removes dancers.</p>
+        <div class="arrow-controls">
+          <span class="arrow-controls-label">Arrows</span>
+          <div class="segmented" role="group" aria-label="Arrow-key movement mode">
+            <button class="movement-mode-btn" data-movement-mode="circle" type="button" title="Arrows follow the circle (M to switch)">◯ Circle</button>
+            <button class="movement-mode-btn" data-movement-mode="straight" type="button" title="Arrows move north/south/east/west (M to switch)">✛ Straight</button>
+          </div>
+          <span class="arrow-controls-label">Step</span>
+          <div class="segmented" role="group" aria-label="Straight movement distance">
+            <button class="straight-step-btn" data-straight-step="short" type="button" title="Quarter of the outer tape radius (H to cycle)">Short</button>
+            <button class="straight-step-btn" data-straight-step="halfTape" type="button" title="Half the outer tape radius (H to cycle)">½ Tape</button>
+            <button class="straight-step-btn" data-straight-step="fullTape" type="button" title="The full outer tape radius (H to cycle)">Full Tape</button>
+          </div>
+          <span class="arrow-controls-label">In/Out</span>
+          <div class="segmented" role="group" aria-label="Move In/Out ring size">
+            <button class="ring-step-btn" data-ring-step="half" type="button" title="Move In/Out jumps tape → ½ → tape (Q to switch)">½ Ring</button>
+            <button class="ring-step-btn" data-ring-step="quarter" type="button" title="Move In/Out also stops on the ¼ and ¾ rings between the tapes (Q to switch)">¼ Ring</button>
+          </div>
+          <input id="quarterRingsToggle" type="checkbox" checked hidden>
+          <span class="arrow-controls-label">Snap</span>
+          <div class="segmented" role="group" aria-label="Snapping">
+            <button class="snap-btn" data-snap="on" type="button" title="Dancers click onto the nearest dot when you let go (F to switch)">Snap to dots</button>
+            <button class="snap-btn" data-snap="off" type="button" title="Dancers stay exactly where you drop them (F to switch)">Free</button>
+          </div>
+          <span class="arrow-controls-label">Couples</span>
+          <div class="segmented" role="group" aria-label="Couples">
+            <button id="joinAllBtn" class="couple-btn" type="button" title="Show each couple as one token (P to switch)">Together</button>
+            <button id="splitAllBtn" class="couple-btn" type="button" title="Separate every lead and follow (P to switch)">Split</button>
+          </div>
+          <input id="snapToggle" type="checkbox" checked hidden>
+        </div>
+        <p class="arrow-hint">Keys: M arrows · H step · Q in/out ring · F snap · P couples · Shift+arrows or WASD always go straight</p>
       </section>
 
+      <nav class="panel-tabs" role="tablist" aria-label="Planner sections">
+        <button class="panel-tab" role="tab" data-tab="plan" type="button">Formation</button>
+        <button class="panel-tab" role="tab" data-tab="shots" type="button">Storyboard</button>
+        <button class="panel-tab" role="tab" data-tab="more" type="button">More</button>
+      </nav>
+
+      <div class="tab-panel" data-tab-panel="plan" role="tabpanel">
       <section class="panel-section">
-        <div class="step-heading"><span class="step-number">3</span><h2>Choose a formation</h2></div>
-        <div class="button-grid">
+        <div class="step-heading"><span class="step-number">2</span><h2>Choose a formation</h2></div>
+        <div class="button-grid three compact">
           <button id="outerFormationBtn" type="button">Outer Circle</button>
           <button id="innerFormationBtn" type="button">Inner Circle</button>
           <button id="squareFormationBtn" type="button">Square</button>
@@ -604,52 +948,120 @@
           <button id="crossFormationBtn" type="button">Cross</button>
           <button id="pyramidFormationBtn" type="button">Pyramid</button>
         </div>
-        <p class="section-help">Only the group shown above moves. Choose another group and formation to layer shapes.</p>
-      </section>
-
-      <section class="panel-section">
-        <div class="step-heading"><span class="step-number">4</span><h2>Fine-tune positions</h2></div>
-        <div class="button-grid">
-          <button id="ccwBtn" type="button">Rotate ↺</button>
-          <button id="cwBtn" type="button">Rotate ↻</button>
-          <button id="stepInBtn" type="button">Move In</button>
-          <button id="stepOutBtn" type="button">Move Out</button>
-          <button id="halfCcwBtn" type="button">Half-step ↺</button>
-          <button id="halfCwBtn" type="button">Half-step ↻</button>
-          <button id="advanceLinesBtn" class="wide" type="button">Advance Two Lines</button>
+        <div class="button-grid compact">
+          <button id="unfurlingPyramidBtn" class="wide" type="button" title="Replace the storyboard with the 8 Unfurling Pyramid shots">Load Unfurling Pyramid Story</button>
         </div>
-        <p class="section-help">Drag dancers directly, or use these controls for even spacing. Arrow keys also move the chosen group.</p>
+        <p class="section-help">Only the group above moves. Choose another group and formation to layer shapes; set Couples to Split when leads and follows need different paths.</p>
       </section>
 
       <section class="panel-section">
-        <div class="step-heading"><span class="step-number">5</span><h2>Capture the formation</h2></div>
+        <div class="step-heading"><span class="step-number">3</span><h2>Fine-tune positions</h2></div>
+        <h3 class="mini-heading">Around the circle</h3>
+        <div class="button-grid three compact">
+          <button id="ccwBtn" type="button" title="Rotate counterclockwise one full step">↺ Rotate</button>
+          <button id="stepInBtn" type="button" title="Move one ring inward (↑)">Move In</button>
+          <button id="cwBtn" type="button" title="Rotate clockwise one full step">Rotate ↻</button>
+          <button id="halfCcwBtn" type="button" title="Rotate counterclockwise a half step (←)">↺ Half</button>
+          <button id="stepOutBtn" type="button" title="Move one ring outward (↓)">Move Out</button>
+          <button id="halfCwBtn" type="button" title="Rotate clockwise a half step (→)">Half ↻</button>
+        </div>
+        <h3 class="mini-heading">Lines &amp; spacing</h3>
+        <div class="button-grid compact">
+          <button id="advanceLinesBtn" class="wide" type="button">Advance Two Lines</button>
+          <button id="alignRowBtn" type="button">Align Row</button>
+          <button id="alignColumnBtn" type="button">Align Column</button>
+          <button id="distributeHorizontalBtn" type="button">Space ↔</button>
+          <button id="distributeVerticalBtn" type="button">Space ↕</button>
+        </div>
+        <p class="section-help">Drag dancers directly, or use the keyboard: ← → rotate, ↑ ↓ change rings, Shift+arrows or WASD move straight.</p>
+      </section>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="shots" role="tabpanel" hidden>
+      <section class="panel-section">
+        <div class="step-heading"><span class="step-number">4</span><h2>Capture the formation</h2></div>
+        <div class="story-controls">
+          <input id="storyNameInput" type="text" maxlength="80" value="Opening 2027 Story" placeholder="Story name" aria-label="Story name">
+        </div>
         <div class="button-grid">
           <button id="captureShotBtn" class="primary-action wide" type="button">+ Add Screenshot</button>
-          <button id="chooseShotFolderBtn" class="wide" type="button">Choose Screenshot Folder</button>
-          <button id="previousShotBtn" type="button" title="Show previous shot">Previous</button>
-          <button id="nextShotBtn" type="button" title="Show next shot">Next</button>
-          <button id="playShotsBtn" type="button" title="Play shots as stop motion">Play Shots</button>
+          <button id="updateShotBtn" class="wide" type="button" disabled>Update Selected Shot</button>
+        </div>
+        <div id="shotStrip" class="shot-strip" aria-label="Formation screenshots"></div>
+        <div class="button-grid compact" style="grid-template-columns: repeat(4, minmax(0, 1fr))">
+          <button id="previousShotBtn" type="button" title="Show previous shot">◀ Prev</button>
+          <button id="nextShotBtn" type="button" title="Show next shot">Next ▶</button>
+          <button id="playShotsBtn" type="button" title="Play shots as stop motion">Play</button>
           <button id="stopShotsBtn" type="button" title="Stop shot playback">Stop</button>
         </div>
-        <p id="folderStatus" class="folder-status">Screenshots stay in the storyboard. Choose a folder to also save PNG files.</p>
-        <div id="shotStrip" class="shot-strip" aria-label="Formation screenshots"></div>
-        <p class="section-help">Each screenshot remembers the exact formation. Reorder shots with their arrow buttons, then step through or play them.</p>
+        <p class="section-help">To edit a shot: click its picture, change the formation, then press Update Selected Shot. Reorder shots with their arrow buttons. Type a time under a shot to hold it longer or shorter.</p>
       </section>
 
+      <section class="panel-section">
+        <div class="step-heading"><h2>GIF &amp; playback timing</h2></div>
+        <div class="gif-settings">
+          <label for="gifSizeInput">Size</label>
+          <select id="gifSizeInput">
+            <option value="360">Small · 360 px</option>
+            <option value="480" selected>Medium · 480 px</option>
+            <option value="720">Large · 720 px</option>
+            <option value="1080">HD · 1080 px</option>
+          </select>
+          <label for="gifTimingInput">Each frame</label>
+          <span class="unit-input"><input id="gifTimingInput" type="number" min="100" max="10000" step="100" value="900"><span>ms</span></span>
+          <label for="gifEndHoldInput">Extra on last</label>
+          <span class="unit-input"><input id="gifEndHoldInput" type="number" min="0" max="10000" step="100" value="0"><span>ms</span></span>
+          <label class="gif-loop"><input id="gifLoopInput" type="checkbox" checked> Loop forever</label>
+        </div>
+        <p id="gifSummary" class="section-help"></p>
+      </section>
+
+      <section class="panel-section">
+        <div class="step-heading"><h2>Google Drive</h2></div>
+        <div class="button-grid compact">
+          <button id="driveSaveBtn" class="primary-action" type="button" title="Save the storyboard file, PNG frames, and GIF to Google Drive">Save to Drive</button>
+          <button id="driveOpenBtn" type="button" title="Open a storyboard saved in Google Drive">Open from Drive</button>
+        </div>
+        <p id="driveStatus" class="folder-status">Saves to “Opening 2027 Storyboards / your story name” in your Google Drive. You'll sign in with Google the first time.</p>
+      </section>
+
+      <section class="panel-section">
+        <div class="step-heading"><h2>This computer</h2></div>
+        <div class="button-grid compact">
+          <button id="chooseShotFolderBtn" class="wide" type="button" title="Pick the folder on this computer where story files are saved">Choose Save Folder…</button>
+          <button id="saveStoryFolderBtn" class="wide" type="button">Save Named Story Folder</button>
+          <button id="exportGifBtn" class="wide" type="button">Save Animated GIF</button>
+          <button id="saveStoryboardBtn" type="button">Save Storyboard</button>
+          <button id="openStoryboardBtn" type="button">Open Storyboard</button>
+          <input id="openStoryboardInput" type="file" accept=".json,application/json" hidden>
+        </div>
+        <p id="folderStatus" class="folder-status">Choose any folder on this computer (Chrome or Edge). The planner organizes files in Storyboard / your story name. Other browsers save to Downloads.</p>
+      </section>
+
+      <dialog id="driveDialog" class="drive-dialog">
+        <form method="dialog">
+          <h2>Open from Google Drive</h2>
+          <ul id="driveFileList" class="drive-file-list"></ul>
+          <div class="button-grid compact">
+            <button id="driveBrowseBtn" type="button" hidden>Browse Drive…</button>
+            <button value="cancel" type="submit">Cancel</button>
+          </div>
+        </form>
+      </dialog>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="more" role="tabpanel" hidden>
       <details class="panel-section">
         <summary>Advanced movement &amp; snapping</summary>
         <div class="details-content">
           <div class="toggles">
-            <label><input id="snapToggle" type="checkbox" checked> Snap to lock points</label>
             <label><input id="innerLockToggle" type="checkbox" checked> Use inner lock points</label>
             <label><input id="ringToggle" type="checkbox"> Drag along locked rings</label>
           </div>
-          <div class="button-grid" role="group" aria-label="Arrow-key movement mode">
-            <button class="movement-mode-btn" data-movement-mode="circle" type="button">Arrows: Circles</button>
-            <button class="movement-mode-btn" data-movement-mode="straight" type="button">Arrows: Straight</button>
+          <div class="button-grid">
             <button id="shuffleBtn" class="wide" type="button">Shuffle</button>
           </div>
-          <p class="section-help">Press M to switch arrow modes. WASD always moves in a straight line.</p>
+          <p class="section-help">Arrow mode and step size are at the top of the panel. Short is a quarter of the outer tape radius, Half is half, Full is the whole radius.</p>
         </div>
       </details>
 
@@ -658,9 +1070,11 @@
         <div class="details-content">
         <div class="button-grid">
           <button id="selectAllBtn" type="button">Select Every Token</button>
+          <button id="unselectActiveBtn" type="button">Unselect Active</button>
           <button id="splitSelectedBtn" type="button" title="Split selected">Split Selected</button>
           <button id="joinSelectedBtn" type="button" title="Join selected">Join Selected</button>
         </div>
+        <p class="section-help">For a custom group, choose Pick… Click a selected dancer again to remove it; Shift/Command/Control-click toggles dancers, and Escape clears the selection.</p>
         </div>
       </details>
 
@@ -672,7 +1086,20 @@
           <button class="display-btn" data-display="leadFollow" type="button" title="Show lead and follow halves">Lead/Follow</button>
           <button class="display-btn" data-display="partner" type="button" title="Show as one combined partner">Partner</button>
         </div>
-        <h2>Group Color</h2>
+        <h2>Panel Text</h2>
+        <label class="range-control" for="panelTextSizeInput">
+          Side panel text size
+          <output id="panelTextSizeValue" for="panelTextSizeInput">90%</output>
+          <input id="panelTextSizeInput" type="range" min="0.7" max="1.1" step="0.05" value="0.9">
+        </label>
+        <h2 style="margin-top: 14px">Floor Dots</h2>
+        <label class="range-control" for="tapeDotSizeInput">
+          Outer &amp; inner circle dot size
+          <output id="tapeDotSizeValue" for="tapeDotSizeInput">2.5×</output>
+          <input id="tapeDotSizeInput" type="range" min="1" max="4" step="0.25" value="2.5">
+        </label>
+        <p class="section-help">Halfway and quarter-ring dots stay tiny so the taped circles stand out. Half-step points aren't drawn, but dancers still snap to them.</p>
+        <h2 style="margin-top: 14px">Group Color</h2>
         <div class="swatch-grid" role="group" aria-label="Color selected couples">
           <button class="swatch-btn" data-color="neutral" type="button" title="Neutral gray" aria-label="Neutral gray" style="--swatch:#d9d9d8"></button>
           <button class="swatch-btn" data-color="amber" type="button" title="Amber group" aria-label="Amber group" style="--swatch:#f2bd72"></button>
@@ -713,10 +1140,12 @@
         <input id="nameInput" type="text" placeholder="Couple name">
         <div class="button-grid">
           <button id="renameBtn" class="wide" type="button" title="Rename selected">Rename Selected</button>
+          <button id="copyImageBtn" class="wide" type="button" title="Copy the board as a transparent PNG (⌘C)">Copy Image</button>
           <button id="copyBtn" class="wide" type="button" title="Copy positions">Copy Positions</button>
         </div>
         </div>
       </details>
+      </div>
 
       <p id="status" class="status">Ready</p>
     </aside>
@@ -733,17 +1162,38 @@
     const CENTER_RING_RADIUS = 70;
     const SQUARE_MIN = CENTER.x - OUTER_RADIUS;
     const SQUARE_MAX = CENTER.x + OUTER_RADIUS;
-    const PIECE_RADIUS = 19;
+    const PIECE_RADIUS = 23;
     const SPLIT_OFFSET = 29;
     const MAX_MOVE_DISTANCE = OUTER_RADIUS * Math.sin(Math.PI / COUPLE_COUNT);
-    const STRAIGHT_STEP = OUTER_RADIUS / 4;
+    const STRAIGHT_STEPS = {
+      short: OUTER_RADIUS / 4,
+      halfTape: OUTER_RADIUS / 2,
+      fullTape: OUTER_RADIUS,
+    };
+    const STRAIGHT_STEP_LABELS = {
+      short: "short step",
+      halfTape: "half-tape step",
+      fullTape: "full-tape step",
+    };
     const TAU = Math.PI * 2;
     const RING_RADII = {
       outer: OUTER_RADIUS,
+      quarter: (OUTER_RADIUS + MIDDLE_RADIUS) / 2,
       middle: MIDDLE_RADIUS,
+      threeQuarter: (MIDDLE_RADIUS + INNER_RADIUS) / 2,
       inner: INNER_RADIUS,
       center: CENTER_RING_RADIUS,
     };
+    // Rings are named by how far they sit between the outer tape and the inner tape.
+    const RING_LABELS = {
+      outer: "outer tape",
+      quarter: "¼ ring",
+      middle: "½ ring",
+      threeQuarter: "¾ ring",
+      inner: "inner tape",
+      center: "center ring",
+    };
+    const QUARTER_RINGS = ["quarter", "threeQuarter"];
     const GROUP_COLORS = {
       neutral: "#d9d9d8",
       amber: "#f2bd72",
@@ -751,7 +1201,19 @@
       green: "#9bcf85",
       rose: "#ee9694",
     };
+    // Base rings, also used to lay out the cross formation's arms.
     const RADIAL_RING_ORDER = ["outer", "middle", "inner", "center"];
+    const RADIAL_RING_ORDER_WITH_QUARTERS = ["outer", "quarter", "middle", "threeQuarter", "inner", "center"];
+    // The outer and inner rings are the taped circles on the floor, so their dots get their own size.
+    const TAPE_RINGS = ["outer", "inner"];
+    const DEFAULT_TAPE_DOT_SCALE = 2.5;
+    // Shot PNGs render at 2x the board size so numbers stay crisp in exports and Drive.
+    const SHOT_PNG_SIZE = 1440;
+    let tapeDotScale = DEFAULT_TAPE_DOT_SCALE;
+    try {
+      const savedScale = Number(localStorage.getItem("opening2027.tapeDotScale"));
+      if (savedScale >= 1 && savedScale <= 4) tapeDotScale = savedScale;
+    } catch {}
 
     const svg = document.querySelector("#board");
     const guides = document.querySelector("#guides");
@@ -759,17 +1221,36 @@
     const statusEl = document.querySelector("#status");
     const selectedLabel = document.querySelector("#selectedLabel");
     const nameInput = document.querySelector("#nameInput");
+    const annotationTitleInput = document.querySelector("#annotationTitleInput");
+    const annotationSubheadingInput = document.querySelector("#annotationSubheadingInput");
+    const annotationTitle = document.querySelector("#annotationTitle");
+    const annotationSubheading = document.querySelector("#annotationSubheading");
     const snapToggle = document.querySelector("#snapToggle");
+    const snapButtons = [...document.querySelectorAll(".snap-btn")];
+    const joinAllBtn = document.querySelector("#joinAllBtn");
+    const splitAllBtn = document.querySelector("#splitAllBtn");
     const innerLockToggle = document.querySelector("#innerLockToggle");
+    const quarterRingsToggle = document.querySelector("#quarterRingsToggle");
+    const ringStepButtons = [...document.querySelectorAll(".ring-step-btn")];
     const ringToggle = document.querySelector("#ringToggle");
     const facingButtons = [...document.querySelectorAll(".facing-btn")];
     const displayButtons = [...document.querySelectorAll(".display-btn")];
     const colorButtons = [...document.querySelectorAll(".swatch-btn")];
     const movementModeButtons = [...document.querySelectorAll(".movement-mode-btn")];
+    const straightStepButtons = [...document.querySelectorAll(".straight-step-btn")];
     const scopeButtons = [...document.querySelectorAll(".scope-btn")];
     const scopeLabel = document.querySelector("#scopeLabel");
     const folderStatus = document.querySelector("#folderStatus");
     const chooseShotFolderBtn = document.querySelector("#chooseShotFolderBtn");
+    const storyNameInput = document.querySelector("#storyNameInput");
+    const gifTimingInput = document.querySelector("#gifTimingInput");
+    const gifEndHoldInput = document.querySelector("#gifEndHoldInput");
+    const gifSizeInput = document.querySelector("#gifSizeInput");
+    const gifLoopInput = document.querySelector("#gifLoopInput");
+    const gifSummary = document.querySelector("#gifSummary");
+    const updateShotBtn = document.querySelector("#updateShotBtn");
+    const undoBtn = document.querySelector("#undoBtn");
+    const openStoryboardInput = document.querySelector("#openStoryboardInput");
     const shotStrip = document.querySelector("#shotStrip");
 
     const tokens = [];
@@ -778,24 +1259,55 @@
     let selectedToken = null;
     let dragState = null;
     let animationFrame = null;
+    let activeMotions = null;
+    const queuedKeyMoves = [];
+    const MAX_QUEUED_KEY_MOVES = 3;
     let defaultFacingMode = "out";
     let defaultCoupleDisplayMode = "leadFollow";
     let defaultGroupColor = "neutral";
     let movementMode = "circle";
+    let straightStepMode = "short";
     let savedCustomFormation = null;
     let customPathSteps = [];
     let twoLineState = null;
     let storyboardShots = [];
     let activeShotIndex = -1;
     let storyboardTimer = null;
+    let storyParentFolderHandle = null;
     let shotFolderHandle = null;
     let downloadFallbackEnabled = false;
     let manualSelectionMode = false;
+    const undoStack = [];
 
     function svgElement(name, attrs = {}) {
       const el = document.createElementNS("http://www.w3.org/2000/svg", name);
       Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
       return el;
+    }
+
+    function updateAnnotation() {
+      annotationTitle.textContent = annotationTitleInput.value;
+      annotationSubheading.textContent = annotationSubheadingInput.value;
+      fitAnnotationLine(annotationTitle, 18, 12);
+      fitAnnotationLine(annotationSubheading, 15, 10);
+    }
+
+    function fitAnnotationLine(element, baseSize, minimumSize) {
+      element.style.fontSize = `${baseSize}px`;
+      const availableWidth = SIZE - 44;
+      const measuredWidth = element.getComputedTextLength();
+      if (measuredWidth > availableWidth) {
+        element.style.fontSize = `${Math.max(minimumSize, baseSize * availableWidth / measuredWidth)}px`;
+      }
+    }
+
+    function applySnapshotAnnotation(snapshot) {
+      const annotation = snapshot?.annotation;
+      annotationTitleInput.value = typeof annotation?.title === "string"
+        ? annotation.title
+        : typeof annotation?.text === "string" ? annotation.text : "";
+      annotationSubheadingInput.value = typeof annotation?.subtitle === "string" ? annotation.subtitle : "";
+      updateAnnotation();
     }
 
     function stepAngle(step) {
@@ -857,6 +1369,12 @@
           r: MIDDLE_RADIUS,
           class: "guide-circle middle-circle",
         }),
+        ...(quarterRingsToggle.checked ? QUARTER_RINGS.map((ring) => svgElement("circle", {
+          cx: CENTER.x,
+          cy: CENTER.y,
+          r: RING_RADII[ring],
+          class: "guide-circle quarter-circle",
+        })) : []),
         svgElement("circle", {
           cx: CENTER.x,
           cy: CENTER.y,
@@ -907,14 +1425,18 @@
           );
         }
 
-        RADIAL_RING_ORDER.forEach((ring) => {
+        // Half-step lock points still work; they just aren't drawn.
+        if (!isMain) continue;
+
+        radialRingOrder().forEach((ring) => {
           const point = stepPosition(step, ring);
+          const isTapeRing = TAPE_RINGS.includes(ring);
           guides.append(
             svgElement("circle", {
               cx: point.x,
               cy: point.y,
-              r: isMain ? 3 : 2,
-              class: isMain ? "slot-marker" : "half-marker",
+              r: isTapeRing ? 3 * tapeDotScale : 1.5,
+              class: `slot-marker${isTapeRing ? " tape-marker" : " minor-marker"}`,
             })
           );
         });
@@ -1145,6 +1667,29 @@
       refreshSelection();
     }
 
+    function unselectToken(token, announce = true) {
+      if (!token || !selectedTokens.has(token)) {
+        if (announce) setStatus("Choose a selected dancer to remove");
+        return;
+      }
+
+      selectedTokens.delete(token);
+      if (selectedToken === token) {
+        selectedToken = selectedTokens.values().next().value || null;
+      }
+      manualSelectionMode = true;
+      refreshSelection();
+      if (announce) {
+        setStatus(selectedTokens.size
+          ? `Removed ${displayLabel(token)}; ${selectedTokens.size} dancer${selectedTokens.size === 1 ? "" : "s"} still selected`
+          : "Selection cleared");
+      }
+    }
+
+    function unselectActiveToken() {
+      unselectToken(selectedToken);
+    }
+
     function selectAllTokens() {
       manualSelectionMode = true;
       selectedTokens.clear();
@@ -1164,6 +1709,17 @@
       setStatus(roleTokens.length
         ? `Selected all ${roleTokens.length} ${role === "lead" ? "leads" : "follows"}`
         : `Split partner pairs first to select ${role === "lead" ? "leads" : "follows"}`);
+    }
+
+    function selectParity(parity) {
+      manualSelectionMode = false;
+      const remainder = parity === "even" ? 0 : 1;
+      const parityTokens = tokens.filter((token) => token.number % 2 === remainder);
+      selectedTokens.clear();
+      parityTokens.forEach((token) => selectedTokens.add(token));
+      selectedToken = parityTokens[0] || null;
+      refreshSelection();
+      setStatus(`Selected all ${parity} numbered couples`);
     }
 
     function clearSelection() {
@@ -1202,12 +1758,15 @@
       refreshFacingButtons();
       refreshDisplayButtons();
       refreshColorButtons();
+      refreshCoupleButtons();
       refreshPlanningScope();
     }
 
     function refreshPlanningScope() {
       const selected = [...selectedTokens].filter((token) => tokens.includes(token));
       const roles = new Set(selected.map((token) => token.role));
+      const oddTokens = tokens.filter((token) => token.number % 2 === 1);
+      const evenTokens = tokens.filter((token) => token.number % 2 === 0);
       let label = "Moving: everyone";
       let activeId = "scopeAllBtn";
 
@@ -1220,6 +1779,12 @@
       } else if (selected.length && roles.size === 1 && roles.has("follow") && selected.length === tokens.filter((token) => token.role === "follow").length) {
         label = `Moving: all ${selected.length} follows`;
         activeId = "selectFollowsBtn";
+      } else if (selected.length === oddTokens.length && selected.every((token) => token.number % 2 === 1)) {
+        label = "Moving: odd-numbered couples";
+        activeId = "selectOddBtn";
+      } else if (selected.length === evenTokens.length && selected.every((token) => token.number % 2 === 0)) {
+        label = "Moving: even-numbered couples";
+        activeId = "selectEvenBtn";
       } else if (selected.length) {
         label = `Moving: ${selected.length} selected dancer${selected.length === 1 ? "" : "s"}`;
         activeId = "clearSelectionBtn";
@@ -1277,6 +1842,71 @@
         button.classList.toggle("active", isActive);
         button.setAttribute("aria-pressed", String(isActive));
       });
+      document.querySelector(".arrow-controls")?.classList.toggle("circle-mode", movementMode === "circle");
+    }
+
+    function setStraightStepMode(mode) {
+      if (!STRAIGHT_STEPS[mode]) return;
+      straightStepMode = mode;
+      refreshStraightStepButtons();
+      setStatus(`Straight movement uses a ${STRAIGHT_STEP_LABELS[mode]}`);
+    }
+
+    function refreshStraightStepButtons() {
+      straightStepButtons.forEach((button) => {
+        const isActive = button.dataset.straightStep === straightStepMode;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+    }
+
+    function setQuarterRings(on) {
+      quarterRingsToggle.checked = on;
+      refreshRingStepButtons();
+      drawGuides();
+      setStatus(on
+        ? "¼ Ring: Move In/Out also stops on the ¼ and ¾ rings"
+        : "½ Ring: Move In/Out jumps between the tapes and the ½ ring");
+    }
+
+    function refreshRingStepButtons() {
+      ringStepButtons.forEach((button) => {
+        const isActive = (button.dataset.ringStep === "quarter") === quarterRingsToggle.checked;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+    }
+
+    function setSnapping(on) {
+      snapToggle.checked = on;
+      refreshSnapButtons();
+      setStatus(on ? "Snap to dots: dancers click onto the nearest dot" : "Free: dancers stay exactly where you drop them");
+    }
+
+    function refreshSnapButtons() {
+      snapButtons.forEach((button) => {
+        const isActive = (button.dataset.snap === "on") === snapToggle.checked;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+    }
+
+    // Lights up Together or Split; neither is lit when only some couples are split.
+    function refreshCoupleButtons() {
+      const hasJoined = tokens.some((token) => token.role === "couple");
+      const hasSplit = tokens.some((token) => token.role !== "couple");
+      [[joinAllBtn, hasJoined && !hasSplit], [splitAllBtn, hasSplit && !hasJoined]].forEach(([button, isActive]) => {
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+    }
+
+    function toggleCouples() {
+      if (tokens.some((token) => token.role === "couple")) {
+        splitAll();
+      } else {
+        joinAll();
+      }
     }
 
     function displayLabel(token) {
@@ -1297,6 +1927,7 @@
       stopAnimation();
       manualSelectionMode = true;
 
+      const wasSelectedBefore = selectedTokens.has(token);
       const additive = event.shiftKey || event.metaKey || event.ctrlKey;
       if (additive) {
         toggleTokenSelection(token);
@@ -1319,6 +1950,9 @@
         pointerId: event.pointerId,
         startX: point.x,
         startY: point.y,
+        wasSelectedBefore,
+        additive,
+        undoRecorded: false,
         starts: new Map([...selectedTokens].map((item) => [item, { x: item.x, y: item.y }])),
       };
     }
@@ -1329,6 +1963,12 @@
       const point = getPointerPoint(event);
       const dx = point.x - dragState.startX;
       const dy = point.y - dragState.startY;
+
+      if (!dragState.undoRecorded && Math.hypot(dx, dy) > 1) {
+        recordUndoState("drag movement");
+        dragState.undoRecorded = true;
+      }
+      if (!dragState.undoRecorded) return;
 
       dragState.tokens.forEach((token) => {
         const start = dragState.starts.get(token);
@@ -1354,10 +1994,18 @@
     function endDrag(event) {
       if (!dragState || event.pointerId !== dragState.pointerId) return;
 
-      const token = dragState.token;
-      const movedTokens = dragState.tokens.filter((item) => tokens.includes(item));
+      const completedDrag = dragState;
+      const token = completedDrag.token;
+      const movedTokens = completedDrag.tokens.filter((item) => tokens.includes(item));
       token.group.classList.remove("dragging");
       dragState = null;
+
+      if (!completedDrag.undoRecorded) {
+        if (completedDrag.wasSelectedBefore && !completedDrag.additive) {
+          unselectToken(token);
+        }
+        return;
+      }
 
       if (snapToggle.checked) {
         const targets = new Map();
@@ -1389,7 +2037,11 @@
     }
 
     function allowedRings() {
-      return innerLockToggle.checked ? RADIAL_RING_ORDER : ["outer"];
+      return innerLockToggle.checked ? radialRingOrder() : ["outer"];
+    }
+
+    function radialRingOrder() {
+      return quarterRingsToggle.checked ? RADIAL_RING_ORDER_WITH_QUARTERS : RADIAL_RING_ORDER;
     }
 
     function nearestAnchor(x, y) {
@@ -1431,7 +2083,7 @@
     }
 
     function animateToTargets(targets, duration = 650, onDone = null) {
-      stopAnimation();
+      finishActiveAnimation();
       const startedAt = performance.now();
       const motions = [...targets.entries()].map(([token, target]) => {
         const startPolar = polarFromCenter(token.x, token.y);
@@ -1479,17 +2131,40 @@
           return;
         }
 
-        motions.forEach((motion) => {
-          setTokenPosition(motion.token, motion.targetX, motion.targetY);
-          motion.token.ring = motion.target.ring;
-          motion.token.step = motion.target.step === null ? null : wrapStep(motion.target.step);
-        });
-
+        settleMotions(motions);
         animationFrame = null;
+        activeMotions = null;
         if (onDone) onDone();
+        if (animationFrame === null) runQueuedKeyMove();
       }
 
+      activeMotions = motions;
       animationFrame = requestAnimationFrame(frame);
+    }
+
+    function settleMotions(motions) {
+      motions.forEach((motion) => {
+        setTokenPosition(motion.token, motion.targetX, motion.targetY);
+        motion.token.ring = motion.target.ring;
+        motion.token.step = motion.target.step === null ? null : wrapStep(motion.target.step);
+      });
+    }
+
+    // Jump an in-flight move to its end so the next move starts from a real lock point
+    // instead of a half-finished position with stale ring/step data.
+    function finishActiveAnimation() {
+      if (animationFrame === null) return;
+      cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+      if (activeMotions) settleMotions(activeMotions);
+      activeMotions = null;
+    }
+
+    function runQueuedKeyMove() {
+      // Keep going if a queued move had nothing to animate (e.g. already at the edge).
+      while (queuedKeyMoves.length && animationFrame === null) {
+        queuedKeyMoves.shift()();
+      }
     }
 
     function animateConstrainedTargets(targets, onDone = null) {
@@ -1559,13 +2234,15 @@
       const formation = formationMap[kind];
       if (!formation) return;
 
-      if (kind !== "twoLines") twoLineState = null;
       const [label, createTargets] = formation;
-      const targets = createTargets();
-      if (!targets.size) {
+      if (!formationScope().length) {
         setStatus("Choose Everyone, Leads, Follows, or pick dancers on the board first");
         return;
       }
+
+      recordUndoState(`${label} formation`);
+      if (kind !== "twoLines") twoLineState = null;
+      const targets = createTargets();
 
       animateConstrainedTargets(targets, () => {
         setStatus(`${capitalize(label)} formation ready`);
@@ -1644,6 +2321,7 @@
         return;
       }
 
+      recordUndoState("line advance");
       twoLineState.step += 1;
       const targets = new Map();
       twoLineState.entries.forEach(({ side, y }, token) => {
@@ -1808,6 +2486,117 @@
       return targets;
     }
 
+    // Unfurling Pyramid: a line opens row by row into a 7-5-3 pyramid, then 9 walks out of the front.
+    // Rows and columns share one lattice so they line up.
+    const UNFURLING_PYRAMID_COLORS = {
+      rose: [1, 4, 6, 8, 11, 13, 16],
+      green: [2, 5, 10, 12, 15],
+      amber: [3, 7, 14],
+      neutral: [9],
+    };
+
+    function unfurlingPyramidLayouts() {
+      const lineOrder = [1, 4, 6, 2, 5, 10, 7, 3, 9, 14, 12, 15, 8, 11, 13, 16];
+      // The line runs nearly edge to edge so 16 dancers barely touch and every number stays readable.
+      const lineEdge = PIECE_RADIUS + 14;
+      const lineX = (number) => spreadValue(lineOrder.indexOf(number), lineOrder.length, lineEdge, SIZE - lineEdge);
+      const column = (index) => spreadValue(index, 7, SQUARE_MIN, SQUARE_MAX);
+      const rowGap = column(1) - column(0);
+      const lineY = CENTER.y - OUTER_RADIUS * 0.7;
+      const backY = CENTER.y - OUTER_RADIUS / 2;
+      const middleY = backY + rowGap;
+      const frontY = middleY + rowGap;
+      const middleNine = [2, 5, 10, 7, 3, 9, 14, 12, 15];
+
+      const line = Object.fromEntries(lineOrder.map((number) => [number, [lineX(number), lineY]]));
+      const back = Object.fromEntries([1, 4, 6, 8, 11, 13, 16].map((number, index) => [number, [column(index), backY]]));
+      const middle = Object.fromEntries([2, 5, 10, 12, 15].map((number, index) => [number, [column(index + 1), middleY]]));
+      const cluster = Object.fromEntries([7, 3, 9, 14].map((number, index) => [
+        number,
+        [CENTER.x + (index - 1.5) * PIECE_RADIUS * 2, CENTER.y],
+      ]));
+      const front = { 7: [column(2), frontY], 3: [column(3), frontY], 14: [column(4), frontY] };
+      // 9 walks from just behind 3 down to the half ring at the front.
+      const nineOut = [0, 1, 2, 3].map((index) => ({
+        ...back,
+        ...middle,
+        ...front,
+        9: [CENTER.x, spreadValue(index, 4, frontY + PIECE_RADIUS * 2, CENTER.y + MIDDLE_RADIUS)],
+      }));
+      const closed = { ...back, ...middle, ...cluster };
+      // Between the line and the pyramid, everyone keeps their line spot: first two rows, then the
+      // middle nine drop back into their own row.
+      const middleRow = {
+        ...back,
+        ...Object.fromEntries(middleNine.map((number) => [number, [lineX(number), middleY]])),
+      };
+      const stacked = Object.fromEntries(lineOrder.map((number) => [
+        number,
+        [lineX(number), middleNine.includes(number) ? backY + rowGap / 2 : backY],
+      ]));
+
+      // Unfurl in order: the line splits into two rows, the middle drops into its own row, the front
+      // three step out to finish the pyramid, then 9 walks out to the front.
+      return [line, stacked, middleRow, closed, ...nineOut];
+    }
+
+    function unfurlingPyramidSnapshot(positions) {
+      const colorFor = (number) => Object.keys(UNFURLING_PYRAMID_COLORS)
+        .find((color) => UNFURLING_PYRAMID_COLORS[color].includes(number));
+      return {
+        count: COUPLE_COUNT,
+        annotation: { title: "Unfurling Pyramid", subtitle: "" },
+        items: Array.from({ length: COUPLE_COUNT }, (_, index) => {
+          const number = index + 1;
+          const [x, y] = positions[number];
+          return {
+            key: `${number}:couple`,
+            number,
+            role: "couple",
+            ring: null,
+            step: null,
+            facingMode: "out",
+            displayMode: "partner",
+            groupColor: colorFor(number),
+            x: Number(x.toFixed(3)),
+            y: Number(y.toFixed(3)),
+          };
+        }),
+      };
+    }
+
+    async function loadUnfurlingPyramid() {
+      stopStoryboard(false);
+      if (storyboardShots.length && !window.confirm("Replace the current storyboard shots with the Unfurling Pyramid?")) return;
+
+      recordUndoState("Unfurling Pyramid");
+      setStatus("Building Unfurling Pyramid shots");
+      storyNameInput.value = "Unfurling Pyramid";
+      try {
+        const shots = [];
+        for (const [index, positions] of unfurlingPyramidLayouts().entries()) {
+          const snapshot = unfurlingPyramidSnapshot(positions);
+          restoreStoryboardSnapshot(snapshot);
+          const blob = await renderBoardPngBlob(SHOT_PNG_SIZE);
+          shots.push({
+            id: `${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`,
+            name: `Shot ${index + 1}`,
+            filename: `formation-shot-${String(index + 1).padStart(2, "0")}.png`,
+            thumbnail: await blobToDataUrl(blob),
+            snapshot,
+          });
+        }
+        storyboardShots = shots;
+        activeShotIndex = 0;
+        showShot(0, false);
+        if (storyParentFolderHandle) await ensureStoryFolder();
+        syncStoryboardFolder();
+        setStatus(`Loaded Unfurling Pyramid: ${shots.length} shots`);
+      } catch (error) {
+        setStatus(`Could not build Unfurling Pyramid: ${error.message || "unknown error"}`);
+      }
+    }
+
     function saveCustomFormation() {
       savedCustomFormation = snapshotCurrentLayout();
       setStatus("Saved current layout");
@@ -1822,6 +2611,7 @@
       const targets = targetsFromSnapshot(savedCustomFormation);
       if (!targets) return;
 
+      recordUndoState("saved layout movement");
       applySnapshotFacing(savedCustomFormation);
       animateConstrainedTargets(targets, () => setStatus("Saved layout ready"));
       setStatus("Moving to saved layout");
@@ -1845,6 +2635,7 @@
         sequence.push({ snapshot, targets });
       }
 
+      recordUndoState("custom path movement");
       setStatus("Playing custom path");
       playTargetSequence(sequence, 0, () => setStatus("Custom path complete"));
     }
@@ -1854,38 +2645,107 @@
       setStatus("Cleared custom path");
     }
 
+    function storyName() {
+      return storyNameInput.value.trim() || "Opening 2027 Story";
+    }
+
+    function safeStoryName() {
+      return storyName()
+        .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "-")
+        .replace(/[. ]+$/g, "")
+        .slice(0, 80) || "Opening 2027 Story";
+    }
+
+    function storyTimingMs() {
+      const value = Number(gifTimingInput.value);
+      return clamp(Number.isFinite(value) && value > 0 ? value : 900, 100, 10000);
+    }
+
+    function gifEndHoldMs() {
+      const value = Number(gifEndHoldInput.value);
+      return clamp(Number.isFinite(value) ? value : 0, 0, 10000);
+    }
+
+    function gifSize() {
+      const value = Number(gifSizeInput.value);
+      return [360, 480, 720, 1080].includes(value) ? value : 480;
+    }
+
+    // A shot's own hold time wins; otherwise it uses the shared frame time. The last shot gets the extra hold.
+    function shotDurationMs(index) {
+      const holdMs = Number(storyboardShots[index]?.holdMs);
+      const base = holdMs > 0 ? clamp(holdMs, 100, 10000) : storyTimingMs();
+      return base + (index === storyboardShots.length - 1 ? gifEndHoldMs() : 0);
+    }
+
+    function storyboardTotalMs() {
+      return storyboardShots.reduce((total, _, index) => total + shotDurationMs(index), 0);
+    }
+
+    function refreshGifSummary() {
+      if (!storyboardShots.length) {
+        gifSummary.textContent = "Capture shots to see the GIF length.";
+        return;
+      }
+      const totalMs = storyboardTotalMs();
+      const frameCount = storyboardShots.length;
+      gifSummary.textContent = `${frameCount} frame${frameCount === 1 ? "" : "s"} · ${(totalMs / 1000).toFixed(1)} s per play`
+        + `${gifLoopInput.checked ? ", looping" : ", plays once"} · ${gifSize()} × ${gifSize()} px`;
+    }
+
+    async function ensureStoryFolder() {
+      if (!storyParentFolderHandle) return shotFolderHandle;
+      shotFolderHandle = await storyParentFolderHandle.getDirectoryHandle(safeStoryName(), { create: true });
+      chooseShotFolderBtn.textContent = `Save Folder: ${shotFolderHandle.name}`;
+      folderStatus.textContent = `Story files will save in “${shotFolderHandle.name}” inside “${storyParentFolderHandle.name}”.`;
+      folderStatus.classList.add("ready");
+      return shotFolderHandle;
+    }
+
     async function chooseShotFolder() {
       if (!("showDirectoryPicker" in window) || !window.isSecureContext) {
         enableDownloadFallback();
-        return;
+        return true;
       }
 
       try {
-        shotFolderHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+        const selectedRoot = await window.showDirectoryPicker({
+          id: "opening-2027-storyboards",
+          mode: "readwrite",
+          startIn: "downloads",
+        });
+        storyParentFolderHandle = selectedRoot.name.toLowerCase() === "storyboard"
+          ? selectedRoot
+          : await selectedRoot.getDirectoryHandle("Storyboard", { create: true });
+        await ensureStoryFolder();
         downloadFallbackEnabled = false;
-        chooseShotFolderBtn.textContent = `Folder: ${shotFolderHandle.name}`;
-        folderStatus.textContent = `New screenshots will be saved as PNG files in “${shotFolderHandle.name}”.`;
-        folderStatus.classList.add("ready");
-        setStatus(`Screenshot folder: ${shotFolderHandle.name}`);
+        const loaded = !storyboardShots.length && await loadStoryboardFromFolder();
+        if (!loaded) await saveStoryboardToFolder();
+        setStatus(loaded
+          ? `Loaded storyboard from ${shotFolderHandle.name}`
+          : `Named story folder ready: ${shotFolderHandle.name}`);
+        return true;
       } catch (error) {
         if (error.name === "AbortError") {
           setStatus("Folder selection canceled");
-          return;
+          return false;
         }
         enableDownloadFallback();
+        return true;
       }
     }
 
     function enableDownloadFallback() {
+      storyParentFolderHandle = null;
       shotFolderHandle = null;
       downloadFallbackEnabled = true;
       chooseShotFolderBtn.textContent = "Saving to Downloads";
-      folderStatus.textContent = "This browser cannot open folders. New screenshots will download to Downloads. If a download is blocked, press Save on that shot.";
+      folderStatus.textContent = "This browser blocks automatic download folders, so storyboard, PNG, and GIF files will save individually to Downloads.";
       folderStatus.classList.add("ready");
       setStatus("Folder picker unavailable; screenshots will save to Downloads instead");
     }
 
-    async function renderBoardPngBlob(size = 720) {
+    async function renderBoardPngBlob(size = 720, { transparent = false } = {}) {
       const clone = svg.cloneNode(true);
       clone.setAttribute("width", String(size));
       clone.setAttribute("height", String(size));
@@ -1909,8 +2769,10 @@
         canvas.width = size;
         canvas.height = size;
         const context = canvas.getContext("2d");
-        context.fillStyle = "#fbfaf7";
-        context.fillRect(0, 0, size, size);
+        if (!transparent) {
+          context.fillStyle = "#ffffff";
+          context.fillRect(0, 0, size, size);
+        }
         context.drawImage(image, 0, 0, size, size);
         return await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
       } finally {
@@ -1927,6 +2789,168 @@
       });
     }
 
+    async function dataUrlToBlob(dataUrl) {
+      const response = await fetch(dataUrl);
+      return response.blob();
+    }
+
+    function gifPalette() {
+      const palette = [];
+      for (let red = 0; red < 8; red += 1) {
+        for (let green = 0; green < 8; green += 1) {
+          for (let blue = 0; blue < 4; blue += 1) {
+            palette.push(
+              Math.round(red * 255 / 7),
+              Math.round(green * 255 / 7),
+              Math.round(blue * 255 / 3)
+            );
+          }
+        }
+      }
+      return palette;
+    }
+
+    function quantizeGifPixels(rgba) {
+      const indexed = new Uint8Array(rgba.length / 4);
+      for (let source = 0, target = 0; source < rgba.length; source += 4, target += 1) {
+        indexed[target] = ((rgba[source] >> 5) << 5)
+          | ((rgba[source + 1] >> 5) << 2)
+          | (rgba[source + 2] >> 6);
+      }
+      return indexed;
+    }
+
+    function gifLzwEncode(indexedPixels) {
+      const clearCode = 256;
+      const endCode = 257;
+      let nextCode = 258;
+      let codeSize = 9;
+      let bitBuffer = 0;
+      let bitCount = 0;
+      const output = [];
+      let dictionary = new Map();
+
+      const writeCode = (code) => {
+        bitBuffer |= code << bitCount;
+        bitCount += codeSize;
+        while (bitCount >= 8) {
+          output.push(bitBuffer & 255);
+          bitBuffer >>>= 8;
+          bitCount -= 8;
+        }
+      };
+      const resetDictionary = () => {
+        dictionary = new Map();
+        nextCode = 258;
+        codeSize = 9;
+      };
+
+      writeCode(clearCode);
+      let prefix = indexedPixels[0] ?? 0;
+      for (let index = 1; index < indexedPixels.length; index += 1) {
+        const suffix = indexedPixels[index];
+        const key = prefix * 256 + suffix;
+        const existing = dictionary.get(key);
+        if (existing !== undefined) {
+          prefix = existing;
+          continue;
+        }
+
+        writeCode(prefix);
+        if (nextCode < 4096) {
+          dictionary.set(key, nextCode);
+          nextCode += 1;
+          // A GIF decoder grows its table after reading the following code, so
+          // the encoder changes width one emitted code after crossing the limit.
+          if (nextCode > (1 << codeSize) && codeSize < 12) codeSize += 1;
+        } else {
+          writeCode(clearCode);
+          resetDictionary();
+        }
+        prefix = suffix;
+      }
+      writeCode(prefix);
+      writeCode(endCode);
+      if (bitCount > 0) output.push(bitBuffer & 255);
+      return output;
+    }
+
+    function encodeGif(frames, width, height, delaysMs, loop = true) {
+      const bytes = [];
+      const pushWord = (value) => bytes.push(value & 255, (value >> 8) & 255);
+      const pushText = (value) => [...value].forEach((character) => bytes.push(character.charCodeAt(0)));
+      const pushSubBlocks = (data) => {
+        for (let index = 0; index < data.length; index += 255) {
+          const block = data.slice(index, index + 255);
+          bytes.push(block.length, ...block);
+        }
+        bytes.push(0);
+      };
+
+      pushText("GIF89a");
+      pushWord(width);
+      pushWord(height);
+      bytes.push(0xf7, 0, 0, ...gifPalette());
+      // Without the NETSCAPE looping block, viewers play the GIF once and stop on the last frame.
+      if (loop) {
+        bytes.push(0x21, 0xff, 0x0b);
+        pushText("NETSCAPE2.0");
+        bytes.push(0x03, 0x01, 0x00, 0x00, 0x00);
+      }
+
+      frames.forEach((frame, index) => {
+        bytes.push(0x21, 0xf9, 0x04, 0x00);
+        pushWord(clamp(Math.round(delaysMs[index] / 10), 1, 65535));
+        bytes.push(0x00, 0x00);
+        bytes.push(0x2c);
+        pushWord(0);
+        pushWord(0);
+        pushWord(width);
+        pushWord(height);
+        bytes.push(0x00, 0x08);
+        pushSubBlocks(gifLzwEncode(frame));
+      });
+      bytes.push(0x3b);
+      return new Blob([new Uint8Array(bytes)], { type: "image/gif" });
+    }
+
+    async function renderStoryboardGifBlob(size = gifSize()) {
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      const frames = [];
+      // Shots are captured at 720 px. Bigger GIFs redraw each shot from its saved layout so they stay sharp.
+      const redrawShots = size > 720;
+      if (redrawShots) finishActiveAnimation();
+      const currentLayout = redrawShots ? snapshotCurrentLayout() : null;
+
+      try {
+        for (const shot of storyboardShots) {
+          let source = shot.thumbnail;
+          if (redrawShots) {
+            restoreStoryboardSnapshot(shot.snapshot);
+            source = await blobToDataUrl(await renderBoardPngBlob(size));
+          }
+          const image = new Image();
+          await new Promise((resolve, reject) => {
+            image.onload = resolve;
+            image.onerror = reject;
+            image.src = source;
+          });
+          context.fillStyle = "#ffffff";
+          context.fillRect(0, 0, size, size);
+          context.drawImage(image, 0, 0, size, size);
+          frames.push(quantizeGifPixels(context.getImageData(0, 0, size, size).data));
+        }
+      } finally {
+        if (currentLayout) restoreStoryboardSnapshot(currentLayout);
+      }
+
+      const delays = storyboardShots.map((_, index) => shotDurationMs(index));
+      return encodeGif(frames, size, size, delays, gifLoopInput.checked);
+    }
+
     async function saveBlobToFolder(blob, filename) {
       if (!shotFolderHandle) return false;
       const fileHandle = await shotFolderHandle.getFileHandle(filename, { create: true });
@@ -1934,6 +2958,62 @@
       await writable.write(blob);
       await writable.close();
       return true;
+    }
+
+    async function saveNamedStoryFolder() {
+      if (!storyboardShots.length) {
+        setStatus("Capture at least one shot before saving a story folder");
+        return;
+      }
+
+      if (!storyParentFolderHandle && !shotFolderHandle && "showDirectoryPicker" in window && window.isSecureContext) {
+        const folderReady = await chooseShotFolder();
+        if (!folderReady) return;
+      }
+
+      setStatus(`Saving ${storyName()} story folder`);
+      try {
+        if (storyParentFolderHandle) await ensureStoryFolder();
+        if (shotFolderHandle) {
+          for (const shot of storyboardShots) {
+            await saveBlobToFolder(await dataUrlToBlob(shot.thumbnail), shot.filename);
+          }
+          await saveStoryboardToFolder();
+          setStatus(`Saved ${storyName()} with ${storyboardShots.length} PNG frame${storyboardShots.length === 1 ? "" : "s"}`);
+          return;
+        }
+
+        for (const shot of storyboardShots) {
+          downloadBlob(await dataUrlToBlob(shot.thumbnail), shot.filename);
+        }
+        saveStoryboardFile();
+        setStatus("Folder access unavailable; story files were sent to Downloads");
+      } catch (error) {
+        setStatus(`Could not save story folder: ${error.message || "unknown error"}`);
+      }
+    }
+
+    async function exportStoryboardGif() {
+      if (!storyboardShots.length) {
+        setStatus("Capture at least one shot before saving a GIF");
+        return;
+      }
+
+      setStatus(`Building ${storyName()} GIF`);
+      try {
+        const blob = await renderStoryboardGifBlob();
+        const filename = `${safeStoryName()}.gif`;
+        if (storyParentFolderHandle) await ensureStoryFolder();
+        if (shotFolderHandle) {
+          await saveBlobToFolder(blob, filename);
+          setStatus(`Saved ${filename} (${gifSize()} px, ${(storyboardTotalMs() / 1000).toFixed(1)} s)`);
+        } else {
+          downloadBlob(blob, filename);
+          setStatus(`Downloaded ${filename} (${gifSize()} px, ${(storyboardTotalMs() / 1000).toFixed(1)} s)`);
+        }
+      } catch (error) {
+        setStatus(`Could not build GIF: ${error.message || "unknown error"}`);
+      }
     }
 
     function downloadBlob(blob, filename) {
@@ -1947,11 +3027,381 @@
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
+    function storyboardProjectData() {
+      return {
+        format: "opening-2027-storyboard",
+        version: 2,
+        storyName: storyName(),
+        frameTimingMs: storyTimingMs(),
+        gif: {
+          size: gifSize(),
+          lastFrameHoldMs: gifEndHoldMs(),
+          loop: gifLoopInput.checked,
+        },
+        savedAt: new Date().toISOString(),
+        labels: Object.fromEntries(coupleLabels),
+        shots: storyboardShots,
+      };
+    }
+
+    function storyboardProjectBlob() {
+      return new Blob([JSON.stringify(storyboardProjectData(), null, 2)], {
+        type: "application/json;charset=utf-8",
+      });
+    }
+
+    function saveStoryboardFile() {
+      downloadBlob(storyboardProjectBlob(), `${safeStoryName()}-storyboard.json`);
+      setStatus(`Saved storyboard file with ${storyboardShots.length} shot${storyboardShots.length === 1 ? "" : "s"}`);
+    }
+
+    function openStoryboardFile() {
+      openStoryboardInput.value = "";
+      openStoryboardInput.click();
+    }
+
+    async function handleStoryboardFile(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      try {
+        const project = JSON.parse(await file.text());
+        loadStoryboardProject(project);
+        setStatus(`Opened ${file.name}`);
+      } catch (error) {
+        setStatus(`Could not open storyboard: ${error.message || "invalid file"}`);
+      }
+    }
+
+    function loadStoryboardProject(project) {
+      if (!project || project.format !== "opening-2027-storyboard" || !Array.isArray(project.shots)) {
+        throw new Error("This is not an Opening 2027 storyboard file");
+      }
+      const validShots = project.shots.every((shot) =>
+        shot && typeof shot.name === "string" && typeof shot.thumbnail === "string"
+        && shot.snapshot && Array.isArray(shot.snapshot.items)
+      );
+      if (!validShots) throw new Error("The storyboard file is incomplete");
+
+      storyboardShots = project.shots;
+      if (typeof project.storyName === "string" && project.storyName.trim()) {
+        storyNameInput.value = project.storyName;
+      }
+      if (Number.isFinite(Number(project.frameTimingMs))) {
+        gifTimingInput.value = String(clamp(Number(project.frameTimingMs), 100, 10000));
+      }
+      if (project.gif && typeof project.gif === "object") {
+        if ([360, 480, 720, 1080].includes(Number(project.gif.size))) gifSizeInput.value = String(project.gif.size);
+        if (Number.isFinite(Number(project.gif.lastFrameHoldMs))) {
+          gifEndHoldInput.value = String(clamp(Number(project.gif.lastFrameHoldMs), 0, 10000));
+        }
+        if (typeof project.gif.loop === "boolean") gifLoopInput.checked = project.gif.loop;
+      }
+      if (project.labels && typeof project.labels === "object") {
+        Object.entries(project.labels).forEach(([number, label]) => {
+          if (typeof label === "string") coupleLabels.set(Number(number), label);
+        });
+      }
+      activeShotIndex = storyboardShots.length ? 0 : -1;
+      renderStoryboard();
+      if (storyboardShots.length) showShot(0, false);
+    }
+
+    async function saveStoryboardToFolder() {
+      if (!shotFolderHandle) return false;
+      await saveBlobToFolder(storyboardProjectBlob(), "storyboard.json");
+      return true;
+    }
+
+    async function loadStoryboardFromFolder() {
+      if (!shotFolderHandle) return false;
+      for (const filename of ["storyboard.json", "opening-2027-storyboard.json"]) {
+        try {
+          const handle = await shotFolderHandle.getFileHandle(filename);
+          const project = JSON.parse(await (await handle.getFile()).text());
+          loadStoryboardProject(project);
+          return true;
+        } catch (error) {
+          if (error.name !== "NotFoundError") throw error;
+        }
+      }
+      return false;
+    }
+
+    function syncStoryboardFolder() {
+      if (!storyParentFolderHandle && !shotFolderHandle) return;
+      (async () => {
+        if (storyParentFolderHandle) await ensureStoryFolder();
+        await saveStoryboardToFolder();
+      })().catch(() => enableDownloadFallback());
+    }
+
+    // ---- Google Drive ----
+    // Setup steps are in README.md. clientId is required; apiKey + appId only enable "Browse Drive…"
+    // (the Google Picker), which is how teammates open storyboards someone else saved.
+    const GOOGLE_DRIVE_CONFIG = {
+      clientId: "",
+      apiKey: "",
+      appId: "",
+    };
+    const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file";
+    const DRIVE_ROOT_FOLDER = "Opening 2027 Storyboards";
+    const DRIVE_FOLDER_MIME = "application/vnd.google-apps.folder";
+    const driveStatus = document.querySelector("#driveStatus");
+    const driveDialog = document.querySelector("#driveDialog");
+    const driveFileList = document.querySelector("#driveFileList");
+    const driveBrowseBtn = document.querySelector("#driveBrowseBtn");
+    const loadedScripts = new Map();
+    let driveAccessToken = null;
+    let driveTokenExpiresAt = 0;
+    let driveBusy = false;
+
+    function loadScriptOnce(src) {
+      if (!loadedScripts.has(src)) {
+        loadedScripts.set(src, new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = src;
+          script.async = true;
+          script.onload = resolve;
+          script.onerror = () => {
+            loadedScripts.delete(src);
+            reject(new Error("Could not reach Google. Check your internet connection."));
+          };
+          document.head.append(script);
+        }));
+      }
+      return loadedScripts.get(src);
+    }
+
+    function setDriveStatus(message, ready = false) {
+      driveStatus.replaceChildren(message);
+      driveStatus.classList.toggle("ready", ready);
+    }
+
+    function driveConfigured() {
+      return Boolean(GOOGLE_DRIVE_CONFIG.clientId);
+    }
+
+    async function driveToken() {
+      if (driveAccessToken && Date.now() < driveTokenExpiresAt - 60000) return driveAccessToken;
+      if (!driveConfigured()) {
+        throw new Error("Google Drive isn't connected to this planner yet. Add a Google client ID (see README).");
+      }
+      await loadScriptOnce("https://accounts.google.com/gsi/client");
+      return new Promise((resolve, reject) => {
+        const client = google.accounts.oauth2.initTokenClient({
+          client_id: GOOGLE_DRIVE_CONFIG.clientId,
+          scope: DRIVE_SCOPE,
+          callback: (response) => {
+            if (response.error) {
+              reject(new Error(response.error_description || response.error));
+              return;
+            }
+            driveAccessToken = response.access_token;
+            driveTokenExpiresAt = Date.now() + Number(response.expires_in || 3600) * 1000;
+            resolve(driveAccessToken);
+          },
+          error_callback: (error) => {
+            reject(new Error(error.type === "popup_closed" ? "Google sign-in was closed" : "Google sign-in was blocked or failed"));
+          },
+        });
+        client.requestAccessToken();
+      });
+    }
+
+    async function driveFetch(url, options = {}, retried = false) {
+      const token = await driveToken();
+      const response = await fetch(url, {
+        ...options,
+        headers: { ...(options.headers || {}), Authorization: `Bearer ${token}` },
+      });
+      if (response.status === 401 && !retried) {
+        driveAccessToken = null;
+        return driveFetch(url, options, true);
+      }
+      if (!response.ok) {
+        let detail = "";
+        try {
+          detail = (await response.json()).error?.message || "";
+        } catch {}
+        throw new Error(detail || `Google Drive error ${response.status}`);
+      }
+      return response;
+    }
+
+    function driveQueryValue(value) {
+      return value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+    }
+
+    async function findDriveItem(name, parentId, mimeType = null) {
+      const query = [
+        `name = '${driveQueryValue(name)}'`,
+        `'${parentId}' in parents`,
+        "trashed = false",
+        mimeType ? `mimeType = '${mimeType}'` : null,
+      ].filter(Boolean).join(" and ");
+      const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id)&pageSize=1`;
+      const result = await (await driveFetch(url)).json();
+      return result.files?.[0]?.id || null;
+    }
+
+    async function ensureDriveFolder(name, parentId = "root") {
+      const existing = await findDriveItem(name, parentId, DRIVE_FOLDER_MIME);
+      if (existing) return existing;
+      const response = await driveFetch("https://www.googleapis.com/drive/v3/files?fields=id", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, mimeType: DRIVE_FOLDER_MIME, parents: [parentId] }),
+      });
+      return (await response.json()).id;
+    }
+
+    // Creates the file, or replaces its contents if one with the same name is already in the folder.
+    async function uploadDriveFile(blob, name, parentId, appProperties = null) {
+      const existingId = await findDriveItem(name, parentId);
+      const metadata = existingId ? { name } : { name, parents: [parentId] };
+      if (appProperties) metadata.appProperties = appProperties;
+      const body = new FormData();
+      body.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
+      body.append("file", blob);
+      const url = existingId
+        ? `https://www.googleapis.com/upload/drive/v3/files/${existingId}?uploadType=multipart&fields=id`
+        : "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id";
+      return (await (await driveFetch(url, { method: existingId ? "PATCH" : "POST", body })).json()).id;
+    }
+
+    async function saveStoryToDrive() {
+      if (driveBusy) return;
+      if (!storyboardShots.length) {
+        setStatus("Capture at least one shot before saving to Google Drive");
+        return;
+      }
+
+      driveBusy = true;
+      try {
+        await driveToken();
+        setDriveStatus("Saving to Google Drive…");
+        const rootId = await ensureDriveFolder(DRIVE_ROOT_FOLDER);
+        const folderId = await ensureDriveFolder(safeStoryName(), rootId);
+        await uploadDriveFile(storyboardProjectBlob(), "storyboard.json", folderId, {
+          opening2027: "storyboard",
+          storyName: storyName().slice(0, 100),
+        });
+        for (const [index, shot] of storyboardShots.entries()) {
+          setDriveStatus(`Uploading frame ${index + 1} of ${storyboardShots.length}…`);
+          await uploadDriveFile(await dataUrlToBlob(shot.thumbnail), shot.filename, folderId);
+        }
+        setDriveStatus("Building and uploading the GIF…");
+        await uploadDriveFile(await renderStoryboardGifBlob(), `${safeStoryName()}.gif`, folderId);
+
+        const link = document.createElement("a");
+        link.href = `https://drive.google.com/drive/folders/${folderId}`;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = "Open folder in Drive";
+        driveStatus.replaceChildren(`Saved “${storyName()}” with ${storyboardShots.length} frame${storyboardShots.length === 1 ? "" : "s"}. `, link);
+        driveStatus.classList.add("ready");
+        setStatus(`Saved ${storyName()} to Google Drive`);
+      } catch (error) {
+        setDriveStatus(`Could not save to Drive: ${error.message || "unknown error"}`);
+        setStatus("Google Drive save failed");
+      } finally {
+        driveBusy = false;
+      }
+    }
+
+    async function openStoryFromDrive() {
+      try {
+        await driveToken();
+        setDriveStatus("Looking for storyboards in Google Drive…");
+        const query = "appProperties has { key='opening2027' and value='storyboard' } and trashed = false";
+        const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}`
+          + "&fields=files(id,modifiedTime,appProperties)&orderBy=modifiedTime desc&pageSize=50";
+        const { files = [] } = await (await driveFetch(url)).json();
+
+        driveFileList.replaceChildren();
+        if (!files.length) {
+          const empty = document.createElement("li");
+          empty.className = "empty-shots";
+          empty.textContent = "No storyboards saved from this planner yet.";
+          driveFileList.append(empty);
+        }
+        files.forEach((file) => {
+          const item = document.createElement("li");
+          const button = document.createElement("button");
+          button.type = "button";
+          const name = file.appProperties?.storyName || "Untitled story";
+          const when = new Date(file.modifiedTime).toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+          button.append(name, Object.assign(document.createElement("small"), { textContent: when }));
+          button.addEventListener("click", () => {
+            driveDialog.close();
+            loadDriveStoryboard(file.id, name);
+          });
+          item.append(button);
+          driveFileList.append(item);
+        });
+        driveBrowseBtn.hidden = !(GOOGLE_DRIVE_CONFIG.apiKey && GOOGLE_DRIVE_CONFIG.appId);
+        setDriveStatus("Choose a storyboard to open.");
+        driveDialog.showModal();
+      } catch (error) {
+        setDriveStatus(`Could not open from Drive: ${error.message || "unknown error"}`);
+      }
+    }
+
+    async function loadDriveStoryboard(fileId, name = "storyboard") {
+      try {
+        setDriveStatus(`Opening ${name}…`);
+        const response = await driveFetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`);
+        loadStoryboardProject(await response.json());
+        setDriveStatus(`Opened “${storyName()}” from Google Drive.`, true);
+        setStatus(`Opened ${storyName()} from Google Drive`);
+      } catch (error) {
+        setDriveStatus(`Could not open storyboard: ${error.message || "unknown error"}`);
+      }
+    }
+
+    // Google Picker lets people open storyboard.json files a teammate shared with them.
+    async function browseDriveWithPicker() {
+      driveDialog.close();
+      try {
+        const token = await driveToken();
+        await loadScriptOnce("https://apis.google.com/js/api.js");
+        await new Promise((resolve) => gapi.load("picker", resolve));
+        const view = new google.picker.DocsView(google.picker.ViewId.DOCS)
+          .setMimeTypes("application/json")
+          .setIncludeFolders(true)
+          .setMode(google.picker.DocsViewMode.LIST);
+        new google.picker.PickerBuilder()
+          .addView(view)
+          .setOAuthToken(token)
+          .setDeveloperKey(GOOGLE_DRIVE_CONFIG.apiKey)
+          .setAppId(GOOGLE_DRIVE_CONFIG.appId)
+          .setTitle("Choose a storyboard.json file")
+          .setCallback((data) => {
+            if (data.action !== google.picker.Action.PICKED) return;
+            const doc = data.docs?.[0];
+            if (doc) loadDriveStoryboard(doc.id, doc.name);
+          })
+          .build()
+          .setVisible(true);
+      } catch (error) {
+        setDriveStatus(`Could not open Google Drive: ${error.message || "unknown error"}`);
+      }
+    }
+
+    if (driveConfigured()) {
+      // Load sign-in early so the Google popup opens straight from the button click.
+      loadScriptOnce("https://accounts.google.com/gsi/client").catch(() => {});
+    } else {
+      setDriveStatus("Google Drive isn't connected to this planner yet. The setup steps are in the README.");
+    }
+
     async function screenshot() {
       stopStoryboard(false);
+      if (textSaveTimer) saveTextToOpenShot();
+      textEditShotId = null;
       setStatus("Capturing formation screenshot");
       try {
-        const blob = await renderBoardPngBlob();
+        const blob = await renderBoardPngBlob(SHOT_PNG_SIZE);
         const number = storyboardShots.length + 1;
         const shot = {
           id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -1963,6 +3413,8 @@
         storyboardShots.push(shot);
         activeShotIndex = storyboardShots.length - 1;
         renderStoryboard();
+        if (storyParentFolderHandle) await ensureStoryFolder();
+        syncStoryboardFolder();
 
         let saved = false;
         if (shotFolderHandle) {
@@ -1983,7 +3435,92 @@
       }
     }
 
+    async function updateCurrentShot() {
+      const shot = storyboardShots[activeShotIndex];
+      if (!shot) {
+        setStatus("Click a shot before updating it");
+        return;
+      }
+
+      stopStoryboard(false);
+      setStatus(`Updating ${shot.name}`);
+      try {
+        const blob = await renderBoardPngBlob(SHOT_PNG_SIZE);
+        shot.thumbnail = await blobToDataUrl(blob);
+        shot.snapshot = snapshotCurrentLayout();
+        textEditShotId = shot.id;
+        renderStoryboard();
+        if (storyParentFolderHandle) await ensureStoryFolder();
+        syncStoryboardFolder();
+
+        let saved = false;
+        if (shotFolderHandle) {
+          try {
+            saved = await saveBlobToFolder(blob, shot.filename);
+          } catch {
+            enableDownloadFallback();
+          }
+        }
+        if (!saved && downloadFallbackEnabled) {
+          downloadBlob(blob, shot.filename);
+          setStatus(`Updated ${shot.name} and downloaded its PNG`);
+        } else {
+          setStatus(saved ? `Updated and saved ${shot.name}` : `Updated ${shot.name}`);
+        }
+      } catch (error) {
+        setStatus(`Could not update shot: ${error.message || "unknown error"}`);
+      }
+    }
+
+    // Text edits save straight into a shot you opened (clicked, Prev/Next, or played), as long as the
+    // dancers still match that shot. Right after capturing, typing is assumed to be for the next shot.
+    let textEditShotId = null;
+    let textSaveTimer = null;
+
+    function boardMatchesShot(shot) {
+      const current = snapshotCurrentLayout().items;
+      return current.length === shot.snapshot.items.length
+        && current.every((item, index) => JSON.stringify(item) === JSON.stringify(shot.snapshot.items[index]));
+    }
+
+    function scheduleShotTextSave() {
+      clearTimeout(textSaveTimer);
+      textSaveTimer = window.setTimeout(saveTextToOpenShot, 500);
+    }
+
+    async function saveTextToOpenShot() {
+      clearTimeout(textSaveTimer);
+      textSaveTimer = null;
+      const shot = storyboardShots[activeShotIndex];
+      if (!shot || shot.id !== textEditShotId) return;
+
+      const annotation = { title: annotationTitleInput.value, subtitle: annotationSubheadingInput.value };
+      const saved = shot.snapshot.annotation || {};
+      if (saved.title === annotation.title && saved.subtitle === annotation.subtitle) return;
+
+      if (animationFrame !== null || !boardMatchesShot(shot)) {
+        setStatus(`Dancers moved since opening ${shot.name}; press Update ${shot.name} to save the text with the new formation`);
+        return;
+      }
+
+      try {
+        shot.snapshot = { ...shot.snapshot, annotation };
+        const blob = await renderBoardPngBlob(SHOT_PNG_SIZE);
+        shot.thumbnail = await blobToDataUrl(blob);
+        renderStoryboard();
+        syncStoryboardFolder();
+        if (shotFolderHandle) await saveBlobToFolder(blob, shot.filename);
+        setStatus(`Saved text to ${shot.name}`);
+      } catch (error) {
+        setStatus(`Could not save text to ${shot.name}: ${error.message || "unknown error"}`);
+      }
+    }
+
     function renderStoryboard() {
+      const activeShot = storyboardShots[activeShotIndex];
+      updateShotBtn.disabled = !activeShot;
+      updateShotBtn.textContent = activeShot ? `Update ${activeShot.name}` : "Update Selected Shot";
+      refreshGifSummary();
       shotStrip.replaceChildren();
       if (!storyboardShots.length) {
         const empty = document.createElement("p");
@@ -2010,6 +3547,32 @@
         title.className = "shot-title";
         title.textContent = shot.name;
 
+        const hold = document.createElement("label");
+        hold.className = "shot-hold";
+        hold.title = "How long this shot shows. Leave blank to use the shared frame time.";
+        const holdInput = document.createElement("input");
+        holdInput.type = "number";
+        holdInput.min = "100";
+        holdInput.max = "10000";
+        holdInput.step = "100";
+        holdInput.placeholder = String(storyTimingMs());
+        holdInput.value = shot.holdMs ? String(shot.holdMs) : "";
+        holdInput.setAttribute("aria-label", `${shot.name} hold time in milliseconds`);
+        holdInput.addEventListener("change", () => {
+          const value = Number(holdInput.value);
+          if (holdInput.value === "" || !(value > 0)) {
+            delete shot.holdMs;
+            holdInput.value = "";
+          } else {
+            shot.holdMs = clamp(Math.round(value), 100, 10000);
+            holdInput.value = String(shot.holdMs);
+          }
+          refreshGifSummary();
+          syncStoryboardFolder();
+          setStatus(shot.holdMs ? `${shot.name} holds for ${shot.holdMs} ms` : `${shot.name} uses the shared frame time`);
+        });
+        hold.append(holdInput, Object.assign(document.createElement("span"), { textContent: "ms" }));
+
         const actions = document.createElement("div");
         actions.className = "shot-actions";
         [
@@ -2026,7 +3589,7 @@
           actions.append(button);
         });
 
-        card.append(preview, title, actions);
+        card.append(preview, title, hold, actions);
         shotStrip.append(card);
       });
 
@@ -2035,6 +3598,7 @@
 
     function restoreStoryboardSnapshot(snapshot) {
       stopAnimation();
+      applySnapshotAnnotation(snapshot);
       pieceLayer.replaceChildren();
       tokens.length = 0;
       selectedTokens.clear();
@@ -2063,8 +3627,12 @@
         setStatus("No storyboard shots yet");
         return;
       }
+      // Flush any pending text edit into the shot being left. This runs synchronously up to the
+      // board render, so it captures the old shot's board before the new one is restored.
+      if (textSaveTimer) saveTextToOpenShot();
       activeShotIndex = (index + storyboardShots.length) % storyboardShots.length;
       restoreStoryboardSnapshot(storyboardShots[activeShotIndex].snapshot);
+      textEditShotId = storyboardShots[activeShotIndex].id;
       renderStoryboard();
       if (announce) setStatus(`Showing ${storyboardShots[activeShotIndex].name}`);
     }
@@ -2088,9 +3656,10 @@
       const advance = () => {
         showShot(index, false);
         setStatus(`Playing ${storyboardShots[index].name}`);
+        const shownIndex = index;
         index += 1;
         if (index < storyboardShots.length) {
-          storyboardTimer = window.setTimeout(advance, 900);
+          storyboardTimer = window.setTimeout(advance, shotDurationMs(shownIndex));
         } else {
           storyboardTimer = null;
           setStatus("Storyboard complete");
@@ -2115,6 +3684,7 @@
       activeShotIndex = target;
       storyboardShots.forEach((shot, shotIndex) => { shot.name = `Shot ${shotIndex + 1}`; });
       renderStoryboard();
+      syncStoryboardFolder();
       setStatus(`Moved shot to position ${target + 1}`);
     }
 
@@ -2124,6 +3694,7 @@
       storyboardShots.forEach((shot, shotIndex) => { shot.name = `Shot ${shotIndex + 1}`; });
       activeShotIndex = storyboardShots.length ? clamp(index, 0, storyboardShots.length - 1) : -1;
       renderStoryboard();
+      syncStoryboardFolder();
       setStatus("Deleted storyboard shot");
     }
 
@@ -2142,6 +3713,7 @@
       storyboardShots = [];
       activeShotIndex = -1;
       renderStoryboard();
+      syncStoryboardFolder();
       setStatus("Cleared screenshot storyboard");
     }
 
@@ -2161,6 +3733,10 @@
     function snapshotCurrentLayout() {
       return {
         count: tokens.length,
+        annotation: {
+          title: annotationTitleInput.value,
+          subtitle: annotationSubheadingInput.value,
+        },
         items: tokens.map((token) => ({
           key: tokenKey(token),
           number: token.number,
@@ -2174,6 +3750,73 @@
           y: Number(token.y.toFixed(3)),
         })),
       };
+    }
+
+    function captureUndoState(label) {
+      return {
+        label,
+        snapshot: snapshotCurrentLayout(),
+        selectedKeys: [...selectedTokens].filter((token) => tokens.includes(token)).map(tokenKey),
+        activeKey: selectedToken && tokens.includes(selectedToken) ? tokenKey(selectedToken) : null,
+        manualSelectionMode,
+        twoLine: twoLineState ? {
+          step: twoLineState.step,
+          offset: twoLineState.offset,
+          entries: [...twoLineState.entries].map(([token, entry]) => ({ key: tokenKey(token), ...entry })),
+        } : null,
+      };
+    }
+
+    function pushUndoState(state) {
+      undoStack.push(state);
+      if (undoStack.length > 50) undoStack.shift();
+      refreshUndoButton();
+    }
+
+    function recordUndoState(label) {
+      finishActiveAnimation();
+      pushUndoState(captureUndoState(label));
+    }
+
+    function undoLastMovement() {
+      const state = undoStack.pop();
+      if (!state) {
+        setStatus("No previous movement to undo");
+        return;
+      }
+
+      stopAnimation();
+      restoreStoryboardSnapshot(state.snapshot);
+      const tokensByKey = new Map(tokens.map((token) => [tokenKey(token), token]));
+      selectedTokens.clear();
+      state.selectedKeys.forEach((key) => {
+        const token = tokensByKey.get(key);
+        if (token) selectedTokens.add(token);
+      });
+      selectedToken = tokensByKey.get(state.activeKey) || selectedTokens.values().next().value || null;
+      manualSelectionMode = state.manualSelectionMode;
+
+      if (state.twoLine) {
+        twoLineState = {
+          step: state.twoLine.step,
+          offset: state.twoLine.offset,
+          entries: new Map(state.twoLine.entries.flatMap(({ key, side, y }) => {
+            const token = tokensByKey.get(key);
+            return token ? [[token, { side, y }]] : [];
+          })),
+        };
+      }
+
+      refreshSelection();
+      refreshUndoButton();
+      setStatus(`Undid ${state.label}`);
+    }
+
+    function refreshUndoButton() {
+      undoBtn.disabled = undoStack.length === 0;
+      undoBtn.title = undoStack.length
+        ? `Undo ${undoStack[undoStack.length - 1].label} (⌘Z / Ctrl-Z)`
+        : "Undo the previous movement (⌘Z / Ctrl-Z)";
     }
 
     function targetsFromSnapshot(snapshot) {
@@ -2210,6 +3853,7 @@
     }
 
     function applySnapshotFacing(snapshot) {
+      applySnapshotAnnotation(snapshot);
       const tokensByKey = new Map(tokens.map((token) => [tokenKey(token), token]));
       snapshot.items.forEach((item) => {
         const token = tokensByKey.get(item.key);
@@ -2259,14 +3903,22 @@
     }
 
     function stopAnimation() {
+      queuedKeyMoves.length = 0;
       if (animationFrame !== null) {
         cancelAnimationFrame(animationFrame);
         animationFrame = null;
+        // Tokens stopped mid-move are no longer on their lock point.
+        activeMotions?.forEach(({ token }) => {
+          token.ring = null;
+          token.step = null;
+        });
+        activeMotions = null;
         setStatus("Animation stopped");
       }
     }
 
     function resetLayout() {
+      recordUndoState("start over");
       twoLineState = null;
       createInitialTokens();
       setStatus("Reset layout");
@@ -2276,6 +3928,7 @@
       const scopedTokens = movementScope();
       if (!scopedTokens.length || stepDelta === 0) return;
 
+      recordUndoState("circle rotation");
       const halfStepCount = Math.max(1, Math.abs(stepDelta));
       const direction = Math.sign(stepDelta);
       const stageDuration = Math.max(120, duration / halfStepCount);
@@ -2343,13 +3996,14 @@
 
     function nearestRadialRing(x, y) {
       const radius = Math.hypot(x - CENTER.x, y - CENTER.y);
-      return RADIAL_RING_ORDER.reduce((best, ring) => {
+      return radialRingOrder().reduce((best, ring) => {
         const distance = Math.abs(RING_RADII[ring] - radius);
         return distance < best.distance ? { ring, distance } : best;
       }, { ring: "outer", distance: Infinity }).ring;
     }
 
     function shuffleTokens() {
+      recordUndoState("shuffle");
       const anchors = [];
       allowedRings().forEach((ring) => {
         for (let step = 0; step < HALF_STEPS; step += 1) {
@@ -2390,7 +4044,10 @@
     }
 
     function splitTokens(joinedTokens, keepSelection = true) {
-      stopAnimation();
+      finishActiveAnimation();
+      if (joinedTokens.some((token) => tokens.includes(token) && token.role === "couple")) {
+        recordUndoState("partner split");
+      }
       const targets = new Map();
       let firstLead = null;
 
@@ -2469,7 +4126,7 @@
     }
 
     function joinCoupleNumbers(numbers, keepSelection = true) {
-      stopAnimation();
+      finishActiveAnimation();
       const targets = new Map();
       const pending = [];
 
@@ -2500,6 +4157,7 @@
         return;
       }
 
+      recordUndoState("partner join");
       animateToTargets(targets, 320, () => {
         pending.forEach(({ number, target, facingMode, displayMode, groupColor }) => {
           const partners = tokens.filter((token) => token.number === number && token.role !== "couple");
@@ -2627,10 +4285,102 @@
       }
     }
 
+    async function copyBoardImage() {
+      if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
+        setStatus("This browser can't copy images to the clipboard");
+        return;
+      }
+      try {
+        // Pass a promise so the clipboard write starts inside the click/keypress gesture.
+        await navigator.clipboard.write([
+          new ClipboardItem({ "image/png": renderBoardPngBlob(1440, { transparent: true }) }),
+        ]);
+        setStatus("Copied board image (transparent background)");
+      } catch {
+        setStatus("Couldn't copy the image; try again");
+      }
+    }
+
+    function alignMovementScope(axis) {
+      const scopedTokens = movementScope();
+      if (scopedTokens.length < 2) {
+        setStatus("Choose at least two dancers to align");
+        return;
+      }
+
+      const alignedValue = average(scopedTokens.map((token) => axis === "horizontal" ? token.y : token.x));
+      const targets = new Map();
+      scopedTokens.forEach((token) => {
+        const x = axis === "vertical" ? alignedValue : token.x;
+        const y = axis === "horizontal" ? alignedValue : token.y;
+        targets.set(token, pointToFreeTarget(x, y));
+      });
+
+      recordUndoState(axis === "horizontal" ? "row alignment" : "column alignment");
+      twoLineState = null;
+      animateConstrainedTargets(targets, () => {
+        setStatus(axis === "horizontal" ? "Aligned selected dancers in a row" : "Aligned selected dancers in a column");
+      });
+    }
+
+    function distributeMovementScope(axis) {
+      const scopedTokens = movementScope();
+      if (scopedTokens.length < 3) {
+        setStatus("Choose at least three dancers to distribute evenly");
+        return;
+      }
+
+      const coordinate = axis === "horizontal" ? "x" : "y";
+      const ordered = [...scopedTokens].sort((a, b) => a[coordinate] - b[coordinate]);
+      const currentStart = ordered[0][coordinate];
+      const currentEnd = ordered[ordered.length - 1][coordinate];
+      const minimumSpan = (ordered.length - 1) * (PIECE_RADIUS * 2 + 10);
+      const availableSpan = SQUARE_MAX - SQUARE_MIN;
+      const span = Math.min(availableSpan, Math.max(currentEnd - currentStart, minimumSpan));
+      const center = (currentStart + currentEnd) / 2;
+      const start = clamp(center - span / 2, SQUARE_MIN, SQUARE_MAX - span);
+      const end = start + span;
+      const targets = new Map();
+
+      ordered.forEach((token, index) => {
+        const value = spreadValue(index, ordered.length, start, end);
+        const x = axis === "horizontal" ? value : token.x;
+        const y = axis === "vertical" ? value : token.y;
+        targets.set(token, pointToFreeTarget(x, y));
+      });
+
+      recordUndoState(axis === "horizontal" ? "horizontal spacing" : "vertical spacing");
+      twoLineState = null;
+      animateConstrainedTargets(targets, () => {
+        setStatus(axis === "horizontal" ? "Spaced selected dancers evenly west to east" : "Spaced selected dancers evenly north to south");
+      });
+    }
+
     function handleKeyDown(event) {
       if (event.target.matches("input, textarea, select")) return;
 
       const key = event.key.toLowerCase();
+      if (key === "escape") {
+        event.preventDefault();
+        clearSelection();
+        return;
+      }
+
+      if ((event.metaKey || event.ctrlKey) && key === "c" && !String(window.getSelection())) {
+        event.preventDefault();
+        copyBoardImage();
+        return;
+      }
+
+      // Leave other browser shortcuts (select all, paste, save…) alone.
+      if ((event.metaKey || event.ctrlKey) && key !== "z") return;
+
+      if ((event.metaKey || event.ctrlKey) && key === "z" && !event.shiftKey) {
+        event.preventDefault();
+        undoLastMovement();
+        return;
+      }
+
       const straightDirections = {
         w: [0, -1],
         a: [-1, 0],
@@ -2648,46 +4398,72 @@
         return;
       }
 
+      if (key === "h") {
+        event.preventDefault();
+        const stepModes = Object.keys(STRAIGHT_STEPS);
+        setStraightStepMode(stepModes[(stepModes.indexOf(straightStepMode) + 1) % stepModes.length]);
+        return;
+      }
+
+      if (key === "q" && !event.metaKey && !event.ctrlKey) {
+        event.preventDefault();
+        setQuarterRings(!quarterRingsToggle.checked);
+        return;
+      }
+
+      if (key === "f" && !event.metaKey && !event.ctrlKey) {
+        event.preventDefault();
+        setSnapping(!snapToggle.checked);
+        return;
+      }
+
+      if (key === "p" && !event.metaKey && !event.ctrlKey) {
+        event.preventDefault();
+        toggleCouples();
+        return;
+      }
+
       const isWasd = ["w", "a", "s", "d"].includes(key);
       const useStraightMovement = isWasd
         || (key.startsWith("arrow") && (movementMode === "straight" || event.shiftKey));
 
+      const circleMoves = {
+        arrowright: () => rotateByHalfSteps(-1, 260),
+        arrowleft: () => rotateByHalfSteps(1, 260),
+        arrowup: () => moveScopeRadially("in"),
+        arrowdown: () => moveScopeRadially("out"),
+      };
+
+      let move = null;
       if (useStraightMovement && straightDirections[key]) {
-        event.preventDefault();
-        moveScopeStraight(...straightDirections[key]);
+        move = () => moveScopeStraight(...straightDirections[key]);
+      } else if (circleMoves[key]) {
+        move = circleMoves[key];
+      }
+      if (!move) return;
+
+      event.preventDefault();
+      if (animationFrame === null) {
+        move();
         return;
       }
 
-      if (event.key === "ArrowRight") {
-        event.preventDefault();
-        rotateByHalfSteps(-1, 260);
-      }
-
-      if (event.key === "ArrowLeft") {
-        event.preventDefault();
-        rotateByHalfSteps(1, 260);
-      }
-
-      if (event.key === "ArrowUp") {
-        event.preventDefault();
-        moveScopeRadially("in");
-      }
-
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        moveScopeRadially("out");
-      }
+      // A move is still animating: queue this one so quick presses in different
+      // directions run in order instead of cancelling each other halfway.
+      if (event.repeat && queuedKeyMoves.length) return;
+      if (queuedKeyMoves.length < MAX_QUEUED_KEY_MOVES) queuedKeyMoves.push(move);
     }
 
     function moveScopeStraight(horizontal, vertical) {
       const scopedTokens = movementScope();
       if (!scopedTokens.length) return;
 
+      const stepDistance = STRAIGHT_STEPS[straightStepMode];
       const targets = new Map();
       let movedCount = 0;
       scopedTokens.forEach((token) => {
-        const x = clamp(token.x + horizontal * STRAIGHT_STEP, SQUARE_MIN, SQUARE_MAX);
-        const y = clamp(token.y + vertical * STRAIGHT_STEP, SQUARE_MIN, SQUARE_MAX);
+        const x = clamp(token.x + horizontal * stepDistance, SQUARE_MIN, SQUARE_MAX);
+        const y = clamp(token.y + vertical * stepDistance, SQUARE_MIN, SQUARE_MAX);
         if (x !== token.x || y !== token.y) movedCount += 1;
         targets.set(token, pointToFreeTarget(x, y));
       });
@@ -2697,9 +4473,11 @@
         return;
       }
 
+      recordUndoState("straight movement");
+      twoLineState = null;
       animateToTargets(targets, 220, () => {
         const direction = horizontal < 0 ? "west" : horizontal > 0 ? "east" : vertical < 0 ? "north" : "south";
-        setStatus(`Moved ${movedCount} point${movedCount === 1 ? "" : "s"} ${direction}`);
+        setStatus(`Moved ${movedCount} point${movedCount === 1 ? "" : "s"} ${direction} by one ${STRAIGHT_STEP_LABELS[straightStepMode]}`);
       });
     }
 
@@ -2711,18 +4489,28 @@
       const scopedTokens = movementScope();
       if (!scopedTokens.length) return;
 
-      const targetOffset = direction === "in" ? 1 : -1;
       const targets = new Map();
       let movedCount = 0;
 
+      const ringOrder = radialRingOrder();
+      const targetRings = new Set();
       scopedTokens.forEach((token) => {
         const anchor = currentOrNearestAnchor(token);
-        const currentIndex = Math.max(0, RADIAL_RING_ORDER.indexOf(anchor.ring));
-        const targetIndex = clamp(currentIndex + targetOffset, 0, RADIAL_RING_ORDER.length - 1);
-        const targetRing = RADIAL_RING_ORDER[targetIndex];
+        // Step to the next ring in use in that direction. Going by radius (not list position) also
+        // works for a dancer left on a ¼/¾ ring after those rings are turned off.
+        const currentRadius = RING_RADII[anchor.ring];
+        const candidates = ringOrder.filter((ring) => (direction === "in"
+          ? RING_RADII[ring] < currentRadius - 0.5
+          : RING_RADII[ring] > currentRadius + 0.5));
+        const targetRing = candidates.length
+          ? candidates[direction === "in" ? 0 : candidates.length - 1]
+          : anchor.ring;
         const point = stepPosition(anchor.step, targetRing);
 
-        if (targetRing !== anchor.ring) movedCount += 1;
+        if (targetRing !== anchor.ring) {
+          movedCount += 1;
+          targetRings.add(targetRing);
+        }
         targets.set(token, anchorToTarget({
           ring: targetRing,
           step: anchor.step,
@@ -2733,12 +4521,14 @@
       });
 
       if (!movedCount) {
-        setStatus(direction === "in" ? "Already on inner ring" : "Already on outer ring");
+        setStatus(direction === "in" ? "Already on the center ring" : "Already on the outer tape");
         return;
       }
 
+      recordUndoState("radial movement");
+      const arrivedAt = targetRings.size === 1 ? ` to the ${RING_LABELS[[...targetRings][0]]}` : " one ring";
       animateConstrainedTargets(targets, () => {
-        setStatus(direction === "in" ? "Moved one step inward" : "Moved one step outward");
+        setStatus(`Moved ${direction === "in" ? "in" : "out"}${arrivedAt}`);
       });
       setStatus(direction === "in" ? "Moving inward" : "Moving outward");
     }
@@ -2760,6 +4550,8 @@
         }));
       });
 
+      if (!targets.size) return;
+      recordUndoState(ring === "inner" ? "move to inner ring" : "move to outer ring");
       animateConstrainedTargets(targets);
       setStatus(ring === "inner" ? "Moved to inner ring" : "Moved to outer ring");
     }
@@ -2814,12 +4606,78 @@
       return Number(value.toFixed(3));
     }
 
+    const panelTabs = [...document.querySelectorAll(".panel-tab")];
+    const tabPanels = [...document.querySelectorAll(".tab-panel")];
+
+    function showPanelTab(name) {
+      if (!tabPanels.some((panel) => panel.dataset.tabPanel === name)) name = "plan";
+      panelTabs.forEach((tab) => {
+        const isActive = tab.dataset.tab === name;
+        tab.classList.toggle("active", isActive);
+        tab.setAttribute("aria-selected", String(isActive));
+      });
+      tabPanels.forEach((panel) => {
+        panel.hidden = panel.dataset.tabPanel !== name;
+      });
+      try {
+        localStorage.setItem("opening2027.panelTab", name);
+      } catch {}
+    }
+
+    panelTabs.forEach((tab) => tab.addEventListener("click", () => showPanelTab(tab.dataset.tab)));
+
+    const tapeDotSizeInput = document.querySelector("#tapeDotSizeInput");
+    const tapeDotSizeValue = document.querySelector("#tapeDotSizeValue");
+    tapeDotSizeInput.value = tapeDotScale;
+    tapeDotSizeValue.textContent = `${tapeDotScale}×`;
+    tapeDotSizeInput.addEventListener("input", () => {
+      tapeDotScale = Number(tapeDotSizeInput.value);
+      tapeDotSizeValue.textContent = `${tapeDotScale}×`;
+      drawGuides();
+      try {
+        localStorage.setItem("opening2027.tapeDotScale", String(tapeDotScale));
+      } catch {}
+    });
+    // Panel text scales the whole side panel so buttons and labels stay in proportion.
+    const panelTextSizeInput = document.querySelector("#panelTextSizeInput");
+    const panelTextSizeValue = document.querySelector("#panelTextSizeValue");
+    function applyPanelTextScale(scale) {
+      document.documentElement.style.setProperty("--panel-text-scale", String(scale));
+      panelTextSizeInput.value = scale;
+      panelTextSizeValue.textContent = `${Math.round(scale * 100)}%`;
+    }
+    try {
+      const savedTextScale = Number(localStorage.getItem("opening2027.panelTextScale"));
+      applyPanelTextScale(savedTextScale >= 0.7 && savedTextScale <= 1.1 ? savedTextScale : 0.9);
+    } catch {
+      applyPanelTextScale(0.9);
+    }
+    panelTextSizeInput.addEventListener("input", () => {
+      applyPanelTextScale(Number(panelTextSizeInput.value));
+      try {
+        localStorage.setItem("opening2027.panelTextScale", panelTextSizeInput.value);
+      } catch {}
+    });
+    let savedPanelTab = "plan";
+    try {
+      savedPanelTab = localStorage.getItem("opening2027.panelTab") || "plan";
+    } catch {}
+    showPanelTab(savedPanelTab);
+
     document.addEventListener("pointermove", dragToken);
     document.addEventListener("pointerup", endDrag);
     document.addEventListener("pointercancel", endDrag);
     document.addEventListener("keydown", handleKeyDown);
+    [annotationTitleInput, annotationSubheadingInput].forEach((input) => {
+      input.addEventListener("input", () => {
+        updateAnnotation();
+        scheduleShotTextSave();
+      });
+      input.addEventListener("change", saveTextToOpenShot);
+    });
 
     document.querySelector("#resetBtn").addEventListener("click", resetLayout);
+    undoBtn.addEventListener("click", undoLastMovement);
     document.querySelector("#shuffleBtn").addEventListener("click", shuffleTokens);
     document.querySelector("#cwBtn").addEventListener("click", () => rotateByHalfSteps(-2));
     document.querySelector("#ccwBtn").addEventListener("click", () => rotateByHalfSteps(2));
@@ -2829,10 +4687,17 @@
     document.querySelector("#scopeAllBtn").addEventListener("click", chooseEveryone);
     document.querySelector("#selectAllBtn").addEventListener("click", selectAllTokens);
     document.querySelector("#clearSelectionBtn").addEventListener("click", clearSelection);
+    document.querySelector("#unselectActiveBtn").addEventListener("click", unselectActiveToken);
     document.querySelector("#selectLeadsBtn").addEventListener("click", () => selectRole("lead"));
     document.querySelector("#selectFollowsBtn").addEventListener("click", () => selectRole("follow"));
+    document.querySelector("#selectOddBtn").addEventListener("click", () => selectParity("odd"));
+    document.querySelector("#selectEvenBtn").addEventListener("click", () => selectParity("even"));
     document.querySelector("#stepInBtn").addEventListener("click", () => moveScopeRadially("in"));
     document.querySelector("#stepOutBtn").addEventListener("click", () => moveScopeRadially("out"));
+    document.querySelector("#alignRowBtn").addEventListener("click", () => alignMovementScope("horizontal"));
+    document.querySelector("#alignColumnBtn").addEventListener("click", () => alignMovementScope("vertical"));
+    document.querySelector("#distributeHorizontalBtn").addEventListener("click", () => distributeMovementScope("horizontal"));
+    document.querySelector("#distributeVerticalBtn").addEventListener("click", () => distributeMovementScope("vertical"));
     document.querySelector("#outerFormationBtn").addEventListener("click", () => applyFormation("outer"));
     document.querySelector("#innerFormationBtn").addEventListener("click", () => applyFormation("inner"));
     document.querySelector("#lineFormationBtn").addEventListener("click", () => applyFormation("line"));
@@ -2840,6 +4705,7 @@
     document.querySelector("#advanceLinesBtn").addEventListener("click", advanceTwoLines);
     document.querySelector("#crossFormationBtn").addEventListener("click", () => applyFormation("cross"));
     document.querySelector("#pyramidFormationBtn").addEventListener("click", () => applyFormation("pyramid"));
+    document.querySelector("#unfurlingPyramidBtn").addEventListener("click", loadUnfurlingPyramid);
     document.querySelector("#gridFormationBtn").addEventListener("click", () => applyFormation("grid"));
     document.querySelector("#squareFormationBtn").addEventListener("click", () => applyFormation("square"));
     document.querySelector("#saveFormationBtn").addEventListener("click", saveCustomFormation);
@@ -2848,18 +4714,69 @@
     document.querySelector("#playPathBtn").addEventListener("click", playCustomPath);
     document.querySelector("#clearPathBtn").addEventListener("click", clearCustomPath);
     document.querySelector("#chooseShotFolderBtn").addEventListener("click", chooseShotFolder);
+    document.querySelector("#saveStoryFolderBtn").addEventListener("click", saveNamedStoryFolder);
+    document.querySelector("#exportGifBtn").addEventListener("click", exportStoryboardGif);
+    document.querySelector("#saveStoryboardBtn").addEventListener("click", saveStoryboardFile);
+    document.querySelector("#openStoryboardBtn").addEventListener("click", openStoryboardFile);
+    document.querySelector("#driveSaveBtn").addEventListener("click", saveStoryToDrive);
+    document.querySelector("#driveOpenBtn").addEventListener("click", openStoryFromDrive);
+    driveBrowseBtn.addEventListener("click", browseDriveWithPicker);
+    openStoryboardInput.addEventListener("change", handleStoryboardFile);
     document.querySelector("#captureShotBtn").addEventListener("click", screenshot);
+    document.querySelector("#updateShotBtn").addEventListener("click", updateCurrentShot);
     document.querySelector("#previousShotBtn").addEventListener("click", () => stepShot(-1));
     document.querySelector("#nextShotBtn").addEventListener("click", () => stepShot(1));
     document.querySelector("#playShotsBtn").addEventListener("click", playStoryboard);
     document.querySelector("#stopShotsBtn").addEventListener("click", () => stopStoryboard(true));
     document.querySelector("#clearShotsBtn").addEventListener("click", clearStoryboard);
+    gifTimingInput.addEventListener("change", () => {
+      gifTimingInput.value = String(storyTimingMs());
+      renderStoryboard();
+      syncStoryboardFolder();
+      setStatus(`Frame timing set to ${storyTimingMs()} ms`);
+    });
+    gifEndHoldInput.addEventListener("change", () => {
+      gifEndHoldInput.value = String(gifEndHoldMs());
+      refreshGifSummary();
+      syncStoryboardFolder();
+      setStatus(gifEndHoldMs() ? `Last frame holds an extra ${gifEndHoldMs()} ms` : "Last frame uses the normal timing");
+    });
+    gifSizeInput.addEventListener("change", () => {
+      refreshGifSummary();
+      syncStoryboardFolder();
+      setStatus(`GIF size set to ${gifSize()} px`);
+    });
+    gifLoopInput.addEventListener("change", () => {
+      refreshGifSummary();
+      syncStoryboardFolder();
+      setStatus(gifLoopInput.checked ? "GIF will loop forever" : "GIF will play once");
+    });
+    storyNameInput.addEventListener("change", () => {
+      storyNameInput.value = storyName();
+      if (storyParentFolderHandle) {
+        ensureStoryFolder()
+          .then(() => saveStoryboardToFolder())
+          .then(() => setStatus(`Story renamed to ${storyName()}`))
+          .catch(() => enableDownloadFallback());
+      } else {
+        setStatus(`Story named ${storyName()}`);
+      }
+    });
     document.querySelector("#splitSelectedBtn").addEventListener("click", splitSelected);
     document.querySelector("#joinSelectedBtn").addEventListener("click", joinSelected);
-    document.querySelector("#splitAllBtn").addEventListener("click", splitAll);
-    document.querySelector("#joinAllBtn").addEventListener("click", joinAll);
+    splitAllBtn.addEventListener("click", splitAll);
+    joinAllBtn.addEventListener("click", joinAll);
+    snapButtons.forEach((button) => {
+      button.addEventListener("click", () => setSnapping(button.dataset.snap === "on"));
+    });
+    refreshSnapButtons();
+    ringStepButtons.forEach((button) => {
+      button.addEventListener("click", () => setQuarterRings(button.dataset.ringStep === "quarter"));
+    });
+    refreshRingStepButtons();
     document.querySelector("#renameBtn").addEventListener("click", renameSelected);
     document.querySelector("#copyBtn").addEventListener("click", copyPositions);
+    document.querySelector("#copyImageBtn").addEventListener("click", copyBoardImage);
     displayButtons.forEach((button) => {
       button.addEventListener("click", () => setCoupleDisplayMode(button.dataset.display));
     });
@@ -2868,6 +4785,9 @@
     });
     movementModeButtons.forEach((button) => {
       button.addEventListener("click", () => setMovementMode(button.dataset.movementMode));
+    });
+    straightStepButtons.forEach((button) => {
+      button.addEventListener("click", () => setStraightStepMode(button.dataset.straightStep));
     });
     facingButtons.forEach((button) => {
       button.addEventListener("click", () => setFacing(button.dataset.facing));
@@ -2879,6 +4799,9 @@
     refreshDisplayButtons();
     refreshColorButtons();
     refreshMovementModeButtons();
+    refreshStraightStepButtons();
+    refreshUndoButton();
+    updateAnnotation();
     renderStoryboard();
   </script>
 </body>

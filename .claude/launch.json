@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "frames",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "/private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/4b06c67d-3da7-45c4-a3c9-d689714ea7fc/scratchpad/serve_frames.py",
+        "8765"
+      ],
+      "port": 8765
+    }
+  ]
+}
