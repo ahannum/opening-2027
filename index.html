@@ -378,6 +378,15 @@
       stroke-dasharray: 1 8;
     }
 
+    /* Reference grid: as quiet as the ¼ and ¾ rings. */
+    .reference-grid {
+      fill: none;
+      stroke: #d3cec6;
+      stroke-width: 1;
+      stroke-dasharray: 1 8;
+      vector-effect: non-scaling-stroke;
+    }
+
     .slot-marker {
       fill: var(--coral);
       opacity: 0.48;
@@ -423,7 +432,7 @@
 
     .annotation-text {
       fill: #2d3236;
-      font-size: 18px;
+      font-size: 36px;
       font-weight: 800;
       dominant-baseline: hanging;
       text-anchor: start;
@@ -435,7 +444,7 @@
     }
 
     .annotation-subheading {
-      font-size: 15px;
+      font-size: 30px;
       font-weight: 500;
       dominant-baseline: hanging;
     }
@@ -476,6 +485,28 @@
 
     .piece.couple.partner-symbol .black-half {
       display: none;
+    }
+
+    /* A colored couple shown as lead/follow keeps its color as a ring around the split. */
+    .piece.couple.lead-follow-symbol.has-group-color .outline {
+      stroke: var(--group-color);
+      stroke-width: 5;
+    }
+
+    /* Bold couples are the ones dancing on these counts. */
+    .piece.emphasized .outline {
+      stroke: #1f2529;
+      stroke-width: 4;
+    }
+
+    .piece.couple.lead-follow-symbol.has-group-color.emphasized .outline {
+      stroke: var(--group-color);
+      stroke-width: 10;
+    }
+
+    /* While some couples are bold, fade the rest so the dancing rows stand out. */
+    #pieces:has(.piece.emphasized) .piece:not(.emphasized) {
+      opacity: 0.35;
     }
 
     .piece .black-half,
@@ -688,7 +719,7 @@
 
     .shot-actions {
       display: grid;
-      grid-template-columns: 24px 24px 1fr 24px;
+      grid-template-columns: 24px 24px 1fr 1fr 24px;
       gap: 3px;
     }
 
@@ -712,7 +743,8 @@
       font-size: 20px;
     }
 
-    .gif-settings select {
+    .gif-settings select,
+    .preset-select {
       min-height: 34px;
       border: 1px solid #bfc5c9;
       background: #ffffff;
@@ -777,6 +809,10 @@
     .piece.active .outline {
       stroke: var(--coral);
       stroke-width: 3.5;
+    }
+
+    .piece text.pair-label {
+      font-size: 17px;
     }
 
     .piece text {
@@ -864,8 +900,8 @@
         <g id="guides"></g>
         <g id="pieces"></g>
         <g id="annotations">
-          <text id="annotationTitle" x="22" y="22" class="annotation-text"></text>
-          <text id="annotationSubheading" x="22" y="48" class="annotation-text annotation-subheading"></text>
+          <text id="annotationTitle" x="22" y="16" class="annotation-text"></text>
+          <text id="annotationSubheading" x="22" y="58" class="annotation-text annotation-subheading"></text>
         </g>
       </svg>
     </section>
@@ -948,8 +984,10 @@
           <button id="crossFormationBtn" type="button">Cross</button>
           <button id="pyramidFormationBtn" type="button">Pyramid</button>
         </div>
+        <h3 class="mini-heading">Saved configurations</h3>
         <div class="button-grid compact">
-          <button id="unfurlingPyramidBtn" class="wide" type="button" title="Replace the storyboard with the 8 Unfurling Pyramid shots">Load Unfurling Pyramid Story</button>
+          <select id="storyPresetSelect" class="preset-select" aria-label="Saved configuration"></select>
+          <button id="loadPresetBtn" type="button" title="Replace the storyboard with this configuration's frames">Load Story</button>
         </div>
         <p class="section-help">Only the group above moves. Choose another group and formation to layer shapes; set Couples to Split when leads and follows need different paths.</p>
       </section>
@@ -998,6 +1036,16 @@
       </section>
 
       <section class="panel-section">
+        <div class="step-heading"><h2>Present &amp; Google Slides</h2></div>
+        <div class="button-grid compact">
+          <button id="presentBtn" class="primary-action wide" type="button" title="Open the frames in the presenter; step with the arrow keys">Present ▶</button>
+          <button id="copyFrameBtn" type="button" title="Copy the selected frame, then paste it into a slide">Copy Selected Frame</button>
+          <button id="saveAllFramesBtn" type="button" title="Download every frame as a numbered PNG">Save All Frames</button>
+        </div>
+        <p class="section-help">Present opens the frames in their own window; step with the arrow keys, Space, or a clicker. Copy a frame (or use Copy under any frame) and paste it onto a slide. For a whole story, Save All Frames, then in Slides use Insert → Image → Upload from computer and pick them all.</p>
+      </section>
+
+      <section class="panel-section">
         <div class="step-heading"><h2>GIF &amp; playback timing</h2></div>
         <div class="gif-settings">
           <label for="gifSizeInput">Size</label>
@@ -1006,6 +1054,8 @@
             <option value="480" selected>Medium · 480 px</option>
             <option value="720">Large · 720 px</option>
             <option value="1080">HD · 1080 px</option>
+            <option value="1440">Extra large · 1440 px</option>
+            <option value="2160">Full · 2160 px (slow)</option>
           </select>
           <label for="gifTimingInput">Each frame</label>
           <span class="unit-input"><input id="gifTimingInput" type="number" min="100" max="10000" step="100" value="900"><span>ms</span></span>
@@ -1200,6 +1250,11 @@
       blue: "#78b9e6",
       green: "#9bcf85",
       rose: "#ee9694",
+      // Extra colors so the Final V can give each of its eight rows its own.
+      orange: "#f39a5e",
+      teal: "#7fcfc4",
+      violet: "#b9a3e3",
+      pink: "#e9a6d3",
     };
     // Base rings, also used to lay out the cross formation's arms.
     const RADIAL_RING_ORDER = ["outer", "middle", "inner", "center"];
@@ -1207,8 +1262,9 @@
     // The outer and inner rings are the taped circles on the floor, so their dots get their own size.
     const TAPE_RINGS = ["outer", "inner"];
     const DEFAULT_TAPE_DOT_SCALE = 2.5;
-    // Shot PNGs render at 2x the board size so numbers stay crisp in exports and Drive.
-    const SHOT_PNG_SIZE = 1440;
+    // Shot PNGs render at 3x the board size so numbers stay crisp on slides, in exports, and on Drive.
+    const SHOT_PNG_SIZE = 2160;
+    const GIF_SIZES = [360, 480, 720, 1080, 1440, 2160];
     let tapeDotScale = DEFAULT_TAPE_DOT_SCALE;
     try {
       const savedScale = Number(localStorage.getItem("opening2027.tapeDotScale"));
@@ -1252,6 +1308,7 @@
     const undoBtn = document.querySelector("#undoBtn");
     const openStoryboardInput = document.querySelector("#openStoryboardInput");
     const shotStrip = document.querySelector("#shotStrip");
+    const storyPresetSelect = document.querySelector("#storyPresetSelect");
 
     const tokens = [];
     const coupleLabels = new Map();
@@ -1288,8 +1345,8 @@
     function updateAnnotation() {
       annotationTitle.textContent = annotationTitleInput.value;
       annotationSubheading.textContent = annotationSubheadingInput.value;
-      fitAnnotationLine(annotationTitle, 18, 12);
-      fitAnnotationLine(annotationSubheading, 15, 10);
+      fitAnnotationLine(annotationTitle, 36, 18);
+      fitAnnotationLine(annotationSubheading, 30, 15);
     }
 
     function fitAnnotationLine(element, baseSize, minimumSize) {
@@ -1349,6 +1406,24 @@
 
       const min = SQUARE_MIN;
       const max = SQUARE_MAX;
+      // A faint reference grid on the pyramid's column spacing, framed by a box half a column outside
+      // the taped square.
+      const gridGap = OUTER_RADIUS / 3;
+      const outerMin = min - gridGap / 2;
+      const outerMax = max + gridGap / 2;
+      guides.append(svgElement("rect", {
+        x: outerMin,
+        y: outerMin,
+        width: outerMax - outerMin,
+        height: outerMax - outerMin,
+        class: "reference-grid",
+      }));
+      for (let offset = min; offset <= max + 0.5; offset += gridGap) {
+        guides.append(
+          svgElement("line", { x1: offset, y1: outerMin, x2: offset, y2: outerMax, class: "reference-grid" }),
+          svgElement("line", { x1: outerMin, y1: offset, x2: outerMax, y2: offset, class: "reference-grid" })
+        );
+      }
       guides.append(
         svgElement("rect", {
           x: min,
@@ -1444,7 +1519,8 @@
 
       const guestText = svgElement("text", {
         x: CENTER.x,
-        y: CENTER.y + OUTER_RADIUS + 28,
+        // Low enough that a dancer standing on the outer tape's front point doesn't cover it.
+        y: CENTER.y + OUTER_RADIUS + PIECE_RADIUS * 2 + 12,
         class: "guest-text",
       });
       guestText.textContent = "Honored Guests";
@@ -1493,9 +1569,12 @@
       facingMode = defaultFacingMode,
       displayMode = defaultCoupleDisplayMode,
       groupColor = defaultGroupColor,
+      emphasized = false,
+      // Shown instead of the number, e.g. "1-2" for a pair of dancers drawn as one circle.
+      label = null,
     }) {
       const group = svgElement("g", {
-        class: `piece ${role}`,
+        class: `piece ${role}${emphasized ? " emphasized" : ""}`,
         tabindex: "0",
         "data-number": number,
         "data-role": role,
@@ -1511,9 +1590,17 @@
         facingMode,
         displayMode,
         groupColor,
+        emphasized,
+        label,
         group,
         blackHalf: null,
         text: null,
+      };
+      const numberText = () => {
+        const text = svgElement("text", { x: 0, y: 1 });
+        text.textContent = label ?? String(number);
+        if (label) text.classList.add("pair-label");
+        return text;
       };
 
       if (role === "couple") {
@@ -1532,8 +1619,7 @@
           r: PIECE_RADIUS,
           class: "outline",
         });
-        const text = svgElement("text", { x: 0, y: 1 });
-        text.textContent = String(number);
+        const text = numberText();
 
         group.append(base, blackHalf, outline, text);
         token.blackHalf = blackHalf;
@@ -1551,8 +1637,7 @@
           r: PIECE_RADIUS,
           class: "outline",
         });
-        const text = svgElement("text", { x: 0, y: 1 });
-        text.textContent = String(number);
+        const text = numberText();
 
         group.append(fill, outline, text);
         token.text = text;
@@ -1573,6 +1658,7 @@
     function updateTokenColor(token) {
       const color = GROUP_COLORS[token.groupColor] || GROUP_COLORS.neutral;
       token.group.style.setProperty("--group-color", color);
+      token.group.classList.toggle("has-group-color", Boolean(GROUP_COLORS[token.groupColor]) && token.groupColor !== "neutral");
     }
 
     function setTokenPosition(token, x, y) {
@@ -2486,66 +2572,177 @@
       return targets;
     }
 
-    // Unfurling Pyramid: a line opens row by row into a 7-5-3 pyramid, then 9 walks out of the front.
-    // Rows and columns share one lattice so they line up.
+    // Unfurling Pyramid: a line opens into a 7-5-3 pyramid with 9 out front. Frame 1 is the start and
+    // each frame after it is one four-count measure. Rows and columns share one lattice so they line up.
     const UNFURLING_PYRAMID_COLORS = {
       rose: [1, 4, 6, 8, 11, 13, 16],
       green: [2, 5, 10, 12, 15],
       amber: [3, 7, 14],
       neutral: [9],
     };
+    // How far each group has travelled from its line spot (0) to its final spot (1), one entry per frame.
+    // Each group locks into its final spot in turn: red on frame 2, green on 3, yellow on 4, 9 on 5.
+    // Frame 2: red is set; green steps forward and starts to spread; yellow and 9 form one solid line
+    //   in front of them.
+    // Frame 3: green is set; yellow starts spreading while 9 pulls ahead.
+    // Frame 4: yellow is set; 9 keeps walking, reaching the outer tape on frame 5.
+    const UNFURLING_PYRAMID_TIMELINE = {
+      red: { x: [0, 1, 1, 1, 1], y: [0, 1, 1, 1, 1] },
+      green: { x: [0, 0.3, 1, 1, 1], y: [0, 0.75, 1, 1, 1] },
+      yellow: { x: [0, 0, 0.3, 1, 1], y: [0, 0.61, 0.82, 1, 1] },
+      nine: { x: [0, 0, 0.5, 1, 1], y: [0, 0.43, 0.73, 0.875, 1] },
+    };
+
+    const UNFURLING_PYRAMID_LINE_Y = CENTER.y - OUTER_RADIUS * 0.7;
+
+    // Final pyramid: red on the top of the inner tape (8 on its top dot), green on the center line,
+    // yellow level with the inner tape's point nearest the Honored Guests (3 on it), and 9 on the
+    // outer tape's front point. In-between frames interpolate toward these spots.
+    const UNFURLING_PYRAMID_GROUPS = {
+      red: { numbers: [1, 4, 6, 8, 11, 13, 16], firstColumn: 0, y: CENTER.y - INNER_RADIUS },
+      green: { numbers: [2, 5, 10, 12, 15], firstColumn: 1, y: CENTER.y },
+      yellow: { numbers: [7, 3, 14], firstColumn: 2, y: CENTER.y + INNER_RADIUS },
+      nine: { numbers: [9], firstColumn: 3, y: CENTER.y + OUTER_RADIUS },
+    };
+
+    function unfurlingPyramidFinalSpots() {
+      const column = (index) => spreadValue(index, 7, SQUARE_MIN, SQUARE_MAX);
+      const finalSpot = {};
+      Object.values(UNFURLING_PYRAMID_GROUPS).forEach(({ numbers, firstColumn, y }) => {
+        numbers.forEach((number, index) => { finalSpot[number] = [column(firstColumn + index), y]; });
+      });
+      return finalSpot;
+    }
+
+    // Unfurling Pyramid v2: the reds start in the line on their final columns, so they only walk
+    // straight forward. The other nine squeeze into the gaps between them (overlapping a little), each
+    // beside the column it ends up in, and walk one straight line to their spot.
+    // One list per gap between neighbouring reds, left to right: 1|2|4|5 7|6|10 3|8|9 14|11|12|13|15|16.
+    const UNFURLING_PYRAMID_V2_GAPS = [[2], [5, 7], [10, 3], [9, 14], [12], [15]];
+    // How far each group is along its straight path on each frame. Red is set on frame 2, green on 3,
+    // yellow on 4, 9 on 5; the center column stays about 70px apart as it walks forward.
+    const UNFURLING_PYRAMID_V2_TIMELINE = {
+      red: [0, 1, 1, 1, 1],
+      green: [0, 0.645, 1, 1, 1],
+      yellow: [0, 0.585, 0.792, 1, 1],
+      nine: [0, 0.557, 0.727, 0.871, 1],
+    };
+
+    // Unfurling Pyramid v3: reds again start on their final columns, but yellow and 9 squeeze in
+    // around 8 in the middle while the greens fill the gaps toward both ends of the line.
+    const UNFURLING_PYRAMID_V3_GAPS = [[2], [5, 10], [7, 3], [9, 14], [12], [15]];
+
+    function unfurlingPyramidV3Layouts() {
+      const frames = unfurlingPyramidGapLineLayouts(UNFURLING_PYRAMID_V3_GAPS);
+      // Frame 2: 7, 3, 9 and 14 make one row on the center line, 9 already up beside 3. The greens,
+      // 7 and 14 are already over their final columns, so later they only walk straight forward.
+      Object.assign(frames[1], {
+        7: [306.3, 360],
+        9: [389.4, 360],
+        14: [436.1, 360],
+      });
+      alignToFinalColumns(frames[1], [...UNFURLING_PYRAMID_GROUPS.green.numbers, 7, 14]);
+      return frames;
+    }
+
+    function unfurlingPyramidV2Layouts() {
+      const frames = unfurlingPyramidGapLineLayouts(UNFURLING_PYRAMID_V2_GAPS);
+      // Frame 2: 3, 7, 9 and 14 make one row on the center line, 9 already up beside 3. As in v3, the
+      // greens, 7 and 14 are already over their final columns (6, 5 and 7 in one file, and so on).
+      Object.assign(frames[1], {
+        3: [327.9, 360],
+        7: [254.3, 360],
+        9: [381.8, 360],
+        14: [462, 360],
+      });
+      alignToFinalColumns(frames[1], [...UNFURLING_PYRAMID_GROUPS.green.numbers, 7, 14]);
+      return frames;
+    }
+
+    // Slides each dancer sideways onto their final pyramid column, keeping their spot front to back.
+    function alignToFinalColumns(positions, numbers) {
+      const finalSpot = unfurlingPyramidFinalSpots();
+      numbers.forEach((number) => { positions[number] = [finalSpot[number][0], positions[number][1]]; });
+    }
+
+    // Everyone walks one straight line from the starting line to their pyramid spot. Reds start on
+    // their final columns; `gaps` lists, left to right, who squeezes in between each pair of reds.
+    function unfurlingPyramidGapLineLayouts(gaps) {
+      const finalSpot = unfurlingPyramidFinalSpots();
+      const redX = UNFURLING_PYRAMID_GROUPS.red.numbers.map((number) => finalSpot[number][0]);
+      const lineX = Object.fromEntries(UNFURLING_PYRAMID_GROUPS.red.numbers.map((number, index) => [number, redX[index]]));
+      gaps.forEach((gap, index) => gap.forEach((number, slot) => {
+        lineX[number] = lerp(redX[index], redX[index + 1], (slot + 1) / (gap.length + 1));
+      }));
+      return UNFURLING_PYRAMID_V2_TIMELINE.red.map((_, frame) => Object.fromEntries(
+        Object.entries(UNFURLING_PYRAMID_GROUPS).flatMap(([group, { numbers }]) => numbers.map((number) => {
+          const progress = UNFURLING_PYRAMID_V2_TIMELINE[group][frame];
+          return [number, [
+            lerp(lineX[number], finalSpot[number][0], progress),
+            lerp(UNFURLING_PYRAMID_LINE_Y, finalSpot[number][1], progress),
+          ]];
+        }))
+      ));
+    }
 
     function unfurlingPyramidLayouts() {
       const lineOrder = [1, 4, 6, 2, 5, 10, 7, 3, 9, 14, 12, 15, 8, 11, 13, 16];
       // The line runs nearly edge to edge so 16 dancers barely touch and every number stays readable.
       const lineEdge = PIECE_RADIUS + 14;
       const lineX = (number) => spreadValue(lineOrder.indexOf(number), lineOrder.length, lineEdge, SIZE - lineEdge);
-      const column = (index) => spreadValue(index, 7, SQUARE_MIN, SQUARE_MAX);
-      const rowGap = column(1) - column(0);
-      const lineY = CENTER.y - OUTER_RADIUS * 0.7;
-      const backY = CENTER.y - OUTER_RADIUS / 2;
-      const middleY = backY + rowGap;
-      const frontY = middleY + rowGap;
-      const middleNine = [2, 5, 10, 7, 3, 9, 14, 12, 15];
+      // Where each dancer stands in the starting line, inside the taped square.
+      const squareLineX = (number) => spreadValue(lineOrder.indexOf(number), lineOrder.length, SQUARE_MIN, SQUARE_MAX);
+      const lineY = UNFURLING_PYRAMID_LINE_Y;
+      const groups = UNFURLING_PYRAMID_GROUPS;
+      const finalSpot = unfurlingPyramidFinalSpots();
 
-      const line = Object.fromEntries(lineOrder.map((number) => [number, [lineX(number), lineY]]));
-      const back = Object.fromEntries([1, 4, 6, 8, 11, 13, 16].map((number, index) => [number, [column(index), backY]]));
-      const middle = Object.fromEntries([2, 5, 10, 12, 15].map((number, index) => [number, [column(index + 1), middleY]]));
-      const cluster = Object.fromEntries([7, 3, 9, 14].map((number, index) => [
-        number,
-        [CENTER.x + (index - 1.5) * PIECE_RADIUS * 2, CENTER.y],
-      ]));
-      const front = { 7: [column(2), frontY], 3: [column(3), frontY], 14: [column(4), frontY] };
-      // 9 walks from just behind 3 down to the half ring at the front.
-      const nineOut = [0, 1, 2, 3].map((index) => ({
-        ...back,
-        ...middle,
-        ...front,
-        9: [CENTER.x, spreadValue(index, 4, frontY + PIECE_RADIUS * 2, CENTER.y + MIDDLE_RADIUS)],
-      }));
-      const closed = { ...back, ...middle, ...cluster };
-      // Between the line and the pyramid, everyone keeps their line spot: first two rows, then the
-      // middle nine drop back into their own row.
-      const middleRow = {
-        ...back,
-        ...Object.fromEntries(middleNine.map((number) => [number, [lineX(number), middleY]])),
-      };
-      const stacked = Object.fromEntries(lineOrder.map((number) => [
-        number,
-        [lineX(number), middleNine.includes(number) ? backY + rowGap / 2 : backY],
-      ]));
-
-      // Unfurl in order: the line splits into two rows, the middle drops into its own row, the front
-      // three step out to finish the pyramid, then 9 walks out to the front.
-      return [line, stacked, middleRow, closed, ...nineOut];
+      // Red slides straight in from its starting spot, so 1 and 16 never step outside where they began.
+      // The middle nine measure from the wider line spots, which gives them room while they step forward.
+      const pathStartX = (group, number) => (group === "red" ? squareLineX(number) : lineX(number));
+      const frames = UNFURLING_PYRAMID_TIMELINE.red.x.map((_, frame) => Object.fromEntries(
+        Object.entries(groups).flatMap(([group, { numbers }]) => numbers.map((number) => {
+          const progress = UNFURLING_PYRAMID_TIMELINE[group];
+          return [number, [
+            lerp(pathStartX(group, number), finalSpot[number][0], progress.x[frame]),
+            lerp(lineY, finalSpot[number][1], progress.y[frame]),
+          ]];
+        }))
+      ));
+      // Everyone starts in the line inside the taped square.
+      frames[0] = Object.fromEntries(lineOrder.map((number) => [number, [squareLineX(number), lineY]]));
+      // On frame 2, 10 steps across to stand halfway between 6 and 8.
+      frames[1][10] = [(frames[1][6][0] + frames[1][8][0]) / 2, frames[1][10][1]];
+      return frames;
     }
 
-    function unfurlingPyramidSnapshot(positions) {
+    // Two frames make a four-count measure, labeled the same way in every configuration:
+    // "Start", "Measure 1 (1–2)", "Measure 1 (3–4)", "Measure 2 (1–2)", and so on.
+    function unfurlingPyramidCountLabel(frame) {
+      if (frame === 0) return "Start";
+      const measure = Math.floor((frame - 1) / 2) + 1;
+      const counts = (frame - 1) % 2 === 0 ? "(1–2)" : "(3–4)";
+      return `Measure ${measure} ${counts}`;
+    }
+
+    // The Unfurling Pyramid takes a whole four-count measure per frame, and the starting line is
+    // measure 1, so its frames run Measure 1 to Measure 5.
+    function unfurlingPyramidMeasureLabel(frame) {
+      return `Measure ${frame + 1}`;
+    }
+
+    function unfurlingPyramidSnapshot(positions, frame) {
+      return storyFrameSnapshot("Unfurling Pyramid (old)", positions, frame, unfurlingPyramidMeasureLabel(frame));
+    }
+
+    // One frame of a saved configuration: joined couples in the pyramid's group colors, titled and
+    // labeled with its counts.
+    // `look(number)` can override a couple's groupColor, displayMode or facingMode for this frame.
+    function storyFrameSnapshot(title, positions, frame, subtitle = unfurlingPyramidCountLabel(frame), look = () => ({})) {
       const colorFor = (number) => Object.keys(UNFURLING_PYRAMID_COLORS)
         .find((color) => UNFURLING_PYRAMID_COLORS[color].includes(number));
       return {
         count: COUPLE_COUNT,
-        annotation: { title: "Unfurling Pyramid", subtitle: "" },
+        annotation: { title, subtitle },
         items: Array.from({ length: COUPLE_COUNT }, (_, index) => {
           const number = index + 1;
           const [x, y] = positions[number];
@@ -2558,6 +2755,7 @@
             facingMode: "out",
             displayMode: "partner",
             groupColor: colorFor(number),
+            ...look(number),
             x: Number(x.toFixed(3)),
             y: Number(y.toFixed(3)),
           };
@@ -2565,36 +2763,591 @@
       };
     }
 
-    async function loadUnfurlingPyramid() {
-      stopStoryboard(false);
-      if (storyboardShots.length && !window.confirm("Replace the current storyboard shots with the Unfurling Pyramid?")) return;
+    // Triumphant Crossing: leads start in a grid on the west, follows in a grid on the east (Ariel's shot 1
+    // from the saved storyboard, couples 1–16 in order). The two grids slide through each other in equal
+    // steps, leads east and follows west, while everyone drifts the same small amount toward the Honored
+    // Guests, so on shot 13 Lead 4 and Follow 15 split the middle circle: both on the center line, one
+    // either side of the center. From there nobody moves closer to the Honored Guests: leads head back
+    // west and follows east in equal steps to their couple's Cascade Grid column, so the columns alternate
+    // windows (shot 14) and lined up (shot 15) until every couple is reunited on shot 19. On shot 20 partners trade spots, follows nearer the guests.
+    const TRIUMPHANT_CROSSING_START = {
+      lead: [[72.3, 351.706], [74.297, 274.497], [168.297, 120.539], [74.297, 192.399], [74.297, 120.539], [168.297, 274.497],
+        [166.3, 351.706], [262.297, 120.539], [262.297, 192.399], [168.297, 192.399], [260.3, 351.706], [356.297, 120.539],
+        [356.297, 192.399], [262.297, 274.497], [356.297, 274.497], [354.3, 351.706]],
+      follow: [[359.147, 316.697], [358.978, 238.436], [453.479, 85.801], [359.136, 160.906], [359.479, 85.801], [452.978, 238.436],
+        [453.147, 316.697], [547.479, 85.801], [547.136, 160.906], [453.136, 160.906], [547.147, 316.697], [641.479, 85.801],
+        [641.136, 160.906], [546.978, 238.436], [640.978, 238.436], [641.147, 316.697]],
+    };
+    const TRIUMPHANT_CROSSING_STEPS = 12;
+    const TRIUMPHANT_CROSSING_REUNITE_STEPS = 6;
 
-      recordUndoState("Unfurling Pyramid");
-      setStatus("Building Unfurling Pyramid shots");
-      storyNameInput.value = "Unfurling Pyramid";
-      try {
-        const shots = [];
-        for (const [index, positions] of unfurlingPyramidLayouts().entries()) {
-          const snapshot = unfurlingPyramidSnapshot(positions);
-          restoreStoryboardSnapshot(snapshot);
-          const blob = await renderBoardPngBlob(SHOT_PNG_SIZE);
-          shots.push({
-            id: `${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`,
-            name: `Shot ${index + 1}`,
-            filename: `formation-shot-${String(index + 1).padStart(2, "0")}.png`,
-            thumbnail: await blobToDataUrl(blob),
-            snapshot,
-          });
+    function triumphantCrossingSnapshots() {
+      const { lead, follow } = TRIUMPHANT_CROSSING_START;
+      const steps = TRIUMPHANT_CROSSING_STEPS;
+      const reuniteSteps = TRIUMPHANT_CROSSING_REUNITE_STEPS;
+      const drift = {
+        lead: (CENTER.x - lead[3][0]) / steps,
+        follow: (CENTER.x - follow[14][0]) / steps,
+      };
+      const towardGuests = (CENTER.y - (lead[3][1] + follow[14][1]) / 2) / steps;
+      const blockColumns = blockToPyramidLayouts()[0];
+      // Where a dancer is on a given frame: the crossing up to shot 13, then the walk back to their
+      // couple's column at shot 13's distance from the Honored Guests, held after the reunion.
+      const position = (role, index, frame) => {
+        const [x, y] = TRIUMPHANT_CROSSING_START[role][index];
+        const crossed = [x + Math.min(frame, steps) * drift[role], y + Math.min(frame, steps) * towardGuests];
+        if (frame <= steps) return crossed;
+        const share = Math.min(frame - steps, reuniteSteps) / reuniteSteps;
+        return [lerp(crossed[0], blockColumns[index + 1][0], share), crossed[1]];
+      };
+      return Array.from({ length: steps + reuniteSteps + 2 }, (_, frame) => ({
+        count: COUPLE_COUNT * 2,
+        // One frame per beat: the first is the starting spots, then "Measure 1: Beat 1" through "Measure 1: Beat 4" and on.
+        annotation: {
+          title: "Triumphant Crossing",
+          subtitle: frame === 0 ? "Start" : `Measure ${Math.floor((frame - 1) / 4) + 1}: Beat ${(frame - 1) % 4 + 1}`,
+        },
+        items: Array.from({ length: COUPLE_COUNT }, (_, index) => ["lead", "follow"].map((role) => {
+          // On the last frame partners trade spots, so the follows end up closer to the Honored Guests.
+          const flipped = frame === steps + reuniteSteps + 1;
+          const spotRole = flipped ? (role === "lead" ? "follow" : "lead") : role;
+          const [x, y] = position(spotRole, index, frame);
+          return {
+            key: `${index + 1}:${role}`,
+            number: index + 1,
+            role,
+            ring: null,
+            step: null,
+            facingMode: "south",
+            displayMode: "partner",
+            groupColor: "neutral",
+            x: Number(x.toFixed(3)),
+            y: Number(y.toFixed(3)),
+          };
+        })).flat(),
+      }));
+    }
+
+    // Line to Triumphant Crossing, from Ariel's sketches. One vertical line of couples (listed north
+    // to south) gallops out to an X with every couple on the outer tape, 3/4, 1/2 or 1/4. The follows
+    // separate from their leads and gallop round to a cross on the same tapes while the leads hold
+    // the X, and everyone draws in for finger turns. The gallop pairs (each the two dancers who share
+    // a column of their Triumphant Crossing grid) join up on the X and +, then one measure to gallop
+    // into the inner circle, each pair on the inner tape, and then the gallop to the grid in eight
+    // bunches, 4 leads or 4 follows each: where everyone is after one measure and after another.
+    // In each bunch its two pairs stand side by side across the row, in their grid columns' order,
+    // spreading toward the columns' spacing. After one measure the bunches are partway there, moving at
+    // different rates so they don't run into each other (the 11 14 15 16 leads go west first, under
+    // their columns, and the 3 4 5 10 follows east across the middle, then both walk north); after two every pair is at its grid spot,
+    // between its two dancers' places: two rows of lead pairs and two rows of follow pairs. Where the
+    // leads' and follows' grids meet in the middle, those pairs stand a little apart so both show. The 8 9 12 13 leads are further north than the 3 4 5 10 leads, and the
+    // 11 14 15 16 leads are in the middle of the floor with the 1 2 6 7 follows just behind them.
+    // Couples are numbered by where they start Triumphant Crossing.
+    const LINE_TO_CROSSING_LINE_ORDER = [3, 12, 10, 13, 5, 8, 4, 9, 6, 14, 7, 15, 2, 11, 1, 16];
+    // Gallop pairs: the two dancers who share a column of their Triumphant Crossing grid. Once they
+    // join up on the X and +, each pair of leads or of follows is drawn as one circle.
+    const LINE_TO_CROSSING_PAIRS = [[1, 2], [6, 7], [3, 10], [4, 5], [8, 9], [12, 13], [11, 14], [15, 16]];
+    const LINE_TO_CROSSING_FRAMES = [
+      {
+        subtitle: "Gallop out",
+        solid: true,
+        couple: [[265.7, 607.9], [292.8, 544.7], [252.1, 99.5], [333.2, 295.3], [306.4, 230.7], [333.2, 424.7], [306.2, 479.7], [413.5, 236.9],
+          [392.5, 310.2], [279.3, 165.1], [440.7, 554.9], [473.3, 97.1], [455.8, 159.5], [386.8, 424.7], [413.6, 489.3], [467.9, 620.5]],
+      },
+      {
+        subtitle: "X",
+        solid: true,
+        couple: [[160.6, 559.4], [210.4, 509.6], [160.6, 160.6], [310.1, 310.1], [260.3, 260.3], [310.1, 409.9], [260.3, 459.7], [459.7, 260.3],
+          [409.9, 310.1], [210.4, 210.4], [509.6, 509.6], [559.4, 160.6], [509.6, 210.4], [409.9, 409.9], [459.7, 459.7], [559.4, 559.4]],
+      },
+      {
+        subtitle: "Follows separate",
+        lead: [[160.6, 559.4], [210.4, 509.6], [160.6, 160.6], [310.1, 310.1], [260.3, 260.3], [310.1, 409.9], [260.3, 459.7], [459.7, 260.3],
+          [409.9, 310.1], [210.4, 210.4], [509.6, 509.6], [559.4, 160.6], [509.6, 210.4], [409.9, 409.9], [459.7, 459.7], [559.4, 559.4]],
+        follow: [[193.1, 591.9], [243, 542.1], [128.1, 193.1], [277.6, 342.7], [227.8, 292.8], [342.7, 442.4], [292.8, 492.2], [427.2, 227.8],
+          [377.3, 277.6], [177.9, 243], [542.1, 477], [526.9, 128.1], [477, 177.9], [442.4, 377.3], [492.2, 427.2], [591.9, 526.9]],
+      },
+      {
+        subtitle: "Follows gallop",
+        lead: [[160.6, 559.4], [210.4, 509.6], [160.6, 160.6], [310.1, 310.1], [260.3, 260.3], [310.1, 409.9], [260.3, 459.7], [459.7, 260.3],
+          [409.9, 310.1], [210.4, 210.4], [509.6, 509.6], [559.4, 160.6], [509.6, 210.4], [409.9, 409.9], [459.7, 459.7], [559.4, 559.4]],
+        follow: [[272.9, 630.2], [299.7, 565.3], [89.8, 272.9], [283.1, 352], [219.3, 326.3], [352, 436.9], [326.3, 500.7], [393.7, 219.3],
+          [368, 283.1], [154.7, 299.7], [565.3, 420.3], [447.1, 89.8], [420.3, 154.7], [436.9, 368], [500.7, 393.7], [630.2, 447.1]],
+      },
+      {
+        subtitle: "Cross",
+        lead: [[160.6, 559.4], [210.4, 509.6], [160.6, 160.6], [310.1, 310.1], [260.3, 260.3], [310.1, 409.9], [260.3, 459.7], [459.7, 260.3],
+          [409.9, 310.1], [210.4, 210.4], [509.6, 509.6], [559.4, 160.6], [509.6, 210.4], [409.9, 409.9], [459.7, 459.7], [559.4, 559.4]],
+        follow: [[360, 642], [360, 571.5], [78, 360], [289.5, 360], [219, 360], [360, 430.5], [360, 501], [360, 219],
+          [360, 289.5], [148.5, 360], [571.5, 360], [360, 78], [360, 148.5], [430.5, 360], [501, 360], [642, 360]],
+      },
+      {
+        subtitle: "Finger turns",
+        lead: [[222.1, 497.9], [253.9, 466.1], [222.1, 222.1], [317.6, 317.6], [285.8, 285.8], [317.6, 402.4], [285.8, 434.2], [434.2, 285.8],
+          [402.4, 317.6], [253.9, 253.9], [466.1, 466.1], [497.9, 222.1], [466.1, 253.9], [402.4, 402.4], [434.2, 434.2], [497.9, 497.9]],
+        follow: [[360, 555], [360, 510], [165, 360], [300, 360], [255, 360], [360, 420], [360, 465], [360, 255],
+          [360, 300], [210, 360], [510, 360], [360, 165], [360, 210], [420, 360], [465, 360], [555, 360]],
+      },
+      {
+        subtitle: "Pairs on the X and +",
+        pairs: {
+          lead: [[238, 482], [301.7, 418.3], [238, 238], [301.7, 301.7], [418.3, 301.7], [482, 238], [434.2, 434.2], [466, 466]],
+          follow: [[360, 532.5], [360, 442.5], [187.5, 360], [277.5, 360], [360, 277.5], [360, 187.5], [465, 360], [510, 360]],
+        },
+      },
+      {
+        subtitle: "Gallop into the inner circle",
+        pairs: {
+          lead: [[232.4, 417.7], [264.3, 462.1], [302.3, 232.4], [257.9, 264.3], [455.8, 257.9], [487.6, 302.3], [417.8, 487.5], [462.2, 455.7]],
+          follow: [[310.6, 491], [364.6, 499.9], [229, 310.6], [220.1, 364.6], [355.4, 220.1], [409.4, 229], [491.0, 409.3], [499.9, 355.4]],
+        },
+      },
+      {
+        subtitle: "Gallop to the grid: after 1 measure",
+        pairs: {
+          lead: [[153.1, 318.8], [223.1, 316.6], [235.7, 202.4], [165.7, 202.4], [383.5, 236.8], [446.3, 236.8], [261, 432], [319, 432]],
+          follow: [[386.4, 369.2], [451, 370], [409, 310], [351, 310], [434.6, 184.1], [499.8, 184.1], [510.6, 340.4], [567.5, 340.4]],
+        },
+      },
+      {
+        subtitle: "Gallop to the grid: after 2 measures",
+        pairs: {
+          lead: [[73.3, 313.1], [167.3, 313.1], [168.3, 156.5], [74.3, 156.5], [262.3, 156.5], [342.3, 156.5], [261.3, 313.1], [341.3, 313.1]],
+          follow: [[373.1, 277.6], [453.1, 277.6], [453.3, 123.4], [373.3, 123.4], [547.3, 123.4], [641.3, 123.4], [547.1, 277.6], [641.1, 277.6]],
+        },
+      },
+    ];
+
+    function lineToCrossingSnapshots() {
+      const title = "Line to Triumphant Crossing";
+      // Couples show their lead's black half toward the center, so the follows are on the outside.
+      const look = { ring: null, step: null, facingMode: "in", groupColor: "neutral" };
+      const dancer = (number, role, [x, y]) => ({
+        key: `${number}:${role}`, number, role, ...look, displayMode: role === "couple" ? "leadFollow" : "partner", x, y,
+      });
+      const line = Array.from({ length: COUPLE_COUNT }, (_, place) => dancer(
+        LINE_TO_CROSSING_LINE_ORDER[place],
+        "couple",
+        [CENTER.x, Number(spreadValue(place, COUPLE_COUNT, SQUARE_MIN, SQUARE_MAX).toFixed(3))]
+      )).sort((a, b) => a.number - b.number);
+      // The story opens on the turn cascade: the leads stand in one line down the middle and each
+      // follow stands beside their lead, on the side away from where the couple gallops to (16's
+      // follow on the left, 1's on the right, 11's on the left, and on up the line). Then the line:
+      // counting up from the Honored Guests, every other couple (16, 11, …) has the follow's white
+      // half toward the Honored Guests, and the couples between them (1, 2, …) the lead's black half.
+      const xSpots = LINE_TO_CROSSING_FRAMES.find((frame) => frame.subtitle === "X").couple;
+      const cascade = line.flatMap((couple) => {
+        const side = xSpots[couple.number - 1][0] > CENTER.x ? -1 : 1;
+        return [dancer(couple.number, "lead", [couple.x, couple.y]), dancer(couple.number, "follow", [couple.x + side * PIECE_RADIUS * 2, couple.y])];
+      });
+      const fromGuests = [...LINE_TO_CROSSING_LINE_ORDER].reverse();
+      line.forEach((couple) => { couple.facingMode = fromGuests.indexOf(couple.number) % 2 === 0 ? "north" : "south"; });
+      const frames = LINE_TO_CROSSING_FRAMES.map((frame) => ({
+        subtitle: frame.subtitle,
+        items: frame.couple
+          ? frame.couple.map((spot, index) => ({ ...dancer(index + 1, "couple", spot), ...(frame.solid ? { displayMode: "partner" } : {}) }))
+          : frame.pairs
+            ? ["lead", "follow"].flatMap((role) => frame.pairs[role].map((spot, index) => {
+              const [first, second] = LINE_TO_CROSSING_PAIRS[index];
+              return { ...dancer(first, role, spot), label: `${first}-${second}` };
+            }))
+            : frame.lead.flatMap((spot, index) => [dancer(index + 1, "lead", spot), dancer(index + 1, "follow", frame.follow[index])]),
+      }));
+      return [
+        ...[{ subtitle: "Turn cascade", items: cascade }, { subtitle: "Line", items: line }, ...frames]
+          .map(({ subtitle, items }) => ({ count: items.length, annotation: { title, subtitle }, items })),
+        { ...triumphantCrossingSnapshots()[0], annotation: { title, subtitle: "Triumphant Crossing start" } },
+      ];
+    }
+
+    // Pyramid → V: three measures, starting on the finished pyramid and following the whiteboard
+    // arrows. Most dancers walk east or west along their row out to the V's arm, then up or down the
+    // arm to their spot. The back
+    // row's 4, 6 and 8 (11 and 13 on the right) fan straight back to theirs, and 7 cuts straight to the
+    // point while 3 waits for it to pass. Everyone moves on every frame; `progress` is how far along
+    // their path each dancer is on each frame, spaced as evenly as the traffic allows.
+    function pyramidToVLayouts() {
+      const start = unfurlingPyramidLayouts().at(-1);
+      const at = (number) => start[number];
+      // The V's shape comes from an earlier choreography: arms from near the back corners down to a
+      // point just inside the outer tape's front, with a gap between the two couples at the point.
+      const backCorner = [CENTER.x - 318, CENTER.y - 267];
+      const point = [CENTER.x - 41, CENTER.y + 276];
+      const armX = (side, fraction) => CENTER.x + side * (CENTER.x - lerp(backCorner[0], point[0], fraction));
+      // Arm spots are evenly spaced, counting from the back corner (0) down to the point (7).
+      const armSpot = (side, index) => [armX(side, index / 7), lerp(backCorner[1], point[1], index / 7)];
+      // Where a row meets the arm on that side.
+      const armAtRow = (side, y) => [armX(side, (y - backCorner[1]) / (point[1] - backCorner[1])), y];
+      const left = (index) => armSpot(-1, index);
+      const right = (index) => armSpot(1, index);
+      const viaArm = (number, side, spot) => [at(number), armAtRow(side, at(number)[1]), spot];
+      const direct = (number, spot) => [at(number), spot];
+
+      const paths = {
+        // Back row: 1 and 16 step in to the arm and head down it, getting a big start on the first
+        // counts; the rest fan straight back toward the corners.
+        1: { via: viaArm(1, -1, left(3)), progress: [0, 0.3, 0.54, 0.66, 0.77, 0.89, 1] },
+        4: { via: direct(4, left(2)), progress: [0, 0.12, 0.24, 0.48, 0.66, 0.83, 1] },
+        6: { via: direct(6, left(1)), progress: [0, 0.16, 0.32, 0.48, 0.65, 0.83, 1] },
+        8: { via: direct(8, left(0)), progress: [0, 0.16, 0.32, 0.48, 0.65, 0.83, 1] },
+        16: { via: viaArm(16, 1, right(2)), progress: [0, 0.3, 0.47, 0.79, 0.86, 0.93, 1] },
+        13: { via: direct(13, right(1)), progress: [0, 0.11, 0.21, 0.63, 0.75, 0.88, 1] },
+        11: { via: direct(11, right(0)), progress: [0, 0.17, 0.33, 0.5, 0.67, 0.83, 1] },
+        // Middle row: 2 reaches the arm first and goes deepest, then 5 and 10 follow it down.
+        // On the right, 15 steps in and goes down while 12 walks out to 15's side and goes up.
+        2: { via: viaArm(2, -1, left(6)), progress: [0, 0.21, 0.37, 0.52, 0.68, 0.84, 1] },
+        5: { via: viaArm(5, -1, left(5)), progress: [0, 0.17, 0.33, 0.5, 0.67, 0.83, 1] },
+        10: { via: viaArm(10, -1, left(4)), progress: [0, 0.17, 0.33, 0.5, 0.67, 0.83, 1] },
+        15: { via: viaArm(15, 1, right(4)), progress: [0, 0.22, 0.43, 0.65, 0.82, 0.91, 1] },
+        12: { via: viaArm(12, 1, right(3)), progress: [0, 0.09, 0.18, 0.27, 0.77, 0.88, 1] },
+        // Front: 14 and 9 step into the right arm, 7 cuts straight to the point, and 3 eases down
+        // beside it once 7 has crossed in front.
+        14: { via: direct(14, right(5)), progress: [0, 0.17, 0.33, 0.5, 0.67, 0.83, 1] },
+        9: { via: direct(9, right(6)), progress: [0, 0.17, 0.33, 0.5, 0.67, 0.83, 1] },
+        7: { via: direct(7, right(7)), progress: [0, 0.19, 0.38, 0.58, 0.76, 0.88, 1] },
+        3: { via: direct(3, left(7)), progress: [0, 0.08, 0.15, 0.23, 0.46, 0.73, 1] },
+      };
+
+      return paths[1].progress.map((_, frame) => Object.fromEntries(
+        Object.entries(paths).map(([number, { via, progress }]) => [number, pointAlongPath(via, progress[frame])])
+      ));
+    }
+
+    // Final V: couples hold their V spots for all 17 frames while the steps play out in place. Each row
+    // (the two couples at the same height on each arm) has its own color. The cascade sends follows out
+    // back to front, shown as the lead/follow split with the white follow half pointing away from the
+    // V and the row color as a ring. The pinwheel steps keep the ring with every follow toward the
+    // Honored Guests, and bold rings mark the rows dancing on those counts. The triangle steps show the
+    // plain black and white split, with `follow` saying which way the follow's white half points
+    // (south is toward the Honored Guests).
+    const FINAL_V_ROW_COLORS = ["rose", "orange", "amber", "green", "teal", "blue", "violet", "pink"];
+    const FINAL_V_STEPS = [
+      { counts: "(1–2)", step: "Pause", look: "rows" },
+      { counts: "(1–2)", step: "Start cascade, back to front (1 and 2 and 3 and 4 and)", look: "cascade", rowsSent: 4 },
+      { counts: "(3–4)", step: "Finish cascade", look: "cascade", rowsSent: 8 },
+      { counts: "(1–2)", step: "Pinwheel prep start", look: "pinwheel" },
+      { counts: "(3–4)", step: "Pinwheel prep end", look: "pinwheel" },
+      { counts: "(1–2)", step: "Pinwheel ready", look: "pinwheel" },
+      // The front four rows pinwheel on the first counts, then the back four.
+      { counts: "(1–2)", step: "Pinwheel start, front to back (1 and 2 and 3 and 4 and)", look: "pinwheel", boldRows: [4, 5, 6, 7] },
+      { counts: "(3–4)", step: "Finish pinwheels", look: "pinwheel", boldRows: [0, 1, 2, 3] },
+      { counts: "(1–2)", step: "Start triangle prep", look: "triangle", follow: "south" },
+      { counts: "(3–4)", step: "Finish triangle prep", look: "triangle", follow: "south" },
+      { counts: "(1–2)", step: "Triangle ½ rotation", look: "triangle", follow: "north" },
+      { counts: "(3–4)", step: "Triangle finish rotation", look: "triangle", follow: "south" },
+      { counts: "(1–2)", step: "Triangle second rotation", look: "triangle", follow: "north" },
+      { counts: "(3–4)", step: "Triangle end third rotation", look: "triangle", follow: "south" },
+      { counts: "(1–2)", step: "Hold triangle facing Honored Guests", look: "triangle", follow: "south" },
+      { counts: "(3–4)", step: "Down triangle", look: "triangle", follow: "south" },
+      { counts: "(1–2)", step: "Hit dip", look: "triangle", follow: "east" },
+    ];
+
+    function finalVSnapshots() {
+      const spots = pyramidToVLayouts().at(-1);
+      // Rows count from the back of the V (0) to the point (7); the two arms share a row's height.
+      const heights = [...new Set(Object.values(spots).map(([, y]) => Math.round(y)))].sort((a, b) => a - b);
+      const rowOf = (number) => heights.indexOf(Math.round(spots[number][1]));
+      const onLeftArm = (number) => spots[number][0] < CENTER.x;
+
+      let measure = 0;
+      return FINAL_V_STEPS.map((step, frame) => {
+        if (step.counts === "(1–2)") measure += 1;
+        const look = (number) => {
+          const rowColor = FINAL_V_ROW_COLORS[rowOf(number)];
+          if (step.look === "triangle") {
+            // The lead's black half sits opposite the follow.
+            const opposite = { north: "south", south: "north", east: "west", west: "east" };
+            return { displayMode: "leadFollow", facingMode: opposite[step.follow], groupColor: "neutral" };
+          }
+          if (step.look === "pinwheel") {
+            // Lead north puts every follow's white half toward the Honored Guests.
+            return {
+              displayMode: "leadFollow",
+              facingMode: "north",
+              groupColor: rowColor,
+              ...(step.boldRows?.includes(rowOf(number)) ? { emphasized: true } : {}),
+            };
+          }
+          if (step.look === "cascade" && rowOf(number) < step.rowsSent) {
+            // The lead's black half faces the V's middle, so the follow is sent out east or west.
+            return { displayMode: "leadFollow", facingMode: onLeftArm(number) ? "east" : "west", groupColor: rowColor };
+          }
+          return { displayMode: "partner", groupColor: rowColor };
+        };
+        return storyFrameSnapshot("Final V", spots, frame, `Measure ${measure} ${step.counts} ${step.step}`, look);
+      });
+    }
+
+    // Cascade Grid → Unfurling Pyramid: a 4 × 4 block, one couple centered in each square of the reference
+    // grid, walks straight back into the locked-in pyramid's starting line (reds on their columns). Each block column becomes one quarter
+    // of the line, and within a column the back couple takes the line spot nearest it while those
+    // further forward fan out wider, so nobody's path crosses anyone else's.
+    // Rows run back to front, columns left to right.
+    const BLOCK_ROWS = [
+      [5, 3, 8, 12],
+      [4, 10, 9, 13],
+      [2, 6, 14, 15],
+      [1, 7, 11, 16],
+    ];
+
+    function blockToPyramidLayouts() {
+      const gridGap = OUTER_RADIUS / 3;
+      const block = {};
+      BLOCK_ROWS.forEach((row, rowIndex) => row.forEach((number, columnIndex) => {
+        block[number] = [CENTER.x + (columnIndex - 1.5) * gridGap, CENTER.y + (rowIndex - 1.5) * gridGap];
+      }));
+      const line = unfurlingPyramidV2Layouts()[0];
+      // Everyone walks at the same steady pace and arrives together.
+      return [0, 0.25, 0.5, 0.75, 1].map((progress) => Object.fromEntries(
+        Object.keys(block).map((number) => [number, [
+          lerp(block[number][0], line[number][0], progress),
+          lerp(block[number][1], line[number][1], progress),
+        ]])
+      ));
+    }
+
+    // Cascade Grid → Unfurling Pyramid v2: a follow-the-leader peel-off. Each block column files back up its
+    // own column to the block's back row, then heads on a diagonal to its spot in the line: the outer
+    // columns peel out to the line's ends and the inner columns angle in behind them toward the middle.
+    // The block is laid out by line position (1 = the line's left end), top to bottom per column.
+    const BLOCK_V2_COLUMNS = [
+      [1, 2, 3, 4],
+      [5, 6, 7, 8],
+      [12, 11, 10, 9],
+      [16, 15, 14, 13],
+    ];
+
+    function blockToPyramidV2Layouts() {
+      const gridGap = OUTER_RADIUS / 3;
+      const line = unfurlingPyramidV2Layouts()[0];
+      const lineOrder = Object.keys(line).sort((a, b) => line[a][0] - line[b][0]);
+      const backRowY = CENTER.y - 1.5 * gridGap;
+      const paths = {};
+      BLOCK_V2_COLUMNS.forEach((column, columnIndex) => {
+        const x = CENTER.x + (columnIndex - 1.5) * gridGap;
+        column.forEach((linePosition, rowIndex) => {
+          const number = lineOrder[linePosition - 1];
+          paths[number] = [[x, backRowY + rowIndex * gridGap], [x, backRowY], line[number]];
+        });
+      });
+      // Like a real file, everyone walks at the same pace so nobody catches the couple ahead. The
+      // couples heading to the line ends get there first and wait; the last of each column lands on
+      // the final frame.
+      const pathLength = (path) => path.slice(1).reduce((sum, point, index) => sum + distanceBetween(
+        { x: path[index][0], y: path[index][1] },
+        { x: point[0], y: point[1] }
+      ), 0);
+      const longest = Math.max(...Object.values(paths).map(pathLength));
+      return [0, 0.25, 0.5, 0.75, 1].map((time) => Object.fromEntries(
+        Object.entries(paths).map(([number, path]) => [
+          number,
+          pointAlongPath(path, Math.min(1, (time * longest) / pathLength(path))),
+        ])
+      ));
+    }
+
+    // The point a given fraction of the way along a path of waypoints, measured by distance.
+    function pointAlongPath(points, fraction) {
+      const lengths = points.slice(1).map((point, index) => distanceBetween(
+        { x: points[index][0], y: points[index][1] },
+        { x: point[0], y: point[1] }
+      ));
+      let remaining = fraction * lengths.reduce((sum, length) => sum + length, 0);
+      for (let index = 0; index < lengths.length; index += 1) {
+        if (remaining <= lengths[index]) {
+          const share = lengths[index] ? remaining / lengths[index] : 0;
+          return [lerp(points[index][0], points[index + 1][0], share), lerp(points[index][1], points[index + 1][1], share)];
         }
-        storyboardShots = shots;
+        remaining -= lengths[index];
+      }
+      return points[points.length - 1];
+    }
+
+    // Saved configurations: ready-made stories listed in the planner and in the presenter. Each returns
+    // the board snapshot for every frame, so adding one here makes it show up in both pickers.
+    // Both pickers group them by `section`, in the order of PRESET_SECTIONS; Polka holds the finished
+    // routine and everything else is still being worked on.
+    const POLKA = "Polka";
+    const WIP = "Works in progress";
+    const PRESET_SECTIONS = [POLKA, WIP];
+    const STORY_PRESETS = [
+      {
+        id: "line-to-triumphant-crossing",
+        section: POLKA,
+        name: "Line to Triumphant Crossing",
+        snapshots: lineToCrossingSnapshots,
+      },
+      {
+        id: "triumphant-crossing",
+        section: POLKA,
+        name: "Triumphant Crossing",
+        snapshots: triumphantCrossingSnapshots,
+      },
+      {
+        id: "block-to-pyramid",
+        section: POLKA,
+        name: "Transition: Cascade Grid → Unfurling Pyramid",
+        // One frame per full measure, on its beat 1: the layouts come in half measures, so every other
+        // one is kept. Everyone is the same gray, since the pyramid's color groups haven't formed yet.
+        snapshots: () => blockToPyramidLayouts().filter((_, halfMeasure) => halfMeasure % 2 === 0).map((positions, frame) => storyFrameSnapshot(
+          "Cascade Grid → Unfurling Pyramid",
+          positions,
+          frame,
+          `Measure ${frame + 1}`,
+          () => ({ groupColor: "neutral" })
+        )),
+      },
+      {
+        id: "block-to-pyramid-v2",
+        section: WIP,
+        name: "Transition: Cascade Grid → Unfurling Pyramid (v2)",
+        snapshots: () => blockToPyramidV2Layouts().map((positions, frame) => storyFrameSnapshot("Cascade Grid → Unfurling Pyramid v2", positions, frame)),
+      },
+      {
+        id: "block-new",
+        section: WIP,
+        // A blank start for a new formation: one frame with everyone on the Cascade Grid block spots.
+        name: "New Formation from Cascade Grid",
+        snapshots: () => [storyFrameSnapshot(
+          "New Formation from Cascade Grid",
+          blockToPyramidLayouts()[0],
+          0,
+          "Start: Cascade Grid block",
+          () => ({ groupColor: "neutral" })
+        )],
+      },
+      {
+        id: "unfurling-pyramid",
+        section: WIP,
+        name: "Unfurling Pyramid (old)",
+        snapshots: () => unfurlingPyramidLayouts().map(unfurlingPyramidSnapshot),
+      },
+      {
+        id: "unfurling-pyramid-v2",
+        section: POLKA,
+        // The locked-in pyramid (built as v2), so it is just "Unfurling Pyramid" everywhere it shows.
+        name: "Unfurling Pyramid",
+        snapshots: () => unfurlingPyramidV2Layouts().map((positions, frame) => storyFrameSnapshot(
+          "Unfurling Pyramid",
+          positions,
+          frame,
+          unfurlingPyramidMeasureLabel(frame)
+        )),
+      },
+      {
+        id: "unfurling-pyramid-v3",
+        section: WIP,
+        name: "Unfurling Pyramid v3",
+        snapshots: () => unfurlingPyramidV3Layouts().map((positions, frame) => storyFrameSnapshot(
+          "Unfurling Pyramid v3",
+          positions,
+          frame,
+          unfurlingPyramidMeasureLabel(frame)
+        )),
+      },
+      {
+        id: "pyramid-to-v",
+        section: POLKA,
+        name: "Transition: Pyramid → V",
+        // One frame per full measure, showing where everyone is on its beat 1: the layouts come in
+        // half measures, so every other one is kept. Measure 1 is Orphan 2 (the fast turn) on the pyramid's
+        // spot; every measure after it is gallops.
+        snapshots: () => pyramidToVLayouts().filter((_, halfMeasure) => halfMeasure % 2 === 0).map((positions, frame) => storyFrameSnapshot(
+          "Pyramid → V",
+          positions,
+          frame,
+          `Measure ${frame + 1} ${frame === 0 ? "Orphan 2" : "Gallop"}`
+        )),
+      },
+      {
+        id: "final-v",
+        section: POLKA,
+        name: "Final V",
+        snapshots: finalVSnapshots,
+      },
+    ];
+
+    function populatePresetSelect() {
+      storyPresetSelect.replaceChildren(...PRESET_SECTIONS.map((section) => {
+        const group = document.createElement("optgroup");
+        group.label = section;
+        group.append(...STORY_PRESETS.filter((preset) => preset.section === section)
+          .map((preset) => new Option(preset.name, preset.id)));
+        return group;
+      }));
+    }
+
+    async function buildPresetShots(preset) {
+      const shots = [];
+      for (const [index, snapshot] of preset.snapshots().entries()) {
+        restoreStoryboardSnapshot(snapshot);
+        const blob = await renderBoardPngBlob(SHOT_PNG_SIZE);
+        shots.push({
+          id: `${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`,
+          name: `Shot ${index + 1}`,
+          filename: `formation-shot-${String(index + 1).padStart(2, "0")}.png`,
+          thumbnail: await blobToDataUrl(blob),
+          snapshot,
+        });
+      }
+      return shots;
+    }
+
+    async function loadStoryPreset(id = storyPresetSelect.value) {
+      const preset = STORY_PRESETS.find((item) => item.id === id);
+      if (!preset) return;
+      stopStoryboard(false);
+      if (storyboardShots.length && !window.confirm(`Replace the current storyboard shots with the ${preset.name}?`)) return;
+
+      recordUndoState(preset.name);
+      setStatus(`Building ${preset.name} shots`);
+      storyNameInput.value = preset.name;
+      try {
+        storyboardShots = await buildPresetShots(preset);
         activeShotIndex = 0;
         showShot(0, false);
         if (storyParentFolderHandle) await ensureStoryFolder();
         syncStoryboardFolder();
-        setStatus(`Loaded Unfurling Pyramid: ${shots.length} shots`);
+        setStatus(`Loaded ${preset.name}: ${storyboardShots.length} shots`);
       } catch (error) {
-        setStatus(`Could not build Unfurling Pyramid: ${error.message || "unknown error"}`);
+        setStatus(`Could not build ${preset.name}: ${error.message || "unknown error"}`);
       }
+    }
+
+    // The presenter loads this page in a hidden frame to list and build saved configurations, so the
+    // drawing code lives in one place. Requests only come from the page that embeds this one.
+    if (window.parent !== window) {
+      window.addEventListener("message", async (event) => {
+        if (event.source !== window.parent) return;
+        // The presenter also sends stories opened from older files here to be redrawn at full size.
+        if (event.data?.type === "opening-2027-sharpen-project" && Array.isArray(event.data.project?.shots)) {
+          const { project, token } = event.data;
+          try {
+            if (await upgradeShotResolution(project.shots)) {
+              window.parent.postMessage({ type: "opening-2027-sharpened-project", token, project }, "*");
+            }
+          } catch {}
+          return;
+        }
+        if (event.data?.type !== "opening-2027-build-preset") return;
+        const preset = STORY_PRESETS.find((item) => item.id === event.data.id);
+        if (!preset) return;
+        try {
+          const shots = await buildPresetShots(preset);
+          window.parent.postMessage({
+            type: "opening-2027-preset-story",
+            id: preset.id,
+            project: { format: "opening-2027-storyboard", version: 2, storyName: preset.name, shots },
+          }, "*");
+        } catch (error) {
+          window.parent.postMessage({ type: "opening-2027-preset-error", id: preset.id, message: error.message }, "*");
+        }
+      });
+      window.parent.postMessage({
+        type: "opening-2027-presets",
+        presets: STORY_PRESETS.map(({ id, name, section }) => ({ id, name, section })),
+        sections: PRESET_SECTIONS,
+      }, "*");
     }
 
     function saveCustomFormation() {
@@ -2668,7 +3421,7 @@
 
     function gifSize() {
       const value = Number(gifSizeInput.value);
-      return [360, 480, 720, 1080].includes(value) ? value : 480;
+      return GIF_SIZES.includes(value) ? value : 480;
     }
 
     // A shot's own hold time wins; otherwise it uses the shared frame time. The last shot gets the extra hold.
@@ -2750,6 +3503,8 @@
       clone.setAttribute("width", String(size));
       clone.setAttribute("height", String(size));
       clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      // As a standalone image the SVG can't inherit the page font, so name it or text falls back to serif.
+      clone.setAttribute("font-family", getComputedStyle(svg).fontFamily);
       const style = svgElement("style");
       style.textContent = [...document.querySelectorAll("style")].map((node) => node.textContent).join("\n");
       clone.insertBefore(style, clone.firstChild);
@@ -3090,7 +3845,7 @@
         gifTimingInput.value = String(clamp(Number(project.frameTimingMs), 100, 10000));
       }
       if (project.gif && typeof project.gif === "object") {
-        if ([360, 480, 720, 1080].includes(Number(project.gif.size))) gifSizeInput.value = String(project.gif.size);
+        if (GIF_SIZES.includes(Number(project.gif.size))) gifSizeInput.value = String(project.gif.size);
         if (Number.isFinite(Number(project.gif.lastFrameHoldMs))) {
           gifEndHoldInput.value = String(clamp(Number(project.gif.lastFrameHoldMs), 0, 10000));
         }
@@ -3104,6 +3859,42 @@
       activeShotIndex = storyboardShots.length ? 0 : -1;
       renderStoryboard();
       if (storyboardShots.length) showShot(0, false);
+      sharpenStoryboard();
+    }
+
+    function imageWidth(dataUrl) {
+      return new Promise((resolve) => {
+        const image = new Image();
+        image.onload = () => resolve(image.naturalWidth);
+        image.onerror = () => resolve(0);
+        image.src = dataUrl;
+      });
+    }
+
+    // Frames saved before shots rendered at full size are redrawn from their saved positions, so older
+    // stories open as sharp as new ones. Returns how many frames were redrawn.
+    async function upgradeShotResolution(shots) {
+      let upgraded = 0;
+      for (const shot of shots) {
+        if (!shot.snapshot || await imageWidth(shot.thumbnail) >= SHOT_PNG_SIZE) continue;
+        restoreStoryboardSnapshot(shot.snapshot);
+        shot.thumbnail = await blobToDataUrl(await renderBoardPngBlob(SHOT_PNG_SIZE));
+        upgraded += 1;
+      }
+      return upgraded;
+    }
+
+    async function sharpenStoryboard() {
+      const shots = storyboardShots;
+      try {
+        const upgraded = await upgradeShotResolution(shots);
+        if (!upgraded || shots !== storyboardShots) return;
+        showShot(clamp(activeShotIndex, 0, shots.length - 1), false);
+        syncStoryboardFolder();
+        setStatus(`Redrew ${upgraded} older frame${upgraded === 1 ? "" : "s"} at ${SHOT_PNG_SIZE} px`);
+      } catch (error) {
+        setStatus(`Could not redraw older frames: ${error.message || "unknown error"}`);
+      }
     }
 
     async function saveStoryboardToFolder() {
@@ -3578,6 +4369,7 @@
         [
           ["←", "Move earlier", () => moveShot(index, -1)],
           ["→", "Move later", () => moveShot(index, 1)],
+          ["Copy", "Copy this frame to paste into Google Slides", () => copyShotImage(index)],
           ["Save", "Download PNG", () => downloadShot(index)],
           ["×", "Delete shot", () => deleteShot(index)],
         ].forEach(([label, titleText, handler]) => {
@@ -3617,6 +4409,8 @@
           facingMode: item.facingMode,
           displayMode: item.displayMode,
           groupColor: item.groupColor,
+          emphasized: Boolean(item.emphasized),
+          label: item.label ?? null,
         }));
       });
       refreshSelection();
@@ -3708,6 +4502,70 @@
       setStatus(`Downloaded ${shot.name}`);
     }
 
+    // Shot PNGs are already on a white background, so they paste straight onto a slide.
+    async function copyShotImage(index) {
+      const shot = storyboardShots[index];
+      if (!shot) return;
+      if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
+        setStatus("This browser can't copy images to the clipboard");
+        return;
+      }
+      try {
+        // Pass a promise so the clipboard write starts inside the click gesture.
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": dataUrlToBlob(shot.thumbnail) })]);
+        setStatus(`Copied ${shot.name}; paste it into a slide with ⌘V / Ctrl-V`);
+      } catch {
+        setStatus("Couldn't copy the frame; try again");
+      }
+    }
+
+    function copyActiveShotImage() {
+      if (activeShotIndex < 0) {
+        setStatus("Click a frame first");
+        return;
+      }
+      copyShotImage(activeShotIndex);
+    }
+
+    // Numbered PNGs can all be picked at once in Slides' Insert → Image → Upload from computer.
+    async function downloadAllShots() {
+      if (!storyboardShots.length) {
+        setStatus("No frames to save yet");
+        return;
+      }
+      for (const [index, shot] of storyboardShots.entries()) {
+        downloadBlob(await dataUrlToBlob(shot.thumbnail), `${safeStoryName()}-${String(index + 1).padStart(2, "0")}.png`);
+        await new Promise((resolve) => window.setTimeout(resolve, 150));
+      }
+      setStatus(`Saved ${storyboardShots.length} frame PNGs for Google Slides`);
+    }
+
+    // The presenter is its own page. It says when it's ready, then gets the story by message, which
+    // also works when both pages are opened straight from files.
+    let presenterWindow = null;
+    function openPresenter() {
+      if (!storyboardShots.length) {
+        setStatus("Capture or load frames before presenting");
+        return;
+      }
+      if (textSaveTimer) saveTextToOpenShot();
+      presenterWindow = window.open("present.html", "opening2027-presenter");
+      if (!presenterWindow) {
+        setStatus("Allow pop-ups for this page to open the presenter");
+        return;
+      }
+      sendStoryToPresenter();
+      setStatus("Opened the presenter");
+    }
+
+    function sendStoryToPresenter() {
+      presenterWindow?.postMessage({ type: "opening-2027-present-story", project: storyboardProjectData() }, "*");
+    }
+
+    window.addEventListener("message", (event) => {
+      if (event.source === presenterWindow && event.data?.type === "opening-2027-present-ready") sendStoryToPresenter();
+    });
+
     function clearStoryboard() {
       stopStoryboard(false);
       storyboardShots = [];
@@ -3746,6 +4604,9 @@
           facingMode: token.facingMode,
           displayMode: token.displayMode,
           groupColor: token.groupColor,
+          // Only stored when on, so shots saved before bold outlines existed still match.
+          ...(token.emphasized ? { emphasized: true } : {}),
+          ...(token.label ? { label: token.label } : {}),
           x: Number(token.x.toFixed(3)),
           y: Number(token.y.toFixed(3)),
         })),
@@ -3861,6 +4722,8 @@
 
         token.groupColor = item.groupColor || defaultGroupColor;
         updateTokenColor(token);
+        token.emphasized = Boolean(item.emphasized);
+        token.group.classList.toggle("emphasized", token.emphasized);
         if (token.role !== "couple" || !item.facingMode) return;
 
         token.facingMode = item.facingMode;
@@ -4293,7 +5156,7 @@
       try {
         // Pass a promise so the clipboard write starts inside the click/keypress gesture.
         await navigator.clipboard.write([
-          new ClipboardItem({ "image/png": renderBoardPngBlob(1440, { transparent: true }) }),
+          new ClipboardItem({ "image/png": renderBoardPngBlob(SHOT_PNG_SIZE, { transparent: true }) }),
         ]);
         setStatus("Copied board image (transparent background)");
       } catch {
@@ -4705,7 +5568,11 @@
     document.querySelector("#advanceLinesBtn").addEventListener("click", advanceTwoLines);
     document.querySelector("#crossFormationBtn").addEventListener("click", () => applyFormation("cross"));
     document.querySelector("#pyramidFormationBtn").addEventListener("click", () => applyFormation("pyramid"));
-    document.querySelector("#unfurlingPyramidBtn").addEventListener("click", loadUnfurlingPyramid);
+    populatePresetSelect();
+    document.querySelector("#loadPresetBtn").addEventListener("click", () => loadStoryPreset());
+    document.querySelector("#presentBtn").addEventListener("click", openPresenter);
+    document.querySelector("#copyFrameBtn").addEventListener("click", copyActiveShotImage);
+    document.querySelector("#saveAllFramesBtn").addEventListener("click", downloadAllShots);
     document.querySelector("#gridFormationBtn").addEventListener("click", () => applyFormation("grid"));
     document.querySelector("#squareFormationBtn").addEventListener("click", () => applyFormation("square"));
     document.querySelector("#saveFormationBtn").addEventListener("click", saveCustomFormation);

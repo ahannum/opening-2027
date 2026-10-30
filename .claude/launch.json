@@ -2,13 +2,15 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "frames",
+      "name": "planner",
       "runtimeExecutable": "python3",
-      "runtimeArgs": [
-        "/private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/4b06c67d-3da7-45c4-a3c9-d689714ea7fc/scratchpad/serve_frames.py",
-        "8765"
-      ],
-      "port": 8765
+      "runtimeArgs": ["-m", "http.server", "8000", "--directory", "/Users/ariel/Documents/GitHub/opening-2027"],
+      "port": 8000
+    },
+    {
+      "name": "planner-running",
+      "url": "http://localhost:8000",
+      "port": 8000
     }
   ]
 }

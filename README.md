@@ -26,6 +26,9 @@ Open `index.html` in a browser.
 - Control the GIF: size (360, 480, 720, or 1080 px), time per frame, a per-shot hold time, extra time on the last frame, and loop forever or play once. Playback in the planner uses the same timing, and the settings save with the storyboard.
 - Save a storyboard (project file, PNG frames, and GIF) straight to Google Drive and open it again from Drive in any browser — no Drive for desktop needed.
 - Copy current positions as JSON.
+- Pick a saved configuration (Formation tab → Saved configurations), such as the Unfurling Pyramid: 5 frames, one four-count measure each. Configurations live in `STORY_PRESETS` in `index.html`.
+- Copy any frame to paste into Google Slides, or save every frame as a numbered PNG. Frames render at 2160 px, and storyboards saved with smaller frames are redrawn at that size when opened. GIFs go up to 2160 px.
+- Present a story in `present.html`: pick a saved configuration, press Present in the planner's Storyboard tab, or open a saved storyboard file, then step with the arrow keys, Space, a clicker, or the buttons. F goes fullscreen. Keep `present.html` next to `index.html`; it uses the planner to draw the configurations.
 
 ## GitHub Pages
 

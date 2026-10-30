@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Opening 2027 Presenter</title>
+  <style>
+    :root {
+      --paper: #ffffff;
+      --surface: #f4f2ee;
+      --ink: #1f2529;
+      --muted: #697077;
+      --line: #d3cec5;
+      --blue: #2368a2;
+      --blue-dark: #18476f;
+      --shadow: 0 18px 40px rgba(31, 37, 41, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr);
+      color: var(--ink);
+      background: var(--surface);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .stage {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      container-type: size;
+    }
+
+    /* Frames are square, so size to whichever side of the stage is shorter. */
+    .frame {
+      width: min(100cqw, 100cqh);
+      aspect-ratio: 1;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .empty {
+      max-width: 520px;
+      padding: 32px;
+      text-align: center;
+      background: var(--paper);
+      border: 2px dashed var(--line);
+      font-size: 20px;
+      line-height: 1.5;
+    }
+
+    .empty strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 26px;
+    }
+
+    body.dragging .empty {
+      border-color: var(--blue);
+    }
+
+    .bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px 14px;
+    }
+
+    .bar .spacer {
+      flex: 1;
+    }
+
+    button {
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: var(--paper);
+      font: inherit;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: var(--blue);
+    }
+
+    select {
+      min-height: 44px;
+      max-width: 240px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: var(--paper);
+      font: inherit;
+      font-size: 18px;
+    }
+
+    /* The planner runs here, out of sight, to draw the saved configurations. */
+    .builder {
+      position: fixed;
+      left: -10000px;
+      top: 0;
+      width: 1280px;
+      height: 900px;
+      border: 0;
+      visibility: hidden;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    button.primary {
+      color: #ffffff;
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    button.primary:hover:not(:disabled) {
+      background: var(--blue-dark);
+    }
+
+    .counter {
+      min-width: 96px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .story-name {
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 18px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* Fullscreen is for showing the room: just the frame on white. */
+    body.fullscreen {
+      background: var(--paper);
+    }
+
+    body.fullscreen .bar {
+      display: none;
+    }
+
+    body.fullscreen .frame {
+      box-shadow: none;
+    }
+
+    @media (max-width: 900px) {
+      .hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <img id="frame" class="frame" alt="" hidden>
+    <div id="empty" class="empty">
+      <strong>Open a story</strong>
+      Pick a saved configuration below, press Present in the planner's Storyboard tab, or open a storyboard file saved from the planner. You can also drop the file here.
+    </div>
+  </main>
+
+  <nav class="bar" aria-label="Presenter controls">
+    <button id="prevBtn" type="button" title="Previous frame (←)" disabled>◀ Prev</button>
+    <span id="counter" class="counter" aria-live="polite">0 / 0</span>
+    <button id="nextBtn" class="primary" type="button" title="Next frame (→ or Space)" disabled>Next ▶</button>
+    <span id="storyName" class="story-name"></span>
+    <span class="spacer"></span>
+    <span class="hint">← → or Space to step · F fullscreen · ⌘C copy</span>
+    <select id="configSelect" aria-label="Saved configuration" disabled>
+      <option value="">Loading configurations…</option>
+    </select>
+    <button id="copyBtn" type="button" title="Copy this frame as an image to paste onto a slide (⌘C)" disabled>Copy</button>
+    <button id="fullscreenBtn" type="button" title="Fullscreen (F)">Fullscreen</button>
+    <button id="openBtn" type="button">Open Storyboard…</button>
+    <input id="openInput" type="file" accept=".json,application/json" hidden>
+  </nav>
+  <iframe id="builder" class="builder" title="Configuration builder" aria-hidden="true" tabindex="-1"></iframe>
+
+  <script>
+    const frameImage = document.querySelector("#frame");
+    const emptyState = document.querySelector("#empty");
+    const prevBtn = document.querySelector("#prevBtn");
+    const nextBtn = document.querySelector("#nextBtn");
+    const counter = document.querySelector("#counter");
+    const storyNameEl = document.querySelector("#storyName");
+    const openInput = document.querySelector("#openInput");
+    const configSelect = document.querySelector("#configSelect");
+    const builder = document.querySelector("#builder");
+    const copyBtn = document.querySelector("#copyBtn");
+    // Load the planner fresh each time so configurations never come from a stale cached copy.
+    builder.src = `index.html?builder=${Date.now()}`;
+
+    let shots = [];
+    let index = 0;
+
+    function loadProject(project) {
+      if (!project || project.format !== "opening-2027-storyboard" || !Array.isArray(project.shots)) {
+        throw new Error("This is not an Opening 2027 storyboard file");
+      }
+      const frames = project.shots.filter((shot) => shot && typeof shot.thumbnail === "string");
+      if (!frames.length) throw new Error("This storyboard has no frames");
+
+      shots = frames;
+      index = 0;
+      storyNameEl.textContent = project.storyName || "";
+      document.title = project.storyName ? `${project.storyName} · Presenter` : "Opening 2027 Presenter";
+      // Decode every frame up front so stepping never flashes a half-loaded image.
+      shots.forEach((shot) => { new Image().src = shot.thumbnail; });
+      show(0);
+    }
+
+    function show(nextIndex) {
+      if (!shots.length) return;
+      index = Math.min(Math.max(nextIndex, 0), shots.length - 1);
+      const shot = shots[index];
+      frameImage.src = shot.thumbnail;
+      frameImage.alt = shot.name || `Frame ${index + 1}`;
+      frameImage.hidden = false;
+      emptyState.hidden = true;
+      counter.textContent = `${index + 1} / ${shots.length}`;
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === shots.length - 1;
+      copyBtn.disabled = false;
+    }
+
+    // Clipboards only take PNG images, so redraw the frame onto a canvas whatever format it was saved in.
+    async function frameAsPng() {
+      await frameImage.decode();
+      const canvas = document.createElement("canvas");
+      canvas.width = frameImage.naturalWidth;
+      canvas.height = frameImage.naturalHeight;
+      canvas.getContext("2d").drawImage(frameImage, 0, 0);
+      return new Promise((resolve, reject) => canvas.toBlob(
+        (blob) => (blob ? resolve(blob) : reject(new Error("could not draw the frame"))),
+        "image/png"
+      ));
+    }
+
+    async function copyFrame() {
+      if (!shots.length) return;
+      const label = copyBtn.textContent;
+      try {
+        // Hand the clipboard a promise right away so Safari still counts this as part of the click.
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": frameAsPng() })]);
+        copyBtn.textContent = "Copied!";
+      } catch (error) {
+        copyBtn.textContent = "Copy failed";
+        console.error(error);
+      }
+      setTimeout(() => { copyBtn.textContent = label; }, 1500);
+    }
+
+    async function openFile(file) {
+      if (!file) return;
+      try {
+        const project = JSON.parse(await file.text());
+        loadProject(project);
+        sharpenInBuilder(project);
+      } catch (error) {
+        window.alert(`Could not open storyboard: ${error.message || "invalid file"}`);
+      }
+    }
+
+    function toggleFullscreen() {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        document.documentElement.requestFullscreen?.();
+      }
+    }
+
+    prevBtn.addEventListener("click", () => show(index - 1));
+    nextBtn.addEventListener("click", () => show(index + 1));
+    frameImage.addEventListener("click", () => show(index + 1));
+    copyBtn.addEventListener("click", copyFrame);
+    document.querySelector("#fullscreenBtn").addEventListener("click", toggleFullscreen);
+    document.querySelector("#openBtn").addEventListener("click", () => {
+      openInput.value = "";
+      openInput.click();
+    });
+    openInput.addEventListener("change", () => openFile(openInput.files?.[0]));
+
+    document.addEventListener("fullscreenchange", () => {
+      document.body.classList.toggle("fullscreen", Boolean(document.fullscreenElement));
+    });
+
+    // Presentation clickers send PageDown/PageUp, so those step frames too.
+    document.addEventListener("keydown", (event) => {
+      // ⌘C / Ctrl+C copies the frame on screen, ready to paste onto a slide.
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "c" && !String(window.getSelection())) {
+        event.preventDefault();
+        copyFrame();
+        return;
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey || event.target.matches?.("select")) return;
+      const keyActions = {
+        ArrowRight: () => show(index + 1),
+        ArrowDown: () => show(index + 1),
+        PageDown: () => show(index + 1),
+        " ": () => show(index + 1),
+        Enter: () => show(index + 1),
+        ArrowLeft: () => show(index - 1),
+        ArrowUp: () => show(index - 1),
+        PageUp: () => show(index - 1),
+        Backspace: () => show(index - 1),
+        Home: () => show(0),
+        End: () => show(shots.length - 1),
+        f: toggleFullscreen,
+        F: toggleFullscreen,
+      };
+      const action = keyActions[event.key];
+      if (!action) return;
+      event.preventDefault();
+      action();
+    });
+
+    document.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      document.body.classList.add("dragging");
+    });
+    document.addEventListener("dragleave", () => document.body.classList.remove("dragging"));
+    document.addEventListener("drop", (event) => {
+      event.preventDefault();
+      document.body.classList.remove("dragging");
+      openFile(event.dataTransfer?.files?.[0]);
+    });
+
+    // The planner's Present button opens this page and sends the story once it says it's ready.
+    window.addEventListener("message", (event) => {
+      if (event.source !== window.opener || event.data?.type !== "opening-2027-present-story") return;
+      try {
+        loadProject(event.data.project);
+        sharpenInBuilder(event.data.project);
+      } catch (error) {
+        window.alert(`Could not open storyboard: ${error.message || "invalid story"}`);
+      }
+    });
+    window.opener?.postMessage({ type: "opening-2027-present-ready" }, "*");
+
+    // Saved configurations come from the planner in the hidden frame: it lists them when it loads and
+    // draws a story's frames on request.
+    const configCache = new Map();
+    let pendingConfig = null;
+    let sharpenToken = 0;
+
+    // Older storyboard files have small frames; the planner redraws them at full size in the background
+    // and the presenter swaps them in, keeping the current frame.
+    function sharpenInBuilder(project) {
+      sharpenToken += 1;
+      builder.contentWindow?.postMessage({ type: "opening-2027-sharpen-project", token: sharpenToken, project }, "*");
+    }
+
+    function selectConfiguration(id) {
+      if (!id) return;
+      if (configCache.has(id)) {
+        loadProject(configCache.get(id));
+        return;
+      }
+      pendingConfig = id;
+      configSelect.disabled = true;
+      storyNameEl.textContent = "Building frames…";
+      builder.contentWindow.postMessage({ type: "opening-2027-build-preset", id }, "*");
+    }
+
+    configSelect.addEventListener("change", () => {
+      selectConfiguration(configSelect.value);
+      configSelect.blur();
+    });
+
+    window.addEventListener("message", (event) => {
+      if (event.source !== builder.contentWindow) return;
+      const { type } = event.data || {};
+      if (type === "opening-2027-presets") {
+        const placeholder = new Option("Saved configurations…", "");
+        // One heading per section (Polka, then Works in progress), each with its stories under it.
+        const { presets, sections = [] } = event.data;
+        const groups = sections.map((section) => {
+          const group = document.createElement("optgroup");
+          group.label = section;
+          group.append(...presets.filter((preset) => preset.section === section).map(({ id, name }) => new Option(name, id)));
+          return group;
+        });
+        configSelect.replaceChildren(placeholder, ...groups);
+        configSelect.disabled = false;
+      } else if (type === "opening-2027-preset-story" && event.data.id === pendingConfig) {
+        pendingConfig = null;
+        configSelect.disabled = false;
+        configCache.set(event.data.id, event.data.project);
+        loadProject(event.data.project);
+      } else if (type === "opening-2027-sharpened-project" && event.data.token === sharpenToken) {
+        const current = index;
+        loadProject(event.data.project);
+        show(current);
+      } else if (type === "opening-2027-preset-error") {
+        pendingConfig = null;
+        configSelect.disabled = false;
+        storyNameEl.textContent = "";
+        window.alert(`Could not build that configuration: ${event.data.message || "unknown error"}`);
+      }
+    });
+  </script>
+</body>
+</html>
