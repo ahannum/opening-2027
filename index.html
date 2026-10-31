@@ -3053,6 +3053,13 @@
       ].map(({ subtitle, items }) => ({ count: items.length, annotation: { title, subtitle }, items }));
     }
 
+    // Hearts Adrift: for now one frame with everyone seeded on the outer circle, on the spots Hearts
+    // Adrift → Line starts from, so the two join up. The real spots get worked back from there later.
+    function heartsAdriftSnapshots() {
+      const [start] = heartsAdriftToLineSnapshots();
+      return [{ ...start, annotation: { title: "Hearts Adrift", subtitle: "Start: couples on the circle" } }];
+    }
+
     // Pyramid → V: three measures, starting on the finished pyramid and following the whiteboard
     // arrows. Most dancers walk east or west along their row out to the V's arm, then up or down the
     // arm to their spot. The back
@@ -3264,6 +3271,12 @@
     const WIP = "Works in progress";
     const PRESET_SECTIONS = [POLKA, WIP];
     const STORY_PRESETS = [
+      {
+        id: "hearts-adrift",
+        section: POLKA,
+        name: "Hearts Adrift",
+        snapshots: heartsAdriftSnapshots,
+      },
       {
         id: "hearts-adrift-to-line",
         section: POLKA,
