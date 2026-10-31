@@ -2960,6 +2960,99 @@
       ];
     }
 
+    // Hearts Adrift → Line: couples start on the outer circle and file into the Line in two measures,
+    // then the follows step out for the turn cascade on the third. The top half of the Line comes down
+    // from the circle's top and the bottom half up from its bottom, both ends at once, each deepest spot
+    // first. The circle spots are worked back from the Line, everyone on a dot of the outer tape: the
+    // first in at each end stands on the end's cardinal dot, and the rest alternate out along the circle
+    // to either side of it, first in nearest, so 16, last in at the bottom, is on the right cardinal. In
+    // the Line each couple's lead/follow split is side to side, the follow's half toward where they step
+    // out for the cascade.
+    // Returns each couple's circle angle and place in their end's file (0 goes in first), by couple number.
+    function heartsAdriftToLineStarts(line) {
+      const slot = (2 * Math.PI) / COUPLE_COUNT;
+      const ends = [
+        { toward: -Math.PI / 2, feeds: (item) => item.y < CENTER.y, deepestFirst: (a, b) => b.y - a.y },
+        { toward: Math.PI / 2, feeds: (item) => item.y > CENTER.y, deepestFirst: (a, b) => a.y - b.y },
+      ];
+      return new Map(ends.flatMap(({ toward, feeds, deepestFirst }) => line.items
+        .filter(feeds)
+        .sort(deepestFirst)
+        .map((item, place) => {
+          // After the first, the next comes from counterclockwise on screen (the board's left at the
+          // top, right at the bottom), then clockwise, and so on, which leaves the last at the bottom on
+          // the right cardinal and the last at the top on the left one.
+          const turn = place % 2 === 1 ? -1 : 1;
+          return [item.number, { angle: toward + turn * slot * Math.ceil(place / 2), place }];
+        })));
+    }
+
+    // Where everyone is `measures` (0 to 2) into the filing, by couple number. Each couple walks the
+    // circle to its end of the Line, then straight along the center line to their spot. A moving file
+    // keeps `fileGap` more than a line place between couples, so they clear each other turning into the
+    // line, and each couple stops on their spot as they reach it, closing up to the Line's spacing.
+    // Couples whose turn hasn't come yet wait on the circle.
+    function heartsAdriftToLinePositions(line, measures, fileGap = PIECE_RADIUS * 1.5) {
+      const starts = heartsAdriftToLineStarts(line);
+      const pathLength = (points) => points.slice(1)
+        .reduce((sum, [x, y], index) => sum + Math.hypot(x - points[index][0], y - points[index][1]), 0);
+      const paths = new Map(line.items.map(({ number, x, y }) => {
+        const fromTop = y < CENTER.y;
+        const { angle: startAngle, place } = starts.get(number);
+        const turn = (fromTop ? -Math.PI / 2 : Math.PI / 2) - startAngle;
+        const arcSteps = Math.max(1, Math.ceil(Math.abs(turn) / (Math.PI / 36)));
+        const arc = Array.from({ length: arcSteps + 1 }, (_, step) => {
+          const angle = startAngle + (turn * step) / arcSteps;
+          return [CENTER.x + OUTER_RADIUS * Math.cos(angle), CENTER.y + OUTER_RADIUS * Math.sin(angle)];
+        });
+        const points = [...arc, [x, y]];
+        return [number, { fromTop, place, points, length: pathLength(points) }];
+      }));
+      // How far the file's lead point is from the Line: it starts where nobody has moved yet and ends
+      // where the last couple in has arrived, at a steady pace.
+      const lead = (fromTop) => {
+        const file = [...paths.values()].filter((path) => path.fromTop === fromTop);
+        const first = Math.max(...file.map((path) => path.length - path.place * fileGap));
+        const last = -Math.max(...file.map((path) => path.place)) * fileGap;
+        return lerp(first, last, measures / 2);
+      };
+      return new Map([...paths].map(([number, { fromTop, place, points, length }]) => {
+        const moved = Math.min(length, Math.max(0, length - lead(fromTop) - place * fileGap));
+        return [number, { inLine: length - moved <= Math.abs(points.at(-2)[1] - points.at(-1)[1]), spot: pointAlongPath(points, moved / length) }];
+      }));
+    }
+
+    function heartsAdriftToLineSnapshots() {
+      const title = "Hearts Adrift → Line";
+      const [cascade, line] = lineToCrossingSnapshots();
+      // In the line the lead's black half points away from the side their follow steps out to. That
+      // alternates down the line, matching how each couple galloped in.
+      const sideways = new Map(cascade.items.filter((item) => item.role === "follow").map((follow) => {
+        const lead = cascade.items.find((item) => item.number === follow.number && item.role === "lead");
+        return [follow.number, follow.x > lead.x ? "west" : "east"];
+      }));
+      const inLine = line.items.map((item) => ({ ...item, facingMode: sideways.get(item.number) }));
+      const afterMeasure = heartsAdriftToLinePositions(line, 1);
+      // Couples already in the line stand side to side; the rest still face in on the circle.
+      const measure1 = inLine.map((item) => {
+        const { inLine: filing, spot: [x, y] } = afterMeasure.get(item.number);
+        return { ...item, facingMode: filing ? item.facingMode : "in", x: Number(x.toFixed(3)), y: Number(y.toFixed(3)) };
+      });
+      const starts = heartsAdriftToLineStarts(line);
+      const circle = inLine.map((item) => {
+        const { angle } = starts.get(item.number);
+        const x = CENTER.x + OUTER_RADIUS * Math.cos(angle);
+        const y = CENTER.y + OUTER_RADIUS * Math.sin(angle);
+        return { ...item, facingMode: "in", x: Number(x.toFixed(3)), y: Number(y.toFixed(3)) };
+      });
+      return [
+        { subtitle: "Circle", items: circle },
+        { subtitle: "After 1 measure", items: measure1 },
+        { subtitle: "After 2 measures: Line", items: inLine },
+        { subtitle: "After 3 measures: Turn cascade", items: cascade.items },
+      ].map(({ subtitle, items }) => ({ count: items.length, annotation: { title, subtitle }, items }));
+    }
+
     // Pyramid → V: three measures, starting on the finished pyramid and following the whiteboard
     // arrows. Most dancers walk east or west along their row out to the V's arm, then up or down the
     // arm to their spot. The back
@@ -3171,6 +3264,12 @@
     const WIP = "Works in progress";
     const PRESET_SECTIONS = [POLKA, WIP];
     const STORY_PRESETS = [
+      {
+        id: "hearts-adrift-to-line",
+        section: POLKA,
+        name: "Transition: Hearts Adrift → Line",
+        snapshots: heartsAdriftToLineSnapshots,
+      },
       {
         id: "line-to-triumphant-crossing",
         section: POLKA,
