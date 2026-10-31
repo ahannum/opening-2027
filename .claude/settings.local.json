@@ -231,7 +231,11 @@
       "Bash(grep -iE '\\\\.\\(mp4|mov|m4v\\)$')",
       "Bash(grep -c '`\\\\|\\\\${' /private/tmp/claude-501/-Users-ariel--claude-spares-spare-oHXHjj/4312318e-fe64-4fc6-bb3c-2f510adb2cd5/scratchpad/journey_code.js)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(git log *)",
+      "Bash(python3 -I /private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/80dddc89-eb17-424b-9375-c49c321f1efc/scratchpad/recv.py /private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/80dddc89-eb17-424b-9375-c49c321f1efc/scratchpad/tc)",
+      "Bash(pkill -f \"scratchpad/recv.py\")",
+      "Bash(python3 - \"/private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/521b8ee1-9ef9-4b5a-a615-671ef6347f8e/scratchpad/hearts.js\")"
     ]
   }
 }
