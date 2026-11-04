@@ -821,6 +821,15 @@
       stroke-width: 2.5;
     }
 
+    .piece text.pair-half {
+      font-size: 13px;
+    }
+
+    .piece .pair-divider {
+      stroke: #8a908e;
+      stroke-width: 1.5;
+    }
+
     /* A couple with L and F marks shrinks its number to leave the marks room. */
     .piece.couple.has-role-marks text:not(.role-mark) {
       font-size: 21px;
@@ -1611,6 +1620,7 @@
         blackHalf: null,
         text: null,
         roleMarks: null,
+        pairParts: null,
       };
       const numberText = () => {
         const text = svgElement("text", { x: 0, y: label && roleLetters ? -5 : 1 });
@@ -1667,7 +1677,23 @@
 
         group.append(fill, outline, text);
         token.text = text;
-        if (roleLetters && label) group.append(roleMark("L", -8, 11), roleMark("F", 8, 11));
+        // A same role pair with role marks is split like a couple, along `facingMode`: the half
+        // toward it is the pair's lead part (the label's first number), the other its follow part.
+        if (roleLetters && label) {
+          const [leadNumber, followNumber = ""] = label.split("-");
+          const half = (number, letter) => {
+            const numberText = svgElement("text", { class: "pair-half" });
+            numberText.textContent = number;
+            const mark = roleMark(letter);
+            group.append(numberText, mark);
+            return { numberText, mark };
+          };
+          text.style.display = "none";
+          const divider = svgElement("line", { class: "pair-divider" });
+          group.insertBefore(divider, outline);
+          token.pairParts = { divider, lead: half(leadNumber, "L"), follow: half(followNumber, "F") };
+          group.classList.add("has-role-marks");
+        }
       }
 
       pieceLayer.append(group);
@@ -1696,6 +1722,7 @@
       if (token.role === "couple") {
         updateCoupleHalf(token);
       }
+      if (token.pairParts) updatePairParts(token);
     }
 
     function updateCoupleHalf(token) {
@@ -1717,6 +1744,23 @@
           token.roleMarks[role].setAttribute("y", round(reach * Math.sin(angle)));
         });
       }
+    }
+
+    function updatePairParts(token) {
+      const direction = blackDirectionAngle(token);
+      const across = direction + Math.PI / 2;
+      token.pairParts.divider.setAttribute("x1", round(PIECE_RADIUS * Math.cos(across)));
+      token.pairParts.divider.setAttribute("y1", round(PIECE_RADIUS * Math.sin(across)));
+      token.pairParts.divider.setAttribute("x2", round(-PIECE_RADIUS * Math.cos(across)));
+      token.pairParts.divider.setAttribute("y2", round(-PIECE_RADIUS * Math.sin(across)));
+      [["lead", direction], ["follow", direction + Math.PI]].forEach(([part, angle]) => {
+        const cx = PIECE_RADIUS * 0.48 * Math.cos(angle), cy = PIECE_RADIUS * 0.48 * Math.sin(angle);
+        const { numberText, mark } = token.pairParts[part];
+        numberText.setAttribute("x", round(cx));
+        numberText.setAttribute("y", round(cy - 3));
+        mark.setAttribute("x", round(cx));
+        mark.setAttribute("y", round(cy + 9));
+      });
     }
 
     function halfCirclePath(radius, direction) {
@@ -3258,7 +3302,9 @@
       // couple next to it on one side, the follows of each couple and the couple next to it on the
       // other, so the lead pairs and follow pairs alternate around the ring. A pair's first number
       // dances its lead part and stands on their own couple's dot. First on the outer tape, then on
-      // the inner tape. Then everyone partners up on their own couple's dot, facing out.
+      // the inner tape. Each pair is split like a couple along the circle: its lead part's half
+      // clockwise, its follow part's counterclockwise. Then everyone partners up on their own
+      // couple's dot.
       const podDot = (first, top) => {
         const k = (first - 1) / 2, degrees = top ? 180 + 22.5 * k : 157.5 - 22.5 * k;
         return wrapStep((45 - degrees) / (360 / HALF_STEPS));
@@ -3277,10 +3323,14 @@
       }));
       const sameRoleCircle = (ring) => rolePairs.map(({ role, first, second }) => ({
         ...onDot(first, role, ring, coupleDot(first)),
-        label: `${real(first)}-${real(second)}`, roleLetters: true,
+        label: `${real(first)}-${real(second)}`, roleLetters: true, facingMode: "cw",
       }));
+      // Partnered up, each couple's halves sit side by side along the circle (the split points at
+      // the center), the lead's half toward the dot its lead pair was on and the follow's half
+      // toward its follow pair's.
       const partnerCircle = () => places.map((place) => ({
-        ...onDot(place, "couple", "inner", coupleDot(place)), displayMode: "leadFollow", facingMode: "out", roleLetters: true,
+        ...onDot(place, "couple", "inner", coupleDot(place)), displayMode: "leadFollow",
+        facingMode: ringOrder.indexOf(place) % 2 === 0 ? "cw" : "ccw", roleLetters: true,
       }));
       // Partners on the inner circle, `along` (0 to 1) of the way to the split's lines.
       const unfoldFrame = (along) => pairs.flatMap((first) => [first, first + 1].map((place, index) => {
@@ -3306,7 +3356,7 @@
       return [
         { subtitle: "Start: lead pairs and follow pairs on the outer tape", items: sameRoleCircle("outer") },
         { subtitle: "Lead pairs and follow pairs on the inner tape", items: sameRoleCircle("inner") },
-        { subtitle: "Partner up on the inner tape, facing out", items: partnerCircle() },
+        { subtitle: "Partner up on the inner tape", items: partnerCircle() },
         { subtitle: "Unfold the inner circle", items: unfoldFrame(0.5) },
         { subtitle: "Second couples on the inner tape toward the Honored Guests, first couples away", items: unfoldFrame(1) },
         { subtitle: "Lines out to the ¾ ring", items: podFrame(RING_RADII.threeQuarter) },
