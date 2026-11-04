@@ -3266,12 +3266,12 @@
     // It opens on a circle of same role pod pairs (the Polka Pods slide's 15-13, 14-12, …), who
     // partner up on the inner tape and unfold into two lines on it, each couple as one L/F circle
     // over its own place: the pod's first couple away from the Honored Guests and its second toward
-    // them. Then the couples come back in, halfway and then
-    // to the first line's distance, and overlap on the center line as they pass each other.
-    // They come out the mirror of the halfway frame (first couples toward the Honored Guests, second
-    // away), gallop back to one line, still in pods, and join up on the center line. Couples
-    // reorient, lead on the left and follow on the right: the left eight first while the right eight
-    // hold, then the right eight while the left eight turn on to the follow toward the Honored Guests.
+    // them. The lines go out to the ¾ ring, come back in by even steps and overlap on the center
+    // line as they pass each other, come out to the inner tape on the other side (first couples
+    // toward the Honored Guests, second away), gallop back to one line, still in pods, and join up
+    // on the center line. Couples
+    // reorient all together, lead on the left and follow on the right, then all turn on to the
+    // follow toward the Honored Guests.
     // Then a flip ripples down the line a pair of couples at a time: each frame the next pair turns the
     // follow's half north, and every pair already started flips again, so behind the front the pairs
     // alternate north and south, and it ends with everyone back to the follow toward the Honored
@@ -3364,8 +3364,6 @@
       const coupleFrame = (facing, spot = (place) => [x(place), CENTER.y]) => places.map((place) => ({
         ...dancer(place, "couple", ...spot(place)), displayMode: "leadFollow", facingMode: facing(place),
       }));
-      const halfway = (PIECE_RADIUS + INNER_RADIUS) / 2;
-      const leftHalf = (place) => place <= COUPLE_COUNT / 2;
       // In the flip cascade, whether a place has the follow's half north `flip` frames in.
       const followNorth = (flip, place) => {
         const pair = Math.floor((place - 1) / 2);
@@ -3381,14 +3379,15 @@
         { subtitle: "Unfold the inner circle", items: unfoldFrame(0.5) },
         { subtitle: "Second couples on the inner tape toward the Honored Guests, first couples away", items: unfoldFrame(1) },
         { subtitle: "Lines out to the ¾ ring", items: podFrame(RING_RADII.threeQuarter) },
-        { subtitle: "Back in halfway", items: podFrame(halfway) },
-        { subtitle: "1 line, still in pods", items: podFrame(PIECE_RADIUS) },
+        // From the ¾ ring in to the overlap in even steps.
+        { subtitle: "Coming back in", items: podFrame((RING_RADII.threeQuarter * 2) / 3) },
+        { subtitle: "Closer in, still in pods", items: podFrame(RING_RADII.threeQuarter / 3) },
         { subtitle: "Overlap", items: podFrame(0) },
-        { subtitle: "Out: first couples toward the Honored Guests, second away", items: podFrame(halfway, -1) },
+        { subtitle: "Out to the inner tape: first couples toward the Honored Guests, second away", items: podFrame(INNER_RADIUS, -1) },
         { subtitle: "Gallop to 1 line", items: podFrame(PIECE_RADIUS, -1) },
         { subtitle: "Couples again: leads toward the Honored Guests, follows away", items: coupleFrame(() => "south") },
-        { subtitle: "Left 8 reorient, lead left, follow right; right 8 hold", items: coupleFrame((place) => (leftHalf(place) ? "west" : "south")) },
-        { subtitle: "Right 8 reorient; left 8 follows toward the Honored Guests", items: coupleFrame((place) => (leftHalf(place) ? "north" : "west")) },
+        { subtitle: "Everyone reorients: lead left, follow right", items: coupleFrame(() => "west") },
+        { subtitle: "All follows toward the Honored Guests", items: coupleFrame(() => "north") },
         ...flips.map((flip) => ({
           subtitle: `Flip ${flip}: ${real(2 * flip - 1)}–${real(2 * flip)} turn`,
           items: coupleFrame((place) => (followNorth(flip, place) ? "south" : "north")),
