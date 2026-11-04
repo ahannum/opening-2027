@@ -816,13 +816,13 @@
     }
 
     .piece text.role-mark {
-      font-size: 11px;
+      font-size: 15px;
       font-weight: 800;
       stroke-width: 2.5;
     }
 
     .piece text.pair-half {
-      font-size: 13px;
+      font-size: 19px;
     }
 
     .piece .pair-divider {
@@ -830,9 +830,15 @@
       stroke-width: 1.5;
     }
 
+    /* Tokens with L and F marks are drawn larger so their text can be bigger (the inner tape's
+       16 dots leave room for about this much). */
+    .piece.has-role-marks > * {
+      transform: scale(1.2);
+    }
+
     /* A couple with L and F marks shrinks its number to leave the marks room. */
     .piece.couple.has-role-marks text:not(.role-mark) {
-      font-size: 21px;
+      font-size: 25px;
     }
 
     .piece text {
@@ -1738,7 +1744,7 @@
       const direction = blackDirectionAngle(token);
       token.blackHalf.setAttribute("d", halfCirclePath(PIECE_RADIUS, direction));
       if (token.roleMarks) {
-        const reach = PIECE_RADIUS * 0.74;
+        const reach = PIECE_RADIUS * 0.8;
         [["lead", direction], ["follow", direction + Math.PI]].forEach(([role, angle]) => {
           token.roleMarks[role].setAttribute("x", round(reach * Math.cos(angle)));
           token.roleMarks[role].setAttribute("y", round(reach * Math.sin(angle)));
@@ -1754,12 +1760,17 @@
       token.pairParts.divider.setAttribute("x2", round(-PIECE_RADIUS * Math.cos(across)));
       token.pairParts.divider.setAttribute("y2", round(-PIECE_RADIUS * Math.sin(across)));
       [["lead", direction], ["follow", direction + Math.PI]].forEach(([part, angle]) => {
+        // Number and letter side by side along the split, so each half reads like "15 L".
         const cx = PIECE_RADIUS * 0.48 * Math.cos(angle), cy = PIECE_RADIUS * 0.48 * Math.sin(angle);
+        const side = Math.cos(across) >= 0 ? 1 : -1;
+        const along = (distance) => [cx + side * distance * Math.cos(across), cy + side * distance * Math.sin(across)];
         const { numberText, mark } = token.pairParts[part];
-        numberText.setAttribute("x", round(cx));
-        numberText.setAttribute("y", round(cy - 3));
-        mark.setAttribute("x", round(cx));
-        mark.setAttribute("y", round(cy + 9));
+        const [numberX, numberY] = along(-5);
+        const [markX, markY] = along(11);
+        numberText.setAttribute("x", round(numberX));
+        numberText.setAttribute("y", round(numberY));
+        mark.setAttribute("x", round(markX));
+        mark.setAttribute("y", round(markY));
       });
     }
 
