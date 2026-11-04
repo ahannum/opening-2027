@@ -3395,10 +3395,15 @@
         { subtitle: "End: follows toward the Honored Guests", items: coupleFrame(() => "north") },
         // Out on the spokes, in the X and through the unfurling, every couple has the follow's half
         // radially out ("in" points the lead's half at the center).
-        ...NEW_SECTION_UNFURL_FRAMES.map(({ subtitle, spots }) => ({
-          subtitle,
-          items: coupleFrame(() => "in", (place) => spots[place - 1]),
-        })),
+        // After the X, still on the X's spots, everyone turns so that facing out from the center
+        // the lead is on the left and the follow on the right ("ccw" points the lead's half that way).
+        ...NEW_SECTION_UNFURL_FRAMES.flatMap(({ subtitle, spots }) => [
+          { subtitle, items: coupleFrame(() => "in", (place) => spots[place - 1]) },
+          ...(subtitle === "X" ? [{
+            subtitle: "X: facing out, lead on the left, follow on the right",
+            items: coupleFrame(() => "ccw", (place) => spots[place - 1]),
+          }] : []),
+        ]),
         // It ends on Hearts Adrift's start, everyone turning in, so the two join up.
         { subtitle: "Hearts Adrift start", items: heartsAdriftStart.items },
       ].map(({ subtitle, items }) => ({ count: items.length, annotation: { title, subtitle }, items }));
