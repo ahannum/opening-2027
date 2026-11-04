@@ -244,7 +244,12 @@
       "Bash(mdfind 'kMDItemContentTypeTree == \"public.movie\" && kMDItemFSCreationDate >= $time.iso\\(2026-11-01\\)')",
       "Bash(mkdir -p /private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/5a108664-06ba-42d9-999e-5dfaaab7975f/scratchpad/thumbs)",
       "Bash(qlmanage -t -s 600 -o /private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/5a108664-06ba-42d9-999e-5dfaaab7975f/scratchpad/thumbs 'WhatsApp Video 2026-11-01 at 7.01.29 PM.mp4' IMG_1368.MOV IMG_1369.MOV 'Polka - First Half Final Runthrough.mov' 'Polka Final Runthrough.mp4' 8304.mp4)",
-      "Bash(swift -e 'import AVFoundation; let a=AVURLAsset\\(url:URL\\(fileURLWithPath:CommandLine.arguments[1]\\)\\); print\\(\"dur\", Int\\(CMTimeGetSeconds\\(a.duration\\)\\)\\); for t in a.tracks\\(withMediaType:.video\\){let s=t.naturalSize.applying\\(t.preferredTransform\\); print\\(Int\\(abs\\(s.width\\)\\),\"x\",Int\\(abs\\(s.height\\)\\), Int\\(t.estimatedDataRate/1000\\),\"kbps\", t.nominalFrameRate,\"fps\"\\)}' '/Users/ariel/Downloads/WhatsApp Video 2026-11-01 at 7.01.29 PM \\(1\\).mp4')"
+      "Bash(swift -e 'import AVFoundation; let a=AVURLAsset\\(url:URL\\(fileURLWithPath:CommandLine.arguments[1]\\)\\); print\\(\"dur\", Int\\(CMTimeGetSeconds\\(a.duration\\)\\)\\); for t in a.tracks\\(withMediaType:.video\\){let s=t.naturalSize.applying\\(t.preferredTransform\\); print\\(Int\\(abs\\(s.width\\)\\),\"x\",Int\\(abs\\(s.height\\)\\), Int\\(t.estimatedDataRate/1000\\),\"kbps\", t.nominalFrameRate,\"fps\"\\)}' '/Users/ariel/Downloads/WhatsApp Video 2026-11-01 at 7.01.29 PM \\(1\\).mp4')",
+      "Bash(awk -F'displayMode' '{print $2}')",
+      "Bash(grep -noi \"gallop[^\\\\\"]\\\\{0,80\\\\}\\\\|triumph[^\\\\\"]\\\\{0,80\\\\}\\\\|pod[a-z ]\\\\{0,30\\\\}pair[^\\\\\"]\\\\{0,60\\\\}\" index.html)",
+      "Bash(grep -noiE \".{0,120}\\(gallop|triumph\\).{0,120}\" index.html)",
+      "Bash(grep -noiE \".{0,80}pod.{0,80}\" index.html)",
+      "Bash(/usr/bin/grep -noiE \".{0,120}\\(gallop|triumph\\).{0,120}\" index.html)"
     ]
   }
 }
