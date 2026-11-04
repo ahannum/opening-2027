@@ -3207,13 +3207,15 @@
       });
       const places = Array.from({ length: COUPLE_COUNT }, (_, index) => index + 1);
       const pairs = places.filter((place) => place % 2 === 1);
-      // The opening line: every lead on the center line, each follow just off it beside their lead,
-      // in groups of four places (two pods): 15 13 14 12 away from the Honored Guests, 6 16 7 11
-      // toward them, 10 8 3 9 away, 1 4 2 5 toward.
-      const followSide = (place) => (Math.floor((place - 1) / 4) % 2 === 0 ? -1 : 1);
+      // The opening line: every lead on the center line, each follow just off it, in groups of four
+      // places (two pods): 15 13 14 12 toward the Honored Guests, 6 16 7 11 away, 10 8 3 9 toward,
+      // 1 4 2 5 away. Each follow is offset FOLLOW_OFFSET places from their lead: to the right on the
+      // Honored Guests' side and to the left on the far side.
+      const FOLLOW_OFFSET = 1.5;
+      const followSide = (place) => (Math.floor((place - 1) / 4) % 2 === 0 ? 1 : -1);
       const lineFrame = () => places.flatMap((place) => [
         dancer(place, "lead", x(place), CENTER.y),
-        dancer(place, "follow", x(place), CENTER.y + followSide(place) * 2 * PIECE_RADIUS),
+        dancer(place, "follow", x(place + followSide(place) * FOLLOW_OFFSET), CENTER.y + followSide(place) * 2 * PIECE_RADIUS),
       ]);
       // The split works by pod (places 1 and 2, 3 and 4, …), each couple kept together as one L/F
       // token over its own place in the line: the pod's first couple (e.g. 15) goes away from the
