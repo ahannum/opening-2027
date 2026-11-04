@@ -3181,12 +3181,11 @@
     // line level with the inner tape's point nearest the Honored Guests and the lead pairs level with
     // its point farthest away. In between, the line splits by pod (places 1 and 2, 3 and 4, …, the
     // Polka Pods slide's 15-13, 14-12, …): each couple joins up as one L/F circle, the pod's first
-    // couple out away from the Honored Guests and its second toward them, both between the pod's two
-    // spots, halfway out and then to the inner tape. Then the couples come back in, halfway and then
-    // to the first line's distance, and overlap on the center line as they pass through each other.
+    // couple out away from the Honored Guests and its second toward them, each over its own spot,
+    // halfway out and then to the inner tape. Then the couples come back in, halfway and then
+    // to the first line's distance, and overlap on the center line as they pass each other.
     // They come out the mirror of the halfway frame (first couples toward the Honored Guests, second
-    // away) with the lead toward the Honored Guests, gallop back to one line, still in pods, then
-    // spread back over their own spots and join up on the center line. Couples
+    // away), gallop back to one line, still in pods, and join up on the center line. Couples
     // reorient, lead on the left and follow on the right: the left eight first while the right eight
     // hold, then the right eight while the left eight turn on to the follow toward the Honored Guests.
     // Then a flip ripples down the line a pair of couples at a time: each frame the next pair turns the
@@ -3213,20 +3212,17 @@
         dancer(place, role, x(place), CENTER.y + flip * side[role] * PIECE_RADIUS)
       )));
       // The split works by pod (places 1 and 2, 3 and 4, …), each couple kept together as one L/F
-      // token: the pod's first couple (e.g. 15) goes away from the Honored Guests and its second
-      // (e.g. 13) toward them, both centered between the pod's two places. `pass` slides the first
-      // couples that far left and the second couples that far right, so they pass beside each other
-      // instead of head on. After they pass (`flip` -1) the couples have the lead toward the Honored Guests.
+      // token over its own place in the line: the pod's first couple (e.g. 15) goes away from the
+      // Honored Guests and its second (e.g. 13) toward them. Being a place apart, they pass beside
+      // each other. After they pass (`flip` -1) the two have switched sides. The couples on the
+      // Honored Guests' side have the follow on the left ("east"), the others the follow on the right
+      // ("west"); in the overlap each keeps the side it's coming from.
       const podSide = [-1, 1];
-      const podFrame = (distance, flip = 1, pass = 0) => pairs.flatMap((first) => [first, first + 1].map((place, index) => ({
-        ...dancer(place, "couple", (x(first) + x(first + 1)) / 2 + podSide[index] * pass, CENTER.y + flip * podSide[index] * distance),
-        displayMode: "leadFollow", facingMode: flip === 1 ? "north" : "south",
+      const podFacing = (south) => (south ? "east" : "west");
+      const podFrame = (distance, flip = 1) => pairs.flatMap((first) => [first, first + 1].map((place, index) => ({
+        ...dancer(place, "couple", x(place), CENTER.y + flip * podSide[index] * distance),
+        displayMode: "leadFollow", facingMode: podFacing(flip * podSide[index] > 0),
       })));
-      // Each couple back over its own place, still on its side of the center line.
-      const podSpread = () => places.map((place) => ({
-        ...dancer(place, "couple", x(place), CENTER.y - podSide[(place - 1) % 2] * PIECE_RADIUS),
-        displayMode: "leadFollow", facingMode: "south",
-      }));
       // Facing is where the lead's half points: "west" puts the lead on the left, "north" the follow
       // toward the Honored Guests.
       const coupleFrame = (facing, spot = (place) => [x(place), CENTER.y]) => places.map((place) => ({
@@ -3246,10 +3242,9 @@
         { subtitle: "Second couples on the inner tape toward the Honored Guests, first couples away", items: podFrame(INNER_RADIUS) },
         { subtitle: "Back in halfway", items: podFrame(halfway) },
         { subtitle: "1 line, still in pods", items: podFrame(PIECE_RADIUS) },
-        { subtitle: "Overlap", items: podFrame(0, 1, PIECE_RADIUS) },
+        { subtitle: "Overlap", items: podFrame(0) },
         { subtitle: "Out: first couples toward the Honored Guests, second away", items: podFrame(halfway, -1) },
         { subtitle: "Gallop to 1 line", items: podFrame(PIECE_RADIUS, -1) },
-        { subtitle: "Back over own spots", items: podSpread() },
         { subtitle: "Couples again: leads toward the Honored Guests, follows away", items: coupleFrame(() => "south") },
         { subtitle: "Left 8 reorient, lead left, follow right; right 8 hold", items: coupleFrame((place) => (leftHalf(place) ? "west" : "south")) },
         { subtitle: "Right 8 reorient; left 8 follows toward the Honored Guests", items: coupleFrame((place) => (leftHalf(place) ? "north" : "west")) },
