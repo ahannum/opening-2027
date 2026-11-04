@@ -3216,25 +3216,32 @@
         ...dancer(place, "couple", x(place), CENTER.y + flip * podSide[index] * distance),
         displayMode: "leadFollow", facingMode: podFacing(flip * podSide[index] > 0),
       })));
-      // It opens on a circle of pods: each pod has a spoke angle, eight evenly spaced across the top
-      // from left to right in line order, mirrored across the bottom. The pod's two leads (e.g. 15-13)
-      // stand together as one circle on the top spoke and its two follows on the bottom one, first on
-      // the outer tape, then on the inner tape. There everyone finds their partner: the pod's first
-      // couple on the top spoke, its second on the bottom. Then the inner circle unfolds, halfway and
-      // then all the way, into the split's two lines on the inner tape.
-      const podAngle = (first) => Math.PI - (((first - 1) / 2 + 0.5) * Math.PI) / pairs.length;
-      const onRing = (ring, angle) => [CENTER.x + RING_RADII[ring] * Math.cos(angle), CENTER.y + RING_RADII[ring] * Math.sin(angle)];
+      // It opens on a circle of pods, everyone on a red dot (the 16 full steps of a tape). Pod k
+      // (0 to 7, in line order) has its two leads (e.g. 15-13) together as one circle on the dot k
+      // steps from the far left over the top, and its two follows on the dot k steps from the left
+      // end of the bottom, so the two sit nearly straight across from each other. First on the outer
+      // tape, then on the inner tape. There everyone finds their partner on those same dots: the
+      // pod's first couple where its leads were, its second where its follows were. Then the inner
+      // circle unfolds, halfway and then all the way, into the split's two lines on the inner tape.
+      const podDot = (first, top) => {
+        const k = (first - 1) / 2, degrees = top ? 180 + 22.5 * k : 157.5 - 22.5 * k;
+        return wrapStep((45 - degrees) / (360 / HALF_STEPS));
+      };
+      const onDot = (place, role, ring, step) => {
+        const point = stepPosition(step, ring);
+        return { ...dancer(place, role, point.x, point.y), ring, step };
+      };
       const sameRoleCircle = (ring) => ["lead", "follow"].flatMap((role) => pairs.map((first) => ({
-        ...dancer(first, role, ...onRing(ring, (role === "lead" ? -1 : 1) * podAngle(first))),
+        ...onDot(first, role, ring, podDot(first, role === "lead")),
         label: `${real(first)}-${real(first + 1)}`,
       })));
       // Partners on the inner circle, `along` (0 to 1) of the way to the split's lines.
       const unfoldFrame = (along) => pairs.flatMap((first) => [first, first + 1].map((place, index) => {
-        const [circleX, circleY] = onRing("inner", podSide[index] * podAngle(first));
-        return {
-          ...dancer(place, "couple", lerp(circleX, x(place), along), lerp(circleY, CENTER.y + podSide[index] * INNER_RADIUS, along)),
-          displayMode: "leadFollow", facingMode: podFacing(podSide[index] > 0),
+        const circle = onDot(place, "couple", "inner", podDot(first, index === 0));
+        const spot = along === 0 ? circle : {
+          ...dancer(place, "couple", lerp(circle.x, x(place), along), lerp(circle.y, CENTER.y + podSide[index] * INNER_RADIUS, along)),
         };
+        return { ...spot, displayMode: "leadFollow", facingMode: podFacing(podSide[index] > 0) };
       }));
       // Facing is where the lead's half points: "west" puts the lead on the left, "north" the follow
       // toward the Honored Guests.
