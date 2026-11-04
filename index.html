@@ -3176,8 +3176,8 @@
     // New Section from 1 Line, before Hearts Adrift. Who stands where is worked back from Hearts
     // Adrift's start: the unfurled circle has to land on it, so each place in the line goes to the
     // couple Hearts Adrift starts on that place's circle spot, and the frames below go by place.
-    // It opens on one horizontal line across the middle, really two lines split over the center: each
-    // follow just toward the Honored Guests and their lead just away. Last, the follow pairs end in a
+    // It opens on one horizontal line across the middle: the leads on the center line and each follow
+    // beside their lead, to one side or the other by groups of four. Last, the follow pairs end in a
     // line level with the inner tape's point nearest the Honored Guests and the lead pairs level with
     // its point farthest away. In between, the line splits by pod (places 1 and 2, 3 and 4, …, the
     // Polka Pods slide's 15-13, 14-12, …): each couple joins up as one L/F circle, the pod's first
@@ -3202,15 +3202,19 @@
       const look = { ring: null, step: null, facingMode: "in", groupColor: "neutral", displayMode: "partner" };
       const x = (place) => spreadValue(place - 1, COUPLE_COUNT, SQUARE_MIN, SQUARE_MAX);
       // South (down the board) is toward the Honored Guests; `flip` mirrors it, leads toward them.
-      const side = { lead: -1, follow: 1 };
       const dancer = (place, role, spotX, y) => ({
         key: `${real(place)}:${role}`, number: real(place), role, ...look, x: Number(spotX.toFixed(3)), y: Number(y.toFixed(3)),
       });
       const places = Array.from({ length: COUPLE_COUNT }, (_, index) => index + 1);
       const pairs = places.filter((place) => place % 2 === 1);
-      const lineFrame = (flip = 1) => places.flatMap((place) => ["lead", "follow"].map((role) => (
-        dancer(place, role, x(place), CENTER.y + flip * side[role] * PIECE_RADIUS)
-      )));
+      // The opening line: every lead on the center line, each follow just off it beside their lead,
+      // in groups of four places (two pods): 15 13 14 12 away from the Honored Guests, 6 16 7 11
+      // toward them, 10 8 3 9 away, 1 4 2 5 toward.
+      const followSide = (place) => (Math.floor((place - 1) / 4) % 2 === 0 ? -1 : 1);
+      const lineFrame = () => places.flatMap((place) => [
+        dancer(place, "lead", x(place), CENTER.y),
+        dancer(place, "follow", x(place), CENTER.y + followSide(place) * 2 * PIECE_RADIUS),
+      ]);
       // The split works by pod (places 1 and 2, 3 and 4, …), each couple kept together as one L/F
       // token over its own place in the line: the pod's first couple (e.g. 15) goes away from the
       // Honored Guests and its second (e.g. 13) toward them. Being a place apart, they pass beside
@@ -3237,7 +3241,7 @@
       };
       const flips = Array.from({ length: COUPLE_COUNT / 2 }, (_, index) => index + 1);
       return [
-        { subtitle: "1 line: follows toward the Honored Guests, leads away", items: lineFrame() },
+        { subtitle: "1 line: leads on the center line, follows beside them", items: lineFrame() },
         { subtitle: "Pods split: first couple away, second toward the Honored Guests", items: podFrame(halfway) },
         { subtitle: "Second couples on the inner tape toward the Honored Guests, first couples away", items: podFrame(INNER_RADIUS) },
         { subtitle: "Back in halfway", items: podFrame(halfway) },
