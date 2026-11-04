@@ -2831,9 +2831,9 @@
     // Line to Triumphant Crossing, from Ariel's sketches. One vertical line of couples (listed north
     // to south) gallops out to an X with every couple on the outer tape, 3/4, 1/2 or 1/4. The follows
     // separate from their leads and gallop round to a cross on the same tapes while the leads hold
-    // the X, and everyone draws in for finger turns. The gallop pairs (each the two dancers who share
-    // a column of their Triumphant Crossing grid) join up on the X and +, then one measure to gallop
-    // into the inner circle, each pair on the inner tape, and then the gallop to the grid in eight
+    // the X. On each spoke the gallop pairs merge, one pair on the outer tape and one on the inner,
+    // then one measure to gallop into the inner circle, each pair on the inner tape, and then the
+    // gallop to the grid in eight
     // bunches, 4 leads or 4 follows each: where everyone is after one measure and after another.
     // In each bunch its two pairs stand side by side across the row, in their grid columns' order,
     // spreading toward the columns' spacing. After one measure the bunches are partway there, moving at
@@ -2844,28 +2844,44 @@
     // 11 14 15 16 leads are in the middle of the floor with the 1 2 6 7 follows just behind them.
     // Couples are numbered by where they start Triumphant Crossing.
     const LINE_TO_CROSSING_LINE_ORDER = [3, 12, 10, 13, 5, 8, 4, 9, 6, 14, 7, 15, 2, 11, 1, 16];
-    // Gallop pairs: the two dancers who share a column of their Triumphant Crossing grid. Once they
-    // join up on the X and +, each pair of leads or of follows is drawn as one circle.
-    const LINE_TO_CROSSING_PAIRS = [[1, 2], [6, 7], [3, 10], [4, 5], [8, 9], [12, 13], [11, 14], [15, 16]];
+    // Gallop pairs: the two dancers who share a spoke's outer tape and 3/4, or its 1/2 and 1/4. Once
+    // they merge, each pair of leads or of follows is drawn as one circle. Most share a column of their
+    // Triumphant Crossing grid; 11-16 and 14-15 don't (the grid has 11 with 14 and 15 with 16).
+    const LINE_TO_CROSSING_PAIRS = [[1, 2], [6, 7], [3, 10], [4, 5], [8, 9], [12, 13], [11, 16], [14, 15]];
+    // Where everyone gallops to before the merge: the leads hold the X and the follows make the +, each
+    // spoke with a dancer on the outer tape, 3/4, 1/2 and 1/4.
+    const LINE_TO_CROSSING_CROSS = {
+      lead: [[160.6, 559.4], [210.4, 509.6], [160.6, 160.6], [310.1, 310.1], [260.3, 260.3], [310.1, 409.9], [260.3, 459.7], [459.7, 260.3],
+        [409.9, 310.1], [210.4, 210.4], [509.6, 509.6], [559.4, 160.6], [509.6, 210.4], [409.9, 409.9], [459.7, 459.7], [559.4, 559.4]],
+      follow: [[360, 642], [360, 571.5], [78, 360], [289.5, 360], [219, 360], [360, 430.5], [360, 501], [360, 219],
+        [360, 289.5], [148.5, 360], [571.5, 360], [360, 78], [360, 148.5], [430.5, 360], [501, 360], [642, 360]],
+    };
+    // In the merge, the two on each spoke's outer tape and 3/4 join as a pair on the outer tape, and the
+    // two on its 1/2 and 1/4 as a pair on the inner tape.
+    // The X: every couple on a diagonal spoke, on the outer tape, 3/4, 1/2 or 1/4.
+    const LINE_TO_CROSSING_X = [[160.6, 559.4], [210.4, 509.6], [160.6, 160.6], [310.1, 310.1], [260.3, 260.3], [310.1, 409.9], [260.3, 459.7], [459.7, 260.3],
+      [409.9, 310.1], [210.4, 210.4], [509.6, 509.6], [559.4, 160.6], [509.6, 210.4], [409.9, 409.9], [459.7, 459.7], [559.4, 559.4]];
+    // Halfway out of the Line, each couple is on its X tape on the spoke between the vertical and its
+    // X spoke.
+    const LINE_TO_CROSSING_GALLOP_OUT = LINE_TO_CROSSING_X.map(([x, y]) => {
+      const radius = Math.hypot(x - CENTER.x, y - CENTER.y);
+      const angle = (Math.atan2(y - CENTER.y, x - CENTER.x) + Math.sign(y - CENTER.y) * Math.PI / 2) / 2;
+      return [Number((CENTER.x + Math.cos(angle) * radius).toFixed(1)), Number((CENTER.y + Math.sin(angle) * radius).toFixed(1))];
+    });
     const LINE_TO_CROSSING_FRAMES = [
+      { subtitle: "Gallop out", solid: true, couple: LINE_TO_CROSSING_GALLOP_OUT },
+      { subtitle: "X: follows in, leads out", facing: "out", couple: LINE_TO_CROSSING_X },
+      { subtitle: "X: follows out, leads in", couple: LINE_TO_CROSSING_X },
       {
-        subtitle: "Gallop out",
-        solid: true,
-        couple: [[265.7, 607.9], [292.8, 544.7], [252.1, 99.5], [333.2, 295.3], [306.4, 230.7], [333.2, 424.7], [306.2, 479.7], [413.5, 236.9],
-          [392.5, 310.2], [279.3, 165.1], [440.7, 554.9], [473.3, 97.1], [455.8, 159.5], [386.8, 424.7], [413.6, 489.3], [467.9, 620.5]],
-      },
-      {
-        subtitle: "X",
-        solid: true,
-        couple: [[160.6, 559.4], [210.4, 509.6], [160.6, 160.6], [310.1, 310.1], [260.3, 260.3], [310.1, 409.9], [260.3, 459.7], [459.7, 260.3],
-          [409.9, 310.1], [210.4, 210.4], [509.6, 509.6], [559.4, 160.6], [509.6, 210.4], [409.9, 409.9], [459.7, 459.7], [559.4, 559.4]],
-      },
-      {
+        // The leads hold the X and each follow steps out along the same spoke, halfway to the next
+        // quarter tape, so every spoke alternates lead, follow from the center out.
         subtitle: "Follows separate",
-        lead: [[160.6, 559.4], [210.4, 509.6], [160.6, 160.6], [310.1, 310.1], [260.3, 260.3], [310.1, 409.9], [260.3, 459.7], [459.7, 260.3],
-          [409.9, 310.1], [210.4, 210.4], [509.6, 509.6], [559.4, 160.6], [509.6, 210.4], [409.9, 409.9], [459.7, 459.7], [559.4, 559.4]],
-        follow: [[193.1, 591.9], [243, 542.1], [128.1, 193.1], [277.6, 342.7], [227.8, 292.8], [342.7, 442.4], [292.8, 492.2], [427.2, 227.8],
-          [377.3, 277.6], [177.9, 243], [542.1, 477], [526.9, 128.1], [477, 177.9], [442.4, 377.3], [492.2, 427.2], [591.9, 526.9]],
+        lead: LINE_TO_CROSSING_X,
+        follow: LINE_TO_CROSSING_X.map(([x, y]) => {
+          const distance = Math.hypot(x - CENTER.x, y - CENTER.y);
+          const out = (distance + OUTER_RADIUS / 8) / distance;
+          return [Number((CENTER.x + (x - CENTER.x) * out).toFixed(1)), Number((CENTER.y + (y - CENTER.y) * out).toFixed(1))];
+        }),
       },
       {
         subtitle: "Follows gallop",
@@ -2874,27 +2890,7 @@
         follow: [[272.9, 630.2], [299.7, 565.3], [89.8, 272.9], [283.1, 352], [219.3, 326.3], [352, 436.9], [326.3, 500.7], [393.7, 219.3],
           [368, 283.1], [154.7, 299.7], [565.3, 420.3], [447.1, 89.8], [420.3, 154.7], [436.9, 368], [500.7, 393.7], [630.2, 447.1]],
       },
-      {
-        subtitle: "Cross",
-        lead: [[160.6, 559.4], [210.4, 509.6], [160.6, 160.6], [310.1, 310.1], [260.3, 260.3], [310.1, 409.9], [260.3, 459.7], [459.7, 260.3],
-          [409.9, 310.1], [210.4, 210.4], [509.6, 509.6], [559.4, 160.6], [509.6, 210.4], [409.9, 409.9], [459.7, 459.7], [559.4, 559.4]],
-        follow: [[360, 642], [360, 571.5], [78, 360], [289.5, 360], [219, 360], [360, 430.5], [360, 501], [360, 219],
-          [360, 289.5], [148.5, 360], [571.5, 360], [360, 78], [360, 148.5], [430.5, 360], [501, 360], [642, 360]],
-      },
-      {
-        subtitle: "Finger turns",
-        lead: [[222.1, 497.9], [253.9, 466.1], [222.1, 222.1], [317.6, 317.6], [285.8, 285.8], [317.6, 402.4], [285.8, 434.2], [434.2, 285.8],
-          [402.4, 317.6], [253.9, 253.9], [466.1, 466.1], [497.9, 222.1], [466.1, 253.9], [402.4, 402.4], [434.2, 434.2], [497.9, 497.9]],
-        follow: [[360, 555], [360, 510], [165, 360], [300, 360], [255, 360], [360, 420], [360, 465], [360, 255],
-          [360, 300], [210, 360], [510, 360], [360, 165], [360, 210], [420, 360], [465, 360], [555, 360]],
-      },
-      {
-        subtitle: "Pairs on the X and +",
-        pairs: {
-          lead: [[238, 482], [301.7, 418.3], [238, 238], [301.7, 301.7], [418.3, 301.7], [482, 238], [434.2, 434.2], [466, 466]],
-          follow: [[360, 532.5], [360, 442.5], [187.5, 360], [277.5, 360], [360, 277.5], [360, 187.5], [465, 360], [510, 360]],
-        },
-      },
+      { subtitle: "Merge into pairs on the outer and inner tapes", merge: true },
       {
         subtitle: "Gallop into the inner circle",
         pairs: {
@@ -2906,14 +2902,14 @@
         subtitle: "Gallop to the grid: after 1 measure",
         pairs: {
           lead: [[153.1, 318.8], [223.1, 316.6], [235.7, 202.4], [165.7, 202.4], [383.5, 236.8], [446.3, 236.8], [261, 432], [319, 432]],
-          follow: [[386.4, 369.2], [451, 370], [409, 310], [351, 310], [434.6, 184.1], [499.8, 184.1], [510.6, 340.4], [567.5, 340.4]],
+          follow: [[386.4, 369.2], [451, 370], [409, 310], [351, 310], [434.6, 184.1], [499.8, 184.1], [567.5, 340.4], [510.6, 340.4]],
         },
       },
       {
         subtitle: "Gallop to the grid: after 2 measures",
         pairs: {
           lead: [[73.3, 313.1], [167.3, 313.1], [168.3, 156.5], [74.3, 156.5], [262.3, 156.5], [342.3, 156.5], [261.3, 313.1], [341.3, 313.1]],
-          follow: [[373.1, 277.6], [453.1, 277.6], [453.3, 123.4], [373.3, 123.4], [547.3, 123.4], [641.3, 123.4], [547.1, 277.6], [641.1, 277.6]],
+          follow: [[373.1, 277.6], [453.1, 277.6], [453.3, 123.4], [373.3, 123.4], [547.3, 123.4], [641.3, 123.4], [641.1, 277.6], [547.1, 277.6]],
         },
       },
     ];
@@ -2935,9 +2931,8 @@
       // follow on the left, 1's on the right, 11's on the left, and on up the line). Then the line:
       // counting up from the Honored Guests, every other couple (16, 11, …) has the follow's white
       // half toward the Honored Guests, and the couples between them (1, 2, …) the lead's black half.
-      const xSpots = LINE_TO_CROSSING_FRAMES.find((frame) => frame.subtitle === "X").couple;
       const cascade = line.flatMap((couple) => {
-        const side = xSpots[couple.number - 1][0] > CENTER.x ? -1 : 1;
+        const side = LINE_TO_CROSSING_X[couple.number - 1][0] > CENTER.x ? -1 : 1;
         return [dancer(couple.number, "lead", [couple.x, couple.y]), dancer(couple.number, "follow", [couple.x + side * PIECE_RADIUS * 2, couple.y])];
       });
       const fromGuests = [...LINE_TO_CROSSING_LINE_ORDER].reverse();
@@ -2945,7 +2940,22 @@
       const frames = LINE_TO_CROSSING_FRAMES.map((frame) => ({
         subtitle: frame.subtitle,
         items: frame.couple
-          ? frame.couple.map((spot, index) => ({ ...dancer(index + 1, "couple", spot), ...(frame.solid ? { displayMode: "partner" } : {}) }))
+          ? frame.couple.map((spot, index) => ({
+            ...dancer(index + 1, "couple", spot),
+            ...(frame.solid ? { displayMode: "partner" } : {}),
+            ...(frame.facing ? { facingMode: frame.facing } : {}),
+          }))
+          : frame.merge
+            ? ["lead", "follow"].flatMap((role) => LINE_TO_CROSSING_PAIRS.map(([first, second]) => {
+              const [x, y] = LINE_TO_CROSSING_CROSS[role][first - 1];
+              const distance = Math.hypot(x - CENTER.x, y - CENTER.y);
+              const radius = distance > (MIDDLE_RADIUS + INNER_RADIUS) / 2 ? OUTER_RADIUS : INNER_RADIUS;
+              const spot = [x, y].map((value, axis) => {
+                const center = axis === 0 ? CENTER.x : CENTER.y;
+                return Number((center + ((value - center) / distance) * radius).toFixed(1));
+              });
+              return { ...dancer(first, role, spot), label: `${first}-${second}` };
+            }))
           : frame.pairs
             ? ["lead", "follow"].flatMap((role) => frame.pairs[role].map((spot, index) => {
               const [first, second] = LINE_TO_CROSSING_PAIRS[index];
@@ -2953,10 +2963,11 @@
             }))
             : frame.lead.flatMap((spot, index) => [dancer(index + 1, "lead", spot), dancer(index + 1, "follow", frame.follow[index])]),
       }));
+      // The frames show the title only: the subtitles just name each frame here.
       return [
         ...[{ subtitle: "Turn cascade", items: cascade }, { subtitle: "Line", items: line }, ...frames]
-          .map(({ subtitle, items }) => ({ count: items.length, annotation: { title, subtitle }, items })),
-        { ...triumphantCrossingSnapshots()[0], annotation: { title, subtitle: "Triumphant Crossing start" } },
+          .map(({ items }) => ({ count: items.length, annotation: { title, subtitle: "" }, items })),
+        { ...triumphantCrossingSnapshots()[0], annotation: { title, subtitle: "" } },
       ];
     }
 
@@ -2987,38 +2998,24 @@
         })));
     }
 
-    // Where everyone is `measures` (0 to 2) into the filing, by couple number. Each couple walks the
-    // circle to its end of the Line, then straight along the center line to their spot. A moving file
-    // keeps `fileGap` more than a line place between couples, so they clear each other turning into the
-    // line, and each couple stops on their spot as they reach it, closing up to the Line's spacing.
-    // Couples whose turn hasn't come yet wait on the circle.
-    function heartsAdriftToLinePositions(line, measures, fileGap = PIECE_RADIUS * 1.5) {
+    // Where everyone is `beat` beats into the filing, by couple number. Each end takes one couple per
+    // beat: a couple reaches the tape at their end of the Line on the beat matching their place in the
+    // file (the first in starts there), then walks in along the center line, from the outer tape to the
+    // ½ ring each beat, until they reach their Line spot. Until they reach the tape they walk the
+    // circle at a steady pace, so they arrive on their beat.
+    function heartsAdriftToLinePositions(line, beat) {
       const starts = heartsAdriftToLineStarts(line);
-      const pathLength = (points) => points.slice(1)
-        .reduce((sum, [x, y], index) => sum + Math.hypot(x - points[index][0], y - points[index][1]), 0);
-      const paths = new Map(line.items.map(({ number, x, y }) => {
-        const fromTop = y < CENTER.y;
+      return new Map(line.items.map(({ number, x, y }) => {
         const { angle: startAngle, place } = starts.get(number);
-        const turn = (fromTop ? -Math.PI / 2 : Math.PI / 2) - startAngle;
-        const arcSteps = Math.max(1, Math.ceil(Math.abs(turn) / (Math.PI / 36)));
-        const arc = Array.from({ length: arcSteps + 1 }, (_, step) => {
-          const angle = startAngle + (turn * step) / arcSteps;
-          return [CENTER.x + OUTER_RADIUS * Math.cos(angle), CENTER.y + OUTER_RADIUS * Math.sin(angle)];
-        });
-        const points = [...arc, [x, y]];
-        return [number, { fromTop, place, points, length: pathLength(points) }];
-      }));
-      // How far the file's lead point is from the Line: it starts where nobody has moved yet and ends
-      // where the last couple in has arrived, at a steady pace.
-      const lead = (fromTop) => {
-        const file = [...paths.values()].filter((path) => path.fromTop === fromTop);
-        const first = Math.max(...file.map((path) => path.length - path.place * fileGap));
-        const last = -Math.max(...file.map((path) => path.place)) * fileGap;
-        return lerp(first, last, measures / 2);
-      };
-      return new Map([...paths].map(([number, { fromTop, place, points, length }]) => {
-        const moved = Math.min(length, Math.max(0, length - lead(fromTop) - place * fileGap));
-        return [number, { inLine: length - moved <= Math.abs(points.at(-2)[1] - points.at(-1)[1]), spot: pointAlongPath(points, moved / length) }];
+        const entry = y < CENTER.y ? -Math.PI / 2 : Math.PI / 2;
+        if (beat > place) {
+          const tapeY = CENTER.y + Math.sin(entry) * OUTER_RADIUS;
+          const walked = Math.min(Math.abs(y - tapeY), (beat - place) * (OUTER_RADIUS - MIDDLE_RADIUS));
+          return [number, { inLine: true, spot: [x, tapeY - Math.sin(entry) * walked] }];
+        }
+        const angle = lerp(startAngle, entry, place ? beat / place : 1);
+        // On the tape point they've already turned to face the way they will in the Line.
+        return [number, { inLine: beat === place, spot: [CENTER.x + OUTER_RADIUS * Math.cos(angle), CENTER.y + OUTER_RADIUS * Math.sin(angle)] }];
       }));
     }
 
@@ -3032,11 +3029,17 @@
         return [follow.number, follow.x > lead.x ? "west" : "east"];
       }));
       const inLine = line.items.map((item) => ({ ...item, facingMode: sideways.get(item.number) }));
-      const afterMeasure = heartsAdriftToLinePositions(line, 1);
-      // Couples already in the line stand side to side; the rest still face in on the circle.
-      const measure1 = inLine.map((item) => {
-        const { inLine: filing, spot: [x, y] } = afterMeasure.get(item.number);
-        return { ...item, facingMode: filing ? item.facingMode : "in", x: Number(x.toFixed(3)), y: Number(y.toFixed(3)) };
+      // Where everyone is on each beat of the two filing measures. Couples on the tape point or already
+      // in the line stand side to side; the rest still face in on the circle.
+      const filingBeats = Array.from({ length: 8 }, (_, index) => {
+        const positions = heartsAdriftToLinePositions(line, index + 1);
+        return {
+          subtitle: `Measure ${Math.floor(index / 4) + 1}: Beat ${(index % 4) + 1}`,
+          items: inLine.map((item) => {
+            const { inLine: filing, spot: [x, y] } = positions.get(item.number);
+            return { ...item, facingMode: filing ? item.facingMode : "in", x: Number(x.toFixed(3)), y: Number(y.toFixed(3)) };
+          }),
+        };
       });
       const starts = heartsAdriftToLineStarts(line);
       const circle = inLine.map((item) => {
@@ -3047,17 +3050,223 @@
       });
       return [
         { subtitle: "Start", items: circle },
-        { subtitle: "Measure 1: Beat 4", items: measure1 },
+        // By beat 4 of measure 2 everyone is on their Line spot.
+        ...filingBeats.slice(0, -1),
         { subtitle: "Measure 2: Beat 4", items: inLine },
-        { subtitle: "Measure 3: Beat 3–4", items: cascade.items },
+        { subtitle: "Measure 3", items: cascade.items },
       ].map(({ subtitle, items }) => ({ count: items.length, annotation: { title, subtitle }, items }));
     }
 
-    // Hearts Adrift: for now one frame with everyone seeded on the outer circle, on the spots Hearts
-    // Adrift → Line starts from, so the two join up. The real spots get worked back from there later.
+    // Hearts Adrift, one frame per measure, worked back from where it ends: everyone on the outer tape
+    // on the spots Hearts Adrift → Line starts from, so the two join up. Each frame gives
+    // the lead's and follow's spot as half steps back from that end (counterclockwise is +) and a
+    // ring; a frame with `couple` keeps the pair as one token. A step is one full tape (two half
+    // steps). Everyone starts on a red dot. From the escale the couples straddle the red dot they go
+    // in on, a quarter step to each side, so each pair stays clear of the next. At the escale the
+    // follow is CW of the lead and holds there while the lead straightens up; on measure 11 the lead
+    // steps to where they turn in from on measure 12. As the follow turns in to the ½ ring
+    // and the inner tape they stand straight in from the red dot, and once the lead joins them on the
+    // inner tape the two have switched sides again. They come back together on that red dot. Later they split and
+    // rejoin a half step forward, which measure 20 brings back onto a red dot. Measures where nobody
+    // travels repeat the spots before them. The ½ ring is halfway between the inner and outer tapes.
+    // Measure 16 takes two frames, the ½ ring then back out on the tape.
+    const HEARTS_ADRIFT_FRAME = { couple: [-6, "outer"] };
+    const HEARTS_ADRIFT_ESCALE = { lead: [-5.5, "outer"], follow: [-6.5, "outer"] };
+    const HEARTS_ADRIFT_FRAMES = [
+      { subtitle: "Start", couple: [-8, "outer"] },
+      { subtitle: "Measure 1: Polka, polka", couple: [-6, "outer"] },
+      { subtitle: "Measure 2: Reach L/F, frame", couple: [-6, "outer"] },
+      { subtitle: "Measure 3: Polka, polka", couple: [-4, "outer"] },
+      { subtitle: "Measure 4: F turn and reorient", couple: [-4, "outer"] },
+      { subtitle: "Measure 5: Polka, pivot, step F outside turn, send out", ...HEARTS_ADRIFT_FRAME },
+      { subtitle: "Measure 6: F extend out (arm over head)", ...HEARTS_ADRIFT_FRAME },
+      { subtitle: "Measure 7: F free spin into dip", ...HEARTS_ADRIFT_FRAME },
+      { subtitle: "Measure 8: Dip (4 counts)", ...HEARTS_ADRIFT_FRAME },
+      { subtitle: "Measure 9: F escale, on R side of lead", ...HEARTS_ADRIFT_ESCALE },
+      { subtitle: "Measure 10: L straighten up", ...HEARTS_ADRIFT_ESCALE },
+      { subtitle: "Measure 11: F turn, turn, pause 3–4 (F in to the ½ ring)", lead: [-6.5, "outer"], follow: [-6, "middle"] },
+      { subtitle: "Measure 12: L turn in", lead: [-6.5, "outer"], follow: [-6, "middle"] },
+      { subtitle: "Measure 13: F turn, turn (F to the inner tape, L to the ½ ring)", lead: [-6.5, "middle"], follow: [-6, "inner"] },
+      { subtitle: "Measure 14: L step, end on L side of follow", lead: [-5.5, "inner"], follow: [-6.5, "inner"] },
+      // Facing out, the lead's half CCW puts the lead on their left and the follow on their right.
+      { subtitle: "Measure 15: L and F reach arm up", couple: [-6, "inner"], facing: "ccw" },
+      { subtitle: "Measure 16: Together out to the ½ ring", couple: [-6, "middle"], facing: "ccw" },
+      { subtitle: "Measure 16: Back on the outer tape", couple: [-6, "outer"] },
+      { subtitle: "Measure 17: Gallop, one step line of dance", couple: [-4, "outer"] },
+      { subtitle: "Measure 18: F a half step line of dance", lead: [-4, "outer"], follow: [-3, "outer"] },
+      { subtitle: "Measure 19: L rejoins F", couple: [-3, "outer"] },
+      { subtitle: "Measure 20: A half step line of dance onto the tape", couple: [-2, "outer"] },
+      { subtitle: "Measure 21: Polka, pivot, pivot, one step line of dance", couple: [0, "outer"] },
+      { subtitle: "Measure 22: Stay on this tape, prep L lift", couple: [0, "outer"] },
+      { subtitle: "Measure 23: Lead lift", couple: [0, "outer"] },
+    ];
+
     function heartsAdriftSnapshots() {
-      const [start] = heartsAdriftToLineSnapshots();
-      return [{ ...start, annotation: { title: "Hearts Adrift", subtitle: "Start: couples on the circle" } }];
+      const title = "Hearts Adrift";
+      const [lineStart] = heartsAdriftToLineSnapshots();
+      const ends = new Map(lineStart.items.map((item) => [item.number, nearestStep(item.x, item.y)]));
+      // Off a dot (a quarter step), the spot is placed by angle and isn't anchored to a ring or step.
+      const dancer = (number, role, [offset, ring]) => {
+        const onDot = Number.isInteger(offset);
+        const angle = stepAngle(ends.get(number)) - (offset * TAU) / HALF_STEPS;
+        const x = CENTER.x + RING_RADII[ring] * Math.cos(angle);
+        const y = CENTER.y + RING_RADII[ring] * Math.sin(angle);
+        return {
+          key: `${number}:${role}`, number, role, ring: onDot ? ring : null, step: onDot ? wrapStep(ends.get(number) + offset) : null,
+          facingMode: "in", groupColor: "neutral",
+          displayMode: role === "couple" ? "leadFollow" : "partner", x: Number(x.toFixed(3)), y: Number(y.toFixed(3)),
+        };
+      };
+      const numbers = Array.from({ length: COUPLE_COUNT }, (_, index) => index + 1);
+      // Measures in a row where nobody moves share one frame, labeled e.g. "Measures 1–2"; the step notes
+      // stay in HEARTS_ADRIFT_FRAMES but aren't shown.
+      const merged = [];
+      HEARTS_ADRIFT_FRAMES.forEach(({ subtitle, couple, facing = "in", lead, follow }) => {
+        const items = couple
+          ? numbers.map((number) => ({ ...dancer(number, "couple", couple), facingMode: facing }))
+          : numbers.flatMap((number) => [dancer(number, "lead", lead), dancer(number, "follow", follow)]);
+        const [, measure, note = subtitle] = subtitle.match(/^Measure (\d+): (.*)$/) || [];
+        const previous = merged.at(-1);
+        if (measure && previous?.first && JSON.stringify(previous.items) === JSON.stringify(items)) {
+          previous.last = measure;
+          previous.notes.push(note);
+        } else {
+          merged.push({ items, first: measure, last: measure, notes: [note] });
+        }
+      });
+      return merged.map(({ items, first, last, notes }) => {
+        // Counting starts over at measure 16, which is shown as measure 1.
+        const shown = (measure) => (measure >= 16 ? measure - 15 : measure);
+        const label = !first ? notes[0] : first === last ? `Measure ${shown(first)}` : `Measures ${shown(first)}–${shown(last)}`;
+        return { count: items.length, annotation: { title, subtitle: label }, items };
+      });
+    }
+
+    // New Section from 1 Line's X and its unfurling, as Ariel laid them out in the planner: each
+    // frame's spot for every place in the line (1 is the far left). The last is the finished circle,
+    // which is where Hearts Adrift starts.
+    const NEW_SECTION_UNFURL_FRAMES = [
+      {
+        subtitle: "Every other couple out on a spoke, up or down",
+        spots: [[99.5, 252.1], [99.5, 467.9], [165.1, 279.3], [165.1, 440.7], [230.7, 306.4], [230.7, 413.6], [295.3, 333.2], [295.3, 386.8],
+          [424.7, 333.2], [424.7, 386.8], [489.3, 306.4], [489.3, 413.6], [554.9, 279.3], [554.9, 440.7], [620.5, 252.1], [620.5, 467.9]],
+      },
+      {
+        subtitle: "X",
+        spots: [[160.6, 160.6], [160.6, 559.4], [210.8, 210.8], [210.8, 509.2], [261, 261], [261, 459], [310.5, 310.5], [321.1, 418.2],
+          [409.5, 310.5], [409.5, 409.5], [459, 261], [459, 459], [509.2, 210.8], [509.2, 509.2], [559.4, 160.6], [559.4, 559.4]],
+      },
+      {
+        subtitle: "Unfurl the X: outer couples onto the circle",
+        spots: [[78, 360], [360, 642], [99.5, 252.1], [252.1, 620.5], [160.6, 160.6], [160.6, 559.4], [210.8, 210.8], [210.8, 509.2],
+          [509.2, 210.8], [509.2, 509.2], [559.4, 160.6], [559.4, 559.4], [467.9, 99.5], [620.5, 467.9], [360, 78], [642, 360]],
+      },
+      {
+        subtitle: "Keep unfurling: dip",
+        spots: [[99.5, 467.9], [467.9, 620.5], [78, 360], [360, 642], [99.5, 252.1], [252.1, 620.5], [160.6, 160.6], [160.6, 559.4],
+          [559.4, 160.6], [559.4, 559.4], [467.9, 99.5], [620.5, 467.9], [360, 78], [642, 360], [252.1, 99.5], [620.5, 252.1]],
+      },
+      {
+        subtitle: "Circle: F escape, L take frame",
+        spots: [[160.6, 559.4], [559.4, 559.4], [99.5, 467.9], [467.9, 620.5], [78, 360], [360, 642], [99.5, 252.1], [252.1, 620.5],
+          [467.9, 99.5], [620.5, 467.9], [360, 78], [642, 360], [252.1, 99.5], [620.5, 252.1], [160.6, 160.6], [559.4, 160.6]],
+      },
+    ];
+
+    // New Section from 1 Line, before Hearts Adrift. Who stands where is worked back from Hearts
+    // Adrift's start: the unfurled circle has to land on it, so each place in the line goes to the
+    // couple Hearts Adrift starts on that place's circle spot, and the frames below go by place.
+    // It opens on one horizontal line across the middle, really two lines split over the center: each
+    // follow just toward the Honored Guests and their lead just away. Last, the follow pairs end in a
+    // line level with the inner tape's point nearest the Honored Guests and the lead pairs level with
+    // its point farthest away. In between, the line splits by pod (places 1 and 2, 3 and 4, …, the
+    // Polka Pods slide's 15-13, 14-12, …): each couple joins up as one L/F circle, the pod's first
+    // couple out away from the Honored Guests and its second toward them, both between the pod's two
+    // spots, halfway out and then to the inner tape. Then the couples come back in, halfway and then
+    // to the first line's distance, and overlap on the center line as they pass through each other.
+    // They come out the mirror of the halfway frame (first couples toward the Honored Guests, second
+    // away) with the lead toward the Honored Guests, gallop back to one line, still in pods, then
+    // spread back over their own spots and join up on the center line. Couples
+    // reorient, lead on the left and follow on the right: the left eight first while the right eight
+    // hold, then the right eight while the left eight turn on to the follow toward the Honored Guests.
+    // Then a flip ripples down the line a pair of couples at a time: each frame the next pair turns the
+    // follow's half north, and every pair already started flips again, so behind the front the pairs
+    // alternate north and south, and it ends with everyone back to the follow toward the Honored
+    // Guests. Last, every other couple goes out on a spoke, they make an X, and the X unfurls into
+    // Hearts Adrift's circle.
+    function newSectionSnapshots() {
+      const title = "New Section from 1 Line";
+      const heartsAdriftStart = heartsAdriftSnapshots()[0];
+      const order = NEW_SECTION_UNFURL_FRAMES.at(-1).spots.map(([spotX, spotY]) => heartsAdriftStart.items
+        .find((item) => Math.hypot(item.x - spotX, item.y - spotY) < 2).number);
+      const real = (place) => order[place - 1];
+      const look = { ring: null, step: null, facingMode: "in", groupColor: "neutral", displayMode: "partner" };
+      const x = (place) => spreadValue(place - 1, COUPLE_COUNT, SQUARE_MIN, SQUARE_MAX);
+      // South (down the board) is toward the Honored Guests; `flip` mirrors it, leads toward them.
+      const side = { lead: -1, follow: 1 };
+      const dancer = (place, role, spotX, y) => ({
+        key: `${real(place)}:${role}`, number: real(place), role, ...look, x: Number(spotX.toFixed(3)), y: Number(y.toFixed(3)),
+      });
+      const places = Array.from({ length: COUPLE_COUNT }, (_, index) => index + 1);
+      const pairs = places.filter((place) => place % 2 === 1);
+      const lineFrame = (flip = 1) => places.flatMap((place) => ["lead", "follow"].map((role) => (
+        dancer(place, role, x(place), CENTER.y + flip * side[role] * PIECE_RADIUS)
+      )));
+      // The split works by pod (places 1 and 2, 3 and 4, …), each couple kept together as one L/F
+      // token: the pod's first couple (e.g. 15) goes away from the Honored Guests and its second
+      // (e.g. 13) toward them, both centered between the pod's two places. `pass` slides the first
+      // couples that far left and the second couples that far right, so they pass beside each other
+      // instead of head on. After they pass (`flip` -1) the couples have the lead toward the Honored Guests.
+      const podSide = [-1, 1];
+      const podFrame = (distance, flip = 1, pass = 0) => pairs.flatMap((first) => [first, first + 1].map((place, index) => ({
+        ...dancer(place, "couple", (x(first) + x(first + 1)) / 2 + podSide[index] * pass, CENTER.y + flip * podSide[index] * distance),
+        displayMode: "leadFollow", facingMode: flip === 1 ? "north" : "south",
+      })));
+      // Each couple back over its own place, still on its side of the center line.
+      const podSpread = () => places.map((place) => ({
+        ...dancer(place, "couple", x(place), CENTER.y - podSide[(place - 1) % 2] * PIECE_RADIUS),
+        displayMode: "leadFollow", facingMode: "south",
+      }));
+      // Facing is where the lead's half points: "west" puts the lead on the left, "north" the follow
+      // toward the Honored Guests.
+      const coupleFrame = (facing, spot = (place) => [x(place), CENTER.y]) => places.map((place) => ({
+        ...dancer(place, "couple", ...spot(place)), displayMode: "leadFollow", facingMode: facing(place),
+      }));
+      const halfway = (PIECE_RADIUS + INNER_RADIUS) / 2;
+      const leftHalf = (place) => place <= COUPLE_COUNT / 2;
+      // In the flip cascade, whether a place has the follow's half north `flip` frames in.
+      const followNorth = (flip, place) => {
+        const pair = Math.floor((place - 1) / 2);
+        return pair < flip && (flip - 1 - pair) % 2 === 0;
+      };
+      const flips = Array.from({ length: COUPLE_COUNT / 2 }, (_, index) => index + 1);
+      return [
+        { subtitle: "1 line: follows toward the Honored Guests, leads away", items: lineFrame() },
+        { subtitle: "Pods split: first couple away, second toward the Honored Guests", items: podFrame(halfway) },
+        { subtitle: "Second couples on the inner tape toward the Honored Guests, first couples away", items: podFrame(INNER_RADIUS) },
+        { subtitle: "Back in halfway", items: podFrame(halfway) },
+        { subtitle: "1 line, still in pods", items: podFrame(PIECE_RADIUS) },
+        { subtitle: "Overlap", items: podFrame(0, 1, PIECE_RADIUS) },
+        { subtitle: "Out: first couples toward the Honored Guests, second away", items: podFrame(halfway, -1) },
+        { subtitle: "Gallop to 1 line", items: podFrame(PIECE_RADIUS, -1) },
+        { subtitle: "Back over own spots", items: podSpread() },
+        { subtitle: "Couples again: leads toward the Honored Guests, follows away", items: coupleFrame(() => "south") },
+        { subtitle: "Left 8 reorient, lead left, follow right; right 8 hold", items: coupleFrame((place) => (leftHalf(place) ? "west" : "south")) },
+        { subtitle: "Right 8 reorient; left 8 follows toward the Honored Guests", items: coupleFrame((place) => (leftHalf(place) ? "north" : "west")) },
+        ...flips.map((flip) => ({
+          subtitle: `Flip ${flip}: ${real(2 * flip - 1)}–${real(2 * flip)} turn`,
+          items: coupleFrame((place) => (followNorth(flip, place) ? "south" : "north")),
+        })),
+        { subtitle: "End: follows toward the Honored Guests", items: coupleFrame(() => "north") },
+        // Out on the spokes, in the X and through the unfurling, every couple has the follow's half
+        // radially out ("in" points the lead's half at the center).
+        ...NEW_SECTION_UNFURL_FRAMES.map(({ subtitle, spots }) => ({
+          subtitle,
+          items: coupleFrame(() => "in", (place) => spots[place - 1]),
+        })),
+        // It ends on Hearts Adrift's start, everyone turning in, so the two join up.
+        { subtitle: "Hearts Adrift start", items: heartsAdriftStart.items },
+      ].map(({ subtitle, items }) => ({ count: items.length, annotation: { title, subtitle }, items }));
     }
 
     // Pyramid → V: three measures, starting on the finished pyramid and following the whiteboard
@@ -3272,6 +3481,14 @@
     const PRESET_SECTIONS = [POLKA, WIP];
     const STORY_PRESETS = [
       {
+        id: "line-new",
+        section: POLKA,
+        // A new section that comes before Hearts Adrift, for now just a blank start: one frame with
+        // everyone in a single horizontal line across the middle, 1 on the left through 16 on the right.
+        name: "New Section from 1 Line",
+        snapshots: newSectionSnapshots,
+      },
+      {
         id: "hearts-adrift",
         section: POLKA,
         name: "Hearts Adrift",
@@ -3327,6 +3544,21 @@
           "Start: Cascade Grid block",
           () => ({ groupColor: "neutral" })
         )],
+      },
+      {
+        id: "cascade-line-to-crossing",
+        section: WIP,
+        // A blank start for a new transition: two frames, from the line New Section from 1 Line holds
+        // after its flip cascade (follows toward the Honored Guests) to where Triumphant Crossing starts.
+        name: "Transition: Cascade Line → Triumphant Crossing",
+        snapshots: () => {
+          const title = "Cascade Line → Triumphant Crossing";
+          const cascadeLine = newSectionSnapshots().find((frame) => frame.annotation.subtitle === "End: follows toward the Honored Guests");
+          return [
+            { ...cascadeLine, annotation: { title, subtitle: "Start: cascade line" } },
+            { ...triumphantCrossingSnapshots()[0], annotation: { title, subtitle: "End: Triumphant Crossing start" } },
+          ];
+        },
       },
       {
         id: "unfurling-pyramid",

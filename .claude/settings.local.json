@@ -235,7 +235,16 @@
       "Bash(git log *)",
       "Bash(python3 -I /private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/80dddc89-eb17-424b-9375-c49c321f1efc/scratchpad/recv.py /private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/80dddc89-eb17-424b-9375-c49c321f1efc/scratchpad/tc)",
       "Bash(pkill -f \"scratchpad/recv.py\")",
-      "Bash(python3 - \"/private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/521b8ee1-9ef9-4b5a-a615-671ef6347f8e/scratchpad/hearts.js\")"
+      "Bash(python3 - \"/private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/521b8ee1-9ef9-4b5a-a615-671ef6347f8e/scratchpad/hearts.js\")",
+      "Bash(git diff *)",
+      "Bash(git apply *)",
+      "mcp__1a59c906-04da-521d-bda7-7f71b9f9e01c__guide",
+      "mcp__1a59c906-04da-521d-bda7-7f71b9f9e01c__update",
+      "mcp__1a59c906-04da-521d-bda7-7f71b9f9e01c__create",
+      "Bash(mdfind 'kMDItemContentTypeTree == \"public.movie\" && kMDItemFSCreationDate >= $time.iso\\(2026-11-01\\)')",
+      "Bash(mkdir -p /private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/5a108664-06ba-42d9-999e-5dfaaab7975f/scratchpad/thumbs)",
+      "Bash(qlmanage -t -s 600 -o /private/tmp/claude-501/-Users-ariel-Documents-GitHub-opening-2027/5a108664-06ba-42d9-999e-5dfaaab7975f/scratchpad/thumbs 'WhatsApp Video 2026-11-01 at 7.01.29 PM.mp4' IMG_1368.MOV IMG_1369.MOV 'Polka - First Half Final Runthrough.mov' 'Polka Final Runthrough.mp4' 8304.mp4)",
+      "Bash(swift -e 'import AVFoundation; let a=AVURLAsset\\(url:URL\\(fileURLWithPath:CommandLine.arguments[1]\\)\\); print\\(\"dur\", Int\\(CMTimeGetSeconds\\(a.duration\\)\\)\\); for t in a.tracks\\(withMediaType:.video\\){let s=t.naturalSize.applying\\(t.preferredTransform\\); print\\(Int\\(abs\\(s.width\\)\\),\"x\",Int\\(abs\\(s.height\\)\\), Int\\(t.estimatedDataRate/1000\\),\"kbps\", t.nominalFrameRate,\"fps\"\\)}' '/Users/ariel/Downloads/WhatsApp Video 2026-11-01 at 7.01.29 PM \\(1\\).mp4')"
     ]
   }
 }
