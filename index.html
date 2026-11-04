@@ -830,12 +830,6 @@
       stroke-width: 1.5;
     }
 
-    /* Tokens with L and F marks are drawn larger so their text can be bigger (the inner tape's
-       16 dots leave room for about this much). */
-    .piece.has-role-marks > * {
-      transform: scale(1.2);
-    }
-
     /* A couple with L and F marks shrinks its number to leave the marks room. */
     .piece.couple.has-role-marks text:not(.role-mark) {
       font-size: 25px;
@@ -1723,7 +1717,10 @@
     function setTokenPosition(token, x, y) {
       token.x = x;
       token.y = y;
-      token.group.setAttribute("transform", `translate(${round(x)} ${round(y)})`);
+      // Tokens with L and F marks are drawn larger so their text can be bigger (the inner tape's 16
+      // dots leave room for about this much).
+      const scale = token.roleLetters ? " scale(1.2)" : "";
+      token.group.setAttribute("transform", `translate(${round(x)} ${round(y)})${scale}`);
 
       if (token.role === "couple") {
         updateCoupleHalf(token);
@@ -1744,7 +1741,7 @@
       const direction = blackDirectionAngle(token);
       token.blackHalf.setAttribute("d", halfCirclePath(PIECE_RADIUS, direction));
       if (token.roleMarks) {
-        const reach = PIECE_RADIUS * 0.8;
+        const reach = PIECE_RADIUS * 0.66;
         [["lead", direction], ["follow", direction + Math.PI]].forEach(([role, angle]) => {
           token.roleMarks[role].setAttribute("x", round(reach * Math.cos(angle)));
           token.roleMarks[role].setAttribute("y", round(reach * Math.sin(angle)));
@@ -3232,7 +3229,7 @@
       });
     }
 
-    // New Section from 1 Line's X and its unfurling, as Ariel laid them out in the planner: each
+    // The X and its unfurling in Intro and 2 Lines, as Ariel laid them out in the planner: each
     // frame's spot for every place in the line (1 is the far left). The last is the finished circle,
     // which is where Hearts Adrift starts.
     const NEW_SECTION_UNFURL_FRAMES = [
@@ -3263,7 +3260,7 @@
       },
     ];
 
-    // New Section from 1 Line, before Hearts Adrift. Who stands where is worked back from Hearts
+    // Intro and 2 Lines, before Hearts Adrift. Who stands where is worked back from Hearts
     // Adrift's start: the unfurled circle has to land on it, so each place in the line goes to the
     // couple Hearts Adrift starts on that place's circle spot, and the frames below go by place.
     // It opens on a circle of same role pod pairs (the Polka Pods slide's 15-13, 14-12, …), who
@@ -3281,7 +3278,7 @@
     // Guests. Last, every other couple goes out on a spoke, they make an X, and the X unfurls into
     // Hearts Adrift's circle.
     function newSectionSnapshots() {
-      const title = "New Section from 1 Line";
+      const title = "Intro and 2 Lines";
       const heartsAdriftStart = heartsAdriftSnapshots()[0];
       const order = NEW_SECTION_UNFURL_FRAMES.at(-1).spots.map(([spotX, spotY]) => heartsAdriftStart.items
         .find((item) => Math.hypot(item.x - spotX, item.y - spotY) < 2).number);
@@ -3337,11 +3334,9 @@
         label: `${real(first)}-${real(second)}`, roleLetters: true, facingMode: "cw",
       }));
       // Partnered up, each couple's halves sit side by side along the circle (the split points at
-      // the center), the lead's half toward the dot its lead pair was on and the follow's half
-      // toward its follow pair's.
+      // the center), all the same way: facing out from the center, the follow on the lead's right.
       const partnerCircle = () => places.map((place) => ({
-        ...onDot(place, "couple", "inner", coupleDot(place)), displayMode: "leadFollow",
-        facingMode: ringOrder.indexOf(place) % 2 === 0 ? "cw" : "ccw", roleLetters: true,
+        ...onDot(place, "couple", "inner", coupleDot(place)), displayMode: "leadFollow", facingMode: "ccw", roleLetters: true,
       }));
       // Partners on the inner circle, `along` (0 to 1) of the way to the split's lines.
       const unfoldFrame = (along) => pairs.flatMap((first) => [first, first + 1].map((place, index) => {
@@ -3609,9 +3604,9 @@
       {
         id: "line-new",
         section: POLKA,
-        // A new section that comes before Hearts Adrift, for now just a blank start: one frame with
-        // everyone in a single horizontal line across the middle, 1 on the left through 16 on the right.
-        name: "New Section from 1 Line",
+        // The section before Hearts Adrift (built as "New Section from 1 Line"; the id stays so saved
+        // stories still find it).
+        name: "Intro and 2 Lines",
         snapshots: newSectionSnapshots,
       },
       {
@@ -3674,7 +3669,7 @@
       {
         id: "cascade-line-to-crossing",
         section: WIP,
-        // A blank start for a new transition: two frames, from the line New Section from 1 Line holds
+        // A blank start for a new transition: two frames, from the line Intro and 2 Lines holds
         // after its flip cascade (follows toward the Honored Guests) to where Triumphant Crossing starts.
         name: "Transition: Cascade Line → Triumphant Crossing",
         snapshots: () => {
