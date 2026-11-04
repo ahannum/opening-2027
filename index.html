@@ -3333,6 +3333,19 @@
         ...onDot(first, role, ring, coupleDot(first)),
         label: `${real(first)}-${real(second)}`, roleLetters: true, facingMode: "cw",
       }));
+      // The pairs separate for a moment: the dancer on the pair's follow part stays on the dot and
+      // the one on its lead part moves a half step along the tape toward their own partner (whose
+      // pair is on the next dot that way), then they join back up.
+      const partnerPairDot = (place, role) => {
+        const other = role === "lead" ? "follow" : "lead";
+        const pair = rolePairs.find((item) => item.role === other && (item.first === place || item.second === place));
+        return coupleDot(pair.first);
+      };
+      const separatedCircle = (ring) => rolePairs.flatMap(({ role, first, second }) => {
+        const home = coupleDot(first);
+        const toward = wrapStep(partnerPairDot(first, role) - home) < HALF_STEPS / 2 ? 1 : -1;
+        return [onDot(first, role, ring, wrapStep(home + toward)), onDot(second, role, ring, home)];
+      });
       // Partnered up, each couple's halves sit side by side along the circle (the split points at
       // the center), all the same way: facing out from the center, the follow on the lead's right.
       const partnerCircle = () => places.map((place) => ({
@@ -3361,6 +3374,8 @@
       const flips = Array.from({ length: COUPLE_COUNT / 2 }, (_, index) => index + 1);
       return [
         { subtitle: "Start: lead pairs and follow pairs on the outer tape", items: sameRoleCircle("outer") },
+        { subtitle: "Pairs separate: each pair's L moves a half step toward their partner", items: separatedCircle("outer") },
+        { subtitle: "Back together in pairs", items: sameRoleCircle("outer") },
         { subtitle: "Lead pairs and follow pairs on the inner tape", items: sameRoleCircle("inner") },
         { subtitle: "Partner up on the inner tape", items: partnerCircle() },
         { subtitle: "Unfold the inner circle", items: unfoldFrame(0.5) },
