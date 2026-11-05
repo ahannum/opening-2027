@@ -3233,19 +3233,28 @@
     // The X and its unfurling in Intro and 2 Lines, as Ariel laid them out in the planner: each
     // frame's spot for every place in the line (1 is the far left). The last is the finished circle,
     // which is where Hearts Adrift starts.
+    // The subheading of Intro and 2 Lines' frame after the flip cascade (follows toward the Honored
+    // Guests), which the cascade line → Triumphant Crossing transition starts from.
+    const NEW_SECTION_CASCADE_END = "Measure 1 (X)";
+    // Each frame's `subtitle` says what happens; `label` is the subheading shown, its measure count.
     const NEW_SECTION_UNFURL_FRAMES = [
       {
         subtitle: "Every other couple out on a spoke, up or down",
+        label: "Measure 2 (X)",
         spots: [[99.5, 252.1], [99.5, 467.9], [165.1, 279.3], [165.1, 440.7], [230.7, 306.4], [230.7, 413.6], [295.3, 333.2], [295.3, 386.8],
           [424.7, 333.2], [424.7, 386.8], [489.3, 306.4], [489.3, 413.6], [554.9, 279.3], [554.9, 440.7], [620.5, 252.1], [620.5, 467.9]],
       },
       {
         subtitle: "X",
+        label: "Measure 3-4",
+        // Then everyone turns on the X's spots to face out, lead on the left, follow on the right.
+        facingOutLabel: "Measure 5",
         spots: [[160.6, 160.6], [160.6, 559.4], [210.8, 210.8], [210.8, 509.2], [261, 261], [261, 459], [310.5, 310.5], [321.1, 418.2],
           [409.5, 310.5], [409.5, 409.5], [459, 261], [459, 459], [509.2, 210.8], [509.2, 509.2], [559.4, 160.6], [559.4, 559.4]],
       },
       {
         subtitle: "Unfurl the X: outer couples onto the circle",
+        label: "Measure 6",
         // These couples keep facing out from the X's last frame (lead on the left, follow on the right).
         facingOut: [7, 8, 10, 11],
         spots: [[78, 360], [360, 642], [99.5, 252.1], [252.1, 620.5], [160.6, 160.6], [160.6, 559.4], [210.8, 210.8], [210.8, 509.2],
@@ -3253,11 +3262,13 @@
       },
       {
         subtitle: "Keep unfurling: dip",
+        label: "Measure 7-8",
         spots: [[99.5, 467.9], [467.9, 620.5], [78, 360], [360, 642], [99.5, 252.1], [252.1, 620.5], [160.6, 160.6], [160.6, 559.4],
           [559.4, 160.6], [559.4, 559.4], [467.9, 99.5], [620.5, 467.9], [360, 78], [642, 360], [252.1, 99.5], [620.5, 252.1]],
       },
       {
         subtitle: "Circle: F escape, L take frame",
+        label: "F escape 1 tape",
         spots: [[160.6, 559.4], [559.4, 559.4], [99.5, 467.9], [467.9, 620.5], [78, 360], [360, 642], [99.5, 252.1], [252.1, 620.5],
           [467.9, 99.5], [620.5, 467.9], [360, 78], [642, 360], [252.1, 99.5], [620.5, 252.1], [160.6, 160.6], [559.4, 160.6]],
       },
@@ -3417,22 +3428,23 @@
         // Everyone reorients: lead left, follow right.
         { subtitle: "Measure 15", items: coupleFrame(() => "west") },
         // All follows toward the Honored Guests.
-        { subtitle: "Measure 16 Beats 1-2", items: coupleFrame(() => "north") },
-        // The flip cascade: the first three flips are counted, the rest still say who turns.
+        { subtitle: "Measure 16", items: coupleFrame(() => "north") },
+        // The flip cascade: places 1–2 turn, then 3–4, and so on, one pair every half measure, on a new
+        // count from Measure 1.
         ...flips.map((flip) => ({
-          subtitle: ["Measure 16 Beats 3-4", "Measure 1 Beats 1-2", "Measure 1 Beats 3-4"][flip - 1]
-            ?? `Flip ${flip}: ${real(2 * flip - 1)}–${real(2 * flip)} turn`,
+          subtitle: `Measure ${Math.ceil(flip / 2)} Beats ${flip % 2 ? "1-2" : "3-4"}`,
           items: coupleFrame((place) => (followNorth(flip, place) ? "south" : "north")),
         })),
-        { subtitle: "End: follows toward the Honored Guests", items: coupleFrame(() => "north") },
+        // End of the cascade: follows toward the Honored Guests. A new count of 8 for the X starts here.
+        { subtitle: NEW_SECTION_CASCADE_END, items: coupleFrame(() => "north") },
         // Out on the spokes, in the X and through the unfurling, every couple has the follow's half
         // radially out ("in" points the lead's half at the center), except a frame's `facingOut` couples.
         // After the X, still on the X's spots, everyone turns so that facing out from the center
         // the lead is on the left and the follow on the right ("ccw" points the lead's half that way).
-        ...NEW_SECTION_UNFURL_FRAMES.flatMap(({ subtitle, spots, facingOut = [] }) => [
-          { subtitle, items: coupleFrame((place) => (facingOut.includes(real(place)) ? "ccw" : "in"), (place) => spots[place - 1]) },
-          ...(subtitle === "X" ? [{
-            subtitle: "X: facing out, lead on the left, follow on the right",
+        ...NEW_SECTION_UNFURL_FRAMES.flatMap(({ label, spots, facingOut = [], facingOutLabel }) => [
+          { subtitle: label, items: coupleFrame((place) => (facingOut.includes(real(place)) ? "ccw" : "in"), (place) => spots[place - 1]) },
+          ...(facingOutLabel ? [{
+            subtitle: facingOutLabel,
             items: coupleFrame(() => "ccw", (place) => spots[place - 1]),
           }] : []),
         ]),
@@ -3726,7 +3738,7 @@
         name: "Transition: Cascade Line → Triumphant Crossing",
         snapshots: () => {
           const title = "Cascade Line → Triumphant Crossing";
-          const cascadeLine = newSectionSnapshots().find((frame) => frame.annotation.subtitle === "End: follows toward the Honored Guests");
+          const cascadeLine = newSectionSnapshots().find((frame) => frame.annotation.subtitle === NEW_SECTION_CASCADE_END);
           return [
             { ...cascadeLine, annotation: { title, subtitle: "Start: cascade line" } },
             { ...triumphantCrossingSnapshots()[0], annotation: { title, subtitle: "End: Triumphant Crossing start" } },
