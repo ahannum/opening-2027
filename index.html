@@ -1221,6 +1221,7 @@
     </aside>
   </main>
 
+  <script src="stories/waltz-intro.js"></script>
   <script>
     const COUPLE_COUNT = 16;
     const HALF_STEPS = COUPLE_COUNT * 2;
@@ -3624,11 +3625,12 @@
 
     // Saved configurations: ready-made stories listed in the planner and in the presenter. Each returns
     // the board snapshot for every frame, so adding one here makes it show up in both pickers.
-    // Both pickers group them by `section`, in the order of PRESET_SECTIONS; Polka holds the finished
-    // routine and everything else is still being worked on.
+    // Both pickers group them by `section`, in the order of PRESET_SECTIONS; Polka and Waltz hold the
+    // finished routines and everything else is still being worked on.
     const POLKA = "Polka";
+    const WALTZ = "Waltz";
     const WIP = "Works in progress";
-    const PRESET_SECTIONS = [POLKA, WIP];
+    const PRESET_SECTIONS = [POLKA, WALTZ, WIP];
     const STORY_PRESETS = [
       {
         id: "line-new",
@@ -3758,6 +3760,13 @@
         section: POLKA,
         name: "Final V",
         snapshots: finalVSnapshots,
+      },
+      {
+        id: "waltz-intro",
+        section: WALTZ,
+        // Saved from the planner as a storyboard file; its frames live in stories/waltz-intro.js.
+        name: "Intro",
+        snapshots: () => structuredClone(window.WALTZ_INTRO_SNAPSHOTS || []),
       },
     ];
 
