@@ -249,7 +249,15 @@
       "Bash(grep -noi \"gallop[^\\\\\"]\\\\{0,80\\\\}\\\\|triumph[^\\\\\"]\\\\{0,80\\\\}\\\\|pod[a-z ]\\\\{0,30\\\\}pair[^\\\\\"]\\\\{0,60\\\\}\" index.html)",
       "Bash(grep -noiE \".{0,120}\\(gallop|triumph\\).{0,120}\" index.html)",
       "Bash(grep -noiE \".{0,80}pod.{0,80}\" index.html)",
-      "Bash(/usr/bin/grep -noiE \".{0,120}\\(gallop|triumph\\).{0,120}\" index.html)"
+      "Bash(/usr/bin/grep -noiE \".{0,120}\\(gallop|triumph\\).{0,120}\" index.html)",
+      "Bash(/usr/bin/grep -niE \"pod\" index.html)",
+      "Bash(/usr/bin/grep -niE \"pods\" index.html present.html)",
+      "Bash(/usr/bin/grep -nE \"const \\(CENTER|COUPLE_COUNT|HEARTS_ADRIFT_START|HEARTS_ADRIFT_FRAMES\\)\" index.html)",
+      "Bash(/usr/bin/grep -noE \"\\(URLSearchParams|location\\\\.\\(hash|search\\)\\)[^;]{0,120}\" present.html)",
+      "Bash(/usr/bin/grep -nE \"localStorage|BroadcastChannel|postMessage|opener|fetch\\\\\\(\" present.html)",
+      "Bash(/usr/bin/grep -nE \"present\\\\.html\" index.html)",
+      "Bash(/usr/bin/grep -nE -B3 \"snapshots: newSectionSnapshots\" index.html)",
+      "Bash(/usr/bin/grep -nE \"podSide|isFirst|first couples|second couples|Second couples\" index.html)"
     ]
   }
 }
