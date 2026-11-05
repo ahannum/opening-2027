@@ -3411,9 +3411,9 @@
         { subtitle: "Measure 2", items: unfoldFrame(1) },
         // Lines out to the ¾ ring.
         { subtitle: "Measure 3", items: podFrame(RING_RADII.threeQuarter) },
-        // Back in: first halfway from the ¾ ring to the inner tape (so 7, 10, 8 and 11 are about
-        // halfway between them), then on to the overlap in even steps.
-        { subtitle: "Measure 4-6", items: podFrame((RING_RADII.threeQuarter + INNER_RADIUS) / 2) },
+        // Measure 4-6 starts by holding the ¾ ring (the same spots as Measure 3), then the lines come
+        // back in to the overlap in even steps.
+        { subtitle: "Measure 4-6", items: podFrame(RING_RADII.threeQuarter) },
         { subtitle: "Measure 4-6", items: podFrame((RING_RADII.threeQuarter * 2) / 3) },
         // Closer in, still in pods.
         { subtitle: "Measure 7", items: podFrame(RING_RADII.threeQuarter / 3) },
