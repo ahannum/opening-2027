@@ -3245,6 +3245,8 @@
       },
       {
         subtitle: "Unfurl the X: outer couples onto the circle",
+        // These couples keep facing out from the X's last frame (lead on the left, follow on the right).
+        facingOut: [7, 8, 10, 11],
         spots: [[78, 360], [360, 642], [99.5, 252.1], [252.1, 620.5], [160.6, 160.6], [160.6, 559.4], [210.8, 210.8], [210.8, 509.2],
           [509.2, 210.8], [509.2, 509.2], [559.4, 160.6], [559.4, 559.4], [467.9, 99.5], [620.5, 467.9], [360, 78], [642, 360]],
       },
@@ -3402,11 +3404,11 @@
         })),
         { subtitle: "End: follows toward the Honored Guests", items: coupleFrame(() => "north") },
         // Out on the spokes, in the X and through the unfurling, every couple has the follow's half
-        // radially out ("in" points the lead's half at the center).
+        // radially out ("in" points the lead's half at the center), except a frame's `facingOut` couples.
         // After the X, still on the X's spots, everyone turns so that facing out from the center
         // the lead is on the left and the follow on the right ("ccw" points the lead's half that way).
-        ...NEW_SECTION_UNFURL_FRAMES.flatMap(({ subtitle, spots }) => [
-          { subtitle, items: coupleFrame(() => "in", (place) => spots[place - 1]) },
+        ...NEW_SECTION_UNFURL_FRAMES.flatMap(({ subtitle, spots, facingOut = [] }) => [
+          { subtitle, items: coupleFrame((place) => (facingOut.includes(real(place)) ? "ccw" : "in"), (place) => spots[place - 1]) },
           ...(subtitle === "X" ? [{
             subtitle: "X: facing out, lead on the left, follow on the right",
             items: coupleFrame(() => "ccw", (place) => spots[place - 1]),
