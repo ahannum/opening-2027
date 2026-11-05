@@ -3263,12 +3263,12 @@
     // Intro and 2 Lines, before Hearts Adrift. Who stands where is worked back from Hearts
     // Adrift's start: the unfurled circle has to land on it, so each place in the line goes to the
     // couple Hearts Adrift starts on that place's circle spot, and the frames below go by place.
-    // It opens on a circle of same role pod pairs (the Polka Pods slide's 15-13, 14-12, …), who
+    // It opens on a circle of same role pod pairs (pods are the Triumphant Crossing gallop pairs), who
     // partner up on the inner tape and unfold into two lines on it, each couple as one L/F circle
-    // over its own place: the pod's first couple away from the Honored Guests and its second toward
-    // them. The lines go out to the ¾ ring, come back in by even steps and overlap on the center
-    // line as they pass each other, come out to the inner tape on the other side (first couples
-    // toward the Honored Guests, second away), gallop back to one line, still in pods, and join up
+    // over its own place: every other pod away from the Honored Guests and the rest toward them, so
+    // the lines alternate couple by couple. The lines go out to the ¾ ring, come back in by even
+    // steps and overlap on the center line as they pass each other, come out to the inner tape on
+    // the other side, gallop back to one line, still in pods, and join up
     // on the center line. Couples
     // reorient all together, lead on the left and follow on the right, then all turn on to the
     // follow toward the Honored Guests.
@@ -3290,22 +3290,30 @@
         key: `${real(place)}:${role}`, number: real(place), role, ...look, x: Number(spotX.toFixed(3)), y: Number(y.toFixed(3)),
       });
       const places = Array.from({ length: COUPLE_COUNT }, (_, index) => index + 1);
-      const pairs = places.filter((place) => place % 2 === 1);
-      // The split works by pod (places 1 and 2, 3 and 4, …), each couple kept together as one L/F
-      // token over its own place in the line: the pod's first couple (e.g. 15) goes away from the
-      // Honored Guests and its second (e.g. 13) toward them. Being a place apart, they pass beside
-      // each other. After they pass (`flip` -1) the two have switched sides. The couples on the
+      // Pods are the gallop pairs that set up Triumphant Crossing (1-2, 6-7, 3-10, …). In the line
+      // each pod's two couples are two places apart (places 1 and 3, 2 and 4, 5 and 7, …), so the
+      // pods interleave. Each pod is [first, second] by place, listed in order of its first place.
+      const placeOf = (number) => order.indexOf(number) + 1;
+      const pods = LINE_TO_CROSSING_PAIRS.map((pair) => pair.map(placeOf).sort((a, b) => a - b))
+        .sort((a, b) => a[0] - b[0]);
+      const podOf = (place) => pods.findIndex((pod) => pod.includes(place));
+      // The split works by pod, every other pod to each line, each couple kept together as one L/F
+      // token over its own place: pods A, C, E, G (places 1 and 3, 5 and 7, …, e.g. 15 and 14) go
+      // away from the Honored Guests and pods B, D, F, H (places 2 and 4, …, e.g. 13 and 12) toward
+      // them, so the two lines go through each other every other couple. After they pass (`flip` -1)
+      // the two lines have switched sides. The couples on the
       // Honored Guests' side have the follow on the left ("east"), the others the follow on the right
       // ("west"); in the overlap each keeps the side it's coming from.
-      const podSide = [-1, 1];
+      const away = (place) => podOf(place) % 2 === 0;
+      const podSide = (place) => (away(place) ? -1 : 1);
       const podFacing = (south) => (south ? "east" : "west");
-      const podFrame = (distance, flip = 1) => pairs.flatMap((first) => [first, first + 1].map((place, index) => ({
-        ...dancer(place, "couple", x(place), CENTER.y + flip * podSide[index] * distance),
-        displayMode: "leadFollow", facingMode: podFacing(flip * podSide[index] > 0),
-      })));
+      const podFrame = (distance, flip = 1) => places.map((place) => ({
+        ...dancer(place, "couple", x(place), CENTER.y + flip * podSide(place) * distance),
+        displayMode: "leadFollow", facingMode: podFacing(flip * podSide(place) > 0),
+      }));
       // It opens on a circle, everyone on a red dot (the 16 full steps of a tape). Each couple has a
-      // dot: pod k (0 to 7, in line order) has its first couple on the dot k steps from the far left
-      // over the top and its second on the dot k steps from the left end of the bottom. Going around
+      // dot: the away line's couples, in line order, on the dots from the far left over the top, and
+      // the other line's on the dots from the left end of the bottom. Going around
       // the circle, neighbors pair up by role, a place apart: the leads of each couple and the
       // couple next to it on one side, the follows of each couple and the couple next to it on the
       // other, so the lead pairs and follow pairs alternate around the ring. A pair's first number
@@ -3313,11 +3321,11 @@
       // the inner tape. Each pair is split like a couple along the circle: its lead part's half
       // clockwise, its follow part's counterclockwise. Then everyone partners up on their own
       // couple's dot.
-      const podDot = (first, top) => {
-        const k = (first - 1) / 2, degrees = top ? 180 + 22.5 * k : 157.5 - 22.5 * k;
+      const podDot = (k, top) => {
+        const degrees = top ? 180 + 22.5 * k : 157.5 - 22.5 * k;
         return wrapStep((45 - degrees) / (360 / HALF_STEPS));
       };
-      const coupleDot = (place) => podDot(place % 2 === 1 ? place : place - 1, place % 2 === 1);
+      const coupleDot = (place) => podDot(Math.floor((place - 1) / 2), away(place));
       const onDot = (place, role, ring, step) => {
         const point = stepPosition(step, ring);
         return { ...dancer(place, role, point.x, point.y), ring, step };
@@ -3325,7 +3333,7 @@
       const dotDegrees = (place) => (((45 - coupleDot(place) * (360 / HALF_STEPS)) % 360) + 360) % 360;
       const ringOrder = [...places].sort((a, b) => dotDegrees(a) - dotDegrees(b));
       const around = (index) => ringOrder[(index + COUPLE_COUNT) % COUPLE_COUNT];
-      const rolePairs = ["lead", "follow"].flatMap((role) => pairs.map((_, i) => {
+      const rolePairs = ["lead", "follow"].flatMap((role) => pods.map((_, i) => {
         const start = role === "lead" ? 2 * i : 2 * i + 1;
         return { role, first: around(start + 1), second: around(start) };
       }));
@@ -3352,13 +3360,13 @@
         ...onDot(place, "couple", "inner", coupleDot(place)), displayMode: "leadFollow", facingMode: "ccw", roleLetters: true,
       }));
       // Partners on the inner circle, `along` (0 to 1) of the way to the split's lines.
-      const unfoldFrame = (along) => pairs.flatMap((first) => [first, first + 1].map((place, index) => {
+      const unfoldFrame = (along) => places.map((place) => {
         const circle = onDot(place, "couple", "inner", coupleDot(place));
         const spot = along === 0 ? circle : {
-          ...dancer(place, "couple", lerp(circle.x, x(place), along), lerp(circle.y, CENTER.y + podSide[index] * INNER_RADIUS, along)),
+          ...dancer(place, "couple", lerp(circle.x, x(place), along), lerp(circle.y, CENTER.y + podSide(place) * INNER_RADIUS, along)),
         };
-        return { ...spot, displayMode: "leadFollow", facingMode: podFacing(podSide[index] > 0) };
-      }));
+        return { ...spot, displayMode: "leadFollow", facingMode: podFacing(podSide(place) > 0) };
+      });
       // Facing is where the lead's half points: "west" puts the lead on the left, "north" the follow
       // toward the Honored Guests.
       const coupleFrame = (facing, spot = (place) => [x(place), CENTER.y]) => places.map((place) => ({
@@ -3377,13 +3385,13 @@
         { subtitle: "Lead pairs and follow pairs on the inner tape", items: sameRoleCircle("inner") },
         { subtitle: "Partner up on the inner tape", items: partnerCircle() },
         { subtitle: "Unfold the inner circle", items: unfoldFrame(0.5) },
-        { subtitle: "Second couples on the inner tape toward the Honored Guests, first couples away", items: unfoldFrame(1) },
+        { subtitle: "Pods B, D, F, H on the inner tape toward the Honored Guests, A, C, E, G away", items: unfoldFrame(1) },
         { subtitle: "Lines out to the ¾ ring", items: podFrame(RING_RADII.threeQuarter) },
         // From the ¾ ring in to the overlap in even steps.
         { subtitle: "Coming back in", items: podFrame((RING_RADII.threeQuarter * 2) / 3) },
         { subtitle: "Closer in, still in pods", items: podFrame(RING_RADII.threeQuarter / 3) },
         { subtitle: "Overlap", items: podFrame(0) },
-        { subtitle: "Out to the inner tape: first couples toward the Honored Guests, second away", items: podFrame(INNER_RADIUS, -1) },
+        { subtitle: "Out to the inner tape: pods A, C, E, G toward the Honored Guests, B, D, F, H away", items: podFrame(INNER_RADIUS, -1) },
         { subtitle: "Gallop to 1 line", items: podFrame(PIECE_RADIUS, -1) },
         { subtitle: "Couples again: leads toward the Honored Guests, follows away", items: coupleFrame(() => "south") },
         { subtitle: "Everyone reorients: lead left, follow right", items: coupleFrame(() => "west") },
