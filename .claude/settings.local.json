@@ -257,7 +257,9 @@
       "Bash(/usr/bin/grep -nE \"localStorage|BroadcastChannel|postMessage|opener|fetch\\\\\\(\" present.html)",
       "Bash(/usr/bin/grep -nE \"present\\\\.html\" index.html)",
       "Bash(/usr/bin/grep -nE -B3 \"snapshots: newSectionSnapshots\" index.html)",
-      "Bash(/usr/bin/grep -nE \"podSide|isFirst|first couples|second couples|Second couples\" index.html)"
+      "Bash(/usr/bin/grep -nE \"podSide|isFirst|first couples|second couples|Second couples\" index.html)",
+      "Bash(grep -v \"annotation: { title, subtitle\")",
+      "Bash(grep -n \"^    input\\\\[type=\\\\\"text\\\\\"\\\\]\\\\|^    input,\\\\|^    select,\\\\|^    input {\" index.html)"
     ]
   }
 }
