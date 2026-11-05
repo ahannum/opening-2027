@@ -3382,25 +3382,46 @@
       };
       const flips = Array.from({ length: COUPLE_COUNT / 2 }, (_, index) => index + 1);
       return [
-        { subtitle: "Start: lead pairs and follow pairs on the outer tape", items: sameRoleCircle("outer") },
-        { subtitle: "Pairs separate: each pair's L moves a half step toward their partner", items: separatedCircle("outer") },
-        { subtitle: "Back together in pairs", items: sameRoleCircle("outer") },
-        { subtitle: "Lead pairs and follow pairs on the inner tape", items: sameRoleCircle("inner") },
-        { subtitle: "Partner up on the inner tape", items: partnerCircle() },
-        { subtitle: "Unfold the inner circle", items: unfoldFrame(0.5) },
-        { subtitle: "Pods B, D, F, H on the inner tape toward the Honored Guests, A, C, E, G away", items: unfoldFrame(1) },
-        { subtitle: "Lines out to the ¾ ring", items: podFrame(RING_RADII.threeQuarter) },
-        // From the ¾ ring in to the overlap in even steps.
-        { subtitle: "Coming back in", items: podFrame((RING_RADII.threeQuarter * 2) / 3) },
-        { subtitle: "Closer in, still in pods", items: podFrame(RING_RADII.threeQuarter / 3) },
-        { subtitle: "Overlap", items: podFrame(0) },
-        { subtitle: "Out to the inner tape: pods A, C, E, G toward the Honored Guests, B, D, F, H away", items: podFrame(INNER_RADIUS, -1) },
-        { subtitle: "Gallop to 1 line", items: podFrame(PIECE_RADIUS, -1) },
-        { subtitle: "Couples again: leads toward the Honored Guests, follows away", items: coupleFrame(() => "south") },
-        { subtitle: "Everyone reorients: lead left, follow right", items: coupleFrame(() => "west") },
-        { subtitle: "All follows toward the Honored Guests", items: coupleFrame(() => "north") },
+        // Subheadings are the music's counts: 8 measures on the circle, then a new 16 from the unfold.
+        // Each frame's comment says what happens on it.
+        // Start: lead pairs and follow pairs on the outer tape.
+        { subtitle: "Measure 1-2", items: sameRoleCircle("outer") },
+        // Pairs separate: each pair's L moves a half step toward their partner.
+        { subtitle: "Measure 3", items: separatedCircle("outer") },
+        // Back together in pairs.
+        { subtitle: "Measure 4", items: sameRoleCircle("outer") },
+        // Lead pairs and follow pairs on the inner tape.
+        { subtitle: "Measure 5-7", items: sameRoleCircle("inner") },
+        // Partner up on the inner tape.
+        { subtitle: "Measure 8", items: partnerCircle() },
+        // Unfold the inner circle.
+        { subtitle: "Measure 1", items: unfoldFrame(0.5) },
+        // Pods B, D, F, H on the inner tape toward the Honored Guests, A, C, E, G away.
+        { subtitle: "Measure 2", items: unfoldFrame(1) },
+        // Lines out to the ¾ ring.
+        { subtitle: "Measure 3", items: podFrame(RING_RADII.threeQuarter) },
+        // Back in: first halfway from the ¾ ring to the inner tape (so 7, 10, 8 and 11 are about
+        // halfway between them), then on to the overlap in even steps.
+        { subtitle: "Measure 4-6", items: podFrame((RING_RADII.threeQuarter + INNER_RADIUS) / 2) },
+        { subtitle: "Measure 4-6", items: podFrame((RING_RADII.threeQuarter * 2) / 3) },
+        // Closer in, still in pods.
+        { subtitle: "Measure 7", items: podFrame(RING_RADII.threeQuarter / 3) },
+        // Overlap.
+        { subtitle: "Measure 8", items: podFrame(0) },
+        // Out to the inner tape: pods A, C, E, G toward the Honored Guests, B, D, F, H away.
+        { subtitle: "Measure 9", items: podFrame(INNER_RADIUS, -1) },
+        // Gallop to 1 line.
+        { subtitle: "Measure 10-13", items: podFrame(PIECE_RADIUS, -1) },
+        // Couples again: leads toward the Honored Guests, follows away.
+        { subtitle: "Measure 14", items: coupleFrame(() => "south") },
+        // Everyone reorients: lead left, follow right.
+        { subtitle: "Measure 15", items: coupleFrame(() => "west") },
+        // All follows toward the Honored Guests.
+        { subtitle: "Measure 16 Beats 1-2", items: coupleFrame(() => "north") },
+        // The flip cascade: the first three flips are counted, the rest still say who turns.
         ...flips.map((flip) => ({
-          subtitle: `Flip ${flip}: ${real(2 * flip - 1)}–${real(2 * flip)} turn`,
+          subtitle: ["Measure 16 Beats 3-4", "Measure 1 Beats 1-2", "Measure 1 Beats 3-4"][flip - 1]
+            ?? `Flip ${flip}: ${real(2 * flip - 1)}–${real(2 * flip)} turn`,
           items: coupleFrame((place) => (followNorth(flip, place) ? "south" : "north")),
         })),
         { subtitle: "End: follows toward the Honored Guests", items: coupleFrame(() => "north") },
