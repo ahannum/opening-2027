@@ -302,7 +302,8 @@
     }
 
     input[type="text"],
-    input[type="number"] {
+    input[type="number"],
+    textarea {
       width: 100%;
       min-height: 40px;
       border: 1px solid #bfc5c9;
@@ -314,8 +315,13 @@
       outline: none;
     }
 
+    textarea {
+      resize: vertical;
+    }
+
     input[type="text"]:focus,
-    input[type="number"]:focus {
+    input[type="number"]:focus,
+    textarea:focus {
       border-color: var(--blue);
       box-shadow: 0 0 0 3px rgba(35, 104, 162, 0.16);
     }
@@ -447,6 +453,13 @@
       font-size: 30px;
       font-weight: 500;
       dominant-baseline: hanging;
+    }
+
+    .annotation-note {
+      font-size: 16px;
+      font-weight: 600;
+      dominant-baseline: auto;
+      stroke-width: 5px;
     }
 
     .annotation-controls {
@@ -922,6 +935,8 @@
         <g id="annotations">
           <text id="annotationTitle" x="22" y="16" class="annotation-text"></text>
           <text id="annotationSubheading" x="22" y="58" class="annotation-text annotation-subheading"></text>
+          <!-- A note sits in the bottom-left corner, one line per line of text, its last line at the bottom. -->
+          <text id="annotationNote" x="22" y="702" class="annotation-text annotation-note"></text>
         </g>
       </svg>
     </section>
@@ -933,6 +948,7 @@
         <div class="annotation-controls">
           <input id="annotationTitleInput" type="text" maxlength="80" placeholder="Top-left title" aria-label="Top-left annotation title">
           <input id="annotationSubheadingInput" type="text" maxlength="80" placeholder="Top-left subheading" aria-label="Top-left annotation subheading">
+          <textarea id="annotationNoteInput" rows="2" maxlength="240" placeholder="Bottom-left note (optional)" aria-label="Bottom-left annotation note"></textarea>
         </div>
         <div class="button-grid three">
           <button id="resetBtn" type="button" title="Return to the starting circle">Start Over</button>
@@ -1276,6 +1292,10 @@
       teal: "#7fcfc4",
       violet: "#b9a3e3",
       pink: "#e9a6d3",
+      // Sixteen colors in order, red through violet, for showing when each couple goes in a cascade.
+      ...Object.fromEntries(Array.from({ length: 16 }, (_, index) => [
+        `cascade${index + 1}`, `hsl(${Math.round((index * 285) / 15)}, 78%, 66%)`,
+      ])),
     };
     // Base rings, also used to lay out the cross formation's arms.
     const RADIAL_RING_ORDER = ["outer", "middle", "inner", "center"];
@@ -1302,6 +1322,8 @@
     const annotationSubheadingInput = document.querySelector("#annotationSubheadingInput");
     const annotationTitle = document.querySelector("#annotationTitle");
     const annotationSubheading = document.querySelector("#annotationSubheading");
+    const annotationNoteInput = document.querySelector("#annotationNoteInput");
+    const annotationNote = document.querySelector("#annotationNote");
     const snapToggle = document.querySelector("#snapToggle");
     const snapButtons = [...document.querySelectorAll(".snap-btn")];
     const joinAllBtn = document.querySelector("#joinAllBtn");
@@ -1368,6 +1390,13 @@
       annotationSubheading.textContent = annotationSubheadingInput.value;
       fitAnnotationLine(annotationTitle, 36, 18);
       fitAnnotationLine(annotationSubheading, 30, 15);
+      // One line per line of the note, stacked up from the bottom-left corner.
+      const lines = annotationNoteInput.value.split("\n").filter((line) => line.trim());
+      annotationNote.replaceChildren(...lines.map((line, index) => {
+        const tspan = svgElement("tspan", { x: 22, dy: index === 0 ? -(lines.length - 1) * 19 : 19 });
+        tspan.textContent = line;
+        return tspan;
+      }));
     }
 
     function fitAnnotationLine(element, baseSize, minimumSize) {
@@ -1379,12 +1408,19 @@
       }
     }
 
+    // The title, subheading and (only when there is one) note, as a snapshot stores them.
+    function currentAnnotation() {
+      const note = annotationNoteInput.value.trim();
+      return { title: annotationTitleInput.value, subtitle: annotationSubheadingInput.value, ...(note ? { note } : {}) };
+    }
+
     function applySnapshotAnnotation(snapshot) {
       const annotation = snapshot?.annotation;
       annotationTitleInput.value = typeof annotation?.title === "string"
         ? annotation.title
         : typeof annotation?.text === "string" ? annotation.text : "";
       annotationSubheadingInput.value = typeof annotation?.subtitle === "string" ? annotation.subtitle : "";
+      annotationNoteInput.value = typeof annotation?.note === "string" ? annotation.note : "";
       updateAnnotation();
     }
 
@@ -3263,6 +3299,8 @@
       {
         subtitle: "Keep unfurling: dip",
         label: "Measure 7-8",
+        // Followed by a copy colored by when each couple dips: a cascade from 12, counterclockwise.
+        dipCascadeFrom: 12,
         spots: [[99.5, 467.9], [467.9, 620.5], [78, 360], [360, 642], [99.5, 252.1], [252.1, 620.5], [160.6, 160.6], [160.6, 559.4],
           [559.4, 160.6], [559.4, 559.4], [467.9, 99.5], [620.5, 467.9], [360, 78], [642, 360], [252.1, 99.5], [620.5, 252.1]],
       },
@@ -3439,16 +3477,42 @@
         // radially out ("in" points the lead's half at the center), except a frame's `facingOut` couples.
         // After the X, still on the X's spots, everyone turns so that facing out from the center
         // the lead is on the left and the follow on the right ("ccw" points the lead's half that way).
-        ...NEW_SECTION_UNFURL_FRAMES.flatMap(({ label, spots, facingOut = [], facingOutLabel }) => [
+        ...NEW_SECTION_UNFURL_FRAMES.flatMap(({ label, spots, facingOut = [], facingOutLabel, dipCascadeFrom }) => [
           { subtitle: label, items: coupleFrame((place) => (facingOut.includes(real(place)) ? "ccw" : "in"), (place) => spots[place - 1]) },
           ...(facingOutLabel ? [{
             subtitle: facingOutLabel,
             items: coupleFrame(() => "ccw", (place) => spots[place - 1]),
           }] : []),
+          ...(dipCascadeFrom ? [dipCascadeFrame(label, dipCascadeFrom, (place) => spots[place - 1])] : []),
         ]),
         // It ends on Hearts Adrift's start, everyone turning in, so the two join up.
         { subtitle: "Hearts Adrift start", items: heartsAdriftStart.items },
-      ].map(({ subtitle, items }) => ({ count: items.length, annotation: { title, subtitle }, items }));
+      ].map(({ subtitle, items, note }) => ({ count: items.length, annotation: { title, subtitle, ...(note ? { note } : {}) }, items }));
+
+      // The same spots, each couple filled with its own color for when it dips: the cascade starts
+      // with `first` and goes counterclockwise around the circle as the board is drawn (from 12 at
+      // the Honored Guests that is toward the right). Colors run red, orange, yellow, green, blue,
+      // violet in dip order, and the note lists the order.
+      function dipCascadeFrame(label, first, spot) {
+        const angle = (place) => {
+          const [spotX, spotY] = spot(place);
+          return (Math.atan2(CENTER.y - spotY, spotX - CENTER.x) * 180) / Math.PI;
+        };
+        const start = angle(places.find((place) => real(place) === first));
+        const turned = (place) => (((angle(place) - start) % 360) + 360) % 360;
+        const order = [...places].sort((a, b) => turned(a) - turned(b)).map(real);
+        const rows = Array.from({ length: order.length / 4 }, (_, row) => order.slice(row * 4, row * 4 + 4).join(" → "));
+        return {
+          subtitle: label,
+          note: [`Dip cascade from ${first},`, "counterclockwise:", ...rows.map((row, index) => (index < rows.length - 1 ? `${row} →` : row))].join("\n"),
+          items: places.map((place) => ({
+            ...dancer(place, "couple", ...spot(place)),
+            displayMode: "partner",
+            facingMode: "in",
+            groupColor: `cascade${order.indexOf(real(place)) + 1}`,
+          })),
+        };
+      }
     }
 
     // Pyramid → V: three measures, starting on the finished pyramid and following the whiteboard
@@ -4819,9 +4883,9 @@
       const shot = storyboardShots[activeShotIndex];
       if (!shot || shot.id !== textEditShotId) return;
 
-      const annotation = { title: annotationTitleInput.value, subtitle: annotationSubheadingInput.value };
+      const annotation = currentAnnotation();
       const saved = shot.snapshot.annotation || {};
-      if (saved.title === annotation.title && saved.subtitle === annotation.subtitle) return;
+      if (saved.title === annotation.title && saved.subtitle === annotation.subtitle && (saved.note || "") === (annotation.note || "")) return;
 
       if (animationFrame !== null || !boardMatchesShot(shot)) {
         setStatus(`Dancers moved since opening ${shot.name}; press Update ${shot.name} to save the text with the new formation`);
@@ -5126,10 +5190,7 @@
     function snapshotCurrentLayout() {
       return {
         count: tokens.length,
-        annotation: {
-          title: annotationTitleInput.value,
-          subtitle: annotationSubheadingInput.value,
-        },
+        annotation: currentAnnotation(),
         items: tokens.map((token) => ({
           key: tokenKey(token),
           number: token.number,
@@ -6067,7 +6128,7 @@
     document.addEventListener("pointerup", endDrag);
     document.addEventListener("pointercancel", endDrag);
     document.addEventListener("keydown", handleKeyDown);
-    [annotationTitleInput, annotationSubheadingInput].forEach((input) => {
+    [annotationTitleInput, annotationSubheadingInput, annotationNoteInput].forEach((input) => {
       input.addEventListener("input", () => {
         updateAnnotation();
         scheduleShotTextSave();
