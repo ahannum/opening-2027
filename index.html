@@ -1237,7 +1237,7 @@
     </aside>
   </main>
 
-  <script src="stories/waltz-intro.js"></script>
+  <script src="stories/waltz.js"></script>
   <script>
     const COUPLE_COUNT = 16;
     const HALF_STEPS = COUPLE_COUNT * 2;
@@ -3283,14 +3283,12 @@
       {
         subtitle: "X",
         label: "Measure 3-4",
-        // Then everyone turns on the X's spots to face out, lead on the left, follow on the right.
-        facingOutLabel: "Measure 5",
         spots: [[160.6, 160.6], [160.6, 559.4], [210.8, 210.8], [210.8, 509.2], [261, 261], [261, 459], [310.5, 310.5], [321.1, 418.2],
           [409.5, 310.5], [409.5, 409.5], [459, 261], [459, 459], [509.2, 210.8], [509.2, 509.2], [559.4, 160.6], [559.4, 559.4]],
       },
       {
         subtitle: "Unfurl the X: outer couples onto the circle",
-        label: "Measure 6",
+        label: "Measure 5",
         // These couples keep facing out from the X's last frame (lead on the left, follow on the right).
         facingOut: [7, 8, 10, 11],
         spots: [[78, 360], [360, 642], [99.5, 252.1], [252.1, 620.5], [160.6, 160.6], [160.6, 559.4], [210.8, 210.8], [210.8, 509.2],
@@ -3298,7 +3296,9 @@
       },
       {
         subtitle: "Keep unfurling: dip",
-        label: "Measure 7-8",
+        // The dip's spots are reached on Measure 6; the colored cascade copy covers Measures 7–8.
+        label: "Measure 6",
+        cascadeLabel: "Measure 7-8",
         // Followed by a copy colored by when each couple dips: a cascade from 12, counterclockwise.
         dipCascadeFrom: 12,
         spots: [[99.5, 467.9], [467.9, 620.5], [78, 360], [360, 642], [99.5, 252.1], [252.1, 620.5], [160.6, 160.6], [160.6, 559.4],
@@ -3475,15 +3475,11 @@
         { subtitle: NEW_SECTION_CASCADE_END, items: coupleFrame(() => "north") },
         // Out on the spokes, in the X and through the unfurling, every couple has the follow's half
         // radially out ("in" points the lead's half at the center), except a frame's `facingOut` couples.
-        // After the X, still on the X's spots, everyone turns so that facing out from the center
-        // the lead is on the left and the follow on the right ("ccw" points the lead's half that way).
-        ...NEW_SECTION_UNFURL_FRAMES.flatMap(({ label, spots, facingOut = [], facingOutLabel, dipCascadeFrom }) => [
+        // ("ccw" points the lead's half counterclockwise: facing out, lead on the left, follow on the
+        // right).
+        ...NEW_SECTION_UNFURL_FRAMES.flatMap(({ label, cascadeLabel = label, spots, facingOut = [], dipCascadeFrom }) => [
           { subtitle: label, items: coupleFrame((place) => (facingOut.includes(real(place)) ? "ccw" : "in"), (place) => spots[place - 1]) },
-          ...(facingOutLabel ? [{
-            subtitle: facingOutLabel,
-            items: coupleFrame(() => "ccw", (place) => spots[place - 1]),
-          }] : []),
-          ...(dipCascadeFrom ? [dipCascadeFrame(label, dipCascadeFrom, (place) => spots[place - 1])] : []),
+          ...(dipCascadeFrom ? [dipCascadeFrame(cascadeLabel, dipCascadeFrom, (place) => spots[place - 1])] : []),
         ]),
         // It ends on Hearts Adrift's start, everyone turning in, so the two join up.
         { subtitle: "Hearts Adrift start", items: heartsAdriftStart.items },
@@ -3718,6 +3714,110 @@
       return points[points.length - 1];
     }
 
+    // Waltz: Hijinks Skit (first built as Follow's Escape; the id stays so saved stories still find it) picks up
+    // where Theme 1 ends (built from its last frame, so it follows any
+    // change there), every couple on a red dot of the outer tape. Then each couple splits its dot: lead
+    // and follow stand either side of it along the tape, the lead on the left facing out (counterclockwise
+    // as the board is drawn), just far enough apart that their tokens don't overlap. The follows escape to
+    // the inner tape, onto the red dot one tape (22.5°) against the line of dance; then the leads come
+    // next to them there, on the follow's left. Then the same again
+    // back out: follows onto the outer tape's red dot another tape against the line of dance, then the
+    // leads right behind them. Last, the couples join up and travel a tape along the line of dance, odds
+    // in to the inner tape and evens along the outer tape.
+    function followsEscapeSnapshots() {
+      const title = "Hijinks Skit";
+      const start = structuredClone((window.WALTZ_THEME_1_SNAPSHOTS || []).at(-1));
+      if (!start) return [];
+      const outerSplit = (PIECE_RADIUS + 2) / OUTER_RADIUS;
+      // On the inner tape the follow stands on the red dot and the lead next to her on her left, halfway to
+      // the next dot, so the 32 tokens are evenly spaced (they are too many for that tape to hold without
+      // touching).
+      const innerLeadOffset = Math.PI / 16;
+      const tapeBack = Math.PI / 8;
+      const dotAngle = (couple) => Math.atan2(CENTER.y - couple.y, couple.x - CENTER.x);
+      const onTape = (radius, angle) => ({
+        x: Number((CENTER.x + radius * Math.cos(angle)).toFixed(3)),
+        y: Number((CENTER.y - radius * Math.sin(angle)).toFixed(3)),
+      });
+      const spots = {
+        outerLead: (angle) => onTape(OUTER_RADIUS, angle + outerSplit),
+        outerFollow: (angle) => onTape(OUTER_RADIUS, angle - outerSplit),
+        innerLead: (angle) => onTape(INNER_RADIUS, angle - tapeBack + innerLeadOffset),
+        innerFollow: (angle) => onTape(INNER_RADIUS, angle - tapeBack),
+        // Back out, the follow stands right on the red dot and the lead right behind her (toward the
+        // center, as they face out), close enough that their tokens overlap a little.
+        backOuterFollow: (angle) => onTape(OUTER_RADIUS, angle - 2 * tapeBack),
+        backOuterLead: (angle) => onTape(OUTER_RADIUS - 1.4 * PIECE_RADIUS, angle - 2 * tapeBack),
+      };
+      const separate = (lead, follow) => start.items.flatMap((couple) => [["lead", lead], ["follow", follow]]
+        .map(([role, spot]) => ({
+          key: `${couple.number}:${role}`, number: couple.number, role, ring: null, step: null,
+          facingMode: "out", displayMode: "leadFollow", groupColor: couple.groupColor || "neutral",
+          ...spots[spot](dotAngle(couple)),
+        })));
+      // Then the couples join up again, the follow's half pointing out ("in" points the lead's half at the
+      // center), and travel 1 tape along the line of dance over two frames. Halfway there, the odd couples
+      // are halfway between the tapes (the ½ ring) on their way in to the inner tape and the even couples
+      // on the outer tape; then the odd couples are on an inner tape dot and the even ones on an outer tape
+      // dot, alternating in and out around the circle.
+      const odd = (couple) => couple.number % 2 === 1;
+      const joined = (couple, ring, radius, halfSteps) => ({
+        key: `${couple.number}:couple`, number: couple.number, role: "couple",
+        ring, step: wrapStep(couple.step - 4 + halfSteps),
+        facingMode: "in", displayMode: "leadFollow", groupColor: couple.groupColor || "neutral",
+        ...onTape(radius, dotAngle(couple) - 2 * tapeBack + (halfSteps * tapeBack) / 2),
+      });
+      const backOuterSeparate = separate("backOuterLead", "backOuterFollow");
+      const allCouplesJoin = start.items.map((couple) => (odd(couple)
+        ? joined(couple, "middle", MIDDLE_RADIUS, 1)
+        : joined(couple, "outer", OUTER_RADIUS, 1)));
+      // There the odd couples' follows face along the line of dance (counterclockwise) and the even
+      // couples' against it ("cw" and "ccw" name where the lead's half points).
+      const evensOut = start.items.map((couple) => (odd(couple)
+        ? { ...joined(couple, "inner", INNER_RADIUS, 2), facingMode: "cw" }
+        : { ...joined(couple, "outer", OUTER_RADIUS, 2), facingMode: "ccw" }));
+      return [
+        { ...start, annotation: { title, subtitle: "Start" } },
+        { subtitle: "Start (Lead and follow separated)", items: separate("outerLead", "outerFollow") },
+        { subtitle: "Measure 1-2", items: separate("outerLead", "innerFollow") },
+        { subtitle: "Measure 3-4", items: separate("innerLead", "innerFollow") },
+        { subtitle: "Measure 5-6", items: separate("innerLead", "backOuterFollow") },
+        { subtitle: "Measure 7", items: backOuterSeparate },
+        { subtitle: "Measure 8", items: allCouplesJoin },
+        { subtitle: "Measure 9-10", items: evensOut },
+      ].map((frame) => (frame.items === start.items ? frame
+        : { count: frame.items.length, annotation: { title, subtitle: frame.subtitle }, items: frame.items }));
+    }
+
+    // Waltz: Turning Gears starts where Hijinks Skit ends (built from its last frame, so it follows any
+    // change there): odd couples on the inner tape, follows facing along the line of dance, and even
+    // couples on the outer tape, follows facing against it. Then the two circles turn like gears, three
+    // times over: each time the odd couples go 2 red dots along the line of dance on the inner tape and
+    // the even couples 1 red dot against it on the outer tape.
+    function turningGearsSnapshots() {
+      const title = "Turning Gears";
+      const start = followsEscapeSnapshots().at(-1);
+      if (!start) return [];
+      const turned = (item, halfSteps) => {
+        const radius = Math.hypot(item.x - CENTER.x, item.y - CENTER.y);
+        const angle = Math.atan2(CENTER.y - item.y, item.x - CENTER.x) + (halfSteps * Math.PI) / 16;
+        return {
+          ...item,
+          step: item.step === null ? null : wrapStep(item.step + halfSteps),
+          x: Number((CENTER.x + radius * Math.cos(angle)).toFixed(3)),
+          y: Number((CENTER.y - radius * Math.sin(angle)).toFixed(3)),
+        };
+      };
+      const turn = (times) => start.items.map((item) => turned(item, item.number % 2 === 1 ? 4 * times : -2 * times));
+      return [
+        { ...start, annotation: { title, subtitle: "Start" } },
+        ...[1, 2, 3].map((times) => {
+          const items = turn(times);
+          return { count: items.length, annotation: { title, subtitle: `Turn ${times}` }, items };
+        }),
+      ];
+    }
+
     // Saved configurations: ready-made stories listed in the planner and in the presenter. Each returns
     // the board snapshot for every frame, so adding one here makes it show up in both pickers.
     // Both pickers group them by `section`, in the order of PRESET_SECTIONS; Polka and Waltz hold the
@@ -3732,37 +3832,37 @@
         section: POLKA,
         // The section before Hearts Adrift (built as "New Section from 1 Line"; the id stays so saved
         // stories still find it).
-        name: "Intro and 2 Lines",
+        name: "1 → 4 · Intro Theme 1 → From X to circle",
         snapshots: newSectionSnapshots,
       },
       {
         id: "hearts-adrift",
         section: POLKA,
-        name: "Hearts Adrift",
+        name: "5 · Hearts adrift",
         snapshots: heartsAdriftSnapshots,
       },
       {
         id: "hearts-adrift-to-line",
         section: POLKA,
-        name: "Transition: Hearts Adrift → Line",
+        name: "6 · Hearts adrift → turn cascade",
         snapshots: heartsAdriftToLineSnapshots,
       },
       {
         id: "line-to-triumphant-crossing",
         section: POLKA,
-        name: "Line to Triumphant Crossing",
+        name: "7 → 8 · Turn cascade → Line → X → grid prep",
         snapshots: lineToCrossingSnapshots,
       },
       {
         id: "triumphant-crossing",
         section: POLKA,
-        name: "Triumphant Crossing",
+        name: "9 · Triumphant grid crossing",
         snapshots: triumphantCrossingSnapshots,
       },
       {
         id: "block-to-pyramid",
         section: POLKA,
-        name: "Transition: Cascade Grid → Unfurling Pyramid",
+        name: "10 · 4×4 grid cascades → unfurling pyramid",
         // One frame per full measure, on its beat 1: the layouts come in half measures, so every other
         // one is kept. Everyone is the same gray, since the pyramid's color groups haven't formed yet.
         snapshots: () => blockToPyramidLayouts().filter((_, halfMeasure) => halfMeasure % 2 === 0).map((positions, frame) => storyFrameSnapshot(
@@ -3817,7 +3917,7 @@
         id: "unfurling-pyramid-v2",
         section: POLKA,
         // The locked-in pyramid (built as v2), so it is just "Unfurling Pyramid" everywhere it shows.
-        name: "Unfurling Pyramid",
+        name: "11 · Unfurling pyramid",
         snapshots: () => unfurlingPyramidV2Layouts().map((positions, frame) => storyFrameSnapshot(
           "Unfurling Pyramid",
           positions,
@@ -3839,7 +3939,7 @@
       {
         id: "pyramid-to-v",
         section: POLKA,
-        name: "Transition: Pyramid → V",
+        name: "11 → 12 · Unfurling pyramid → V finale",
         // One frame per full measure, showing where everyone is on its beat 1: the layouts come in
         // half measures, so every other one is kept. Measure 1 is Orphan 2 (the fast turn) on the pyramid's
         // spot; every measure after it is gallops.
@@ -3853,15 +3953,40 @@
       {
         id: "final-v",
         section: POLKA,
-        name: "Final V",
+        name: "12 · V finale",
         snapshots: finalVSnapshots,
       },
+      // The Waltz was saved from the planner as one storyboard file and split into its three parts;
+      // their frames live in stories/waltz.js.
       {
         id: "waltz-intro",
         section: WALTZ,
-        // Saved from the planner as a storyboard file; its frames live in stories/waltz-intro.js.
-        name: "Intro",
+        name: "1 · Introduction",
         snapshots: () => structuredClone(window.WALTZ_INTRO_SNAPSHOTS || []),
+      },
+      {
+        id: "waltz-contraction-expansion",
+        section: WALTZ,
+        name: "2 · Theme 2: Contraction and Expansion",
+        snapshots: () => structuredClone(window.WALTZ_CONTRACTION_EXPANSION_SNAPSHOTS || []),
+      },
+      {
+        id: "waltz-theme-1",
+        section: WALTZ,
+        name: "3 · Theme 1: Solo String",
+        snapshots: () => structuredClone(window.WALTZ_THEME_1_SNAPSHOTS || []),
+      },
+      {
+        id: "waltz-follows-escape",
+        section: WALTZ,
+        name: "4 · Hijinks Skit",
+        snapshots: followsEscapeSnapshots,
+      },
+      {
+        id: "waltz-turning-gears",
+        section: WALTZ,
+        name: "5 · Theme 2: Turning Gears",
+        snapshots: turningGearsSnapshots,
       },
     ];
 
@@ -3889,6 +4014,37 @@
         });
       }
       return shots;
+    }
+
+    // A short hash of a story's frames (plus how they're drawn), so a saved copy can tell it's out of date.
+    const PRESET_RENDER_VERSION = 2;
+    function presetFingerprint(preset) {
+      const text = `${PRESET_RENDER_VERSION}:${preset.name}:${JSON.stringify(preset.snapshots())}`;
+      let hash = 2166136261;
+      for (let i = 0; i < text.length; i += 1) hash = Math.imul(hash ^ text.charCodeAt(i), 16777619);
+      return (hash >>> 0).toString(36);
+    }
+
+    // Frames for the phone player: WebP where the browser can make it (much smaller), else JPEG.
+    async function buildPresetFrames(preset, size, onProgress = () => {}) {
+      const frames = [];
+      const snapshots = preset.snapshots();
+      for (const snapshot of snapshots) {
+        onProgress(frames.length, snapshots.length);
+        // The player titles every frame with the story's "N · name", the way the Ground Truth slides do.
+        restoreStoryboardSnapshot({ ...snapshot, annotation: { ...snapshot.annotation, title: preset.name } });
+        const png = await renderBoardPngBlob(size);
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        canvas.getContext("2d").drawImage(await createImageBitmap(png), 0, 0);
+        let blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
+        if (!blob || blob.type !== "image/webp") blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.88));
+        const { subtitle = "", note = "" } = snapshot.annotation || {};
+        const title = preset.name;
+        frames.push({ blob, title, subtitle, note });
+      }
+      return frames;
     }
 
     async function loadStoryPreset(id = storyPresetSelect.value) {
@@ -3927,6 +4083,20 @@
           } catch {}
           return;
         }
+        // The phone player (app/) asks for one story's frames as compact images it can keep offline.
+        if (event.data?.type === "opening-2027-build-frames") {
+          const preset = STORY_PRESETS.find((item) => item.id === event.data.id);
+          if (!preset) return;
+          try {
+            const frames = await buildPresetFrames(preset, event.data.size || 1440, (done, total) => {
+              window.parent.postMessage({ type: "opening-2027-frames-progress", id: preset.id, done, total }, "*");
+            });
+            window.parent.postMessage({ type: "opening-2027-frames", id: preset.id, fingerprint: presetFingerprint(preset), frames }, "*");
+          } catch (error) {
+            window.parent.postMessage({ type: "opening-2027-preset-error", id: preset.id, message: error.message }, "*");
+          }
+          return;
+        }
         if (event.data?.type !== "opening-2027-build-preset") return;
         const preset = STORY_PRESETS.find((item) => item.id === event.data.id);
         if (!preset) return;
@@ -3943,7 +4113,8 @@
       });
       window.parent.postMessage({
         type: "opening-2027-presets",
-        presets: STORY_PRESETS.map(({ id, name, section }) => ({ id, name, section })),
+        // The fingerprint changes whenever a story's frames do, so the phone player knows what to redraw.
+        presets: STORY_PRESETS.map((preset) => ({ id: preset.id, name: preset.name, section: preset.section, fingerprint: presetFingerprint(preset) })),
         sections: PRESET_SECTIONS,
       }, "*");
     }

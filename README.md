@@ -30,6 +30,20 @@ Open `index.html` in a browser.
 - Copy any frame to paste into Google Slides, or save every frame as a numbered PNG. Frames render at 2160 px, and storyboards saved with smaller frames are redrawn at that size when opened. GIFs go up to 2160 px.
 - Present a story in `present.html`: pick a saved configuration, press Present in the planner's Storyboard tab, or open a saved storyboard file, then step with the arrow keys, Space, a clicker, or the buttons. F goes fullscreen. Keep `present.html` next to `index.html`; it uses the planner to draw the configurations.
 
+## Phone player
+
+`app/` is a phone-friendly player for the finished Polka and Waltz storyboards (works in progress are left out). Open `https://ahannum.github.io/opening-2027/app/` on a phone and add it to the home screen (iPhone: Share → Add to Home Screen; Android: ⋮ → Install app). Pick a part and step through it by tapping, swiping or using the buttons. At the end of a part, Next goes on to the next one. Play steps through on its own, at a speed you choose.
+
+Parts are named the way the Ground Truth slides name sections ("5 · Hearts adrift", "11 → 12 · Unfurling pyramid → V finale"); the names are the presets' `name` in `STORY_PRESETS`.
+
+The frames are drawn ahead of time into `app/frames/` and `app/stories.js`, so phones only download images. After changing a routine, redraw them:
+
+```bash
+python3 tools/export_player.py
+```
+
+Open <http://localhost:8010/tools/export-player.html>, press Export, then commit and push `app/`. Without `app/stories.js` the player draws the frames itself with the planner, hidden. The player saves every frame on the phone, so after the first visit it works offline.
+
 ## GitHub Pages
 
 This is a static app. GitHub Pages can serve it directly from the repository root.

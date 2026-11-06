@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Opening 2027</title>
+  <meta name="description" content="Step through the Polka and Waltz storyboards for the Viennese Ball Opening 2027.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Opening 2027">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#f4f2ee" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191c" media="(prefers-color-scheme: dark)">
+  <style>
+    :root {
+      --bg: #f4f2ee;
+      --surface: #ffffff;
+      --ink: #1f2529;
+      --muted: #697077;
+      --line: #dcd7ce;
+      --accent: #2368a2;
+      --accent-ink: #ffffff;
+      --accent-soft: #e3edf6;
+      --shadow: 0 10px 28px rgba(31, 37, 41, 0.12);
+      --frame-shadow: 0 8px 24px rgba(31, 37, 41, 0.14);
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #15191c;
+        --surface: #20262a;
+        --ink: #eef0f1;
+        --muted: #9aa3aa;
+        --line: #333b41;
+        --accent: #6aa8dc;
+        --accent-ink: #0e1a24;
+        --accent-soft: #1f3344;
+        --shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+        --frame-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        color-scheme: dark;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #15191c;
+      --surface: #20262a;
+      --ink: #eef0f1;
+      --muted: #9aa3aa;
+      --line: #333b41;
+      --accent: #6aa8dc;
+      --accent-ink: #0e1a24;
+      --accent-soft: #1f3344;
+      --shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+      --frame-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+    }
+    button { font: inherit; color: inherit; }
+    [hidden] { display: none !important; }
+
+    /* ---------- Home: the list of storyboards ---------- */
+    .home {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: calc(env(safe-area-inset-top) + 20px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 28px) calc(env(safe-area-inset-left) + 16px);
+    }
+    .home h1 {
+      margin: 4px 0 2px;
+      font-size: 28px;
+      letter-spacing: -0.01em;
+    }
+    .home .sub {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .tabs {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      padding: 4px;
+      margin: 0 -2px 16px;
+      border-radius: 12px;
+      background: var(--surface);
+      box-shadow: 0 1px 0 var(--line), 0 0 0 1px var(--line) inset;
+    }
+    .tabs button {
+      min-height: 44px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      font-size: 17px;
+      font-weight: 650;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .tabs button[aria-selected="true"] {
+      color: var(--accent-ink);
+      background: var(--accent);
+    }
+    .play-all {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 50px;
+      margin-bottom: 14px;
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-size: 17px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .card {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      padding: 10px 14px 10px 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      text-align: left;
+      cursor: pointer;
+    }
+    .card:active { transform: scale(0.99); }
+    .thumb {
+      width: 76px;
+      height: 76px;
+      border-radius: 9px;
+      background: #ffffff center / cover no-repeat;
+      box-shadow: 0 0 0 1px var(--line);
+      display: grid;
+      place-items: center;
+      color: #9aa3aa;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .card .name {
+      display: block;
+      font-size: 17px;
+      font-weight: 650;
+      line-height: 1.25;
+    }
+    .card .meta {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .card .chev { color: var(--muted); font-size: 22px; }
+    .status {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ---------- Player ---------- */
+    .player {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      background: var(--bg);
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+    .topbar {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) 48px;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 6px 2px;
+    }
+    .icon-btn {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      cursor: pointer;
+    }
+    .icon-btn svg { width: 26px; height: 26px; }
+    .titles { text-align: center; min-width: 0; }
+    .titles .story {
+      font-size: 17px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .titles .part { font-size: 13px; color: var(--muted); }
+
+    .stage {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 8px 12px;
+      container-type: size;
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .frame-wrap {
+      position: relative;
+      width: min(100cqw, 100cqh);
+      aspect-ratio: 1;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: var(--frame-shadow);
+    }
+    .frame-wrap img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+    .loading {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 12px;
+      color: #697077;
+      font-size: 15px;
+      background: #ffffff;
+    }
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #dcd7ce;
+      border-top-color: #2368a2;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .controls {
+      padding: 4px 16px 10px;
+      display: grid;
+      gap: 8px;
+    }
+    .caption {
+      min-height: 46px;
+      text-align: center;
+    }
+    .caption .measure {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .caption .note {
+      margin-top: 2px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .scrub {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      color: var(--muted);
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 32px;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .buttons button {
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      font-size: 17px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .buttons button.primary {
+      color: var(--accent-ink);
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .buttons button:disabled { opacity: 0.4; cursor: default; }
+    .buttons svg { width: 22px; height: 22px; flex: none; }
+    .speed {
+      justify-self: center;
+      min-height: 32px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* Landscape phones: the frame on the left, controls on the right. */
+    @media (orientation: landscape) and (max-height: 560px) {
+      .player {
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 38%);
+        grid-template-rows: auto minmax(0, 1fr);
+      }
+      .topbar { grid-column: 1 / -1; padding-top: 2px; }
+      .stage { padding: 4px 8px 10px; }
+      .controls { align-content: center; padding: 0 16px 10px 4px; }
+    }
+
+    /* The planner runs here, out of sight, only to draw the frames. */
+    .builder {
+      position: fixed;
+      left: -10000px;
+      top: 0;
+      width: 1280px;
+      height: 900px;
+      border: 0;
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+  <main class="home" id="home">
+    <h1>Opening 2027</h1>
+    <p class="sub">Viennese Ball Opening Waltz / Polka Choreo</p>
+    <div class="tabs" role="tablist" aria-label="Dance">
+      <button type="button" role="tab" data-section="Polka" aria-selected="true">Polka</button>
+      <button type="button" role="tab" data-section="Waltz" aria-selected="false">Waltz</button>
+    </div>
+    <button type="button" class="play-all" id="playAll" hidden>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l10.5-6.5z"/></svg>
+      <span>Step through the whole Polka</span>
+    </button>
+    <ol class="list" id="list"></ol>
+    <p class="status" id="status">Loading storyboards…</p>
+  </main>
+
+  <section class="player" id="player" hidden aria-label="Storyboard player">
+    <header class="topbar">
+      <button type="button" class="icon-btn" id="backBtn" aria-label="Back to storyboards">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="titles">
+        <div class="story" id="storyTitle"></div>
+        <div class="part" id="storyPart"></div>
+      </div>
+      <span></span>
+    </header>
+
+    <div class="stage" id="stage">
+      <div class="frame-wrap">
+        <img id="frameImg" alt="">
+        <div class="loading" id="loading" hidden>
+          <div class="spinner" aria-hidden="true"></div>
+          <div id="loadingText">Drawing frames…</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="caption" aria-live="polite">
+        <div class="measure" id="measure"></div>
+        <div class="note" id="note"></div>
+      </div>
+      <div class="scrub">
+        <span id="pos">0</span>
+        <input type="range" id="scrubber" min="1" max="1" value="1" aria-label="Frame">
+        <span id="total">0</span>
+      </div>
+      <div class="buttons">
+        <button type="button" id="prevBtn" aria-label="Previous frame">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></svg>
+          <span>Back</span>
+        </button>
+        <button type="button" id="playBtn" aria-label="Play">
+          <svg viewBox="0 0 24 24" aria-hidden="true" id="playIcon"><path fill="currentColor" d="M8 5.5v13l10.5-6.5z"/></svg>
+          <span id="playLabel">Play</span>
+        </button>
+        <button type="button" class="primary" id="nextBtn" aria-label="Next frame">
+          <span id="nextLabel">Next</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <button type="button" class="speed" id="speedBtn">Play speed: 1.5 s per frame</button>
+    </div>
+  </section>
+
+  <iframe id="builder" class="builder" title="Frame builder" aria-hidden="true" tabindex="-1"></iframe>
+
+  <!-- Pre-drawn frames (tools/export-player.html makes it). Without it the player draws them itself. -->
+  <script src="stories.js"></script>
+  <script>
+    // Only the finished routines show here; works in progress stay in the planner.
+    const SECTIONS = ["Polka", "Waltz"];
+    const FRAME_SIZE = 1440;
+    const SPEEDS = [1000, 1500, 2500, 4000];
+
+    // A shared copy of the player (one page plus its frame images, no planner) sets PLAYER_MANIFEST
+    // before this script: the list of stories and their pre-drawn frames.
+    const STATIC = window.PLAYER_MANIFEST || null;
+
+    const $ = (selector) => document.querySelector(selector);
+    const home = $("#home");
+    const player = $("#player");
+    const list = $("#list");
+    const statusEl = $("#status");
+    const frameImg = $("#frameImg");
+    const loading = $("#loading");
+    const scrubber = $("#scrubber");
+    const builder = $("#builder");
+
+    // ---------- Saved frames (IndexedDB), so stories open instantly and work offline ----------
+    const dbReady = new Promise((resolve) => {
+      try {
+        const request = indexedDB.open("opening-2027-player", 1);
+        request.onupgradeneeded = () => {
+          request.result.createObjectStore("stories", { keyPath: "id" });
+          request.result.createObjectStore("meta");
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => resolve(null);
+      } catch {
+        resolve(null);
+      }
+    });
+    async function dbGet(store, key) {
+      const db = await dbReady;
+      if (!db) return undefined;
+      return new Promise((resolve) => {
+        const request = db.transaction(store).objectStore(store).get(key);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => resolve(undefined);
+      });
+    }
+    async function dbPut(store, value, key) {
+      const db = await dbReady;
+      if (!db) return;
+      return new Promise((resolve) => {
+        const tx = db.transaction(store, "readwrite");
+        key === undefined ? tx.objectStore(store).put(value) : tx.objectStore(store).put(value, key);
+        tx.oncomplete = tx.onerror = () => resolve();
+      });
+    }
+
+    // ---------- State ----------
+    let stories = [];            // [{ id, name, section, fingerprint }]
+    const framesById = new Map(); // id -> [{ blob, title, subtitle, note }] (current versions only)
+    const thumbUrls = new Map();
+    let section = "Polka";
+    let current = null;          // { ids: [...], storyIndex, frameIndex, urls: [] }
+    let playTimer = null;
+    let speedIndex = 1;
+    try { speedIndex = Math.min(Math.max(Number(localStorage.getItem("speedIndex") ?? 1), 0), SPEEDS.length - 1); } catch {}
+    try { if (SECTIONS.includes(localStorage.getItem("section"))) section = localStorage.getItem("section"); } catch {}
+
+    // ---------- Builder: the planner, hidden, draws frames one story at a time ----------
+    let builderReady = false;
+    const buildQueue = [];
+    const waiting = new Map();   // id -> [resolve]
+    let building = null;
+
+    function requestBuild(id, urgent = false) {
+      if (framesById.has(id)) return Promise.resolve(framesById.get(id));
+      const promise = new Promise((resolve) => {
+        if (!waiting.has(id)) waiting.set(id, []);
+        waiting.get(id).push(resolve);
+      });
+      if (building !== id) {
+        const at = buildQueue.indexOf(id);
+        if (at >= 0) buildQueue.splice(at, 1);
+        urgent ? buildQueue.unshift(id) : buildQueue.push(id);
+      }
+      pumpBuilds();
+      return promise;
+    }
+
+    let lastProgress = 0;
+    function pumpBuilds() {
+      if (!builderReady || building || !buildQueue.length) return;
+      building = buildQueue.shift();
+      lastProgress = Date.now();
+      builder.contentWindow.postMessage({ type: "opening-2027-build-frames", id: building, size: FRAME_SIZE }, "*");
+    }
+
+    // A fresh copy of the planner every time, so frames never come from a stale cached page.
+    function loadBuilder() {
+      builderReady = false;
+      builder.src = `../index.html?builder=${Date.now()}`;
+    }
+
+    // Phones pause pages in the background, and a drawing can stall partway. If a story makes no
+    // progress for a while (with the app on screen), reload the planner and pick up where it left off.
+    setInterval(() => {
+      if (!building || document.hidden || Date.now() - lastProgress < 20000) return;
+      buildQueue.unshift(building);
+      building = null;
+      loadBuilder();
+    }, 5000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) lastProgress = Date.now(); });
+
+    function finishBuild(id, frames) {
+      if (frames) framesById.set(id, frames);
+      (waiting.get(id) || []).forEach((resolve) => resolve(frames || null));
+      waiting.delete(id);
+      if (building === id) building = null;
+      if (frames) refreshThumb(id);
+      renderStatus();
+      pumpBuilds();
+    }
+
+    window.addEventListener("message", async (event) => {
+      if (event.source !== builder.contentWindow) return;
+      const data = event.data || {};
+      if (data.type === "opening-2027-presets") {
+        builderReady = true;
+        const fresh = (data.presets || []).filter((preset) => SECTIONS.includes(preset.section));
+        await useStoryList(fresh);
+        dbPut("meta", fresh, "list");
+        // Draw everything that isn't saved yet, so the whole routine works offline afterwards.
+        for (const story of stories) if (!framesById.has(story.id)) requestBuild(story.id);
+        pumpBuilds();
+      } else if (data.type === "opening-2027-frames-progress") {
+        lastProgress = Date.now();
+        if (current && current.ids[current.storyIndex] === data.id && !current.frames) {
+          $("#loadingText").textContent = `Drawing frames… ${data.done} of ${data.total}`;
+        }
+      } else if (data.type === "opening-2027-frames") {
+        const story = stories.find((item) => item.id === data.id);
+        const record = { id: data.id, fingerprint: data.fingerprint, frames: data.frames };
+        if (story) story.fingerprint = data.fingerprint;
+        await dbPut("stories", record);
+        finishBuild(data.id, data.frames);
+      } else if (data.type === "opening-2027-preset-error") {
+        console.error("Could not draw", data.id, data.message);
+        finishBuild(data.id, null);
+      }
+    });
+
+    if (STATIC) {
+      builder.remove();
+      stories = STATIC.stories.filter((story) => SECTIONS.includes(story.section))
+        .map(({ id, name, section }) => ({ id, name, section }));
+      for (const story of STATIC.stories) framesById.set(story.id, story.frames);
+    } else {
+      loadBuilder();
+    }
+
+    async function useStoryList(list) {
+      stories = list;
+      for (const story of stories) {
+        if (framesById.has(story.id)) continue;
+        const saved = await dbGet("stories", story.id);
+        if (saved && saved.fingerprint === story.fingerprint && saved.frames?.length) {
+          framesById.set(story.id, saved.frames);
+        }
+      }
+      // Drop saved frames that no longer match (the planner changed them).
+      for (const [id] of framesById) {
+        const story = stories.find((item) => item.id === id);
+        if (!story) framesById.delete(id);
+      }
+      renderList();
+      if (current) syncPlayerAfterListChange();
+      else routeFromHash();
+    }
+
+    // Offline (or before the planner answers): use what was saved last time.
+    if (!STATIC) (async () => {
+      const saved = await dbGet("meta", "list");
+      if (saved && !stories.length) {
+        stories = saved;
+        for (const story of stories) {
+          const record = await dbGet("stories", story.id);
+          if (record?.frames?.length) framesById.set(story.id, record.frames);
+        }
+        renderList();
+        routeFromHash();
+      }
+    })();
+    setTimeout(() => { if (!builderReady) renderStatus(); }, 8000);
+
+    // ---------- Home list ----------
+    function sectionStories(name = section) {
+      return stories.filter((story) => story.section === name);
+    }
+
+    function refreshThumb(id) {
+      const frames = framesById.get(id);
+      const card = list.querySelector(`[data-id="${CSS.escape(id)}"]`);
+      if (!frames || !card) return;
+      if (thumbUrls.has(id)) revokeUrls([thumbUrls.get(id)]);
+      const url = frameUrl(frames[0]);
+      thumbUrls.set(id, url);
+      const thumb = card.querySelector(".thumb");
+      thumb.style.backgroundImage = `url("${url}")`;
+      thumb.textContent = "";
+      card.querySelector(".meta").textContent = `${frames.length} frame${frames.length === 1 ? "" : "s"}`;
+    }
+
+    function renderList() {
+      document.querySelectorAll(".tabs button").forEach((tab) => tab.setAttribute("aria-selected", String(tab.dataset.section === section)));
+      const items = sectionStories();
+      list.replaceChildren(...items.map((story, i) => {
+        const li = document.createElement("li");
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "card";
+        button.dataset.id = story.id;
+        button.innerHTML = `<span class="thumb">${i + 1}</span><span><span class="name"></span><span class="meta">Not drawn yet</span></span><span class="chev" aria-hidden="true">›</span>`;
+        button.querySelector(".name").textContent = story.name;
+        button.addEventListener("click", () => openStory(section, i, 0));
+        li.append(button);
+        return li;
+      }));
+      items.forEach((story) => refreshThumb(story.id));
+      const playAll = $("#playAll");
+      playAll.hidden = items.length < 2;
+      playAll.querySelector("span").textContent = `Step through the whole ${section}`;
+      renderStatus();
+    }
+
+    function renderStatus() {
+      if (STATIC) {
+        statusEl.textContent = STATIC.updated ? `Frames drawn ${STATIC.updated}` : "";
+        return;
+      }
+      if (!stories.length) {
+        statusEl.textContent = navigator.onLine === false
+          ? "You're offline. Open the app once while online to save the storyboards."
+          : "Loading storyboards…";
+        return;
+      }
+      const missing = stories.filter((story) => !framesById.has(story.id)).length;
+      if (missing && builderReady) statusEl.textContent = `Drawing frames… ${stories.length - missing} of ${stories.length} storyboards ready`;
+      else if (missing) statusEl.textContent = `${stories.length - missing} of ${stories.length} storyboards saved on this device. Connect to draw the rest.`;
+      else statusEl.textContent = "All storyboards are saved on this device and work offline.";
+    }
+
+    document.querySelectorAll(".tabs button").forEach((tab) => tab.addEventListener("click", () => {
+      section = tab.dataset.section;
+      try { localStorage.setItem("section", section); } catch {}
+      renderList();
+    }));
+    $("#playAll").addEventListener("click", () => openStory(section, 0, 0));
+
+    // ---------- Player ----------
+    // Routes are a plain #<storyId> (story ids are letters, digits and hyphens), so the phone's back
+    // button works and a link can open a part directly. The frame lives in the page, not the link.
+    let pendingFrame = 0;
+    let openedFromHome = false;
+    function openStory(sectionName, storyIndex, frameIndex, replace = false) {
+      const ids = sectionStories(sectionName).map((story) => story.id);
+      if (!ids[storyIndex]) return;
+      const hash = `#${ids[storyIndex]}`;
+      pendingFrame = frameIndex;
+      if (player.hidden) openedFromHome = true;
+      if (location.hash === hash) return showFromRoute();
+      if (replace) location.replace(hash);
+      else location.hash = hash;
+    }
+
+    function routeFromHash() { showFromRoute(); }
+    window.addEventListener("hashchange", showFromRoute);
+
+    let routeToken = 0;
+    async function showFromRoute() {
+      const match = location.hash.match(/^#([A-Za-z0-9-]+)$/);
+      if (!match) return closePlayer();
+      const id = match[1];
+      const story = stories.find((item) => item.id === id);
+      if (!story) return; // the list hasn't loaded yet; this runs again when it does
+      const ids = sectionStories(story.section).map((item) => item.id);
+      const storyIndex = ids.indexOf(id);
+      const token = ++routeToken;
+
+      const isNewStory = !current || current.ids[current.storyIndex] !== id;
+      if (isNewStory) {
+        // Play keeps going into the next part, so a new story doesn't stop it.
+        if (current) revokeUrls(current.urls);
+        current = { section: story.section, ids, storyIndex, frameIndex: pendingFrame, urls: [], frames: null };
+        pendingFrame = 0;
+      }
+      current.ids = ids;
+      current.storyIndex = storyIndex;
+      home.hidden = true;
+      player.hidden = false;
+      $("#storyTitle").textContent = story.name;
+      $("#storyPart").textContent = `${story.section} · part ${storyIndex + 1} of ${ids.length}`;
+      document.title = `${story.name} · Opening 2027`;
+
+      if (!current.frames) {
+        loading.hidden = false;
+        frameImg.removeAttribute("src");
+        $("#loadingText").textContent = builderReady || navigator.onLine !== false ? "Drawing frames…" : "Not saved on this device yet";
+        setCaption("", "");
+        setControlsEnabled(false);
+        const frames = framesById.get(id) || await requestBuild(id, true);
+        if (token !== routeToken) return;
+        if (!frames) {
+          $("#loadingText").textContent = "Couldn't draw this storyboard";
+          return;
+        }
+        current.frames = frames;
+        current.urls = frames.map(frameUrl);
+        // Warm the next story so "Next part" is instant.
+        if (ids[storyIndex + 1]) {
+          if (STATIC) new Image().src = framesById.get(ids[storyIndex + 1])[0].src;
+          else requestBuild(ids[storyIndex + 1], true);
+        }
+      }
+      loading.hidden = true;
+      current.frameIndex = Math.min(Math.max(current.frameIndex, 0), current.frames.length - 1);
+      showFrame();
+    }
+
+    // Frames come either as saved images (blobs, drawn on this phone) or as image files next to the page.
+    function frameUrl(frame) {
+      return frame.src || URL.createObjectURL(frame.blob);
+    }
+    function revokeUrls(urls) {
+      urls.forEach((url) => { if (url.startsWith("blob:")) URL.revokeObjectURL(url); });
+    }
+
+    function syncPlayerAfterListChange() {
+      // A story changed under the open player: reload it from the fresh frames.
+      const id = current.ids[current.storyIndex];
+      if (current.frames && framesById.get(id) !== current.frames) {
+        revokeUrls(current.urls);
+        current.frames = null;
+      }
+      showFromRoute();
+    }
+
+    function setCaption(measure, note) {
+      $("#measure").textContent = measure;
+      $("#note").textContent = note;
+    }
+
+    function setControlsEnabled(enabled) {
+      ["#prevBtn", "#nextBtn", "#playBtn"].forEach((sel) => { $(sel).disabled = !enabled; });
+      scrubber.disabled = !enabled;
+    }
+
+    function showFrame() {
+      const { frames, frameIndex, urls, ids, storyIndex } = current;
+      const frame = frames[frameIndex];
+      frameImg.src = urls[frameIndex];
+      frameImg.alt = `${frame.title} — ${frame.subtitle}`;
+      setCaption(frame.subtitle || `Frame ${frameIndex + 1}`, frame.note || "");
+      scrubber.max = String(frames.length);
+      scrubber.value = String(frameIndex + 1);
+      $("#pos").textContent = frameIndex + 1;
+      $("#total").textContent = frames.length;
+      setControlsEnabled(true);
+      const atEnd = frameIndex === frames.length - 1;
+      const hasNextStory = Boolean(ids[storyIndex + 1]);
+      const atStart = frameIndex === 0 && storyIndex === 0;
+      $("#prevBtn").disabled = atStart;
+      $("#nextBtn").disabled = atEnd && !hasNextStory;
+      $("#nextLabel").textContent = atEnd && hasNextStory ? "Next part" : "Next";
+      // Preload neighbours so stepping never flashes.
+      [frameIndex + 1, frameIndex + 2].forEach((i) => { if (urls[i]) new Image().src = urls[i]; });
+    }
+
+    function go(delta) {
+      if (!current?.frames) return;
+      const target = current.frameIndex + delta;
+      if (target >= current.frames.length) {
+        if (current.ids[current.storyIndex + 1]) {
+          openStory(current.section, current.storyIndex + 1, 0, true);
+          return true;
+        }
+        return false;
+      }
+      if (target < 0) {
+        if (current.storyIndex > 0) {
+          const previousId = current.ids[current.storyIndex - 1];
+          const previousFrames = framesById.get(previousId);
+          // Step back onto the previous part's last frame.
+          openStory(current.section, current.storyIndex - 1, previousFrames ? previousFrames.length - 1 : 0, true);
+          return true;
+        }
+        return false;
+      }
+      current.frameIndex = target;
+      showFrame();
+      return true;
+    }
+
+    function closePlayer() {
+      stopPlay();
+      openedFromHome = false;
+      player.hidden = true;
+      home.hidden = false;
+      document.title = "Opening 2027";
+      if (current) {
+        revokeUrls(current.urls);
+        const story = stories.find((item) => item.id === current.ids[current.storyIndex]);
+        if (story && story.section !== section) {
+          section = story.section;
+          renderList();
+        }
+        current = null;
+      }
+    }
+
+    // Play steps on by itself, through the following parts too, until the routine ends.
+    function startPlay() {
+      stopPlay();
+      $("#playLabel").textContent = "Pause";
+      $("#playIcon").innerHTML = '<path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/>';
+      playTimer = setInterval(() => {
+        if (!current?.frames) return; // waiting on the next part's frames
+        if (!go(1)) stopPlay();
+      }, SPEEDS[speedIndex]);
+    }
+    function stopPlay() {
+      if (playTimer) clearInterval(playTimer);
+      playTimer = null;
+      $("#playLabel").textContent = "Play";
+      $("#playIcon").innerHTML = '<path fill="currentColor" d="M8 5.5v13l10.5-6.5z"/>';
+    }
+    function renderSpeed() {
+      $("#speedBtn").textContent = `Play speed: ${SPEEDS[speedIndex] / 1000} s per frame`;
+    }
+    renderSpeed();
+
+    // Back returns to the list: through history when the list is what's behind us, else by clearing the route.
+    $("#backBtn").addEventListener("click", () => {
+      if (openedFromHome) {
+        openedFromHome = false;
+        history.back();
+      } else {
+        location.hash = "";
+        closePlayer();
+      }
+    });
+    $("#prevBtn").addEventListener("click", () => { stopPlay(); go(-1); });
+    $("#nextBtn").addEventListener("click", () => { stopPlay(); go(1); });
+    $("#playBtn").addEventListener("click", () => (playTimer ? stopPlay() : startPlay()));
+    $("#speedBtn").addEventListener("click", () => {
+      speedIndex = (speedIndex + 1) % SPEEDS.length;
+      try { localStorage.setItem("speedIndex", String(speedIndex)); } catch {}
+      renderSpeed();
+      if (playTimer) startPlay();
+    });
+    scrubber.addEventListener("input", () => {
+      if (!current?.frames) return;
+      stopPlay();
+      current.frameIndex = Number(scrubber.value) - 1;
+      showFrame();
+    });
+
+    // Swipe left/right on the frame, or tap its right or left side.
+    const stage = $("#stage");
+    let touchStart = null;
+    stage.addEventListener("pointerdown", (event) => { touchStart = { x: event.clientX, y: event.clientY, t: Date.now() }; });
+    stage.addEventListener("pointerup", (event) => {
+      if (!touchStart) return;
+      const dx = event.clientX - touchStart.x;
+      const dy = event.clientY - touchStart.y;
+      touchStart = null;
+      stopPlay();
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+        go(dx < 0 ? 1 : -1);
+      } else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+        const rect = stage.getBoundingClientRect();
+        go(event.clientX - rect.left < rect.width / 3 ? -1 : 1);
+      }
+    });
+    stage.addEventListener("pointercancel", () => { touchStart = null; });
+
+    document.addEventListener("keydown", (event) => {
+      if (player.hidden || event.metaKey || event.ctrlKey || event.altKey) return;
+      const actions = {
+        ArrowRight: () => go(1), ArrowDown: () => go(1), PageDown: () => go(1), " ": () => go(1),
+        ArrowLeft: () => go(-1), ArrowUp: () => go(-1), PageUp: () => go(-1),
+        Escape: () => $("#backBtn").click(),
+      };
+      if (event.target === scrubber && event.key.startsWith("Arrow")) return;
+      const action = actions[event.key];
+      if (!action) return;
+      event.preventDefault();
+      stopPlay();
+      action();
+    });
+
+    window.addEventListener("online", renderStatus);
+    window.addEventListener("offline", renderStatus);
+
+    if (STATIC) {
+      renderList();
+      routeFromHash();
+      // Fetch every frame once in the background, so the whole routine works offline afterwards.
+      setTimeout(async () => {
+        for (const story of STATIC.stories) {
+          for (const frame of story.frames) {
+            try { await fetch(frame.src); } catch { return; }
+          }
+        }
+      }, 2500);
+    }
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    }
+  </script>
+</body>
+</html>
