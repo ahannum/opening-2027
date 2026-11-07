@@ -3832,6 +3832,37 @@
       ));
     }
 
+    // Theme 1: Big Strings, from where Turning Gears ends (inside couples, the odd numbers, on the inner
+    // tape; outside couples, the even numbers, on the outer tape). One tape is one red dot (2 half steps)
+    // along the line of dance. Measure 1: the inside couples go 1 tape and out to the ½ ring, between the
+    // two circles; the outside couples go 1 tape. Measure 2: the inside couples go 1 more tape and out to
+    // the outer tape. The outside couples go 1 tape too, so the two circles interleave into one circle of
+    // 16 (staying put, they'd be on the spots the inside couples land on). Measure 3: everyone goes 1
+    // tape on the outer tape.
+    function bigStringsSnapshots() {
+      const title = "Big Strings";
+      const start = turningGearsSnapshots().at(-1);
+      if (!start) return [];
+      const move = (item, halfSteps, ring) => {
+        const radius = RING_RADII[ring];
+        const angle = Math.atan2(CENTER.y - item.y, item.x - CENTER.x) + (halfSteps * Math.PI) / 16;
+        return {
+          ...item,
+          ring,
+          step: item.step === null ? null : wrapStep(item.step + halfSteps),
+          x: Number((CENTER.x + radius * Math.cos(angle)).toFixed(3)),
+          y: Number((CENTER.y - radius * Math.sin(angle)).toFixed(3)),
+        };
+      };
+      const inside = (item) => item.number % 2 === 1;
+      const measure1 = start.items.map((item) => move(item, 2, inside(item) ? "middle" : "outer"));
+      const measure2 = measure1.map((item) => move(item, 2, "outer"));
+      const measure3 = measure2.map((item) => move(item, 2, "outer"));
+      return [measure1, measure2, measure3].map((items, index) => (
+        { count: items.length, annotation: { title, subtitle: `Measure ${index + 1}` }, items }
+      ));
+    }
+
     // Saved configurations: ready-made stories listed in the planner and in the presenter. Each returns
     // the board snapshot for every frame, so adding one here makes it show up in both pickers.
     // Both pickers group them by `section`, in the order of PRESET_SECTIONS; Polka and Waltz hold the
@@ -4023,6 +4054,12 @@
         section: WALTZ,
         name: "5 · Theme 2: Turning Gears",
         snapshots: turningGearsSnapshots,
+      },
+      {
+        id: "waltz-big-strings",
+        section: WALTZ,
+        name: "6 · Theme 1: Big Strings",
+        snapshots: bigStringsSnapshots,
       },
     ];
 
