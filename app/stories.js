@@ -917,42 +917,42 @@ window.PLAYER_MANIFEST = {
   },
   {
    "id": "waltz-theme-1",
-   "name": "3 · Theme 1: Solo String",
+   "name": "3 · Theme 1: Solo Violin",
    "section": "Waltz",
    "frames": [
     {
      "src": "frames/waltz-theme-1/01.webp",
-     "title": "3 · Theme 1: Solo String",
+     "title": "3 · Theme 1: Solo Violin",
      "subtitle": "(8) Waltz",
      "note": ""
     },
     {
      "src": "frames/waltz-theme-1/02.webp",
-     "title": "3 · Theme 1: Solo String",
+     "title": "3 · Theme 1: Solo Violin",
      "subtitle": "Measure 1-2",
      "note": ""
     },
     {
      "src": "frames/waltz-theme-1/03.webp",
-     "title": "3 · Theme 1: Solo String",
+     "title": "3 · Theme 1: Solo Violin",
      "subtitle": "Measure 3",
      "note": ""
     },
     {
      "src": "frames/waltz-theme-1/04.webp",
-     "title": "3 · Theme 1: Solo String",
+     "title": "3 · Theme 1: Solo Violin",
      "subtitle": "Measure 4-6",
      "note": ""
     },
     {
      "src": "frames/waltz-theme-1/05.webp",
-     "title": "3 · Theme 1: Solo String",
+     "title": "3 · Theme 1: Solo Violin",
      "subtitle": "Measure 7",
      "note": ""
     },
     {
      "src": "frames/waltz-theme-1/06.webp",
-     "title": "3 · Theme 1: Solo String",
+     "title": "3 · Theme 1: Solo Violin",
      "subtitle": "Measure 8",
      "note": ""
     }
