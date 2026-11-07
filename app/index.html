@@ -275,19 +275,14 @@
       display: grid;
       gap: 8px;
     }
+    /* The frame image already shows its heading and note, so the caption is only read aloud. */
     .caption {
-      min-height: 46px;
-      text-align: center;
-    }
-    .caption .measure {
-      font-size: 20px;
-      font-weight: 700;
-      line-height: 1.25;
-    }
-    .caption .note {
-      margin-top: 2px;
-      font-size: 14px;
-      color: var(--muted);
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
     .scrub {
       display: grid;
