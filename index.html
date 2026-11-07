@@ -3811,12 +3811,15 @@
         };
       };
       const turn = (times) => start.items.map((item) => turned(item, item.number % 2 === 1 ? 4 * times : -2 * times));
+      // L and F swap sides: every couple's facing turns around, so its lead and follow halves trade places.
+      const FLIPPED = { in: "out", out: "in", cw: "ccw", ccw: "cw", north: "south", south: "north", east: "west", west: "east" };
+      const flip = (item) => ({ ...item, facingMode: FLIPPED[item.facingMode] || item.facingMode });
       // Three turns forward, then the gears turn back: Turn 4 is where Turn 2 was, Turn 5 where Turn 1
-      // was (Ariel's frames 5 and 6 repeat frames 3 and 2).
+      // was (Ariel's frames 5 and 6 repeat frames 3 and 2). From Turn 3 (frame 4) on, L and F are flipped.
       return [
         { ...start, annotation: { title, subtitle: "Start" } },
         ...[1, 2, 3, 2, 1].map((times, index) => {
-          const items = turn(times);
+          const items = index >= 2 ? turn(times).map(flip) : turn(times);
           return { count: items.length, annotation: { title, subtitle: `Turn ${index + 1}` }, items };
         }),
       ];
