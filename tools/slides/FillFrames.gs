@@ -47,8 +47,9 @@ function fillFrames(partName, deckId, options) {
       Logger.log('%s: no frames slide titled "%s"', deck.getName(), partName);
       return;
     }
-    const slideNumber = deck.getSlides().indexOf(slide) + 1;
-    Logger.log('%s, slide %s (%s):', deck.getName(), slideNumber, slide.getObjectId());
+    // getSlides() returns new wrapper objects each time, so find the slide by its id.
+    const slideNumber = deck.getSlides().map(function (s) { return s.getObjectId(); }).indexOf(slide.getObjectId()) + 1;
+    Logger.log('%s, slide %s (%s):', deck.getName(), String(slideNumber), slide.getObjectId());
     placeFrames_(deck, slide, blobs, dryRun);
   });
 }
@@ -92,7 +93,7 @@ function placeFrames_(deck, slide, blobs, dryRun) {
   }
   const cols = best.cols, size = Math.floor(best.size), rows = Math.ceil(n / cols);
   const rowGap = rows > 1 ? (H - top - M - rows * size) / (rows - 1) : 0;
-  Logger.log('  %s %s frames: %s per row, %spt squares, from y=%s', dryRun ? 'would place' : 'placing', n, cols, size, Math.round(top));
+  Logger.log('  %s %s frames: %s per row, %spt squares, from y=%s', dryRun ? 'would place' : 'placing', String(n), String(cols), String(size), String(Math.round(top)));
   if (dryRun) return;
   blobs.forEach(function (blob, i) {
     const row = Math.floor(i / cols), inRow = Math.min(cols, n - row * cols), col = i % cols;
