@@ -929,7 +929,7 @@
    "id": "waltz-big-strings",
    "name": "6 · Theme 1: Big Strings",
    "section": "Waltz",
-   "fingerprint": "1l8igs8",
+   "fingerprint": "1ivi3rt",
    "frames": [
     {
      "src": "waltz-big-strings/01.jpg",
@@ -944,6 +944,31 @@
     {
      "src": "waltz-big-strings/03.jpg",
      "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-big-strings/04.jpg",
+     "subtitle": "Measure 4",
+     "note": ""
+    },
+    {
+     "src": "waltz-big-strings/05.jpg",
+     "subtitle": "Measure 5",
+     "note": ""
+    },
+    {
+     "src": "waltz-big-strings/06.jpg",
+     "subtitle": "Measure 6",
+     "note": ""
+    },
+    {
+     "src": "waltz-big-strings/07.jpg",
+     "subtitle": "Measure 7",
+     "note": ""
+    },
+    {
+     "src": "waltz-big-strings/08.jpg",
+     "subtitle": "Measure 8",
      "note": ""
     }
    ]
