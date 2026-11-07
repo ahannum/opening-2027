@@ -881,41 +881,46 @@
    "id": "waltz-turning-gears",
    "name": "5 · Theme 2: Turning Gears",
    "section": "Waltz",
-   "fingerprint": "12sak94",
+   "fingerprint": "uuc50d",
    "frames": [
     {
      "src": "waltz-turning-gears/01.jpg",
-     "subtitle": "Start",
+     "subtitle": "Measure 1",
      "note": ""
     },
     {
      "src": "waltz-turning-gears/02.jpg",
-     "subtitle": "Turn 1",
+     "subtitle": "Measure 2",
      "note": ""
     },
     {
      "src": "waltz-turning-gears/03.jpg",
-     "subtitle": "Turn 2",
+     "subtitle": "Measure 3",
      "note": ""
     },
     {
      "src": "waltz-turning-gears/04.jpg",
-     "subtitle": "Turn 3",
+     "subtitle": "Measure 4",
      "note": ""
     },
     {
      "src": "waltz-turning-gears/05.jpg",
-     "subtitle": "Turn 4",
+     "subtitle": "Measure 5",
      "note": ""
     },
     {
      "src": "waltz-turning-gears/06.jpg",
-     "subtitle": "Turn 5",
+     "subtitle": "Measure 6",
      "note": ""
     },
     {
      "src": "waltz-turning-gears/07.jpg",
-     "subtitle": "Turn 6",
+     "subtitle": "Measure 7",
+     "note": ""
+    },
+    {
+     "src": "waltz-turning-gears/08.jpg",
+     "subtitle": "Measure 8",
      "note": ""
     }
    ]
