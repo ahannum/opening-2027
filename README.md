@@ -38,7 +38,7 @@ Parts are named the way the Ground Truth slides name sections ("5 · Hearts adri
 
 The player draws the boards itself: it loads the planner out of sight and asks it for each part's frames as SVG. So pushing a change to a routine is all it takes; phones pick it up the next time they open the app online. Each phone keeps the frames it drew, so after the first visit the player works offline, and only parts that changed are drawn again.
 
-The palette button (top right) opens **Colors & theme**: Auto / Light / Dark, and the colors of the lead and follow halves. The choice is saved on that phone. The planner's board styles live in their own `<style id="board-style">` block with color variables, which is what lets the player recolor them.
+The palette button (top right) opens **Colors, theme & size**: Auto / Light / Dark, the size of the numbers on the dots (Small to Bigger), and the colors of the lead and follow halves. The choices are saved on that phone. The planner's board styles live in their own `<style id="board-style">` block with color variables, which is what lets the player recolor them.
 
 ## Slide frames
 

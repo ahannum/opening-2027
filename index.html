@@ -715,7 +715,7 @@
   <style id="board-style">
     /* The board's look, kept apart so the phone player can draw boards with the same styles. Colors
        are variables with the planner's defaults; the player sets them for dark mode and its lead and
-       follow color choices. */
+       follow color choices. --number-scale grows or shrinks every number on the dots (default 1). */
     .guide-line,
     .guide-circle,
     .guide-box {
@@ -887,17 +887,17 @@
     }
 
     .piece text.pair-label {
-      font-size: 18px;
+      font-size: calc(18px * var(--number-scale, 1));
     }
 
     .piece text.role-mark {
-      font-size: 16px;
+      font-size: calc(16px * var(--number-scale, 1));
       font-weight: 800;
       stroke-width: 2.5;
     }
 
     .piece text.pair-half {
-      font-size: 22px;
+      font-size: calc(22px * var(--number-scale, 1));
     }
 
     .piece .pair-divider {
@@ -907,12 +907,12 @@
 
     /* A couple with L and F marks shrinks its number to leave the marks room. */
     .piece.couple.has-role-marks text:not(.role-mark) {
-      font-size: 26px;
+      font-size: calc(26px * var(--number-scale, 1));
     }
 
     .piece text {
       fill: var(--number-fill, #101416);
-      font-size: 34px;
+      font-size: calc(34px * var(--number-scale, 1));
       font-weight: 750;
       dominant-baseline: central;
       text-anchor: middle;
