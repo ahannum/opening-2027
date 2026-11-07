@@ -825,17 +825,17 @@
     }
 
     .piece text.pair-label {
-      font-size: 17px;
+      font-size: 18px;
     }
 
     .piece text.role-mark {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 800;
       stroke-width: 2.5;
     }
 
     .piece text.pair-half {
-      font-size: 19px;
+      font-size: 22px;
     }
 
     .piece .pair-divider {
@@ -845,7 +845,7 @@
 
     /* A couple with L and F marks shrinks its number to leave the marks room. */
     .piece.couple.has-role-marks text:not(.role-mark) {
-      font-size: 25px;
+      font-size: 26px;
     }
 
     .piece text {
@@ -1776,7 +1776,7 @@
       const direction = blackDirectionAngle(token);
       token.blackHalf.setAttribute("d", halfCirclePath(PIECE_RADIUS, direction));
       if (token.roleMarks) {
-        const reach = PIECE_RADIUS * 0.66;
+        const reach = PIECE_RADIUS * 0.7;
         [["lead", direction], ["follow", direction + Math.PI]].forEach(([role, angle]) => {
           token.roleMarks[role].setAttribute("x", round(reach * Math.cos(angle)));
           token.roleMarks[role].setAttribute("y", round(reach * Math.sin(angle)));
@@ -3821,16 +3821,27 @@
     const POLKA = "Polka";
     const WALTZ = "Waltz";
     const WIP = "Works in progress";
-    const PRESET_SECTIONS = [POLKA, WALTZ, WIP];
+    // Stories that run across more than one Ground Truth section, kept whole for the planner; the
+    // player only shows Polka and Waltz, where each story is one section.
+    const POLKA_RUNS = "Polka: whole runs";
+    const PRESET_SECTIONS = [POLKA, WALTZ, POLKA_RUNS, WIP];
+    // Intro and 2 Lines covers Ground Truth sections 1–4. Each section's frames start where its count
+    // does: 1 at the circle, 2 at the unfold's Measure 1, 3 at the X's Measure 1, 4 at its Measure 5.
+    function introSectionSnapshots(section) {
+      const frames = newSectionSnapshots();
+      const subtitles = frames.map((frame) => frame.annotation.subtitle);
+      const x = subtitles.indexOf(NEW_SECTION_CASCADE_END);
+      const starts = [0, subtitles.indexOf("Measure 1"), x, subtitles.indexOf("Measure 5", x), frames.length];
+      return frames.slice(starts[section - 1], starts[section]);
+    }
+    // Line to Triumphant Crossing is sections 7 and 8: its first two frames are the turn cascade (from
+    // the cascade position into the line), the rest go from the line through the X to the grid.
+    const TURN_CASCADE_FRAMES = 2;
     const STORY_PRESETS = [
-      {
-        id: "line-new",
-        section: POLKA,
-        // The section before Hearts Adrift (built as "New Section from 1 Line"; the id stays so saved
-        // stories still find it).
-        name: "1 → 4 · Intro Theme 1 → From X to circle",
-        snapshots: newSectionSnapshots,
-      },
+      { id: "intro-circle", section: POLKA, name: "1 · Intro Theme 1: circle → inside circle", snapshots: () => introSectionSnapshots(1) },
+      { id: "intro-two-lines", section: POLKA, name: "2 · Theme 1 variation: 2 lines", snapshots: () => introSectionSnapshots(2) },
+      { id: "intro-brass-x", section: POLKA, name: "3 · Big brass X", snapshots: () => introSectionSnapshots(3) },
+      { id: "intro-x-to-circle", section: POLKA, name: "4 · From X to circle", snapshots: () => introSectionSnapshots(4) },
       {
         id: "hearts-adrift",
         section: POLKA,
@@ -3843,12 +3854,8 @@
         name: "6 · Hearts adrift → turn cascade",
         snapshots: heartsAdriftToLineSnapshots,
       },
-      {
-        id: "line-to-triumphant-crossing",
-        section: POLKA,
-        name: "7 → 8 · Turn cascade → Line → X → grid prep",
-        snapshots: lineToCrossingSnapshots,
-      },
+      { id: "turn-cascade", section: POLKA, name: "7 · Turn cascade", snapshots: () => lineToCrossingSnapshots().slice(0, TURN_CASCADE_FRAMES) },
+      { id: "line-x-grid-prep", section: POLKA, name: "8 · Line → X → grid prep", snapshots: () => lineToCrossingSnapshots().slice(TURN_CASCADE_FRAMES) },
       {
         id: "triumphant-crossing",
         section: POLKA,
@@ -3935,7 +3942,8 @@
       {
         id: "pyramid-to-v",
         section: POLKA,
-        name: "11 → 12 · Unfurling pyramid → V finale",
+        // The Ground Truth puts the fast turn and the gallop to the V at the end of section 11.
+        name: "11 · Unfurling pyramid → gallop to V",
         // One frame per full measure, showing where everyone is on its beat 1: the layouts come in
         // half measures, so every other one is kept. Measure 1 is Orphan 2 (the fast turn) on the pyramid's
         // spot; every measure after it is gallops.
@@ -3951,6 +3959,20 @@
         section: POLKA,
         name: "12 · V finale",
         snapshots: finalVSnapshots,
+      },
+      {
+        id: "line-new",
+        section: POLKA_RUNS,
+        // Sections 1–4 in one story, as it was built ("New Section from 1 Line"; the id stays so saved
+        // stories still find it).
+        name: "1 → 4 · Intro Theme 1 → From X to circle",
+        snapshots: newSectionSnapshots,
+      },
+      {
+        id: "line-to-triumphant-crossing",
+        section: POLKA_RUNS,
+        name: "7 → 8 · Turn cascade → Line → X → grid prep",
+        snapshots: lineToCrossingSnapshots,
       },
       // The Waltz was saved from the planner as one storyboard file and split into its three parts;
       // their frames live in stories/waltz.js.

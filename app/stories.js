@@ -7,193 +7,214 @@ window.PLAYER_MANIFEST = {
  ],
  "stories": [
   {
-   "id": "line-new",
-   "name": "1 → 4 · Intro Theme 1 → From X to circle",
+   "id": "intro-circle",
+   "name": "1 · Intro Theme 1: circle → inside circle",
    "section": "Polka",
    "frames": [
     {
-     "src": "frames/line-new/01.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-circle/01.webp",
+     "title": "1 · Intro Theme 1: circle → inside circle",
      "subtitle": "Measure 1-2",
      "note": ""
     },
     {
-     "src": "frames/line-new/02.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-circle/02.webp",
+     "title": "1 · Intro Theme 1: circle → inside circle",
      "subtitle": "Measure 3",
      "note": ""
     },
     {
-     "src": "frames/line-new/03.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-circle/03.webp",
+     "title": "1 · Intro Theme 1: circle → inside circle",
      "subtitle": "Measure 4",
      "note": ""
     },
     {
-     "src": "frames/line-new/04.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-circle/04.webp",
+     "title": "1 · Intro Theme 1: circle → inside circle",
      "subtitle": "Measure 5-7",
      "note": ""
     },
     {
-     "src": "frames/line-new/05.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-circle/05.webp",
+     "title": "1 · Intro Theme 1: circle → inside circle",
      "subtitle": "Measure 8",
      "note": ""
-    },
+    }
+   ]
+  },
+  {
+   "id": "intro-two-lines",
+   "name": "2 · Theme 1 variation: 2 lines",
+   "section": "Polka",
+   "frames": [
     {
-     "src": "frames/line-new/06.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/01.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 1",
      "note": ""
     },
     {
-     "src": "frames/line-new/07.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/02.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 2",
      "note": ""
     },
     {
-     "src": "frames/line-new/08.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/03.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 3",
      "note": ""
     },
     {
-     "src": "frames/line-new/09.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/04.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 4-6",
      "note": ""
     },
     {
-     "src": "frames/line-new/10.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/05.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 7",
      "note": ""
     },
     {
-     "src": "frames/line-new/11.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/06.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 8",
      "note": ""
     },
     {
-     "src": "frames/line-new/12.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/07.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 9-13",
      "note": ""
     },
     {
-     "src": "frames/line-new/13.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/08.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 14",
      "note": ""
     },
     {
-     "src": "frames/line-new/14.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/09.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 15",
      "note": ""
     },
     {
-     "src": "frames/line-new/15.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/10.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 16",
      "note": ""
     },
     {
-     "src": "frames/line-new/16.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/11.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 1 Beats 1-2",
      "note": ""
     },
     {
-     "src": "frames/line-new/17.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/12.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 1 Beats 3-4",
      "note": ""
     },
     {
-     "src": "frames/line-new/18.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/13.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 2 Beats 1-2",
      "note": ""
     },
     {
-     "src": "frames/line-new/19.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/14.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 2 Beats 3-4",
      "note": ""
     },
     {
-     "src": "frames/line-new/20.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/15.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 3 Beats 1-2",
      "note": ""
     },
     {
-     "src": "frames/line-new/21.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/16.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 3 Beats 3-4",
      "note": ""
     },
     {
-     "src": "frames/line-new/22.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/17.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 4 Beats 1-2",
      "note": ""
     },
     {
-     "src": "frames/line-new/23.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-two-lines/18.webp",
+     "title": "2 · Theme 1 variation: 2 lines",
      "subtitle": "Measure 4 Beats 3-4",
      "note": ""
-    },
+    }
+   ]
+  },
+  {
+   "id": "intro-brass-x",
+   "name": "3 · Big brass X",
+   "section": "Polka",
+   "frames": [
     {
-     "src": "frames/line-new/24.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-brass-x/01.webp",
+     "title": "3 · Big brass X",
      "subtitle": "Measure 1 (X)",
      "note": ""
     },
     {
-     "src": "frames/line-new/25.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-brass-x/02.webp",
+     "title": "3 · Big brass X",
      "subtitle": "Measure 2 (X)",
      "note": ""
     },
     {
-     "src": "frames/line-new/26.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-brass-x/03.webp",
+     "title": "3 · Big brass X",
      "subtitle": "Measure 3-4",
      "note": ""
-    },
+    }
+   ]
+  },
+  {
+   "id": "intro-x-to-circle",
+   "name": "4 · From X to circle",
+   "section": "Polka",
+   "frames": [
     {
-     "src": "frames/line-new/27.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-x-to-circle/01.webp",
+     "title": "4 · From X to circle",
      "subtitle": "Measure 5",
      "note": ""
     },
     {
-     "src": "frames/line-new/28.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-x-to-circle/02.webp",
+     "title": "4 · From X to circle",
      "subtitle": "Measure 6",
      "note": ""
     },
     {
-     "src": "frames/line-new/29.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-x-to-circle/03.webp",
+     "title": "4 · From X to circle",
      "subtitle": "Measure 7-8",
      "note": "Dip cascade from 12,\ncounterclockwise:\n12 → 13 → 8 → 9 →\n4 → 5 → 10 → 3 →\n1 → 2 → 7 → 6 →\n14 → 15 → 11 → 16"
     },
     {
-     "src": "frames/line-new/30.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-x-to-circle/04.webp",
+     "title": "4 · From X to circle",
      "subtitle": "F escape 1 tape",
      "note": ""
     },
     {
-     "src": "frames/line-new/31.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
+     "src": "frames/intro-x-to-circle/05.webp",
+     "title": "4 · From X to circle",
      "subtitle": "Hearts Adrift start",
      "note": ""
     }
@@ -370,79 +391,86 @@ window.PLAYER_MANIFEST = {
    ]
   },
   {
-   "id": "line-to-triumphant-crossing",
-   "name": "7 → 8 · Turn cascade → Line → X → grid prep",
+   "id": "turn-cascade",
+   "name": "7 · Turn cascade",
    "section": "Polka",
    "frames": [
     {
-     "src": "frames/line-to-triumphant-crossing/01.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
+     "src": "frames/turn-cascade/01.webp",
+     "title": "7 · Turn cascade",
      "subtitle": "",
      "note": ""
     },
     {
-     "src": "frames/line-to-triumphant-crossing/02.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
+     "src": "frames/turn-cascade/02.webp",
+     "title": "7 · Turn cascade",
+     "subtitle": "",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "line-x-grid-prep",
+   "name": "8 · Line → X → grid prep",
+   "section": "Polka",
+   "frames": [
+    {
+     "src": "frames/line-x-grid-prep/01.webp",
+     "title": "8 · Line → X → grid prep",
      "subtitle": "",
      "note": ""
     },
     {
-     "src": "frames/line-to-triumphant-crossing/03.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
+     "src": "frames/line-x-grid-prep/02.webp",
+     "title": "8 · Line → X → grid prep",
      "subtitle": "",
      "note": ""
     },
     {
-     "src": "frames/line-to-triumphant-crossing/04.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
+     "src": "frames/line-x-grid-prep/03.webp",
+     "title": "8 · Line → X → grid prep",
      "subtitle": "",
      "note": ""
     },
     {
-     "src": "frames/line-to-triumphant-crossing/05.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
+     "src": "frames/line-x-grid-prep/04.webp",
+     "title": "8 · Line → X → grid prep",
      "subtitle": "",
      "note": ""
     },
     {
-     "src": "frames/line-to-triumphant-crossing/06.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
+     "src": "frames/line-x-grid-prep/05.webp",
+     "title": "8 · Line → X → grid prep",
      "subtitle": "",
      "note": ""
     },
     {
-     "src": "frames/line-to-triumphant-crossing/07.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
+     "src": "frames/line-x-grid-prep/06.webp",
+     "title": "8 · Line → X → grid prep",
      "subtitle": "",
      "note": ""
     },
     {
-     "src": "frames/line-to-triumphant-crossing/08.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
+     "src": "frames/line-x-grid-prep/07.webp",
+     "title": "8 · Line → X → grid prep",
      "subtitle": "",
      "note": ""
     },
     {
-     "src": "frames/line-to-triumphant-crossing/09.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
+     "src": "frames/line-x-grid-prep/08.webp",
+     "title": "8 · Line → X → grid prep",
      "subtitle": "",
      "note": ""
     },
     {
-     "src": "frames/line-to-triumphant-crossing/10.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
+     "src": "frames/line-x-grid-prep/09.webp",
+     "title": "8 · Line → X → grid prep",
      "subtitle": "",
      "note": ""
     },
     {
-     "src": "frames/line-to-triumphant-crossing/11.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
-     "subtitle": "",
-     "note": ""
-    },
-    {
-     "src": "frames/line-to-triumphant-crossing/12.webp",
-     "title": "7 → 8 · Turn cascade → Line → X → grid prep",
+     "src": "frames/line-x-grid-prep/10.webp",
+     "title": "8 · Line → X → grid prep",
      "subtitle": "",
      "note": ""
     }
@@ -639,30 +667,30 @@ window.PLAYER_MANIFEST = {
   },
   {
    "id": "pyramid-to-v",
-   "name": "11 → 12 · Unfurling pyramid → V finale",
+   "name": "11 · Unfurling pyramid → gallop to V",
    "section": "Polka",
    "frames": [
     {
      "src": "frames/pyramid-to-v/01.webp",
-     "title": "11 → 12 · Unfurling pyramid → V finale",
+     "title": "11 · Unfurling pyramid → gallop to V",
      "subtitle": "Measure 1 Orphan 2",
      "note": ""
     },
     {
      "src": "frames/pyramid-to-v/02.webp",
-     "title": "11 → 12 · Unfurling pyramid → V finale",
+     "title": "11 · Unfurling pyramid → gallop to V",
      "subtitle": "Measure 2 Gallop",
      "note": ""
     },
     {
      "src": "frames/pyramid-to-v/03.webp",
-     "title": "11 → 12 · Unfurling pyramid → V finale",
+     "title": "11 · Unfurling pyramid → gallop to V",
      "subtitle": "Measure 3 Gallop",
      "note": ""
     },
     {
      "src": "frames/pyramid-to-v/04.webp",
-     "title": "11 → 12 · Unfurling pyramid → V finale",
+     "title": "11 · Unfurling pyramid → gallop to V",
      "subtitle": "Measure 4 Gallop",
      "note": ""
     }

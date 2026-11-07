@@ -34,7 +34,7 @@ Open `index.html` in a browser.
 
 `app/` is a phone-friendly player for the finished Polka and Waltz storyboards (works in progress are left out). Open `https://ahannum.github.io/opening-2027/app/` on a phone and add it to the home screen (iPhone: Share → Add to Home Screen; Android: ⋮ → Install app). Pick a part and step through it by tapping, swiping or using the buttons. At the end of a part, Next goes on to the next one. Play steps through on its own, at a speed you choose.
 
-Parts are named the way the Ground Truth slides name sections ("5 · Hearts adrift", "11 → 12 · Unfurling pyramid → V finale"); the names are the presets' `name` in `STORY_PRESETS`.
+Parts are named the way the Ground Truth slides name sections ("5 · Hearts adrift", "8 · Line → X → grid prep"), one part per section; the names are the presets' `name` in `STORY_PRESETS`. Stories that span several sections are split for the player and kept whole in the planner under "Polka: whole runs".
 
 The frames are drawn ahead of time into `app/frames/` and `app/stories.js`, so phones only download images. After changing a routine, redraw them:
 
