@@ -4,7 +4,8 @@
  * The "Slide frames" GitHub workflow draws every Polka and Waltz part from the planner as JPEGs and
  * lists them in deck/frames.json on GitHub Pages. fillFrames() reads that list, finds the slide whose
  * header is the part's name ("5 · Theme 2: Turning Gears") and that has no table (the frames slide,
- * not its measure table), clears frames it placed before, and lays the new ones out as big as they fit:
+ * not its measure table), removes the pictures already on it below the header band (the old frames,
+ * whether placed by hand or by an earlier run), and lays the new ones out as big as they fit:
  * a 10pt page margin, 8pt gaps, equal squares, each row centered, rows spread down the page.
  *
  * Install: paste this file into an Apps Script project that can open the decks (the comparison
@@ -51,7 +52,8 @@ function framesSlide_(deck, partName) {
 }
 
 function placeFrames_(deck, slide, blobs) {
-  slide.getImages().forEach(function (image) { if (image.getDescription() === FRAMES_TAG) image.remove(); });
+  // The old frames: every picture below the header band (the band's section symbol is a drawing, not a picture).
+  slide.getImages().forEach(function (image) { if (image.getDescription() === FRAMES_TAG || image.getTop() >= 60) image.remove(); });
   const W = deck.getPageWidth(), H = deck.getPageHeight(), M = 10, G = 8;
   // Frames start under the header band and any text near the top (like the "Formation:" line).
   let top = 74;

@@ -715,7 +715,8 @@
   <style id="board-style">
     /* The board's look, kept apart so the phone player can draw boards with the same styles. Colors
        are variables with the planner's defaults; the player sets them for dark mode and its lead and
-       follow color choices. --number-scale grows or shrinks every number on the dots (default 1). */
+       follow color choices. --number-scale grows or shrinks every number on the dots and --dot-scale the dots themselves
+       (both default 1). */
     .guide-line,
     .guide-circle,
     .guide-box {
@@ -815,6 +816,10 @@
     .piece {
       cursor: grab;
       outline: none;
+    }
+
+    .piece-body {
+      scale: var(--dot-scale, 1);
     }
 
     .piece.dragging {
@@ -1641,6 +1646,10 @@
         "data-number": number,
         "data-role": role,
       });
+      // Everything drawn for the token sits in one inner group centered on it, so the phone player can
+      // make dots bigger or smaller around their own centers (--dot-scale in the board styles).
+      const body = svgElement("g", { class: "piece-body" });
+      group.append(body);
 
       const token = {
         number,
@@ -1691,13 +1700,13 @@
         });
         const text = numberText();
 
-        group.append(base, blackHalf, outline, text);
+        body.append(base, blackHalf, outline, text);
         token.blackHalf = blackHalf;
         token.text = text;
         if (roleLetters) {
           group.classList.add("has-role-marks");
           token.roleMarks = { lead: roleMark("L"), follow: roleMark("F") };
-          group.append(token.roleMarks.lead, token.roleMarks.follow);
+          body.append(token.roleMarks.lead, token.roleMarks.follow);
         }
       } else {
         const fill = svgElement("circle", {
@@ -1714,7 +1723,7 @@
         });
         const text = numberText();
 
-        group.append(fill, outline, text);
+        body.append(fill, outline, text);
         token.text = text;
         // A same role pair with role marks is split like a couple, along `facingMode`: the half
         // toward it is the pair's lead part (the label's first number), the other its follow part.
@@ -1724,12 +1733,12 @@
             const numberText = svgElement("text", { class: "pair-half" });
             numberText.textContent = number;
             const mark = roleMark(letter);
-            group.append(numberText, mark);
+            body.append(numberText, mark);
             return { numberText, mark };
           };
           text.style.display = "none";
           const divider = svgElement("line", { class: "pair-divider" });
-          group.insertBefore(divider, outline);
+          body.insertBefore(divider, outline);
           token.pairParts = { divider, lead: half(leadNumber, "L"), follow: half(followNumber, "F") };
           group.classList.add("has-role-marks");
         }
