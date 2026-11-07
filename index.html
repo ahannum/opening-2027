@@ -3847,7 +3847,7 @@
     // two circles; the outside couples go 1 tape. Measure 2: the inside couples go 1 more tape and out to
     // the outer tape. The outside couples go 1 tape too, so the two circles interleave into one circle of
     // 16 (staying put, they'd be on the spots the inside couples land on). Measure 3: everyone goes 1
-    // tape on the outer tape.
+    // tape on the outer tape. Then Measure 4 holds, 5–7 go 1 tape each, and 8 holds.
     function bigStringsSnapshots() {
       const title = "Big Strings";
       const start = turningGearsSnapshots().at(-1);
@@ -3867,7 +3867,12 @@
       const measure1 = start.items.map((item) => move(item, 2, inside(item) ? "middle" : "outer"));
       const measure2 = measure1.map((item) => move(item, 2, "outer"));
       const measure3 = measure2.map((item) => move(item, 2, "outer"));
-      return [measure1, measure2, measure3].map((items, index) => (
+      // Measure 4 holds Measure 3's spots; Measures 5–7 each go 1 tape along the line of dance on the
+      // outer tape; Measure 8 holds Measure 7's spots.
+      const measure5 = measure3.map((item) => move(item, 2, "outer"));
+      const measure6 = measure5.map((item) => move(item, 2, "outer"));
+      const measure7 = measure6.map((item) => move(item, 2, "outer"));
+      return [measure1, measure2, measure3, measure3, measure5, measure6, measure7, measure7].map((items, index) => (
         { count: items.length, annotation: { title, subtitle: `Measure ${index + 1}` }, items }
       ));
     }
