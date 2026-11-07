@@ -417,61 +417,61 @@ window.PLAYER_MANIFEST = {
     {
      "src": "frames/line-x-grid-prep/01.webp",
      "title": "8 · Line → X → grid prep",
-     "subtitle": "",
+     "subtitle": "Measure 3",
      "note": ""
     },
     {
      "src": "frames/line-x-grid-prep/02.webp",
      "title": "8 · Line → X → grid prep",
-     "subtitle": "",
+     "subtitle": "Measure 4",
      "note": ""
     },
     {
      "src": "frames/line-x-grid-prep/03.webp",
      "title": "8 · Line → X → grid prep",
-     "subtitle": "",
+     "subtitle": "Measure 5",
      "note": ""
     },
     {
      "src": "frames/line-x-grid-prep/04.webp",
      "title": "8 · Line → X → grid prep",
-     "subtitle": "",
+     "subtitle": "Measure 6",
      "note": ""
     },
     {
      "src": "frames/line-x-grid-prep/05.webp",
      "title": "8 · Line → X → grid prep",
-     "subtitle": "",
+     "subtitle": "Measure 7",
      "note": ""
     },
     {
      "src": "frames/line-x-grid-prep/06.webp",
      "title": "8 · Line → X → grid prep",
-     "subtitle": "",
+     "subtitle": "Measure 8-9",
      "note": ""
     },
     {
      "src": "frames/line-x-grid-prep/07.webp",
      "title": "8 · Line → X → grid prep",
-     "subtitle": "",
+     "subtitle": "Measure 10",
      "note": ""
     },
     {
      "src": "frames/line-x-grid-prep/08.webp",
      "title": "8 · Line → X → grid prep",
-     "subtitle": "",
+     "subtitle": "Measure 11",
      "note": ""
     },
     {
      "src": "frames/line-x-grid-prep/09.webp",
      "title": "8 · Line → X → grid prep",
-     "subtitle": "",
+     "subtitle": "Measure 12",
      "note": ""
     },
     {
      "src": "frames/line-x-grid-prep/10.webp",
      "title": "8 · Line → X → grid prep",
-     "subtitle": "",
+     "subtitle": "Measure 13-15",
      "note": ""
     }
    ]

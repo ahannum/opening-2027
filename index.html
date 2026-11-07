@@ -3085,11 +3085,17 @@
             }))
             : frame.lead.flatMap((spot, index) => [dancer(index + 1, "lead", spot), dancer(index + 1, "follow", frame.follow[index])]),
       }));
-      // The frames show the title only: the subtitles just name each frame here.
+      // The subtitles above just name each frame here. On the board, the turn cascade's two frames
+      // have no heading, and section 8 (from Gallop out on) shows its measures, as Ariel set them.
+      const section8Measures = [
+        "Measure 3", "Measure 4", "Measure 5", "Measure 6", "Measure 7",
+        "Measure 8-9", "Measure 10", "Measure 11", "Measure 12", "Measure 13-15",
+      ];
+      const heading = (index) => (index < TURN_CASCADE_FRAMES ? "" : section8Measures[index - TURN_CASCADE_FRAMES] || "");
       return [
         ...[{ subtitle: "Turn cascade", items: cascade }, { subtitle: "Line", items: line }, ...frames]
-          .map(({ items }) => ({ count: items.length, annotation: { title, subtitle: "" }, items })),
-        { ...triumphantCrossingSnapshots()[0], annotation: { title, subtitle: "" } },
+          .map(({ items }, index) => ({ count: items.length, annotation: { title, subtitle: heading(index) }, items })),
+        { ...triumphantCrossingSnapshots()[0], annotation: { title, subtitle: heading(frames.length + 2) } },
       ];
     }
 
@@ -3991,7 +3997,7 @@
       {
         id: "waltz-theme-1",
         section: WALTZ,
-        name: "3 · Theme 1: Solo String",
+        name: "3 · Theme 1: Solo Violin",
         snapshots: () => structuredClone(window.WALTZ_THEME_1_SNAPSHOTS || []),
       },
       {
