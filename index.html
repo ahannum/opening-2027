@@ -3811,11 +3811,13 @@
         };
       };
       const turn = (times) => start.items.map((item) => turned(item, item.number % 2 === 1 ? 4 * times : -2 * times));
+      // Three turns forward, then the gears turn back: Turn 4 is where Turn 2 was, Turn 5 where Turn 1
+      // was (Ariel's frames 5 and 6 repeat frames 3 and 2).
       return [
         { ...start, annotation: { title, subtitle: "Start" } },
-        ...[1, 2, 3].map((times) => {
+        ...[1, 2, 3, 2, 1].map((times, index) => {
           const items = turn(times);
-          return { count: items.length, annotation: { title, subtitle: `Turn ${times}` }, items };
+          return { count: items.length, annotation: { title, subtitle: `Turn ${index + 1}` }, items };
         }),
       ];
     }

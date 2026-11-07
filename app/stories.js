@@ -1,6 +1,6 @@
 // Made by tools/export-player.html. Redraw with: python3 tools/export_player.py
 window.PLAYER_MANIFEST = {
- "updated": "Nov 6, 2026",
+ "updated": "Nov 7, 2026",
  "sections": [
   "Polka",
   "Waltz"
@@ -1040,6 +1040,18 @@ window.PLAYER_MANIFEST = {
      "src": "frames/waltz-turning-gears/04.webp",
      "title": "5 · Theme 2: Turning Gears",
      "subtitle": "Turn 3",
+     "note": ""
+    },
+    {
+     "src": "frames/waltz-turning-gears/05.webp",
+     "title": "5 · Theme 2: Turning Gears",
+     "subtitle": "Turn 4",
+     "note": ""
+    },
+    {
+     "src": "frames/waltz-turning-gears/06.webp",
+     "title": "5 · Theme 2: Turning Gears",
+     "subtitle": "Turn 5",
      "note": ""
     }
    ]
