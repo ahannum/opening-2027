@@ -44,7 +44,7 @@ The palette button (top right) opens **Colors, theme & size**: Auto / Light / Da
 
 The **Slide frames** GitHub workflow (`.github/workflows/deck-frames.yml`) redraws every Polka and Waltz part as 1080 px JPEGs in `deck/<part id>/` whenever a routine changes, and lists them in `deck/frames.json`. They're published at `https://ahannum.github.io/opening-2027/deck/`. Only parts that changed are redrawn.
 
-To put a part's frames on its Ground Truth slide, run `fillFrames("5 · Theme 2: Turning Gears")` from `tools/slides/FillFrames.gs` in an Apps Script project that can open the decks. It finds the slide titled with that part's name (the frames slide, not its table), replaces the frames it placed before, and lays them out as large as they fit.
+To put a part's frames on its Ground Truth slide, use `tools/slides/FillFrames.gs` in an Apps Script project that can open the decks. Run `previewFrames("5 · Theme 2: Turning Gears")` first: it changes nothing and logs which slide it found, which pictures it would remove and how it would lay the frames out. Then `fillFrames(...)` does it. It finds the slide titled with that part's name that has no table (the frames slide, not its measure table) in the Polka GT and WIP decks or the public and WIP Waltz decks, removes the old frames (square pictures below the header, or ones it placed before; other pictures and all text boxes stay), and lays the new ones out as large as they fit.
 
 To redraw by hand: `python3 tools/export_deck.py`, then open <http://localhost:8010/tools/export-deck.html>.
 
