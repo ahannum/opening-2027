@@ -3824,12 +3824,12 @@
       // Turn 6 (the last frame): the inner circle (odd couples) stays put and flips L and F back; the
       // outer circle (even couples) goes 1 tape (one red dot, 2 half steps) along the line of dance.
       const last = turns.at(-1).map((item) => (item.number % 2 === 1 ? flip(item) : turned(item, 2)));
-      return [
-        { ...start, annotation: { title, subtitle: "Start" } },
-        ...[...turns, last].map((items, index) => (
-          { count: items.length, annotation: { title, subtitle: `Turn ${index + 1}` }, items }
-        )),
-      ];
+      // One frame per measure, as Ariel labeled them: the start is Measure 1, and Turn 2's spots hold for
+      // Measures 3 and 4, so the frames run Measure 1 to Measure 8.
+      const [turn1, turn2, ...rest] = [...turns, last];
+      return [start.items, turn1, turn2, turn2, ...rest].map((items, index) => (
+        { count: items.length, annotation: { title, subtitle: `Measure ${index + 1}` }, items }
+      ));
     }
 
     // Saved configurations: ready-made stories listed in the planner and in the presenter. Each returns
