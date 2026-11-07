@@ -68,137 +68,131 @@ window.PLAYER_MANIFEST = {
     {
      "src": "frames/line-new/10.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 4-6",
+     "subtitle": "Measure 7",
      "note": ""
     },
     {
      "src": "frames/line-new/11.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 7",
+     "subtitle": "Measure 8",
      "note": ""
     },
     {
      "src": "frames/line-new/12.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 8",
+     "subtitle": "Measure 9-13",
      "note": ""
     },
     {
      "src": "frames/line-new/13.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 9-13",
+     "subtitle": "Measure 14",
      "note": ""
     },
     {
      "src": "frames/line-new/14.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 14",
+     "subtitle": "Measure 15",
      "note": ""
     },
     {
      "src": "frames/line-new/15.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 15",
+     "subtitle": "Measure 16",
      "note": ""
     },
     {
      "src": "frames/line-new/16.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 16",
+     "subtitle": "Measure 1 Beats 1-2",
      "note": ""
     },
     {
      "src": "frames/line-new/17.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 1 Beats 1-2",
+     "subtitle": "Measure 1 Beats 3-4",
      "note": ""
     },
     {
      "src": "frames/line-new/18.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 1 Beats 3-4",
+     "subtitle": "Measure 2 Beats 1-2",
      "note": ""
     },
     {
      "src": "frames/line-new/19.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 2 Beats 1-2",
+     "subtitle": "Measure 2 Beats 3-4",
      "note": ""
     },
     {
      "src": "frames/line-new/20.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 2 Beats 3-4",
+     "subtitle": "Measure 3 Beats 1-2",
      "note": ""
     },
     {
      "src": "frames/line-new/21.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 3 Beats 1-2",
+     "subtitle": "Measure 3 Beats 3-4",
      "note": ""
     },
     {
      "src": "frames/line-new/22.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 3 Beats 3-4",
+     "subtitle": "Measure 4 Beats 1-2",
      "note": ""
     },
     {
      "src": "frames/line-new/23.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 4 Beats 1-2",
+     "subtitle": "Measure 4 Beats 3-4",
      "note": ""
     },
     {
      "src": "frames/line-new/24.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 4 Beats 3-4",
+     "subtitle": "Measure 1 (X)",
      "note": ""
     },
     {
      "src": "frames/line-new/25.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 1 (X)",
+     "subtitle": "Measure 2 (X)",
      "note": ""
     },
     {
      "src": "frames/line-new/26.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 2 (X)",
+     "subtitle": "Measure 3-4",
      "note": ""
     },
     {
      "src": "frames/line-new/27.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 3-4",
+     "subtitle": "Measure 5",
      "note": ""
     },
     {
      "src": "frames/line-new/28.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 5",
+     "subtitle": "Measure 6",
      "note": ""
     },
     {
      "src": "frames/line-new/29.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
-     "subtitle": "Measure 6",
-     "note": ""
-    },
-    {
-     "src": "frames/line-new/30.webp",
-     "title": "1 → 4 · Intro Theme 1 → From X to circle",
      "subtitle": "Measure 7-8",
      "note": "Dip cascade from 12,\ncounterclockwise:\n12 → 13 → 8 → 9 →\n4 → 5 → 10 → 3 →\n1 → 2 → 7 → 6 →\n14 → 15 → 11 → 16"
     },
     {
-     "src": "frames/line-new/31.webp",
+     "src": "frames/line-new/30.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
      "subtitle": "F escape 1 tape",
      "note": ""
     },
     {
-     "src": "frames/line-new/32.webp",
+     "src": "frames/line-new/31.webp",
      "title": "1 → 4 · Intro Theme 1 → From X to circle",
      "subtitle": "Hearts Adrift start",
      "note": ""
