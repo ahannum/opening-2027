@@ -347,66 +347,6 @@
       z-index: 2;
     }
 
-    .guide-line,
-    .guide-circle,
-    .guide-box {
-      fill: none;
-      stroke: #aaa49b;
-      stroke-width: 1;
-      stroke-dasharray: 1 6;
-      vector-effect: non-scaling-stroke;
-    }
-
-    .guide-circle {
-      stroke-dasharray: 2 6;
-    }
-
-    .boundary-circle {
-      stroke: #625e58;
-      stroke-width: 2.25;
-      stroke-dasharray: 4 7;
-    }
-
-    .middle-circle,
-    .center-circle {
-      stroke: #aaa49b;
-      stroke-width: 1;
-      stroke-dasharray: 2 7;
-    }
-
-    .center-circle {
-      stroke: #8e8880;
-    }
-
-    .quarter-circle {
-      stroke: #c4beb5;
-      stroke-width: 1;
-      stroke-dasharray: 1 8;
-    }
-
-    /* Reference grid: as quiet as the ¼ and ¾ rings. */
-    .reference-grid {
-      fill: none;
-      stroke: #d3cec6;
-      stroke-width: 1;
-      stroke-dasharray: 1 8;
-      vector-effect: non-scaling-stroke;
-    }
-
-    .slot-marker {
-      fill: var(--coral);
-      opacity: 0.48;
-    }
-
-    .slot-marker.tape-marker {
-      opacity: 0.62;
-    }
-
-    /* Halfway and quarter rings: still snap points, just quiet. */
-    .slot-marker.minor-marker {
-      opacity: 0.32;
-    }
-
     .range-control {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -426,42 +366,6 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .center-dot {
-      fill: var(--green);
-    }
-
-    .guest-text {
-      fill: #878178;
-      font-size: 17px;
-      text-anchor: middle;
-    }
-
-    .annotation-text {
-      fill: #2d3236;
-      font-size: 36px;
-      font-weight: 800;
-      dominant-baseline: hanging;
-      text-anchor: start;
-      paint-order: stroke;
-      stroke: var(--paper);
-      stroke-linejoin: round;
-      stroke-width: 6px;
-      pointer-events: none;
-    }
-
-    .annotation-subheading {
-      font-size: 30px;
-      font-weight: 500;
-      dominant-baseline: hanging;
-    }
-
-    .annotation-note {
-      font-size: 16px;
-      font-weight: 600;
-      dominant-baseline: auto;
-      stroke-width: 5px;
-    }
-
     .annotation-controls {
       display: grid;
       gap: 8px;
@@ -472,63 +376,6 @@
       display: grid;
       gap: 8px;
       margin: 10px 0 2px;
-    }
-
-    .piece {
-      cursor: grab;
-      outline: none;
-    }
-
-    .piece.dragging {
-      cursor: grabbing;
-    }
-
-    .piece .token-base,
-    .piece .solo-fill {
-      filter: drop-shadow(0 2px 3px rgba(31, 37, 41, 0.18));
-    }
-
-    .piece .token-base {
-      fill: #ffffff;
-    }
-
-    .piece.couple.partner-symbol .token-base {
-      fill: var(--group-color, #d9d9d8);
-    }
-
-    .piece.couple.partner-symbol .black-half {
-      display: none;
-    }
-
-    /* A colored couple shown as lead/follow keeps its color as a ring around the split. */
-    .piece.couple.lead-follow-symbol.has-group-color .outline {
-      stroke: var(--group-color);
-      stroke-width: 5;
-    }
-
-    /* Bold couples are the ones dancing on these counts. */
-    .piece.emphasized .outline {
-      stroke: #1f2529;
-      stroke-width: 4;
-    }
-
-    .piece.couple.lead-follow-symbol.has-group-color.emphasized .outline {
-      stroke: var(--group-color);
-      stroke-width: 10;
-    }
-
-    /* While some couples are bold, fade the rest so the dancing rows stand out. */
-    #pieces:has(.piece.emphasized) .piece:not(.emphasized) {
-      opacity: 0.35;
-    }
-
-    .piece .black-half,
-    .piece.lead .solo-fill {
-      fill: #050505;
-    }
-
-    .piece.follow .solo-fill {
-      fill: #ffffff;
     }
 
     .swatch-grid {
@@ -807,66 +654,6 @@
       font-size: 18px;
     }
 
-    .piece .outline {
-      fill: none;
-      stroke: #4e5358;
-      stroke-width: 1.5;
-      transition: stroke 120ms ease, stroke-width 120ms ease;
-    }
-
-    .piece.selected .outline {
-      stroke: var(--blue);
-      stroke-width: 3;
-    }
-
-    .piece.active .outline {
-      stroke: var(--coral);
-      stroke-width: 3.5;
-    }
-
-    .piece text.pair-label {
-      font-size: 18px;
-    }
-
-    .piece text.role-mark {
-      font-size: 16px;
-      font-weight: 800;
-      stroke-width: 2.5;
-    }
-
-    .piece text.pair-half {
-      font-size: 22px;
-    }
-
-    .piece .pair-divider {
-      stroke: #8a908e;
-      stroke-width: 1.5;
-    }
-
-    /* A couple with L and F marks shrinks its number to leave the marks room. */
-    .piece.couple.has-role-marks text:not(.role-mark) {
-      font-size: 26px;
-    }
-
-    .piece text {
-      fill: #101416;
-      font-size: 34px;
-      font-weight: 750;
-      dominant-baseline: central;
-      text-anchor: middle;
-      pointer-events: none;
-      paint-order: stroke;
-      stroke: #ffffff;
-      stroke-linejoin: round;
-      stroke-width: 4;
-    }
-
-    .piece.lead text {
-      fill: #ffffff;
-      stroke: #050505;
-      stroke-width: 3;
-    }
-
     @media (max-width: 760px) {
       body {
         overflow: hidden;
@@ -923,6 +710,223 @@
       .button-grid {
         grid-template-columns: 1fr;
       }
+    }
+  </style>
+  <style id="board-style">
+    /* The board's look, kept apart so the phone player can draw boards with the same styles. Colors
+       are variables with the planner's defaults; the player sets them for dark mode and its lead and
+       follow color choices. */
+    .guide-line,
+    .guide-circle,
+    .guide-box {
+      fill: none;
+      stroke: var(--board-guide, #aaa49b);
+      stroke-width: 1;
+      stroke-dasharray: 1 6;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .guide-circle {
+      stroke-dasharray: 2 6;
+    }
+
+    .boundary-circle {
+      stroke: var(--board-boundary, #625e58);
+      stroke-width: 2.25;
+      stroke-dasharray: 4 7;
+    }
+
+    .middle-circle,
+    .center-circle {
+      stroke: var(--board-guide, #aaa49b);
+      stroke-width: 1;
+      stroke-dasharray: 2 7;
+    }
+
+    .center-circle {
+      stroke: var(--board-center-ring, #8e8880);
+    }
+
+    .quarter-circle {
+      stroke: var(--board-quarter, #c4beb5);
+      stroke-width: 1;
+      stroke-dasharray: 1 8;
+    }
+
+    /* Reference grid: as quiet as the ¼ and ¾ rings. */
+    .reference-grid {
+      fill: none;
+      stroke: var(--board-grid, #d3cec6);
+      stroke-width: 1;
+      stroke-dasharray: 1 8;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .slot-marker {
+      fill: var(--board-dot, var(--coral, #d45d4f));
+      opacity: 0.48;
+    }
+
+    .slot-marker.tape-marker {
+      opacity: 0.62;
+    }
+
+    /* Halfway and quarter rings: still snap points, just quiet. */
+    .slot-marker.minor-marker {
+      opacity: 0.32;
+    }
+
+    .center-dot {
+      fill: var(--green, #307a63);
+    }
+
+    .guest-text {
+      fill: var(--board-muted, #878178);
+      font-size: 17px;
+      text-anchor: middle;
+    }
+
+    .annotation-text {
+      fill: var(--board-ink, #2d3236);
+      font-size: 36px;
+      font-weight: 800;
+      dominant-baseline: hanging;
+      text-anchor: start;
+      paint-order: stroke;
+      stroke: var(--board-bg, #ffffff);
+      stroke-linejoin: round;
+      stroke-width: 6px;
+      pointer-events: none;
+    }
+
+    .annotation-subheading {
+      font-size: 30px;
+      font-weight: 500;
+      dominant-baseline: hanging;
+    }
+
+    .annotation-note {
+      font-size: 16px;
+      font-weight: 600;
+      dominant-baseline: auto;
+      stroke-width: 5px;
+    }
+
+    .piece {
+      cursor: grab;
+      outline: none;
+    }
+
+    .piece.dragging {
+      cursor: grabbing;
+    }
+
+    .piece .token-base,
+    .piece .solo-fill {
+      filter: drop-shadow(0 2px 3px rgba(31, 37, 41, 0.18));
+    }
+
+    .piece .token-base {
+      fill: var(--follow-fill, #ffffff);
+    }
+
+    .piece.couple.partner-symbol .token-base {
+      fill: var(--group-color, #d9d9d8);
+    }
+
+    .piece.couple.partner-symbol .black-half {
+      display: none;
+    }
+
+    /* A colored couple shown as lead/follow keeps its color as a ring around the split. */
+    .piece.couple.lead-follow-symbol.has-group-color .outline {
+      stroke: var(--group-color);
+      stroke-width: 5;
+    }
+
+    /* Bold couples are the ones dancing on these counts. */
+    .piece.emphasized .outline {
+      stroke: var(--token-outline-strong, #1f2529);
+      stroke-width: 4;
+    }
+
+    .piece.couple.lead-follow-symbol.has-group-color.emphasized .outline {
+      stroke: var(--group-color);
+      stroke-width: 10;
+    }
+
+    /* While some couples are bold, fade the rest so the dancing rows stand out. */
+    #pieces:has(.piece.emphasized) .piece:not(.emphasized) {
+      opacity: 0.35;
+    }
+
+    .piece .black-half,
+    .piece.lead .solo-fill {
+      fill: var(--lead-fill, #050505);
+    }
+
+    .piece.follow .solo-fill {
+      fill: var(--follow-fill, #ffffff);
+    }
+
+    .piece .outline {
+      fill: none;
+      stroke: var(--token-outline, #4e5358);
+      stroke-width: 1.5;
+      transition: stroke 120ms ease, stroke-width 120ms ease;
+    }
+
+    .piece.selected .outline {
+      stroke: var(--blue, #2368a2);
+      stroke-width: 3;
+    }
+
+    .piece.active .outline {
+      stroke: var(--coral, #d45d4f);
+      stroke-width: 3.5;
+    }
+
+    .piece text.pair-label {
+      font-size: 18px;
+    }
+
+    .piece text.role-mark {
+      font-size: 16px;
+      font-weight: 800;
+      stroke-width: 2.5;
+    }
+
+    .piece text.pair-half {
+      font-size: 22px;
+    }
+
+    .piece .pair-divider {
+      stroke: var(--pair-divider, #8a908e);
+      stroke-width: 1.5;
+    }
+
+    /* A couple with L and F marks shrinks its number to leave the marks room. */
+    .piece.couple.has-role-marks text:not(.role-mark) {
+      font-size: 26px;
+    }
+
+    .piece text {
+      fill: var(--number-fill, #101416);
+      font-size: 34px;
+      font-weight: 750;
+      dominant-baseline: central;
+      text-anchor: middle;
+      pointer-events: none;
+      paint-order: stroke;
+      stroke: var(--number-halo, #ffffff);
+      stroke-linejoin: round;
+      stroke-width: 4;
+    }
+
+    .piece.lead text {
+      fill: var(--lead-number-fill, #ffffff);
+      stroke: var(--lead-number-halo, #050505);
+      stroke-width: 3;
     }
   </style>
 </head>
@@ -3816,12 +3820,15 @@
       const flip = (item) => ({ ...item, facingMode: FLIPPED[item.facingMode] || item.facingMode });
       // Three turns forward, then the gears turn back: Turn 4 is where Turn 2 was, Turn 5 where Turn 1
       // was (Ariel's frames 5 and 6 repeat frames 3 and 2). From Turn 3 (frame 4) on, L and F are flipped.
+      const turns = [1, 2, 3, 2, 1].map((times, index) => (index >= 2 ? turn(times).map(flip) : turn(times)));
+      // Turn 6 (the last frame): the inner circle (odd couples) stays put and flips L and F back; the
+      // outer circle (even couples) goes 1 tape (one red dot, 2 half steps) along the line of dance.
+      const last = turns.at(-1).map((item) => (item.number % 2 === 1 ? flip(item) : turned(item, 2)));
       return [
         { ...start, annotation: { title, subtitle: "Start" } },
-        ...[1, 2, 3, 2, 1].map((times, index) => {
-          const items = index >= 2 ? turn(times).map(flip) : turn(times);
-          return { count: items.length, annotation: { title, subtitle: `Turn ${index + 1}` }, items };
-        }),
+        ...[...turns, last].map((items, index) => (
+          { count: items.length, annotation: { title, subtitle: `Turn ${index + 1}` }, items }
+        )),
       ];
     }
 
@@ -4046,16 +4053,36 @@
     }
 
     // A short hash of a story's frames (plus how they're drawn), so a saved copy can tell it's out of date.
-    const PRESET_RENDER_VERSION = 3;
+    const PRESET_RENDER_VERSION = 4;
+    // The board's styles, as the phone player gets them (see the board-style block in the head).
+    const boardCss = () => document.querySelector("#board-style").textContent;
+    // Changes whenever a story's frames would look different: its name, its positions or the board's styles.
     function presetFingerprint(preset) {
-      const text = `${PRESET_RENDER_VERSION}:${preset.name}:${JSON.stringify(preset.snapshots())}`;
+      const text = `${PRESET_RENDER_VERSION}:${preset.name}:${JSON.stringify(preset.snapshots())}:${boardCss()}`;
       let hash = 2166136261;
       for (let i = 0; i < text.length; i += 1) hash = Math.imul(hash ^ text.charCodeAt(i), 16777619);
       return (hash >>> 0).toString(36);
     }
 
-    // Frames for the phone player: WebP where the browser can make it (much smaller), else JPEG.
-    async function buildPresetFrames(preset, size, onProgress = () => {}) {
+    // Frames for the phone player as SVG markup, drawn by the board itself. The player supplies the
+    // board's styles and colors, so one copy works in light and dark and with any lead/follow colors.
+    function buildPresetSvgFrames(preset) {
+      return preset.snapshots().map((snapshot) => {
+        restoreStoryboardSnapshot(snapshot);
+        const clone = svg.cloneNode(true);
+        ["id", "width", "height", "role", "aria-label", "style"].forEach((name) => clone.removeAttribute(name));
+        clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        clone.querySelectorAll(".piece").forEach((piece) => {
+          piece.classList.remove("selected", "active", "dragging");
+          piece.removeAttribute("tabindex");
+        });
+        const { subtitle = "", note = "" } = snapshot.annotation || {};
+        return { svg: clone.outerHTML, title: preset.name, subtitle, note };
+      });
+    }
+
+    // Pictures of a story's frames, for slides: JPEG by default (Google Slides takes JPEG and PNG).
+    async function buildPresetFrames(preset, size, onProgress = () => {}, type = "image/jpeg") {
       const frames = [];
       const snapshots = preset.snapshots();
       for (const snapshot of snapshots) {
@@ -4066,8 +4093,8 @@
         canvas.width = size;
         canvas.height = size;
         canvas.getContext("2d").drawImage(await createImageBitmap(png), 0, 0);
-        let blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
-        if (!blob || blob.type !== "image/webp") blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.88));
+        let blob = await new Promise((resolve) => canvas.toBlob(resolve, type, 0.88));
+        if (!blob || blob.type !== type) blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.88));
         const { subtitle = "", note = "" } = snapshot.annotation || {};
         frames.push({ blob, title: preset.name, subtitle, note });
       }
@@ -4110,12 +4137,24 @@
           } catch {}
           return;
         }
-        // The phone player (app/) asks for one story's frames as compact images it can keep offline.
+        // The phone player (app/) asks for one story's frames as SVG it can keep offline.
+        if (event.data?.type === "opening-2027-build-svg") {
+          const preset = STORY_PRESETS.find((item) => item.id === event.data.id);
+          if (!preset) return;
+          try {
+            const frames = buildPresetSvgFrames(preset);
+            window.parent.postMessage({ type: "opening-2027-svg-frames", id: preset.id, fingerprint: presetFingerprint(preset), frames }, "*");
+          } catch (error) {
+            window.parent.postMessage({ type: "opening-2027-preset-error", id: preset.id, message: error.message }, "*");
+          }
+          return;
+        }
+        // The slide exporter (tools/export-deck.html) asks for one story's frames as pictures.
         if (event.data?.type === "opening-2027-build-frames") {
           const preset = STORY_PRESETS.find((item) => item.id === event.data.id);
           if (!preset) return;
           try {
-            const frames = await buildPresetFrames(preset, event.data.size || 1440, (done, total) => {
+            const frames = await buildPresetFrames(preset, event.data.size || 1080, (done, total) => {
               window.parent.postMessage({ type: "opening-2027-frames-progress", id: preset.id, done, total }, "*");
             });
             window.parent.postMessage({ type: "opening-2027-frames", id: preset.id, fingerprint: presetFingerprint(preset), frames }, "*");
@@ -4143,6 +4182,8 @@
         // The fingerprint changes whenever a story's frames do, so the phone player knows what to redraw.
         presets: STORY_PRESETS.map((preset) => ({ id: preset.id, name: preset.name, section: preset.section, fingerprint: presetFingerprint(preset) })),
         sections: PRESET_SECTIONS,
+        boardCss: boardCss(),
+        fontFamily: getComputedStyle(svg).fontFamily,
       }, "*");
     }
 

@@ -1,0 +1,919 @@
+{
+ "base": "https://ahannum.github.io/opening-2027/deck/",
+ "stories": [
+  {
+   "id": "intro-circle",
+   "name": "1 · Intro Theme 1: circle → inside circle",
+   "section": "Polka",
+   "fingerprint": "1ni9duc",
+   "frames": [
+    {
+     "src": "intro-circle/01.jpg",
+     "subtitle": "Measure 1-2",
+     "note": ""
+    },
+    {
+     "src": "intro-circle/02.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "intro-circle/03.jpg",
+     "subtitle": "Measure 4",
+     "note": ""
+    },
+    {
+     "src": "intro-circle/04.jpg",
+     "subtitle": "Measure 5-7",
+     "note": ""
+    },
+    {
+     "src": "intro-circle/05.jpg",
+     "subtitle": "Measure 8",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "intro-two-lines",
+   "name": "2 · Theme 1 variation: 2 lines",
+   "section": "Polka",
+   "fingerprint": "14ehjqc",
+   "frames": [
+    {
+     "src": "intro-two-lines/01.jpg",
+     "subtitle": "Measure 1",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/02.jpg",
+     "subtitle": "Measure 2",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/03.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/04.jpg",
+     "subtitle": "Measure 4-6",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/05.jpg",
+     "subtitle": "Measure 7",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/06.jpg",
+     "subtitle": "Measure 8",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/07.jpg",
+     "subtitle": "Measure 9-13",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/08.jpg",
+     "subtitle": "Measure 14",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/09.jpg",
+     "subtitle": "Measure 15",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/10.jpg",
+     "subtitle": "Measure 16",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/11.jpg",
+     "subtitle": "Measure 1 Beats 1-2",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/12.jpg",
+     "subtitle": "Measure 1 Beats 3-4",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/13.jpg",
+     "subtitle": "Measure 2 Beats 1-2",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/14.jpg",
+     "subtitle": "Measure 2 Beats 3-4",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/15.jpg",
+     "subtitle": "Measure 3 Beats 1-2",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/16.jpg",
+     "subtitle": "Measure 3 Beats 3-4",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/17.jpg",
+     "subtitle": "Measure 4 Beats 1-2",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/18.jpg",
+     "subtitle": "Measure 4 Beats 3-4",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "intro-brass-x",
+   "name": "3 · Big brass X",
+   "section": "Polka",
+   "fingerprint": "1wq9kpn",
+   "frames": [
+    {
+     "src": "intro-brass-x/01.jpg",
+     "subtitle": "Measure 1 (X)",
+     "note": ""
+    },
+    {
+     "src": "intro-brass-x/02.jpg",
+     "subtitle": "Measure 2 (X)",
+     "note": ""
+    },
+    {
+     "src": "intro-brass-x/03.jpg",
+     "subtitle": "Measure 3-4",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "intro-x-to-circle",
+   "name": "4 · From X to circle",
+   "section": "Polka",
+   "fingerprint": "yur8jy",
+   "frames": [
+    {
+     "src": "intro-x-to-circle/01.jpg",
+     "subtitle": "Measure 5",
+     "note": ""
+    },
+    {
+     "src": "intro-x-to-circle/02.jpg",
+     "subtitle": "Measure 6",
+     "note": ""
+    },
+    {
+     "src": "intro-x-to-circle/03.jpg",
+     "subtitle": "Measure 7-8",
+     "note": "Dip cascade from 12,\ncounterclockwise:\n12 → 13 → 8 → 9 →\n4 → 5 → 10 → 3 →\n1 → 2 → 7 → 6 →\n14 → 15 → 11 → 16"
+    },
+    {
+     "src": "intro-x-to-circle/04.jpg",
+     "subtitle": "F escape 1 tape",
+     "note": ""
+    },
+    {
+     "src": "intro-x-to-circle/05.jpg",
+     "subtitle": "Hearts Adrift start",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "hearts-adrift",
+   "name": "5 · Hearts adrift",
+   "section": "Polka",
+   "fingerprint": "cy2m83",
+   "frames": [
+    {
+     "src": "hearts-adrift/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/02.jpg",
+     "subtitle": "Measures 1–2",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/03.jpg",
+     "subtitle": "Measures 3–4",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/04.jpg",
+     "subtitle": "Measures 5–8",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/05.jpg",
+     "subtitle": "Measures 9–10",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/06.jpg",
+     "subtitle": "Measures 11–12",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/07.jpg",
+     "subtitle": "Measure 13",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/08.jpg",
+     "subtitle": "Measure 14",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/09.jpg",
+     "subtitle": "Measure 15",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/10.jpg",
+     "subtitle": "Measure 1",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/11.jpg",
+     "subtitle": "Measure 1",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/12.jpg",
+     "subtitle": "Measure 2",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/13.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/14.jpg",
+     "subtitle": "Measure 4",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/15.jpg",
+     "subtitle": "Measure 5",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/16.jpg",
+     "subtitle": "Measures 6–8",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "hearts-adrift-to-line",
+   "name": "6 · Hearts adrift → turn cascade",
+   "section": "Polka",
+   "fingerprint": "u6gvjf",
+   "frames": [
+    {
+     "src": "hearts-adrift-to-line/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift-to-line/02.jpg",
+     "subtitle": "Measure 1: Beat 1",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift-to-line/03.jpg",
+     "subtitle": "Measure 1: Beat 2",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift-to-line/04.jpg",
+     "subtitle": "Measure 1: Beat 3",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift-to-line/05.jpg",
+     "subtitle": "Measure 1: Beat 4",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift-to-line/06.jpg",
+     "subtitle": "Measure 2: Beat 1",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift-to-line/07.jpg",
+     "subtitle": "Measure 2: Beat 2",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift-to-line/08.jpg",
+     "subtitle": "Measure 2: Beat 3",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift-to-line/09.jpg",
+     "subtitle": "Measure 2: Beat 4",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift-to-line/10.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "turn-cascade",
+   "name": "7 · Turn cascade",
+   "section": "Polka",
+   "fingerprint": "nyrxuy",
+   "frames": [
+    {
+     "src": "turn-cascade/01.jpg",
+     "subtitle": "",
+     "note": ""
+    },
+    {
+     "src": "turn-cascade/02.jpg",
+     "subtitle": "",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "line-x-grid-prep",
+   "name": "8 · Line → X → grid prep",
+   "section": "Polka",
+   "fingerprint": "17fd1gn",
+   "frames": [
+    {
+     "src": "line-x-grid-prep/01.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "line-x-grid-prep/02.jpg",
+     "subtitle": "Measure 4",
+     "note": ""
+    },
+    {
+     "src": "line-x-grid-prep/03.jpg",
+     "subtitle": "Measure 5",
+     "note": ""
+    },
+    {
+     "src": "line-x-grid-prep/04.jpg",
+     "subtitle": "Measure 6",
+     "note": ""
+    },
+    {
+     "src": "line-x-grid-prep/05.jpg",
+     "subtitle": "Measure 7",
+     "note": ""
+    },
+    {
+     "src": "line-x-grid-prep/06.jpg",
+     "subtitle": "Measure 8-9",
+     "note": ""
+    },
+    {
+     "src": "line-x-grid-prep/07.jpg",
+     "subtitle": "Measure 10",
+     "note": ""
+    },
+    {
+     "src": "line-x-grid-prep/08.jpg",
+     "subtitle": "Measure 11",
+     "note": ""
+    },
+    {
+     "src": "line-x-grid-prep/09.jpg",
+     "subtitle": "Measure 12",
+     "note": ""
+    },
+    {
+     "src": "line-x-grid-prep/10.jpg",
+     "subtitle": "Measure 13-15",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "triumphant-crossing",
+   "name": "9 · Triumphant grid crossing",
+   "section": "Polka",
+   "fingerprint": "1d8pam7",
+   "frames": [
+    {
+     "src": "triumphant-crossing/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/02.jpg",
+     "subtitle": "Measure 1: Beat 1",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/03.jpg",
+     "subtitle": "Measure 1: Beat 2",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/04.jpg",
+     "subtitle": "Measure 1: Beat 3",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/05.jpg",
+     "subtitle": "Measure 1: Beat 4",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/06.jpg",
+     "subtitle": "Measure 2: Beat 1",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/07.jpg",
+     "subtitle": "Measure 2: Beat 2",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/08.jpg",
+     "subtitle": "Measure 2: Beat 3",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/09.jpg",
+     "subtitle": "Measure 2: Beat 4",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/10.jpg",
+     "subtitle": "Measure 3: Beat 1",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/11.jpg",
+     "subtitle": "Measure 3: Beat 2",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/12.jpg",
+     "subtitle": "Measure 3: Beat 3",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/13.jpg",
+     "subtitle": "Measure 3: Beat 4",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/14.jpg",
+     "subtitle": "Measure 4: Beat 1",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/15.jpg",
+     "subtitle": "Measure 4: Beat 2",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/16.jpg",
+     "subtitle": "Measure 4: Beat 3",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/17.jpg",
+     "subtitle": "Measure 4: Beat 4",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/18.jpg",
+     "subtitle": "Measure 5: Beat 1",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/19.jpg",
+     "subtitle": "Measure 5: Beat 2",
+     "note": ""
+    },
+    {
+     "src": "triumphant-crossing/20.jpg",
+     "subtitle": "Measure 5: Beat 3",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "block-to-pyramid",
+   "name": "10 · 4×4 grid cascades → unfurling pyramid",
+   "section": "Polka",
+   "fingerprint": "177fqw2",
+   "frames": [
+    {
+     "src": "block-to-pyramid/01.jpg",
+     "subtitle": "Measure 1",
+     "note": ""
+    },
+    {
+     "src": "block-to-pyramid/02.jpg",
+     "subtitle": "Measure 2",
+     "note": ""
+    },
+    {
+     "src": "block-to-pyramid/03.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "unfurling-pyramid-v2",
+   "name": "11 · Unfurling pyramid",
+   "section": "Polka",
+   "fingerprint": "34h18d",
+   "frames": [
+    {
+     "src": "unfurling-pyramid-v2/01.jpg",
+     "subtitle": "Measure 1",
+     "note": ""
+    },
+    {
+     "src": "unfurling-pyramid-v2/02.jpg",
+     "subtitle": "Measure 2",
+     "note": ""
+    },
+    {
+     "src": "unfurling-pyramid-v2/03.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "unfurling-pyramid-v2/04.jpg",
+     "subtitle": "Measure 4",
+     "note": ""
+    },
+    {
+     "src": "unfurling-pyramid-v2/05.jpg",
+     "subtitle": "Measure 5",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "pyramid-to-v",
+   "name": "11 · Unfurling pyramid → gallop to V",
+   "section": "Polka",
+   "fingerprint": "wg6gtd",
+   "frames": [
+    {
+     "src": "pyramid-to-v/01.jpg",
+     "subtitle": "Measure 1 Orphan 2",
+     "note": ""
+    },
+    {
+     "src": "pyramid-to-v/02.jpg",
+     "subtitle": "Measure 2 Gallop",
+     "note": ""
+    },
+    {
+     "src": "pyramid-to-v/03.jpg",
+     "subtitle": "Measure 3 Gallop",
+     "note": ""
+    },
+    {
+     "src": "pyramid-to-v/04.jpg",
+     "subtitle": "Measure 4 Gallop",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "final-v",
+   "name": "12 · V finale",
+   "section": "Polka",
+   "fingerprint": "1i8cnat",
+   "frames": [
+    {
+     "src": "final-v/01.jpg",
+     "subtitle": "Measure 1 (1–2) Pause",
+     "note": ""
+    },
+    {
+     "src": "final-v/02.jpg",
+     "subtitle": "Measure 2 (1–2) Start cascade, back to front (1 and 2 and 3 and 4 and)",
+     "note": ""
+    },
+    {
+     "src": "final-v/03.jpg",
+     "subtitle": "Measure 2 (3–4) Finish cascade",
+     "note": ""
+    },
+    {
+     "src": "final-v/04.jpg",
+     "subtitle": "Measure 3 (1–2) Pinwheel prep start",
+     "note": ""
+    },
+    {
+     "src": "final-v/05.jpg",
+     "subtitle": "Measure 3 (3–4) Pinwheel prep end",
+     "note": ""
+    },
+    {
+     "src": "final-v/06.jpg",
+     "subtitle": "Measure 4 (1–2) Pinwheel ready",
+     "note": ""
+    },
+    {
+     "src": "final-v/07.jpg",
+     "subtitle": "Measure 5 (1–2) Pinwheel start, front to back (1 and 2 and 3 and 4 and)",
+     "note": ""
+    },
+    {
+     "src": "final-v/08.jpg",
+     "subtitle": "Measure 5 (3–4) Finish pinwheels",
+     "note": ""
+    },
+    {
+     "src": "final-v/09.jpg",
+     "subtitle": "Measure 6 (1–2) Start triangle prep",
+     "note": ""
+    },
+    {
+     "src": "final-v/10.jpg",
+     "subtitle": "Measure 6 (3–4) Finish triangle prep",
+     "note": ""
+    },
+    {
+     "src": "final-v/11.jpg",
+     "subtitle": "Measure 7 (1–2) Triangle ½ rotation",
+     "note": ""
+    },
+    {
+     "src": "final-v/12.jpg",
+     "subtitle": "Measure 7 (3–4) Triangle finish rotation",
+     "note": ""
+    },
+    {
+     "src": "final-v/13.jpg",
+     "subtitle": "Measure 8 (1–2) Triangle second rotation",
+     "note": ""
+    },
+    {
+     "src": "final-v/14.jpg",
+     "subtitle": "Measure 8 (3–4) Triangle end third rotation",
+     "note": ""
+    },
+    {
+     "src": "final-v/15.jpg",
+     "subtitle": "Measure 9 (1–2) Hold triangle facing Honored Guests",
+     "note": ""
+    },
+    {
+     "src": "final-v/16.jpg",
+     "subtitle": "Measure 9 (3–4) Down triangle",
+     "note": ""
+    },
+    {
+     "src": "final-v/17.jpg",
+     "subtitle": "Measure 10 (1–2) Hit dip",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-intro",
+   "name": "1 · Introduction",
+   "section": "Waltz",
+   "fingerprint": "1qo1xp9",
+   "frames": [
+    {
+     "src": "waltz-intro/01.jpg",
+     "subtitle": "Starting Positions",
+     "note": ""
+    },
+    {
+     "src": "waltz-intro/02.jpg",
+     "subtitle": "1 step, RF",
+     "note": ""
+    },
+    {
+     "src": "waltz-intro/03.jpg",
+     "subtitle": "1 step, LF",
+     "note": ""
+    },
+    {
+     "src": "waltz-intro/04.jpg",
+     "subtitle": "1 step, LF",
+     "note": ""
+    },
+    {
+     "src": "waltz-intro/05.jpg",
+     "subtitle": "1 step, LF",
+     "note": ""
+    },
+    {
+     "src": "waltz-intro/06.jpg",
+     "subtitle": "1 step, LF",
+     "note": ""
+    },
+    {
+     "src": "waltz-intro/07.jpg",
+     "subtitle": "1 step, LF",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-contraction-expansion",
+   "name": "2 · Theme 2: Contraction and Expansion",
+   "section": "Waltz",
+   "fingerprint": "1pvziw",
+   "frames": [
+    {
+     "src": "waltz-contraction-expansion/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "waltz-contraction-expansion/02.jpg",
+     "subtitle": "Measure 1",
+     "note": ""
+    },
+    {
+     "src": "waltz-contraction-expansion/03.jpg",
+     "subtitle": "Measure 2",
+     "note": ""
+    },
+    {
+     "src": "waltz-contraction-expansion/04.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-contraction-expansion/05.jpg",
+     "subtitle": "Measure 4",
+     "note": ""
+    },
+    {
+     "src": "waltz-contraction-expansion/06.jpg",
+     "subtitle": "Measure 5",
+     "note": ""
+    },
+    {
+     "src": "waltz-contraction-expansion/07.jpg",
+     "subtitle": "Measure 6",
+     "note": ""
+    },
+    {
+     "src": "waltz-contraction-expansion/08.jpg",
+     "subtitle": "Measure 7",
+     "note": ""
+    },
+    {
+     "src": "waltz-contraction-expansion/09.jpg",
+     "subtitle": "Measure 8",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-theme-1",
+   "name": "3 · Theme 1: Solo Violin",
+   "section": "Waltz",
+   "fingerprint": "1q9ryld",
+   "frames": [
+    {
+     "src": "waltz-theme-1/01.jpg",
+     "subtitle": "(8) Waltz",
+     "note": ""
+    },
+    {
+     "src": "waltz-theme-1/02.jpg",
+     "subtitle": "Measure 1-2",
+     "note": ""
+    },
+    {
+     "src": "waltz-theme-1/03.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-theme-1/04.jpg",
+     "subtitle": "Measure 4-6",
+     "note": ""
+    },
+    {
+     "src": "waltz-theme-1/05.jpg",
+     "subtitle": "Measure 7",
+     "note": ""
+    },
+    {
+     "src": "waltz-theme-1/06.jpg",
+     "subtitle": "Measure 8",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-follows-escape",
+   "name": "4 · Hijinks Skit",
+   "section": "Waltz",
+   "fingerprint": "u3aoiz",
+   "frames": [
+    {
+     "src": "waltz-follows-escape/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "waltz-follows-escape/02.jpg",
+     "subtitle": "Start (Lead and follow separated)",
+     "note": ""
+    },
+    {
+     "src": "waltz-follows-escape/03.jpg",
+     "subtitle": "Measure 1-2",
+     "note": ""
+    },
+    {
+     "src": "waltz-follows-escape/04.jpg",
+     "subtitle": "Measure 3-4",
+     "note": ""
+    },
+    {
+     "src": "waltz-follows-escape/05.jpg",
+     "subtitle": "Measure 5-6",
+     "note": ""
+    },
+    {
+     "src": "waltz-follows-escape/06.jpg",
+     "subtitle": "Measure 7",
+     "note": ""
+    },
+    {
+     "src": "waltz-follows-escape/07.jpg",
+     "subtitle": "Measure 8",
+     "note": ""
+    },
+    {
+     "src": "waltz-follows-escape/08.jpg",
+     "subtitle": "Measure 9-10",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-turning-gears",
+   "name": "5 · Theme 2: Turning Gears",
+   "section": "Waltz",
+   "fingerprint": "i9suyn",
+   "frames": [
+    {
+     "src": "waltz-turning-gears/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "waltz-turning-gears/02.jpg",
+     "subtitle": "Turn 1",
+     "note": ""
+    },
+    {
+     "src": "waltz-turning-gears/03.jpg",
+     "subtitle": "Turn 2",
+     "note": ""
+    },
+    {
+     "src": "waltz-turning-gears/04.jpg",
+     "subtitle": "Turn 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-turning-gears/05.jpg",
+     "subtitle": "Turn 4",
+     "note": ""
+    },
+    {
+     "src": "waltz-turning-gears/06.jpg",
+     "subtitle": "Turn 5",
+     "note": ""
+    }
+   ]
+  }
+ ]
+}

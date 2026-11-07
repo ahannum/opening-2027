@@ -15,6 +15,8 @@
   <meta name="theme-color" content="#f4f2ee" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#15191c" media="(prefers-color-scheme: dark)">
   <style>
+    /* Light is the default; dark follows the phone unless the Colors & theme panel picks one. The
+       --board-* variables color the drawn boards (the planner's board styles read them). */
     :root {
       --bg: #f4f2ee;
       --surface: #ffffff;
@@ -26,6 +28,18 @@
       --accent-soft: #e3edf6;
       --shadow: 0 10px 28px rgba(31, 37, 41, 0.12);
       --frame-shadow: 0 8px 24px rgba(31, 37, 41, 0.14);
+      --board-bg: #ffffff;
+      --board-ink: #2d3236;
+      --board-muted: #878178;
+      --board-guide: #aaa49b;
+      --board-boundary: #625e58;
+      --board-center-ring: #8e8880;
+      --board-quarter: #c4beb5;
+      --board-grid: #d3cec6;
+      --board-dot: #d45d4f;
+      --token-outline: #4e5358;
+      --token-outline-strong: #1f2529;
+      --pair-divider: #8a908e;
       color-scheme: light;
     }
     @media (prefers-color-scheme: dark) {
@@ -40,6 +54,18 @@
         --accent-soft: #1f3344;
         --shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
         --frame-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        --board-bg: #1c2125;
+        --board-ink: #eef0f1;
+        --board-muted: #8e979e;
+        --board-guide: #59626a;
+        --board-boundary: #a3acb3;
+        --board-center-ring: #6f787f;
+        --board-quarter: #3f474d;
+        --board-grid: #30373c;
+        --board-dot: #e2796b;
+        --token-outline: #b3bbc1;
+        --token-outline-strong: #eef0f1;
+        --pair-divider: #8a908e;
         color-scheme: dark;
       }
     }
@@ -54,6 +80,18 @@
       --accent-soft: #1f3344;
       --shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
       --frame-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      --board-bg: #1c2125;
+      --board-ink: #eef0f1;
+      --board-muted: #8e979e;
+      --board-guide: #59626a;
+      --board-boundary: #a3acb3;
+      --board-center-ring: #6f787f;
+      --board-quarter: #3f474d;
+      --board-grid: #30373c;
+      --board-dot: #e2796b;
+      --token-outline: #b3bbc1;
+      --token-outline-strong: #eef0f1;
+      --pair-divider: #8a908e;
       color-scheme: dark;
     }
 
@@ -75,6 +113,12 @@
       max-width: 720px;
       margin: 0 auto;
       padding: calc(env(safe-area-inset-top) + 20px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 28px) calc(env(safe-area-inset-left) + 16px);
+    }
+    .home-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 8px;
     }
     .home h1 {
       margin: 4px 0 2px;
@@ -153,12 +197,13 @@
     .thumb {
       width: 76px;
       height: 76px;
+      overflow: hidden;
       border-radius: 9px;
-      background: #ffffff center / cover no-repeat;
+      background: var(--board-bg);
       box-shadow: 0 0 0 1px var(--line);
       display: grid;
       place-items: center;
-      color: #9aa3aa;
+      color: var(--muted);
       font-size: 22px;
       font-weight: 700;
     }
@@ -181,6 +226,15 @@
       font-size: 13px;
       text-align: center;
       line-height: 1.5;
+    }
+
+    /* ---------- Boards: SVG from the planner, styled by its board styles ---------- */
+    .board svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: var(--board-bg);
+      font-family: var(--board-font, Inter, ui-sans-serif, system-ui, -apple-system, sans-serif);
     }
 
     /* ---------- Player ---------- */
@@ -241,16 +295,12 @@
       aspect-ratio: 1;
       border-radius: 14px;
       overflow: hidden;
-      background: #ffffff;
+      background: var(--board-bg);
       box-shadow: var(--frame-shadow);
     }
-    .frame-wrap img {
+    .frame-wrap .board {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      -webkit-user-drag: none;
       pointer-events: none;
     }
     .loading {
@@ -260,15 +310,15 @@
       place-items: center;
       align-content: center;
       gap: 12px;
-      color: #697077;
+      color: var(--muted);
       font-size: 15px;
-      background: #ffffff;
+      background: var(--board-bg);
     }
     .spinner {
       width: 30px;
       height: 30px;
-      border: 3px solid #dcd7ce;
-      border-top-color: #2368a2;
+      border: 3px solid var(--line);
+      border-top-color: var(--accent);
       border-radius: 50%;
       animation: spin 0.9s linear infinite;
     }
@@ -279,7 +329,7 @@
       display: grid;
       gap: 8px;
     }
-    /* The frame image already shows its heading and note, so the caption is only read aloud. */
+    /* The board already shows its heading and note, so the caption is only read aloud. */
     .caption {
       position: absolute;
       width: 1px;
@@ -352,6 +402,93 @@
       .controls { align-content: center; padding: 0 16px 10px 4px; }
     }
 
+    /* ---------- Colors & theme ---------- */
+    .settings {
+      width: min(440px, calc(100vw - 24px));
+      max-height: calc(100dvh - 24px);
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      color: var(--ink);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .settings::backdrop { background: rgba(0, 0, 0, 0.45); }
+    .settings form { display: grid; gap: 18px; padding: 18px 18px 16px; }
+    .settings h2 { margin: 0; font-size: 20px; }
+    .settings fieldset { margin: 0; padding: 0; border: 0; display: grid; gap: 8px; }
+    .settings legend { padding: 0; margin-bottom: 8px; font-size: 14px; font-weight: 650; color: var(--muted); }
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      padding: 4px;
+      border-radius: 12px;
+      background: var(--bg);
+    }
+    .segmented label { position: relative; }
+    .segmented input { position: absolute; opacity: 0; inset: 0; }
+    .segmented span {
+      display: grid;
+      place-items: center;
+      min-height: 40px;
+      border-radius: 9px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .segmented input:checked + span { color: var(--accent-ink); background: var(--accent); }
+    .segmented input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .color-row {
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1fr) 44px;
+      align-items: center;
+      gap: 10px;
+    }
+    .color-row .label { font-weight: 650; }
+    .swatches { display: flex; flex-wrap: wrap; gap: 6px; }
+    .swatch {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: 2px solid var(--line);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .swatch[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+    .color-row input[type="color"] {
+      width: 44px;
+      height: 36px;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+    }
+    .preview {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--board-bg);
+      color: var(--board-ink);
+      font-size: 14px;
+    }
+    .preview svg { width: 64px; height: 64px; }
+    .settings .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .settings .actions button {
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .settings .actions button.primary { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+
     /* The planner runs here, out of sight, only to draw the frames. */
     .builder {
       position: fixed;
@@ -363,11 +500,20 @@
       visibility: hidden;
     }
   </style>
+  <!-- The planner's board styles, saved from the last visit so boards draw offline too. -->
+  <style id="boardCss"></style>
 </head>
 <body>
   <main class="home" id="home">
-    <h1>Opening 2027</h1>
-    <p class="sub">Viennese Ball Opening Waltz / Polka Choreo</p>
+    <div class="home-head">
+      <div>
+        <h1>Opening 2027</h1>
+        <p class="sub">Viennese Ball Opening Waltz / Polka Choreo</p>
+      </div>
+      <button type="button" class="icon-btn settings-btn" aria-label="Colors and theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.7 1.8-1.6 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5C21 6.4 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.3" fill="currentColor"/><circle cx="10" cy="7" r="1.3" fill="currentColor"/><circle cx="14.5" cy="7" r="1.3" fill="currentColor"/></svg>
+      </button>
+    </div>
     <div class="tabs" role="tablist" aria-label="Dance">
       <button type="button" role="tab" data-section="Polka" aria-selected="true">Polka</button>
       <button type="button" role="tab" data-section="Waltz" aria-selected="false">Waltz</button>
@@ -389,12 +535,14 @@
         <div class="story" id="storyTitle"></div>
         <div class="part" id="storyPart"></div>
       </div>
-      <span></span>
+      <button type="button" class="icon-btn settings-btn" aria-label="Colors and theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.7 1.8-1.6 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5C21 6.4 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.3" fill="currentColor"/><circle cx="10" cy="7" r="1.3" fill="currentColor"/><circle cx="14.5" cy="7" r="1.3" fill="currentColor"/></svg>
+      </button>
     </header>
 
     <div class="stage" id="stage">
       <div class="frame-wrap">
-        <img id="frameImg" alt="">
+        <div class="board" id="board" role="img" aria-label=""></div>
         <div class="loading" id="loading" hidden>
           <div class="spinner" aria-hidden="true"></div>
           <div id="loadingText">Drawing frames…</div>
@@ -430,37 +578,158 @@
     </div>
   </section>
 
+  <dialog class="settings" id="settings" aria-labelledby="settingsTitle">
+    <form method="dialog">
+      <h2 id="settingsTitle">Colors &amp; theme</h2>
+      <fieldset>
+        <legend>Theme</legend>
+        <div class="segmented">
+          <label><input type="radio" name="theme" value="auto"><span>Auto</span></label>
+          <label><input type="radio" name="theme" value="light"><span>Light</span></label>
+          <label><input type="radio" name="theme" value="dark"><span>Dark</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Dancer colors</legend>
+        <div class="color-row">
+          <span class="label">Leads</span>
+          <div class="swatches" data-role="lead"></div>
+          <input type="color" id="leadColor" aria-label="Custom lead color">
+        </div>
+        <div class="color-row">
+          <span class="label">Follows</span>
+          <div class="swatches" data-role="follow"></div>
+          <input type="color" id="followColor" aria-label="Custom follow color">
+        </div>
+      </fieldset>
+      <div class="preview">
+        <svg viewBox="-26 -26 52 52" aria-hidden="true">
+          <circle r="23" fill="var(--follow-fill)"/>
+          <path d="M 0 -23 A 23 23 0 0 0 0 23 Z" fill="var(--lead-fill)"/>
+          <circle r="23" fill="none" stroke="var(--token-outline)" stroke-width="1.5"/>
+          <text y="1" text-anchor="middle" dominant-baseline="central" font-size="30" font-weight="750" fill="var(--number-fill)" stroke="var(--number-halo)" stroke-width="4" paint-order="stroke">7</text>
+        </svg>
+        <span>Lead half on the left, follow half on the right. Saved on this device.</span>
+      </div>
+      <div class="actions">
+        <button type="button" id="resetColors">Reset</button>
+        <button type="submit" class="primary">Done</button>
+      </div>
+    </form>
+  </dialog>
+
   <iframe id="builder" class="builder" title="Frame builder" aria-hidden="true" tabindex="-1"></iframe>
 
-  <!-- Pre-drawn frames (tools/export-player.html makes it). Without it the player draws them itself. -->
-  <script src="stories.js"></script>
   <script>
     // Only the finished routines show here; works in progress stay in the planner.
     const SECTIONS = ["Polka", "Waltz"];
-    const FRAME_SIZE = 1440;
     const SPEEDS = [1000, 1500, 2500, 4000];
-
-    // A shared copy of the player (one page plus its frame images, no planner) sets PLAYER_MANIFEST
-    // before this script: the list of stories and their pre-drawn frames.
-    const STATIC = window.PLAYER_MANIFEST || null;
 
     const $ = (selector) => document.querySelector(selector);
     const home = $("#home");
     const player = $("#player");
     const list = $("#list");
     const statusEl = $("#status");
-    const frameImg = $("#frameImg");
+    const board = $("#board");
     const loading = $("#loading");
     const scrubber = $("#scrubber");
     const builder = $("#builder");
+    const store = {
+      get(key, fallback) { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } },
+      set(key, value) { try { localStorage.setItem(key, value); } catch {} },
+    };
+
+    // ---------- Colors & theme (saved on this device) ----------
+    const LEAD_SWATCHES = ["#050505", "#1f4e8c", "#8a1c2b", "#1d6b4f", "#5b2a86", "#c25a00"];
+    const FOLLOW_SWATCHES = ["#ffffff", "#f6c1d1", "#ffd966", "#bfe3ff", "#c8f0c4", "#e2d4ff"];
+    const DEFAULT_COLORS = { lead: "#050505", follow: "#ffffff" };
+    const themeMetaColors = { light: "#f4f2ee", dark: "#15191c" };
+
+    // Text over a fill needs the opposite brightness to stay readable.
+    function isDark(hex) {
+      const n = parseInt(hex.slice(1), 16);
+      const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => {
+        const c = v / 255;
+        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.25;
+    }
+
+    function applyLook() {
+      const theme = store.get("theme", "auto");
+      const lead = store.get("leadColor", DEFAULT_COLORS.lead);
+      const follow = store.get("followColor", DEFAULT_COLORS.follow);
+      const root = document.documentElement;
+      if (theme === "auto") root.removeAttribute("data-theme");
+      else root.setAttribute("data-theme", theme);
+      root.style.setProperty("--lead-fill", lead);
+      root.style.setProperty("--follow-fill", follow);
+      // A lead's own number (lone leads) reads in white on a dark lead color, dark on a light one.
+      root.style.setProperty("--lead-number-fill", isDark(lead) ? "#ffffff" : "#101416");
+      root.style.setProperty("--lead-number-halo", isDark(lead) ? "#050505" : "#ffffff");
+      const dark = theme === "dark" || (theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+        meta.setAttribute("content", themeMetaColors[dark ? "dark" : "light"]);
+      });
+      syncSettingsForm();
+    }
+
+    function syncSettingsForm() {
+      const theme = store.get("theme", "auto");
+      document.querySelectorAll('input[name="theme"]').forEach((input) => { input.checked = input.value === theme; });
+      for (const role of ["lead", "follow"]) {
+        const color = store.get(`${role}Color`, DEFAULT_COLORS[role]);
+        $(`#${role}Color`).value = color;
+        document.querySelectorAll(`.swatches[data-role="${role}"] .swatch`).forEach((swatch) => {
+          swatch.setAttribute("aria-pressed", String(swatch.dataset.color === color));
+        });
+      }
+    }
+
+    function buildSwatches() {
+      for (const [role, colors] of [["lead", LEAD_SWATCHES], ["follow", FOLLOW_SWATCHES]]) {
+        const row = $(`.swatches[data-role="${role}"]`);
+        row.replaceChildren(...colors.map((color) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "swatch";
+          button.dataset.color = color;
+          button.style.background = color;
+          button.setAttribute("aria-label", `${role === "lead" ? "Lead" : "Follow"} color ${color}`);
+          button.addEventListener("click", () => { store.set(`${role}Color`, color); applyLook(); });
+          return button;
+        }));
+        $(`#${role}Color`).addEventListener("input", (event) => { store.set(`${role}Color`, event.target.value); applyLook(); });
+      }
+    }
+    buildSwatches();
+    document.querySelectorAll('input[name="theme"]').forEach((input) => input.addEventListener("change", () => {
+      store.set("theme", input.value);
+      applyLook();
+    }));
+    $("#resetColors").addEventListener("click", () => {
+      store.set("leadColor", DEFAULT_COLORS.lead);
+      store.set("followColor", DEFAULT_COLORS.follow);
+      store.set("theme", "auto");
+      applyLook();
+    });
+    document.querySelectorAll(".settings-btn").forEach((button) => button.addEventListener("click", () => {
+      stopPlay();
+      $("#settings").showModal();
+    }));
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyLook);
+    applyLook();
 
     // ---------- Saved frames (IndexedDB), so stories open instantly and work offline ----------
     const dbReady = new Promise((resolve) => {
       try {
-        const request = indexedDB.open("opening-2027-player", 1);
+        const request = indexedDB.open("opening-2027-player", 2);
         request.onupgradeneeded = () => {
-          request.result.createObjectStore("stories", { keyPath: "id" });
-          request.result.createObjectStore("meta");
+          const db = request.result;
+          // Version 1 kept pictures; boards are SVG now, so start the saved stories over.
+          if (db.objectStoreNames.contains("stories")) db.deleteObjectStore("stories");
+          if (!db.objectStoreNames.contains("meta")) db.createObjectStore("meta");
+          db.createObjectStore("stories", { keyPath: "id" });
         };
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => resolve(null);
@@ -468,41 +737,45 @@
         resolve(null);
       }
     });
-    async function dbGet(store, key) {
+    async function dbGet(name, key) {
       const db = await dbReady;
       if (!db) return undefined;
       return new Promise((resolve) => {
-        const request = db.transaction(store).objectStore(store).get(key);
+        const request = db.transaction(name).objectStore(name).get(key);
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => resolve(undefined);
       });
     }
-    async function dbPut(store, value, key) {
+    async function dbPut(name, value, key) {
       const db = await dbReady;
       if (!db) return;
       return new Promise((resolve) => {
-        const tx = db.transaction(store, "readwrite");
-        key === undefined ? tx.objectStore(store).put(value) : tx.objectStore(store).put(value, key);
+        const tx = db.transaction(name, "readwrite");
+        key === undefined ? tx.objectStore(name).put(value) : tx.objectStore(name).put(value, key);
         tx.oncomplete = tx.onerror = () => resolve();
       });
     }
 
+    function useBoardStyles({ css, fontFamily }) {
+      if (css) $("#boardCss").textContent = css;
+      if (fontFamily) document.documentElement.style.setProperty("--board-font", fontFamily);
+    }
+
     // ---------- State ----------
     let stories = [];            // [{ id, name, section, fingerprint }]
-    const framesById = new Map(); // id -> [{ blob, title, subtitle, note }] (current versions only)
-    const thumbUrls = new Map();
-    let section = "Polka";
-    let current = null;          // { ids: [...], storyIndex, frameIndex, urls: [] }
+    const framesById = new Map(); // id -> [{ svg, title, subtitle, note }] (current versions only)
+    let section = SECTIONS.includes(store.get("section")) ? store.get("section") : "Polka";
+    let current = null;          // { section, ids, storyIndex, frameIndex, frames }
     let playTimer = null;
-    let speedIndex = 1;
-    try { speedIndex = Math.min(Math.max(Number(localStorage.getItem("speedIndex") ?? 1), 0), SPEEDS.length - 1); } catch {}
-    try { if (SECTIONS.includes(localStorage.getItem("section"))) section = localStorage.getItem("section"); } catch {}
+    let speedIndex = Math.min(Math.max(Number(store.get("speedIndex", 1)) || 0, 0), SPEEDS.length - 1);
 
-    // ---------- Builder: the planner, hidden, draws frames one story at a time ----------
+    // ---------- Builder: the planner, hidden, draws every story's boards ----------
+    // It always comes fresh from the site, so a pushed change to a routine shows up on the next visit.
     let builderReady = false;
     const buildQueue = [];
     const waiting = new Map();   // id -> [resolve]
     let building = null;
+    let buildStarted = 0;
 
     function requestBuild(id, urgent = false) {
       if (framesById.has(id)) return Promise.resolve(framesById.get(id));
@@ -519,29 +792,26 @@
       return promise;
     }
 
-    let lastProgress = 0;
     function pumpBuilds() {
       if (!builderReady || building || !buildQueue.length) return;
       building = buildQueue.shift();
-      lastProgress = Date.now();
-      builder.contentWindow.postMessage({ type: "opening-2027-build-frames", id: building, size: FRAME_SIZE }, "*");
+      buildStarted = Date.now();
+      builder.contentWindow.postMessage({ type: "opening-2027-build-svg", id: building }, "*");
     }
 
-    // A fresh copy of the planner every time, so frames never come from a stale cached page.
     function loadBuilder() {
       builderReady = false;
       builder.src = `../index.html?builder=${Date.now()}`;
     }
 
-    // Phones pause pages in the background, and a drawing can stall partway. If a story makes no
-    // progress for a while (with the app on screen), reload the planner and pick up where it left off.
+    // If the planner stops answering (a phone paused it in the background), reload it and carry on.
     setInterval(() => {
-      if (!building || document.hidden || Date.now() - lastProgress < 20000) return;
+      if (!building || document.hidden || Date.now() - buildStarted < 15000) return;
       buildQueue.unshift(building);
       building = null;
       loadBuilder();
     }, 5000);
-    document.addEventListener("visibilitychange", () => { if (!document.hidden) lastProgress = Date.now(); });
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) buildStarted = Date.now(); });
 
     function finishBuild(id, frames) {
       if (frames) framesById.set(id, frames);
@@ -558,22 +828,19 @@
       const data = event.data || {};
       if (data.type === "opening-2027-presets") {
         builderReady = true;
+        const look = { css: data.boardCss, fontFamily: data.fontFamily };
+        useBoardStyles(look);
+        dbPut("meta", look, "boardStyles");
         const fresh = (data.presets || []).filter((preset) => SECTIONS.includes(preset.section));
         await useStoryList(fresh);
         dbPut("meta", fresh, "list");
         // Draw everything that isn't saved yet, so the whole routine works offline afterwards.
         for (const story of stories) if (!framesById.has(story.id)) requestBuild(story.id);
         pumpBuilds();
-      } else if (data.type === "opening-2027-frames-progress") {
-        lastProgress = Date.now();
-        if (current && current.ids[current.storyIndex] === data.id && !current.frames) {
-          $("#loadingText").textContent = `Drawing frames… ${data.done} of ${data.total}`;
-        }
-      } else if (data.type === "opening-2027-frames") {
+      } else if (data.type === "opening-2027-svg-frames") {
         const story = stories.find((item) => item.id === data.id);
-        const record = { id: data.id, fingerprint: data.fingerprint, frames: data.frames };
         if (story) story.fingerprint = data.fingerprint;
-        await dbPut("stories", record);
+        await dbPut("stories", { id: data.id, fingerprint: data.fingerprint, frames: data.frames });
         finishBuild(data.id, data.frames);
       } else if (data.type === "opening-2027-preset-error") {
         console.error("Could not draw", data.id, data.message);
@@ -581,47 +848,39 @@
       }
     });
 
-    if (STATIC) {
-      builder.remove();
-      stories = STATIC.stories.filter((story) => SECTIONS.includes(story.section))
-        .map(({ id, name, section }) => ({ id, name, section }));
-      for (const story of STATIC.stories) framesById.set(story.id, story.frames);
-    } else {
-      loadBuilder();
-    }
-
-    async function useStoryList(list) {
-      stories = list;
+    async function useStoryList(fresh) {
+      stories = fresh;
       for (const story of stories) {
-        if (framesById.has(story.id)) continue;
         const saved = await dbGet("stories", story.id);
+        const have = framesById.get(story.id);
         if (saved && saved.fingerprint === story.fingerprint && saved.frames?.length) {
-          framesById.set(story.id, saved.frames);
+          if (!have) framesById.set(story.id, saved.frames);
+        } else {
+          // Not saved, or the planner changed it since: draw it again.
+          framesById.delete(story.id);
         }
       }
-      // Drop saved frames that no longer match (the planner changed them).
-      for (const [id] of framesById) {
-        const story = stories.find((item) => item.id === id);
-        if (!story) framesById.delete(id);
-      }
+      for (const [id] of framesById) if (!stories.some((story) => story.id === id)) framesById.delete(id);
       renderList();
       if (current) syncPlayerAfterListChange();
-      else routeFromHash();
+      else showFromRoute();
     }
 
-    // Offline (or before the planner answers): use what was saved last time.
-    if (!STATIC) (async () => {
-      const saved = await dbGet("meta", "list");
-      if (saved && !stories.length) {
-        stories = saved;
+    // Before the planner answers (or offline): show what was saved last time.
+    (async () => {
+      const [savedList, look] = await Promise.all([dbGet("meta", "list"), dbGet("meta", "boardStyles")]);
+      if (look && !builderReady) useBoardStyles(look);
+      if (savedList && !stories.length) {
+        stories = savedList;
         for (const story of stories) {
           const record = await dbGet("stories", story.id);
-          if (record?.frames?.length) framesById.set(story.id, record.frames);
+          if (record?.frames?.length && record.fingerprint === story.fingerprint) framesById.set(story.id, record.frames);
         }
         renderList();
-        routeFromHash();
+        showFromRoute();
       }
     })();
+    loadBuilder();
     setTimeout(() => { if (!builderReady) renderStatus(); }, 8000);
 
     // ---------- Home list ----------
@@ -633,12 +892,9 @@
       const frames = framesById.get(id);
       const card = list.querySelector(`[data-id="${CSS.escape(id)}"]`);
       if (!frames || !card) return;
-      if (thumbUrls.has(id)) revokeUrls([thumbUrls.get(id)]);
-      const url = frameUrl(frames[0]);
-      thumbUrls.set(id, url);
       const thumb = card.querySelector(".thumb");
-      thumb.style.backgroundImage = `url("${url}")`;
-      thumb.textContent = "";
+      thumb.classList.add("board");
+      thumb.innerHTML = frames[0].svg;
       card.querySelector(".meta").textContent = `${frames.length} frame${frames.length === 1 ? "" : "s"}`;
     }
 
@@ -651,7 +907,7 @@
         button.type = "button";
         button.className = "card";
         button.dataset.id = story.id;
-        button.innerHTML = `<span class="thumb">${i + 1}</span><span><span class="name"></span><span class="meta">Not drawn yet</span></span><span class="chev" aria-hidden="true">›</span>`;
+        button.innerHTML = `<span class="thumb" aria-hidden="true">${i + 1}</span><span><span class="name"></span><span class="meta">Not drawn yet</span></span><span class="chev" aria-hidden="true">›</span>`;
         button.querySelector(".name").textContent = story.name;
         button.addEventListener("click", () => openStory(section, i, 0));
         li.append(button);
@@ -665,10 +921,6 @@
     }
 
     function renderStatus() {
-      if (STATIC) {
-        statusEl.textContent = STATIC.updated ? `Frames drawn ${STATIC.updated}` : "";
-        return;
-      }
       if (!stories.length) {
         statusEl.textContent = navigator.onLine === false
           ? "You're offline. Open the app once while online to save the storyboards."
@@ -676,14 +928,15 @@
         return;
       }
       const missing = stories.filter((story) => !framesById.has(story.id)).length;
-      if (missing && builderReady) statusEl.textContent = `Drawing frames… ${stories.length - missing} of ${stories.length} storyboards ready`;
+      if (missing && builderReady) statusEl.textContent = `Drawing… ${stories.length - missing} of ${stories.length} storyboards ready`;
       else if (missing) statusEl.textContent = `${stories.length - missing} of ${stories.length} storyboards saved on this device. Connect to draw the rest.`;
-      else statusEl.textContent = "All storyboards are saved on this device and work offline.";
+      else if (builderReady) statusEl.textContent = "Up to date with the planner. Everything is saved on this device for offline use.";
+      else statusEl.textContent = "Saved on this device. Connect to check for changes.";
     }
 
     document.querySelectorAll(".tabs button").forEach((tab) => tab.addEventListener("click", () => {
       section = tab.dataset.section;
-      try { localStorage.setItem("section", section); } catch {}
+      store.set("section", section);
       renderList();
     }));
     $("#playAll").addEventListener("click", () => openStory(section, 0, 0));
@@ -704,7 +957,6 @@
       else location.hash = hash;
     }
 
-    function routeFromHash() { showFromRoute(); }
     window.addEventListener("hashchange", showFromRoute);
 
     let routeToken = 0;
@@ -721,8 +973,7 @@
       const isNewStory = !current || current.ids[current.storyIndex] !== id;
       if (isNewStory) {
         // Play keeps going into the next part, so a new story doesn't stop it.
-        if (current) revokeUrls(current.urls);
-        current = { section: story.section, ids, storyIndex, frameIndex: pendingFrame, urls: [], frames: null };
+        current = { section: story.section, ids, storyIndex, frameIndex: pendingFrame, frames: null };
         pendingFrame = 0;
       }
       current.ids = ids;
@@ -735,7 +986,7 @@
 
       if (!current.frames) {
         loading.hidden = false;
-        frameImg.removeAttribute("src");
+        board.replaceChildren();
         $("#loadingText").textContent = builderReady || navigator.onLine !== false ? "Drawing frames…" : "Not saved on this device yet";
         setCaption("", "");
         setControlsEnabled(false);
@@ -746,33 +997,17 @@
           return;
         }
         current.frames = frames;
-        current.urls = frames.map(frameUrl);
-        // Warm the next story so "Next part" is instant.
-        if (ids[storyIndex + 1]) {
-          if (STATIC) new Image().src = framesById.get(ids[storyIndex + 1])[0].src;
-          else requestBuild(ids[storyIndex + 1], true);
-        }
+        if (ids[storyIndex + 1]) requestBuild(ids[storyIndex + 1], true);
       }
       loading.hidden = true;
       current.frameIndex = Math.min(Math.max(current.frameIndex, 0), current.frames.length - 1);
       showFrame();
     }
 
-    // Frames come either as saved images (blobs, drawn on this phone) or as image files next to the page.
-    function frameUrl(frame) {
-      return frame.src || URL.createObjectURL(frame.blob);
-    }
-    function revokeUrls(urls) {
-      urls.forEach((url) => { if (url.startsWith("blob:")) URL.revokeObjectURL(url); });
-    }
-
     function syncPlayerAfterListChange() {
       // A story changed under the open player: reload it from the fresh frames.
       const id = current.ids[current.storyIndex];
-      if (current.frames && framesById.get(id) !== current.frames) {
-        revokeUrls(current.urls);
-        current.frames = null;
-      }
+      if (current.frames && framesById.get(id) !== current.frames) current.frames = null;
       showFromRoute();
     }
 
@@ -787,10 +1022,10 @@
     }
 
     function showFrame() {
-      const { frames, frameIndex, urls, ids, storyIndex } = current;
+      const { frames, frameIndex, ids, storyIndex } = current;
       const frame = frames[frameIndex];
-      frameImg.src = urls[frameIndex];
-      frameImg.alt = `${frame.title} — ${frame.subtitle}`;
+      board.innerHTML = frame.svg;
+      board.setAttribute("aria-label", `${frame.title} — ${frame.subtitle || `frame ${frameIndex + 1}`}`);
       setCaption(frame.subtitle || `Frame ${frameIndex + 1}`, frame.note || "");
       scrubber.max = String(frames.length);
       scrubber.value = String(frameIndex + 1);
@@ -803,8 +1038,6 @@
       $("#prevBtn").disabled = atStart;
       $("#nextBtn").disabled = atEnd && !hasNextStory;
       $("#nextLabel").textContent = atEnd && hasNextStory ? "Next part" : "Next";
-      // Preload neighbours so stepping never flashes.
-      [frameIndex + 1, frameIndex + 2].forEach((i) => { if (urls[i]) new Image().src = urls[i]; });
     }
 
     function go(delta) {
@@ -819,8 +1052,7 @@
       }
       if (target < 0) {
         if (current.storyIndex > 0) {
-          const previousId = current.ids[current.storyIndex - 1];
-          const previousFrames = framesById.get(previousId);
+          const previousFrames = framesById.get(current.ids[current.storyIndex - 1]);
           // Step back onto the previous part's last frame.
           openStory(current.section, current.storyIndex - 1, previousFrames ? previousFrames.length - 1 : 0, true);
           return true;
@@ -839,7 +1071,6 @@
       home.hidden = false;
       document.title = "Opening 2027";
       if (current) {
-        revokeUrls(current.urls);
         const story = stories.find((item) => item.id === current.ids[current.storyIndex]);
         if (story && story.section !== section) {
           section = story.section;
@@ -885,7 +1116,7 @@
     $("#playBtn").addEventListener("click", () => (playTimer ? stopPlay() : startPlay()));
     $("#speedBtn").addEventListener("click", () => {
       speedIndex = (speedIndex + 1) % SPEEDS.length;
-      try { localStorage.setItem("speedIndex", String(speedIndex)); } catch {}
+      store.set("speedIndex", String(speedIndex));
       renderSpeed();
       if (playTimer) startPlay();
     });
@@ -899,7 +1130,7 @@
     // Swipe left/right on the frame, or tap its right or left side.
     const stage = $("#stage");
     let touchStart = null;
-    stage.addEventListener("pointerdown", (event) => { touchStart = { x: event.clientX, y: event.clientY, t: Date.now() }; });
+    stage.addEventListener("pointerdown", (event) => { touchStart = { x: event.clientX, y: event.clientY }; });
     stage.addEventListener("pointerup", (event) => {
       if (!touchStart) return;
       const dx = event.clientX - touchStart.x;
@@ -916,7 +1147,7 @@
     stage.addEventListener("pointercancel", () => { touchStart = null; });
 
     document.addEventListener("keydown", (event) => {
-      if (player.hidden || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (player.hidden || $("#settings").open || event.metaKey || event.ctrlKey || event.altKey) return;
       const actions = {
         ArrowRight: () => go(1), ArrowDown: () => go(1), PageDown: () => go(1), " ": () => go(1),
         ArrowLeft: () => go(-1), ArrowUp: () => go(-1), PageUp: () => go(-1),
@@ -933,18 +1164,6 @@
     window.addEventListener("online", renderStatus);
     window.addEventListener("offline", renderStatus);
 
-    if (STATIC) {
-      renderList();
-      routeFromHash();
-      // Fetch every frame once in the background, so the whole routine works offline afterwards.
-      setTimeout(async () => {
-        for (const story of STATIC.stories) {
-          for (const frame of story.frames) {
-            try { await fetch(frame.src); } catch { return; }
-          }
-        }
-      }, 2500);
-    }
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
       navigator.serviceWorker.register("sw.js").catch(() => {});
     }

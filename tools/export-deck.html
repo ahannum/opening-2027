@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Export Slide Frames</title>
+  <style>
+    body { margin: 0; padding: 24px 16px; font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif; color: #1f2529; background: #f4f2ee; }
+    main { max-width: 640px; margin: 0 auto; }
+    h1 { font-size: 22px; margin: 0 0 8px; }
+    button { min-height: 44px; padding: 0 18px; border: 0; border-radius: 8px; color: #fff; background: #2368a2; font: inherit; cursor: pointer; }
+    button:disabled { opacity: 0.5; }
+    ol { padding-left: 22px; }
+    .done { color: #2f7a4f; }
+    .builder { position: fixed; left: -10000px; top: 0; width: 1280px; height: 900px; border: 0; visibility: hidden; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Export slide frames</h1>
+    <p>Draws every Polka and Waltz part with the planner as 1080 px JPEGs in <code>deck/&lt;part id&gt;/</code>, with a list of them in <code>deck/frames.json</code>, for Google Slides. Only parts that changed are redrawn. The GitHub workflow runs this on every push; run it by hand with <code>python3 tools/export_deck.py</code>.</p>
+    <button id="go" type="button" disabled>Loading planner…</button>
+    <p id="status"></p>
+    <ol id="log"></ol>
+  </main>
+  <iframe id="builder" class="builder" title="Planner" aria-hidden="true"></iframe>
+  <script>
+    const SECTIONS = ["Polka", "Waltz"];
+    const SIZE = 1080;
+    const auto = new URLSearchParams(location.search).has("auto");
+    const go = document.querySelector("#go");
+    const statusEl = document.querySelector("#status");
+    const log = document.querySelector("#log");
+    const builder = document.querySelector("#builder");
+    builder.src = `../index.html?builder=${Date.now()}`;
+    let presets = [];
+    let waiting = null;
+
+    window.addEventListener("message", (event) => {
+      if (event.source !== builder.contentWindow) return;
+      const data = event.data || {};
+      if (data.type === "opening-2027-presets") {
+        presets = data.presets.filter((preset) => SECTIONS.includes(preset.section));
+        go.disabled = false;
+        go.textContent = `Export ${presets.length} parts`;
+        if (auto) run();
+      } else if (data.type === "opening-2027-frames-progress") {
+        statusEl.textContent = `Drawing ${data.id}: ${data.done} of ${data.total}`;
+      } else if ((data.type === "opening-2027-frames" || data.type === "opening-2027-preset-error") && waiting) {
+        waiting(data);
+        waiting = null;
+      }
+    });
+
+    const post = async (url, body) => {
+      const response = await fetch(url, { method: "POST", body });
+      if (!response.ok) throw new Error(`${url} failed`);
+    };
+    const note = (text) => {
+      const item = document.createElement("li");
+      item.textContent = text;
+      log.append(item);
+    };
+
+    async function run() {
+      go.disabled = true;
+      log.replaceChildren();
+      try {
+        let previous = { stories: [] };
+        try { previous = await (await fetch(`../deck/frames.json?t=${Date.now()}`)).json(); } catch {}
+        const stories = [];
+        let drawn = 0;
+        for (const preset of presets) {
+          const before = previous.stories.find((story) => story.id === preset.id);
+          if (before && before.fingerprint === preset.fingerprint && before.name === preset.name) {
+            stories.push(before);
+            continue;
+          }
+          const result = await new Promise((resolve) => {
+            waiting = resolve;
+            builder.contentWindow.postMessage({ type: "opening-2027-build-frames", id: preset.id, size: SIZE }, "*");
+          });
+          if (result.type !== "opening-2027-frames") throw new Error(`${preset.name}: ${result.message || "could not draw"}`);
+          await post(`/remove?dir=${encodeURIComponent(preset.id)}`);
+          const frames = [];
+          for (const [i, frame] of result.frames.entries()) {
+            const src = `${preset.id}/${String(i + 1).padStart(2, "0")}.jpg`;
+            await post(`/save?path=${encodeURIComponent(src)}`, frame.blob);
+            frames.push({ src, subtitle: frame.subtitle, note: frame.note });
+          }
+          stories.push({ id: preset.id, name: preset.name, section: preset.section, fingerprint: preset.fingerprint, frames });
+          note(`${preset.name}: ${frames.length} frames`);
+          drawn += 1;
+        }
+        // Parts that no longer exist lose their folder.
+        for (const story of previous.stories) {
+          if (!stories.some((item) => item.id === story.id)) {
+            await post(`/remove?dir=${encodeURIComponent(story.id)}`);
+            note(`Removed ${story.name}`);
+          }
+        }
+        const changed = drawn || previous.stories.length !== stories.length;
+        if (changed) {
+          const manifest = { base: "https://ahannum.github.io/opening-2027/deck/", stories };
+          await post("/save?path=frames.json", JSON.stringify(manifest, null, 1) + "\n");
+        }
+        statusEl.innerHTML = `<span class="done">Done: ${drawn ? `${drawn} part${drawn === 1 ? "" : "s"} redrawn` : "nothing changed"}.</span>`;
+        document.title = "done";
+      } catch (error) {
+        statusEl.textContent = `Stopped: ${error.message}`;
+        document.title = "failed";
+      }
+      go.disabled = false;
+    }
+    go.addEventListener("click", run);
+  </script>
+</body>
+</html>

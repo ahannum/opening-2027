@@ -36,13 +36,17 @@ Open `index.html` in a browser.
 
 Parts are named the way the Ground Truth slides name sections ("5 · Hearts adrift", "8 · Line → X → grid prep"), one part per section; the names are the presets' `name` in `STORY_PRESETS`. Stories that span several sections are split for the player and kept whole in the planner under "Polka: whole runs".
 
-The frames are drawn ahead of time into `app/frames/` and `app/stories.js`, so phones only download images. After changing a routine, redraw them:
+The player draws the boards itself: it loads the planner out of sight and asks it for each part's frames as SVG. So pushing a change to a routine is all it takes; phones pick it up the next time they open the app online. Each phone keeps the frames it drew, so after the first visit the player works offline, and only parts that changed are drawn again.
 
-```bash
-python3 tools/export_player.py
-```
+The palette button (top right) opens **Colors & theme**: Auto / Light / Dark, and the colors of the lead and follow halves. The choice is saved on that phone. The planner's board styles live in their own `<style id="board-style">` block with color variables, which is what lets the player recolor them.
 
-Open <http://localhost:8010/tools/export-player.html>, press Export, then commit and push `app/`. Without `app/stories.js` the player draws the frames itself with the planner, hidden. The player saves every frame on the phone, so after the first visit it works offline.
+## Slide frames
+
+The **Slide frames** GitHub workflow (`.github/workflows/deck-frames.yml`) redraws every Polka and Waltz part as 1080 px JPEGs in `deck/<part id>/` whenever a routine changes, and lists them in `deck/frames.json`. They're published at `https://ahannum.github.io/opening-2027/deck/`. Only parts that changed are redrawn.
+
+To put a part's frames on its Ground Truth slide, run `fillFrames("5 · Theme 2: Turning Gears")` from `tools/slides/FillFrames.gs` in an Apps Script project that can open the decks. It finds the slide titled with that part's name (the frames slide, not its table), replaces the frames it placed before, and lays them out as large as they fit.
+
+To redraw by hand: `python3 tools/export_deck.py`, then open <http://localhost:8010/tools/export-deck.html>.
 
 ## GitHub Pages
 

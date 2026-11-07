@@ -1,0 +1,55 @@
+# Redraws the slide frames (deck/) whenever a routine changes, so the Ground Truth decks' fillFrames()
+# always finds current pictures at https://ahannum.github.io/opening-2027/deck/. Only parts whose
+# frames changed are redrawn; if nothing changed, nothing is committed.
+name: Slide frames
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - stories/**
+      - tools/export-deck.html
+      - tools/export_deck.py
+      - .github/workflows/deck-frames.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deck-frames
+  cancel-in-progress: true
+
+jobs:
+  draw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the browser
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-inter
+          pip install playwright==1.48.0
+          python -m playwright install --with-deps chromium
+
+      - name: Draw the frames
+        run: python tools/export_deck.py --headless
+
+      - name: Commit any changes
+        run: |
+          git add deck
+          if git diff --cached --quiet; then
+            echo "Slide frames already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Redraw slide frames"
+          git pull --rebase
+          git push

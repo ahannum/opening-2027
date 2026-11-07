@@ -1,7 +1,6 @@
-// Keeps the player available offline: its own files, stories.js and every frame image it has fetched
-// (the page fetches them all once in the background). Network first, so updates show up as soon as
-// the phone is online; the saved copy is the fallback. Frames the page draws itself live in IndexedDB.
-const CACHE = "opening-2027-player-v2";
+// Keeps the player's own files available offline. Network first, so updates show up as soon as the
+// phone is online; the saved copy is the fallback. The boards it draws (as SVG) live in IndexedDB.
+const CACHE = "opening-2027-player-v3";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 
 self.addEventListener("install", (event) => {
