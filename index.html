@@ -4015,7 +4015,7 @@
     }
 
     // A short hash of a story's frames (plus how they're drawn), so a saved copy can tell it's out of date.
-    const PRESET_RENDER_VERSION = 2;
+    const PRESET_RENDER_VERSION = 3;
     function presetFingerprint(preset) {
       const text = `${PRESET_RENDER_VERSION}:${preset.name}:${JSON.stringify(preset.snapshots())}`;
       let hash = 2166136261;
@@ -4027,20 +4027,26 @@
     async function buildPresetFrames(preset, size, onProgress = () => {}) {
       const frames = [];
       const snapshots = preset.snapshots();
-      for (const snapshot of snapshots) {
-        onProgress(frames.length, snapshots.length);
-        // The player titles every frame with the story's "N · name", the way the Ground Truth slides do.
-        restoreStoryboardSnapshot({ ...snapshot, annotation: { ...snapshot.annotation, title: preset.name } });
-        const png = await renderBoardPngBlob(size);
-        const canvas = document.createElement("canvas");
-        canvas.width = size;
-        canvas.height = size;
-        canvas.getContext("2d").drawImage(await createImageBitmap(png), 0, 0);
-        let blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
-        if (!blob || blob.type !== "image/webp") blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.88));
-        const { subtitle = "", note = "" } = snapshot.annotation || {};
-        const title = preset.name;
-        frames.push({ blob, title, subtitle, note });
+      // The player shows the part's name above the frame, so its frames leave the bold title off and
+      // put the subheading where the title would be.
+      const subheadingY = annotationSubheading.getAttribute("y");
+      annotationSubheading.setAttribute("y", annotationTitle.getAttribute("y"));
+      try {
+        for (const snapshot of snapshots) {
+          onProgress(frames.length, snapshots.length);
+          restoreStoryboardSnapshot({ ...snapshot, annotation: { ...snapshot.annotation, title: "" } });
+          const png = await renderBoardPngBlob(size);
+          const canvas = document.createElement("canvas");
+          canvas.width = size;
+          canvas.height = size;
+          canvas.getContext("2d").drawImage(await createImageBitmap(png), 0, 0);
+          let blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
+          if (!blob || blob.type !== "image/webp") blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.88));
+          const { subtitle = "", note = "" } = snapshot.annotation || {};
+          frames.push({ blob, title: preset.name, subtitle, note });
+        }
+      } finally {
+        annotationSubheading.setAttribute("y", subheadingY);
       }
       return frames;
     }
