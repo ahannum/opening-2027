@@ -933,8 +933,8 @@
         <g id="guides"></g>
         <g id="pieces"></g>
         <g id="annotations">
-          <text id="annotationTitle" x="22" y="16" class="annotation-text"></text>
-          <text id="annotationSubheading" x="22" y="58" class="annotation-text annotation-subheading"></text>
+          <!-- One heading in the top-left corner: the frame's count or step. The story's name goes around the board, not on it. -->
+          <text id="annotationSubheading" x="22" y="16" class="annotation-text annotation-subheading"></text>
           <!-- A note sits in the bottom-left corner, one line per line of text, its last line at the bottom. -->
           <text id="annotationNote" x="22" y="702" class="annotation-text annotation-note"></text>
         </g>
@@ -946,8 +946,9 @@
         <h1>Opening 2027 Planner</h1>
         <p class="intro">Build one formation at a time. Work down the numbered steps, then capture each finished formation as a shot.</p>
         <div class="annotation-controls">
-          <input id="annotationTitleInput" type="text" maxlength="80" placeholder="Top-left title" aria-label="Top-left annotation title">
-          <input id="annotationSubheadingInput" type="text" maxlength="80" placeholder="Top-left subheading" aria-label="Top-left annotation subheading">
+          <!-- Shots still carry a title (kept in saved storyboards), but it isn't drawn on the board. -->
+          <input id="annotationTitleInput" type="hidden">
+          <input id="annotationSubheadingInput" type="text" maxlength="80" placeholder="Top-left heading (e.g. Measure 1-2)" aria-label="Top-left heading">
           <textarea id="annotationNoteInput" rows="2" maxlength="240" placeholder="Bottom-left note (optional)" aria-label="Bottom-left annotation note"></textarea>
         </div>
         <div class="button-grid three">
@@ -1320,7 +1321,6 @@
     const nameInput = document.querySelector("#nameInput");
     const annotationTitleInput = document.querySelector("#annotationTitleInput");
     const annotationSubheadingInput = document.querySelector("#annotationSubheadingInput");
-    const annotationTitle = document.querySelector("#annotationTitle");
     const annotationSubheading = document.querySelector("#annotationSubheading");
     const annotationNoteInput = document.querySelector("#annotationNoteInput");
     const annotationNote = document.querySelector("#annotationNote");
@@ -1386,9 +1386,7 @@
     }
 
     function updateAnnotation() {
-      annotationTitle.textContent = annotationTitleInput.value;
       annotationSubheading.textContent = annotationSubheadingInput.value;
-      fitAnnotationLine(annotationTitle, 36, 18);
       fitAnnotationLine(annotationSubheading, 30, 15);
       // One line per line of the note, stacked up from the bottom-left corner.
       const lines = annotationNoteInput.value.split("\n").filter((line) => line.trim());
@@ -4027,26 +4025,18 @@
     async function buildPresetFrames(preset, size, onProgress = () => {}) {
       const frames = [];
       const snapshots = preset.snapshots();
-      // The player shows the part's name above the frame, so its frames leave the bold title off and
-      // put the subheading where the title would be.
-      const subheadingY = annotationSubheading.getAttribute("y");
-      annotationSubheading.setAttribute("y", annotationTitle.getAttribute("y"));
-      try {
-        for (const snapshot of snapshots) {
-          onProgress(frames.length, snapshots.length);
-          restoreStoryboardSnapshot({ ...snapshot, annotation: { ...snapshot.annotation, title: "" } });
-          const png = await renderBoardPngBlob(size);
-          const canvas = document.createElement("canvas");
-          canvas.width = size;
-          canvas.height = size;
-          canvas.getContext("2d").drawImage(await createImageBitmap(png), 0, 0);
-          let blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
-          if (!blob || blob.type !== "image/webp") blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.88));
-          const { subtitle = "", note = "" } = snapshot.annotation || {};
-          frames.push({ blob, title: preset.name, subtitle, note });
-        }
-      } finally {
-        annotationSubheading.setAttribute("y", subheadingY);
+      for (const snapshot of snapshots) {
+        onProgress(frames.length, snapshots.length);
+        restoreStoryboardSnapshot(snapshot);
+        const png = await renderBoardPngBlob(size);
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        canvas.getContext("2d").drawImage(await createImageBitmap(png), 0, 0);
+        let blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
+        if (!blob || blob.type !== "image/webp") blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.88));
+        const { subtitle = "", note = "" } = snapshot.annotation || {};
+        frames.push({ blob, title: preset.name, subtitle, note });
       }
       return frames;
     }
