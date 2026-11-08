@@ -3989,7 +3989,7 @@
       "Rose: toss + pivot/reorient",
       "Teal: 1 step (L fwd R), collect",
     ].join("\n");
-    // Ariel's rule for the lines of Measures 2–5 (HG: the Honored Guests).
+    // Ariel's rule for the lines of Measures 2–4 (HG: the Honored Guests).
     const HAPPY_LINES_NOTE = [
       "In the lines, on 1:",
       "left line F faces HG,",
@@ -4035,13 +4035,13 @@
         // the front, toward the Honored Guests).
         return { ...couple, step, facingMode, ...rotate(leadAt.get(couple.number) || couple, -halfTape) };
       });
-      // Measures 2–5: everyone forward waltzes to the nearest turning spot and turns there into one of
+      // Measures 2–4: everyone forward waltzes to the nearest turning spot and turns there into one of
       // two straight lines toward the middle, the left line through the two left spots (1's at the
       // back, 8's at the front) and the right line through the two right ones (16's, 9's). The back
       // left and front right quarters travel against the line of dance, the others with it. On the
       // circle a couple covers 1 tape a measure, so it's between dots on 1 and passes the last dot
       // before its spot on 4. Turned into the line, it goes up to 1 tape a measure until it reaches its
-      // place: by Measure 5 each line holds 8 couples evenly spaced from the back spot to the front one,
+      // place: by Measure 4 each line holds 8 couples evenly spaced from the back spot to the front one,
       // the 4 from the back filling the back half and the 4 from the front the front half. Couples keep
       // their Measure 1 facing on the circle until they reach their turning spot; from there, on 1, the
       // left line has the follow facing the Honored Guests and the right line the lead (lead's half
@@ -4066,6 +4066,19 @@
         return [couple.number, { angle, direction: Math.sign(gap), left, back, tapes, depth }];
       }));
       const lineFacing = (path) => (path.left ? "north" : "south");
+      // Measures 5 and 6: both lines close up evenly toward the middle until their ends sit on the inner
+      // tape, so the whole of each line is inside the inner circle.
+      const innerEnd = Math.sqrt(INNER_RADIUS ** 2 - lineX ** 2);
+      const innerFrame = (measure) => {
+        const lines = lineFrame(4);
+        const share = (measure - 4) / 2;
+        const scale = 1 - share * (1 - innerEnd / spotY);
+        const items = lines.items.map((couple) => ({
+          ...couple,
+          y: Number((CENTER.y + (couple.y - CENTER.y) * scale).toFixed(3)),
+        }));
+        return { ...lines, annotation: { ...lines.annotation, subtitle: `Measure ${measure}` }, items };
+      };
       const lineFrame = (measure) => {
         const t = measure - 1; // tapes waltzed since Measure 1
         const items = moved.map((couple) => {
@@ -4098,7 +4111,8 @@
       return [
         { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
         { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: moved },
-        ...[2, 3, 4, 5].map(lineFrame),
+        ...[2, 3, 4].map(lineFrame),
+        ...[5, 6].map(innerFrame),
       ];
     }
     function happySectionSnapshots() {
