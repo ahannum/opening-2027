@@ -3488,12 +3488,12 @@
         { subtitle: "Measure 8", items: partnerCircle() },
         // Unfold the inner circle.
         { subtitle: "Measure 1", items: unfoldFrame(0.5) },
-        // Pods B, D, F, H on the inner tape toward the Honored Guests, A, C, E, G away.
-        { subtitle: "Measure 2", items: unfoldFrame(1) },
-        // Lines out to the ¾ ring.
-        { subtitle: "Measure 3", items: podFrame(RING_RADII.threeQuarter) },
-        // Measure 4-6 holds the ¾ ring (the same spots as Measure 3).
-        { subtitle: "Measure 4-6", items: podFrame(RING_RADII.threeQuarter) },
+        // Pods B, D, F, H toward the Honored Guests, A, C, E, G away, already spread out to the ¾ ring.
+        { subtitle: "Measure 2", items: podFrame(RING_RADII.threeQuarter) },
+        // Lines out level with the nearest tape dots beyond: the outer tape's dots at 45°.
+        { subtitle: "Measure 3", items: podFrame(OUTER_RADIUS * Math.SQRT1_2) },
+        // Measure 4-6 a little past those dots, on the middle ring.
+        { subtitle: "Measure 4-6", items: podFrame(RING_RADII.middle) },
         // Back in toward the overlap, still in pods.
         { subtitle: "Measure 7", items: podFrame(RING_RADII.threeQuarter / 3) },
         // Overlap.
