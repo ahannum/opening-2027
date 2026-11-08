@@ -1060,11 +1060,11 @@
    "id": "waltz-happy-transition-in",
    "name": "8A · Transition into Happy Section",
    "section": "Waltz",
-   "fingerprint": "1eraowm",
+   "fingerprint": "1siddm4",
    "frames": [
     {
      "src": "waltz-happy-transition-in/01.jpg",
-     "subtitle": "Orphan 3",
+     "subtitle": "Start: Orphan 3",
      "note": ""
     },
     {
@@ -1078,7 +1078,7 @@
    "id": "waltz-happy-section",
    "name": "8B · Happy Section",
    "section": "Waltz",
-   "fingerprint": "cagakv",
+   "fingerprint": "1vljv8b",
    "frames": [
     {
      "src": "waltz-happy-section/01.jpg",
@@ -1091,7 +1091,7 @@
    "id": "waltz-happy-to-peaceful",
    "name": "8C · Transition Happy to Peaceful",
    "section": "Waltz",
-   "fingerprint": "1el0nhi",
+   "fingerprint": "5f2fv0",
    "frames": [
     {
      "src": "waltz-happy-to-peaceful/01.jpg",
