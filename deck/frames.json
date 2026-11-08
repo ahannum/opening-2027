@@ -38,95 +38,100 @@
    "id": "intro-two-lines",
    "name": "2 · Theme 1 variation: 2 lines",
    "section": "Polka",
-   "fingerprint": "1kt7s0q",
+   "fingerprint": "pybkgr",
    "frames": [
     {
      "src": "intro-two-lines/01.jpg",
-     "subtitle": "Measure 1",
+     "subtitle": "Start",
      "note": ""
     },
     {
      "src": "intro-two-lines/02.jpg",
-     "subtitle": "Measure 2",
+     "subtitle": "Measure 1",
      "note": ""
     },
     {
      "src": "intro-two-lines/03.jpg",
-     "subtitle": "Measure 3",
+     "subtitle": "Measure 2",
      "note": ""
     },
     {
      "src": "intro-two-lines/04.jpg",
-     "subtitle": "Measure 4-6",
+     "subtitle": "Measure 3",
      "note": ""
     },
     {
      "src": "intro-two-lines/05.jpg",
-     "subtitle": "Measure 7",
+     "subtitle": "Measure 4-6",
      "note": ""
     },
     {
      "src": "intro-two-lines/06.jpg",
-     "subtitle": "Measure 8",
+     "subtitle": "Measure 7",
      "note": ""
     },
     {
      "src": "intro-two-lines/07.jpg",
-     "subtitle": "Measure 9-13",
+     "subtitle": "Measure 8",
      "note": ""
     },
     {
      "src": "intro-two-lines/08.jpg",
-     "subtitle": "Measure 14",
+     "subtitle": "Measure 9-13",
      "note": ""
     },
     {
      "src": "intro-two-lines/09.jpg",
-     "subtitle": "Measure 15",
+     "subtitle": "Measure 14",
      "note": ""
     },
     {
      "src": "intro-two-lines/10.jpg",
-     "subtitle": "Measure 16",
+     "subtitle": "Measure 15",
      "note": ""
     },
     {
      "src": "intro-two-lines/11.jpg",
-     "subtitle": "Measure 1 Beats 1-2",
+     "subtitle": "Measure 16",
      "note": ""
     },
     {
      "src": "intro-two-lines/12.jpg",
-     "subtitle": "Measure 1 Beats 3-4",
+     "subtitle": "Measure 1 Beats 1-2",
      "note": ""
     },
     {
      "src": "intro-two-lines/13.jpg",
-     "subtitle": "Measure 2 Beats 1-2",
+     "subtitle": "Measure 1 Beats 3-4",
      "note": ""
     },
     {
      "src": "intro-two-lines/14.jpg",
-     "subtitle": "Measure 2 Beats 3-4",
+     "subtitle": "Measure 2 Beats 1-2",
      "note": ""
     },
     {
      "src": "intro-two-lines/15.jpg",
-     "subtitle": "Measure 3 Beats 1-2",
+     "subtitle": "Measure 2 Beats 3-4",
      "note": ""
     },
     {
      "src": "intro-two-lines/16.jpg",
-     "subtitle": "Measure 3 Beats 3-4",
+     "subtitle": "Measure 3 Beats 1-2",
      "note": ""
     },
     {
      "src": "intro-two-lines/17.jpg",
-     "subtitle": "Measure 4 Beats 1-2",
+     "subtitle": "Measure 3 Beats 3-4",
      "note": ""
     },
     {
      "src": "intro-two-lines/18.jpg",
+     "subtitle": "Measure 4 Beats 1-2",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/19.jpg",
      "subtitle": "Measure 4 Beats 3-4",
      "note": ""
     }
@@ -742,7 +747,7 @@
    "id": "waltz-contraction-expansion",
    "name": "2 · Theme 2: Contraction and Expansion",
    "section": "Waltz",
-   "fingerprint": "zg1obb",
+   "fingerprint": "7n9vny",
    "frames": [
     {
      "src": "waltz-contraction-expansion/01.jpg",
@@ -751,46 +756,41 @@
     },
     {
      "src": "waltz-contraction-expansion/02.jpg",
-     "subtitle": "Start",
-     "note": ""
-    },
-    {
-     "src": "waltz-contraction-expansion/03.jpg",
      "subtitle": "Measure 1",
      "note": ""
     },
     {
-     "src": "waltz-contraction-expansion/04.jpg",
+     "src": "waltz-contraction-expansion/03.jpg",
      "subtitle": "Measure 2",
      "note": ""
     },
     {
-     "src": "waltz-contraction-expansion/05.jpg",
+     "src": "waltz-contraction-expansion/04.jpg",
      "subtitle": "Measure 3",
      "note": ""
     },
     {
-     "src": "waltz-contraction-expansion/06.jpg",
+     "src": "waltz-contraction-expansion/05.jpg",
      "subtitle": "Measure 4",
      "note": ""
     },
     {
-     "src": "waltz-contraction-expansion/07.jpg",
+     "src": "waltz-contraction-expansion/06.jpg",
      "subtitle": "Measure 5",
      "note": ""
     },
     {
-     "src": "waltz-contraction-expansion/08.jpg",
+     "src": "waltz-contraction-expansion/07.jpg",
      "subtitle": "Measure 6",
      "note": ""
     },
     {
-     "src": "waltz-contraction-expansion/09.jpg",
+     "src": "waltz-contraction-expansion/08.jpg",
      "subtitle": "Measure 7",
      "note": ""
     },
     {
-     "src": "waltz-contraction-expansion/10.jpg",
+     "src": "waltz-contraction-expansion/09.jpg",
      "subtitle": "Measure 8",
      "note": ""
     }
