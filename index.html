@@ -839,12 +839,6 @@
       fill: var(--group-color, #d9d9d8);
     }
 
-    /* A color-filled lead/follow couple: the follow's half takes the group color instead of white, so
-       the circle reads as its color while the black lead half still shows which way it faces. */
-    .piece.couple.color-fill.has-group-color .token-base {
-      fill: var(--group-color);
-    }
-
     .piece.couple.partner-symbol .black-half {
       display: none;
     }
@@ -1643,8 +1637,6 @@
       displayMode = defaultCoupleDisplayMode,
       groupColor = defaultGroupColor,
       emphasized = false,
-      // Fill the couple with its group color rather than only ringing it (see .color-fill).
-      colorFill = false,
       // Shown instead of the number, e.g. "1-2" for a pair of dancers drawn as one circle.
       label = null,
       // Small L and F marks: on a couple, in its lead and follow halves; on a same role pair, under
@@ -1652,7 +1644,7 @@
       roleLetters = false,
     }) {
       const group = svgElement("g", {
-        class: `piece ${role}${emphasized ? " emphasized" : ""}${colorFill ? " color-fill" : ""}`,
+        class: `piece ${role}${emphasized ? " emphasized" : ""}`,
         tabindex: "0",
         "data-number": number,
         "data-role": role,
@@ -1673,7 +1665,6 @@
         displayMode,
         groupColor,
         emphasized,
-        colorFill,
         label,
         roleLetters,
         group,
@@ -3978,7 +3969,7 @@
     // Transition into Happy Section, from Ariel's sketch. It opens on Orphan 3 with the couples joined
     // again: each couple is one token, the lead's half pointing along the line of dance and sitting on
     // the red dot where the lead ends Box Skit (the couple's center half a token against the line of
-    // dance from it), in the colors of the sketch. Then everyone moves half a tape (one
+    // dance from it), outlined in the colors of the sketch. Then everyone moves half a tape (one
     // half step, 11.25°) clockwise, against the line of dance; the teal couples have no arrow in the
     // sketch but shift too, as Ariel asked.
     const HAPPY_COLORS = {
@@ -4010,7 +4001,7 @@
       const joined = joinedOn.items.map((couple) => {
         const lead = leadAt.get(couple.number) || couple;
         return {
-          ...couple, facingMode: "ccw", groupColor: colorOf(couple.number) || "neutral", colorFill: true,
+          ...couple, facingMode: "ccw", groupColor: colorOf(couple.number) || "neutral",
           ...rotate(lead, -PIECE_RADIUS / 2 / OUTER_RADIUS),
         };
       });
@@ -5475,7 +5466,6 @@
           displayMode: item.displayMode,
           groupColor: item.groupColor,
           emphasized: Boolean(item.emphasized),
-          colorFill: Boolean(item.colorFill),
           label: item.label ?? null,
           roleLetters: Boolean(item.roleLetters),
         }));
@@ -5670,7 +5660,6 @@
           groupColor: token.groupColor,
           // Only stored when on, so shots saved before bold outlines existed still match.
           ...(token.emphasized ? { emphasized: true } : {}),
-          ...(token.colorFill ? { colorFill: true } : {}),
           ...(token.label ? { label: token.label } : {}),
           ...(token.roleLetters ? { roleLetters: true } : {}),
           x: Number(token.x.toFixed(3)),
@@ -5790,8 +5779,6 @@
         updateTokenColor(token);
         token.emphasized = Boolean(item.emphasized);
         token.group.classList.toggle("emphasized", token.emphasized);
-        token.colorFill = Boolean(item.colorFill);
-        token.group.classList.toggle("color-fill", token.colorFill);
         if (token.role !== "couple" || !item.facingMode) return;
 
         token.facingMode = item.facingMode;
