@@ -4024,7 +4024,10 @@
       const moved = joined.map((couple) => {
         const step = couple.step == null ? couple.step : (couple.step + 31) % 32;
         const facingMode = measure1Facing[couple.groupColor] || couple.facingMode;
-        return { ...couple, step, facingMode, ...rotate(couple, -halfTape) };
+        // Centered exactly between two red dots, half a tape clockwise of the dot the lead was on. These
+        // in-between spots are the turning spots of the next measures (1 and 16 at the back, 8 and 9 at
+        // the front, toward the Honored Guests).
+        return { ...couple, step, facingMode, ...rotate(leadAt.get(couple.number) || couple, -halfTape) };
       });
       return [
         { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
