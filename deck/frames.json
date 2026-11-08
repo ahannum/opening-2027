@@ -977,7 +977,7 @@
    "id": "waltz-box-skit",
    "name": "7 · Box Skit",
    "section": "Waltz",
-   "fingerprint": "1l01lg8",
+   "fingerprint": "clvpe2",
    "frames": [
     {
      "src": "waltz-box-skit/01.jpg",
@@ -1058,22 +1058,27 @@
   },
   {
    "id": "waltz-happy-transition-in",
-   "name": "8 · Transition into Happy Section",
+   "name": "8A · Transition into Happy Section",
    "section": "Waltz",
-   "fingerprint": "1lu96yq",
+   "fingerprint": "11549j3",
    "frames": [
     {
      "src": "waltz-happy-transition-in/01.jpg",
-     "subtitle": "Start",
+     "subtitle": "Orphan 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-happy-transition-in/02.jpg",
+     "subtitle": "Half a tape clockwise",
      "note": ""
     }
    ]
   },
   {
    "id": "waltz-happy-section",
-   "name": "9 · Happy Section",
+   "name": "8B · Happy Section",
    "section": "Waltz",
-   "fingerprint": "1q60mg9",
+   "fingerprint": "h3l4h0",
    "frames": [
     {
      "src": "waltz-happy-section/01.jpg",
@@ -1084,9 +1089,9 @@
   },
   {
    "id": "waltz-happy-to-peaceful",
-   "name": "10 · Transition Happy to Peaceful",
+   "name": "8C · Transition Happy to Peaceful",
    "section": "Waltz",
-   "fingerprint": "1fzn7o7",
+   "fingerprint": "1mzramn",
    "frames": [
     {
      "src": "waltz-happy-to-peaceful/01.jpg",
