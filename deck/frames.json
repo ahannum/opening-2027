@@ -38,7 +38,7 @@
    "id": "intro-two-lines",
    "name": "2 · Theme 1 variation: 2 lines",
    "section": "Polka",
-   "fingerprint": "1oifuv7",
+   "fingerprint": "70rex6",
    "frames": [
     {
      "src": "intro-two-lines/01.jpg",
@@ -72,8 +72,8 @@
     },
     {
      "src": "intro-two-lines/07.jpg",
-     "subtitle": "Measure 8",
-     "note": ""
+     "subtitle": "Measure 8: Beat 1",
+     "note": "2 lines intersect"
     },
     {
      "src": "intro-two-lines/08.jpg",
