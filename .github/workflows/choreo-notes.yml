@@ -1,0 +1,44 @@
+# Copies the choreo notes (measure tables) from the PUBLIC Ground Truth decks into deck/notes.json,
+# which the phone player shows under the board. Deck edits don't push anything, so this runs every
+# hour; it commits only when the notes changed. Run it right away from the Actions tab
+# ("Choreo notes" → Run workflow).
+name: Choreo notes
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  push:
+    branches: [main]
+    paths:
+      - tools/sync_notes.py
+      - .github/workflows/choreo-notes.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: choreo-notes
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy the notes from the decks
+        run: python3 tools/sync_notes.py
+
+      - name: Commit any changes
+        run: |
+          git add deck/notes.json
+          if git diff --cached --quiet; then
+            echo "Choreo notes already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update choreo notes from the Ground Truth decks"
+          git pull --rebase
+          git push

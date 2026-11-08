@@ -243,7 +243,7 @@
       inset: 0;
       z-index: 10;
       display: grid;
-      grid-template-rows: auto minmax(0, 1fr) auto;
+      grid-template-rows: auto minmax(0, 1fr) auto auto;
       background: var(--bg);
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
@@ -390,16 +390,71 @@
       cursor: pointer;
     }
 
-    /* Landscape phones: the frame on the left, controls on the right. */
+    .extras { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .extras .speed { justify-self: auto; }
+    .speed[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+
+    /* ---------- Choreo notes: the Ground Truth table rows for the frame's measures ---------- */
+    .notes {
+      position: relative;
+      margin: 0 16px 4px;
+      max-height: clamp(110px, 30vh, 320px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 10px 14px 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      font-size: 15px;
+      line-height: 1.4;
+    }
+    .notes-head {
+      position: sticky;
+      top: -10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: -10px -14px 6px;
+      padding: 10px 14px 6px;
+      background: var(--surface);
+    }
+    .notes-head strong { flex: 1; min-width: 0; font-size: 15px; }
+    .notes-head button, .notes-head a {
+      flex: none;
+      min-height: 30px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 28px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .notes-head button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+    .notes .overview { margin: 0 0 8px; color: var(--muted); white-space: pre-line; }
+    .note-row { padding: 6px 8px; border-radius: 10px; }
+    .note-row + .note-row { margin-top: 2px; }
+    .note-row.current { background: var(--accent-soft); }
+    .note-row .counts { font-weight: 700; }
+    .note-row .cell { white-space: pre-line; }
+    .note-row .cell .col { color: var(--muted); font-size: 13px; font-weight: 650; }
+    .notes .empty { margin: 0; color: var(--muted); }
+
+    /* Landscape phones: the frame on the left, notes and controls on the right. */
     @media (orientation: landscape) and (max-height: 560px) {
       .player {
         grid-template-columns: minmax(0, 1fr) minmax(260px, 38%);
-        grid-template-rows: auto minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr) auto;
       }
       .topbar { grid-column: 1 / -1; padding-top: 2px; }
+      .stage { grid-column: 1; grid-row: 2 / span 2; }
+      .notes { grid-column: 2; grid-row: 2; align-self: start; max-height: 100%; margin: 0 16px 6px 4px; }
+      .controls { grid-column: 2; grid-row: 3; }
       .titles .story { font-size: 24px; -webkit-line-clamp: 1; }
       .stage { padding: 4px 8px 10px; }
-      .controls { align-content: center; padding: 0 16px 10px 4px; }
+      .controls { align-content: end; padding: 0 16px 10px 4px; }
     }
 
     /* ---------- Colors & theme ---------- */
@@ -550,6 +605,15 @@
       </div>
     </div>
 
+    <section class="notes" id="notes" hidden aria-label="Choreo notes">
+      <div class="notes-head">
+        <strong id="notesTitle">Choreo</strong>
+        <button type="button" id="notesAll" aria-pressed="false">All measures</button>
+        <a id="notesSource" target="_blank" rel="noopener">Deck ↗</a>
+      </div>
+      <div id="notesBody"></div>
+    </section>
+
     <div class="controls">
       <div class="caption" aria-live="polite">
         <div class="measure" id="measure"></div>
@@ -574,7 +638,10 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
         </button>
       </div>
-      <button type="button" class="speed" id="speedBtn">Play speed: 1.5 s per frame</button>
+      <div class="extras">
+        <button type="button" class="speed" id="choreoBtn" aria-pressed="false" aria-controls="notes">Choreo notes</button>
+        <button type="button" class="speed" id="speedBtn">Play speed: 1.5 s per frame</button>
+      </div>
     </div>
   </section>
 
@@ -792,6 +859,145 @@
       if (css) $("#boardCss").textContent = css;
       if (fontFamily) document.documentElement.style.setProperty("--board-font", fontFamily);
     }
+
+    // ---------- Choreo notes: deck/notes.json, copied hourly from the PUBLIC Ground Truth decks ----------
+    let notes = null;
+    let showNotes = store.get("showNotes", "0") === "1";
+    let notesAll = false;
+    (async () => {
+      const saved = await dbGet("meta", "notes");
+      if (saved && !notes) { notes = saved; renderNotes(); }
+      try {
+        const response = await fetch(`../deck/notes.json?t=${Date.now()}`);
+        if (response.ok) {
+          notes = await response.json();
+          dbPut("meta", notes, "notes");
+          renderNotes();
+        }
+      } catch {}
+    })();
+
+    // "Measure 4-6" → [4, 6]; "Measures 1–3", "Measure 11,12", "Measure 2: Beat 3" work too.
+    function measureRange(label = "") {
+      const match = label.match(/measures?\s*(\d+)(?:\s*(?:[-–,]|to)\s*(\d+))?/i);
+      if (!match) return null;
+      const a = Number(match[1]);
+      const b = match[2] ? Number(match[2]) : a;
+      return [Math.min(a, b), Math.max(a, b)];
+    }
+    // Parts whose frame headings don't follow the table's count: the Ground Truth puts the fast turn
+    // and the gallop to the V after Measure 14 of section 11, as "Orphan 2" and "Next 3 measures".
+    const NOTE_ROWS_BY_FRAME = { "pyramid-to-v": ["Orphan 2", "Next 3 measures", "Next 3 measures", "Next 3 measures"] };
+
+    function notesTables(story) {
+      const number = parseInt(story.name, 10);
+      return notes ? notes.sections.filter((table) => table.dance === story.section && table.number === number) : [];
+    }
+    // A section split over slides (Hearts adrift Part 1 and Part 2) starts its count again, so a frame
+    // whose measure drops back to a lower number moves on to the next table.
+    function tableForFrame(frames, frameIndex, count) {
+      let table = 0;
+      let previous = null;
+      for (let i = 0; i <= frameIndex; i += 1) {
+        const range = measureRange(frames[i].subtitle);
+        if (range && previous !== null && range[0] < previous && table < count - 1) table += 1;
+        if (range) previous = range[0];
+      }
+      return table;
+    }
+    function matchingRows(story, table, frames, frameIndex) {
+      const fixed = NOTE_ROWS_BY_FRAME[story.id]?.[frameIndex];
+      if (fixed) return table.rows.flatMap((row, i) => (row[0] === fixed ? [i] : []));
+      const range = measureRange(frames[frameIndex].subtitle);
+      if (range) {
+        return table.rows.flatMap((row, i) => {
+          const rowRange = measureRange(row[0]);
+          return rowRange && rowRange[0] <= range[1] && rowRange[1] >= range[0] ? [i] : [];
+        });
+      }
+      // A "Start" frame goes with the rows before the first measure ("Starting position", "Orphan 2").
+      if (frameIndex === 0) {
+        const first = table.rows.findIndex((row) => measureRange(row[0]));
+        return Array.from({ length: Math.max(first, 0) }, (_, i) => i);
+      }
+      return [];
+    }
+
+    function renderNotes() {
+      const panel = $("#notes");
+      $("#choreoBtn").setAttribute("aria-pressed", String(showNotes));
+      $("#notesAll").setAttribute("aria-pressed", String(notesAll));
+      panel.hidden = !showNotes || player.hidden || !current?.frames;
+      if (panel.hidden) return;
+      const story = stories.find((item) => item.id === current.ids[current.storyIndex]);
+      const frame = current.frames[current.frameIndex];
+      const tables = story ? notesTables(story) : [];
+      const body = $("#notesBody");
+      const source = notes?.source?.[story?.section];
+      $("#notesSource").hidden = !source;
+      if (source) $("#notesSource").href = source;
+      $("#notesTitle").textContent = `Choreo · ${frame.subtitle || `Frame ${current.frameIndex + 1}`}`;
+      if (!tables.length) {
+        $("#notesAll").hidden = true;
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent = notes
+          ? "No choreo notes for this part yet. They appear once its section's table is in the public Ground Truth deck."
+          : "Choreo notes aren't saved on this device yet. Connect once to get them.";
+        body.replaceChildren(empty);
+        return;
+      }
+      const table = tables[tableForFrame(current.frames, current.frameIndex, tables.length)];
+      const matches = matchingRows(story, table, current.frames, current.frameIndex);
+      const showAll = notesAll || !matches.length || table.rows.length <= 2;
+      $("#notesAll").hidden = !matches.length || table.rows.length <= 2;
+      if (!matches.length) $("#notesTitle").textContent += " (all measures)";
+      const nodes = [];
+      if (showAll && table.overview) {
+        const overview = document.createElement("p");
+        overview.className = "overview";
+        overview.textContent = table.overview;
+        nodes.push(overview);
+      }
+      table.rows.forEach((row, i) => {
+        if (!showAll && !matches.includes(i)) return;
+        const item = document.createElement("div");
+        item.className = `note-row${matches.includes(i) ? " current" : ""}`;
+        const counts = document.createElement("div");
+        counts.className = "counts";
+        counts.textContent = row[0];
+        item.append(counts);
+        row.slice(1).forEach((text, c) => {
+          if (!text) return;
+          const cell = document.createElement("div");
+          cell.className = "cell";
+          // The Choreo column reads on its own; the others (F notes, L notes, …) get their name.
+          if (c > 0) {
+            const label = document.createElement("span");
+            label.className = "col";
+            label.textContent = `${table.columns[c + 1]}: `;
+            cell.append(label);
+          }
+          cell.append(text);
+          item.append(cell);
+        });
+        nodes.push(item);
+      });
+      body.replaceChildren(...nodes);
+      // In the full table, bring the frame's rows up to just under the card's heading.
+      const first = showAll ? body.querySelector(".note-row.current") : null;
+      panel.scrollTop = first ? Math.max(first.offsetTop - panel.querySelector(".notes-head").offsetHeight - 4, 0) : 0;
+    }
+
+    $("#choreoBtn").addEventListener("click", () => {
+      showNotes = !showNotes;
+      store.set("showNotes", showNotes ? "1" : "0");
+      renderNotes();
+    });
+    $("#notesAll").addEventListener("click", () => {
+      notesAll = !notesAll;
+      renderNotes();
+    });
 
     // ---------- State ----------
     let stories = [];            // [{ id, name, section, fingerprint }]
@@ -1019,6 +1225,7 @@
       if (!current.frames) {
         loading.hidden = false;
         board.replaceChildren();
+        $("#notes").hidden = true;
         $("#loadingText").textContent = builderReady || navigator.onLine !== false ? "Drawing frames…" : "Not saved on this device yet";
         setCaption("", "");
         setControlsEnabled(false);
@@ -1070,6 +1277,7 @@
       $("#prevBtn").disabled = atStart;
       $("#nextBtn").disabled = atEnd && !hasNextStory;
       $("#nextLabel").textContent = atEnd && hasNextStory ? "Next part" : "Next";
+      renderNotes();
     }
 
     function go(delta) {
@@ -1101,6 +1309,7 @@
       openedFromHome = false;
       player.hidden = true;
       home.hidden = false;
+      $("#notes").hidden = true;
       document.title = "Opening 2027";
       if (current) {
         const story = stories.find((item) => item.id === current.ids[current.storyIndex]);

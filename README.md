@@ -40,6 +40,12 @@ The player draws the boards itself: it loads the planner out of sight and asks i
 
 The palette button (top right) opens **Colors, theme & size**: Auto / Light / Dark, the size of the dots and of the numbers on them (Small to Bigger each), and the colors of the lead and follow halves. The choices are saved on that phone. The planner's board styles live in their own `<style id="board-style">` block with color variables, which is what lets the player recolor them.
 
+## Choreo notes
+
+**Choreo notes** (under the player's controls) opens a card under the board with the Ground Truth measure-table rows for the current frame: the frame's heading ("Measure 4-6") picks the rows, and the card follows along as you step or play. **All measures** shows the part's whole table with the frame's rows highlighted, and **Deck ↗** opens the Ground Truth deck. The card's on/off choice is saved on the phone, and the notes are kept there for offline use.
+
+The notes come from the **PUBLIC** Ground Truth decks only (the WIP decks need a Google sign-in): the **Choreo notes** GitHub workflow (`.github/workflows/choreo-notes.yml`) runs `tools/sync_notes.py` every hour, which downloads the decks and saves every measure table to `deck/notes.json`, matched to the player's parts by section number ("5 · …"). Run it at once from the repo's Actions tab, or by hand with `python3 tools/sync_notes.py`. To turn the feature off, delete that workflow and `deck/notes.json`; the button then says there are no notes.
+
 ## Slide frames
 
 The **Slide frames** GitHub workflow (`.github/workflows/deck-frames.yml`) redraws every Polka and Waltz part as 1080 px JPEGs in `deck/<part id>/` whenever a routine changes, and lists them in `deck/frames.json`. They're published at `https://ahannum.github.io/opening-2027/deck/`. Only parts that changed are redrawn.
