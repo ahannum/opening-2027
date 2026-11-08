@@ -1060,7 +1060,7 @@
    "id": "waltz-happy-transition-in",
    "name": "8A · Transition into Happy Section",
    "section": "Waltz",
-   "fingerprint": "11lqhqj",
+   "fingerprint": "1jgaymd",
    "frames": [
     {
      "src": "waltz-happy-transition-in/01.jpg",
@@ -1071,6 +1071,26 @@
      "src": "waltz-happy-transition-in/02.jpg",
      "subtitle": "Measure 1",
      "note": "Violet: toss, stop lead facing in\nGreen: toss, L switches sides\nRose: toss + pivot/reorient\nTeal: 1 step (L fwd R), collect"
+    },
+    {
+     "src": "waltz-happy-transition-in/03.jpg",
+     "subtitle": "Measure 2",
+     "note": "In the lines, on 1:\nleft line F faces HG,\nright line L faces HG"
+    },
+    {
+     "src": "waltz-happy-transition-in/04.jpg",
+     "subtitle": "Measure 3",
+     "note": "In the lines, on 1:\nleft line F faces HG,\nright line L faces HG"
+    },
+    {
+     "src": "waltz-happy-transition-in/05.jpg",
+     "subtitle": "Measure 4",
+     "note": "In the lines, on 1:\nleft line F faces HG,\nright line L faces HG"
+    },
+    {
+     "src": "waltz-happy-transition-in/06.jpg",
+     "subtitle": "Measure 5",
+     "note": "In the lines, on 1:\nleft line F faces HG,\nright line L faces HG"
     }
    ]
   },
@@ -1078,7 +1098,7 @@
    "id": "waltz-happy-section",
    "name": "8B · Happy Section",
    "section": "Waltz",
-   "fingerprint": "vhnf5f",
+   "fingerprint": "1xgpwe3",
    "frames": [
     {
      "src": "waltz-happy-section/01.jpg",
@@ -1091,7 +1111,7 @@
    "id": "waltz-happy-to-peaceful",
    "name": "8C · Transition Happy to Peaceful",
    "section": "Waltz",
-   "fingerprint": "ipnmss",
+   "fingerprint": "18406ay",
    "frames": [
     {
      "src": "waltz-happy-to-peaceful/01.jpg",
