@@ -3035,6 +3035,7 @@
       },
       {
         subtitle: "Gallop to the grid: after 1 measure",
+        grid: true,
         pairs: {
           lead: [[153.1, 318.8], [223.1, 316.6], [235.7, 202.4], [165.7, 202.4], [383.5, 236.8], [446.3, 236.8], [261, 432], [319, 432]],
           follow: [[386.4, 369.2], [451, 370], [409, 310], [351, 310], [434.6, 184.1], [499.8, 184.1], [567.5, 340.4], [510.6, 340.4]],
@@ -3042,6 +3043,7 @@
       },
       {
         subtitle: "Gallop to the grid: after 2 measures",
+        grid: true,
         pairs: {
           lead: [[73.3, 313.1], [167.3, 313.1], [168.3, 156.5], [74.3, 156.5], [262.3, 156.5], [342.3, 156.5], [261.3, 313.1], [341.3, 313.1]],
           follow: [[373.1, 277.6], [453.1, 277.6], [453.3, 123.4], [373.3, 123.4], [547.3, 123.4], [641.3, 123.4], [641.1, 277.6], [547.1, 277.6]],
@@ -3070,6 +3072,28 @@
         const side = LINE_TO_CROSSING_X[couple.number - 1][0] > CENTER.x ? -1 : 1;
         return [dancer(couple.number, "lead", [couple.x, couple.y]), dancer(couple.number, "follow", [couple.x + side * PIECE_RADIUS * 2, couple.y])];
       });
+      // Each follow pair is drawn like the Intro's same role pairs, split into an L half and an F half:
+      // the follow on the outside at the merge (further from the center) dances the lead part, and
+      // that half points out from the center. Galloping to the grid, the pair is split along the grid
+      // instead, the L half toward the lead part's own Triumphant Crossing spot.
+      const fromCenter = (number) => {
+        const [x, y] = LINE_TO_CROSSING_CROSS.follow[number - 1];
+        return Math.hypot(x - CENTER.x, y - CENTER.y);
+      };
+      const towardGridSpot = (leadPart, followPart) => {
+        const [leadX, leadY] = TRIUMPHANT_CROSSING_START.follow[leadPart - 1];
+        const [followX, followY] = TRIUMPHANT_CROSSING_START.follow[followPart - 1];
+        const dx = leadX - followX, dy = leadY - followY;
+        return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "east" : "west") : (dy > 0 ? "south" : "north");
+      };
+      const pairToken = (role, first, second, spot, grid) => {
+        if (role !== "follow") return { ...dancer(first, role, spot), label: `${first}-${second}` };
+        const [leadPart, followPart] = fromCenter(first) >= fromCenter(second) ? [first, second] : [second, first];
+        return {
+          ...dancer(first, role, spot), label: `${leadPart}-${followPart}`, roleLetters: true,
+          facingMode: grid ? towardGridSpot(leadPart, followPart) : "out",
+        };
+      };
       const fromGuests = [...LINE_TO_CROSSING_LINE_ORDER].reverse();
       line.forEach((couple) => { couple.facingMode = fromGuests.indexOf(couple.number) % 2 === 0 ? "north" : "south"; });
       const frames = LINE_TO_CROSSING_FRAMES.map((frame) => ({
@@ -3089,12 +3113,12 @@
                 const center = axis === 0 ? CENTER.x : CENTER.y;
                 return Number((center + ((value - center) / distance) * radius).toFixed(1));
               });
-              return { ...dancer(first, role, spot), label: `${first}-${second}` };
+              return pairToken(role, first, second, spot);
             }))
           : frame.pairs
             ? ["lead", "follow"].flatMap((role) => frame.pairs[role].map((spot, index) => {
               const [first, second] = LINE_TO_CROSSING_PAIRS[index];
-              return { ...dancer(first, role, spot), label: `${first}-${second}` };
+              return pairToken(role, first, second, spot, frame.grid);
             }))
             : frame.lead.flatMap((spot, index) => [dancer(index + 1, "lead", spot), dancer(index + 1, "follow", frame.follow[index])]),
       }));
