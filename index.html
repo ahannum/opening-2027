@@ -3948,16 +3948,9 @@
         frame("Measure 7: 4-5-6", [1, 0], [-1, 0]),
         // Separated again, the lead on the line-of-dance side (as in the "Little boxes" demo video).
         frame("Measure 8", [1, 0], [-1, 0]),
-        // Joined again, the lead's half pointing along the line of dance ("ccw"), and the couple shifted
-        // half a token against it so the red dot sits in the middle of the lead's half: the lead is on
-        // the dot and the follow beside them, away from the line of dance.
-        {
-          count: start.items.length,
-          annotation: { title, subtitle: "Measure 9" },
-          items: start.items.map((couple) => ({
-            ...couple, facingMode: "ccw", ...spot(couple, [-PIECE_RADIUS / 2 / unit, 0]),
-          })),
-        },
+        // Like Measure 8, lead and follow side by side facing out with the lead on the follow's left, but
+        // slid against the line of dance so the lead stands right on the red dot.
+        frame("Measure 9", [0, 0], [-2, 0]),
       ];
     }
 
