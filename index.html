@@ -3323,12 +3323,18 @@
         spots: [[99.5, 252.1], [99.5, 467.9], [165.1, 279.3], [165.1, 440.7], [230.7, 306.4], [230.7, 413.6], [295.3, 333.2], [295.3, 386.8],
           [424.7, 333.2], [424.7, 386.8], [489.3, 306.4], [489.3, 413.6], [554.9, 279.3], [554.9, 440.7], [620.5, 252.1], [620.5, 467.9]],
       },
-      {
+      // The X holds through Measure 3 and beats 1-2 of Measure 4; on 3-4 everyone reorients in place to
+      // face radially out, lead on the left and follow on the right.
+      ...[
+        { label: "Measure 3" },
+        { label: "Measure 4: 1-2" },
+        { label: "Measure 4: 3-4", allFacingOut: true },
+      ].map((frame) => ({
         subtitle: "X",
-        label: "Measure 3-4",
+        ...frame,
         spots: [[160.6, 160.6], [160.6, 559.4], [210.8, 210.8], [210.8, 509.2], [261, 261], [261, 459], [310.5, 310.5], [310.5, 409.5],
           [409.5, 310.5], [409.5, 409.5], [459, 261], [459, 459], [509.2, 210.8], [509.2, 509.2], [559.4, 160.6], [559.4, 559.4]],
-      },
+      })),
       {
         subtitle: "Unfurl the X: outer couples onto the circle",
         label: "Measure 5",
@@ -3522,11 +3528,12 @@
         // End of the cascade: follows toward the Honored Guests. A new count of 8 for the X starts here.
         { subtitle: NEW_SECTION_CASCADE_END, items: coupleFrame(() => "north") },
         // Out on the spokes, in the X and through the unfurling, every couple has the follow's half
-        // radially out ("in" points the lead's half at the center), except a frame's `facingOut` couples.
+        // radially out ("in" points the lead's half at the center), except a frame's `facingOut` couples (or
+        // all of them, with `allFacingOut`).
         // ("ccw" points the lead's half counterclockwise: facing out, lead on the left, follow on the
         // right).
-        ...NEW_SECTION_UNFURL_FRAMES.flatMap(({ label, cascadeLabel = label, spots, facingOut = [], dipCascadeFrom }) => [
-          { subtitle: label, items: coupleFrame((place) => (facingOut.includes(real(place)) ? "ccw" : "in"), (place) => spots[place - 1]) },
+        ...NEW_SECTION_UNFURL_FRAMES.flatMap(({ label, cascadeLabel = label, spots, facingOut = [], allFacingOut, dipCascadeFrom }) => [
+          { subtitle: label, items: coupleFrame((place) => (allFacingOut || facingOut.includes(real(place)) ? "ccw" : "in"), (place) => spots[place - 1]) },
           ...(dipCascadeFrom ? [dipCascadeFrame(cascadeLabel, dipCascadeFrom, (place) => spots[place - 1])] : []),
         ]),
         // It ends on Hearts Adrift's start, everyone turning in, so the two join up.
