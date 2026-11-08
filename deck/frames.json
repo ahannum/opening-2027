@@ -977,7 +977,7 @@
    "id": "waltz-box-skit",
    "name": "7 · Box Skit",
    "section": "Waltz",
-   "fingerprint": "gdd6ta",
+   "fingerprint": "1l01lg8",
    "frames": [
     {
      "src": "waltz-box-skit/01.jpg",
@@ -1031,27 +1031,66 @@
     },
     {
      "src": "waltz-box-skit/11.jpg",
-     "subtitle": "Measure 7: 4-5-6",
+     "subtitle": "Measure 6: 4-5-6",
      "note": ""
     },
     {
      "src": "waltz-box-skit/12.jpg",
-     "subtitle": "Measure 8: 1-2-3",
+     "subtitle": "Measure 7: 1-2-3",
      "note": ""
     },
     {
      "src": "waltz-box-skit/13.jpg",
-     "subtitle": "Measure 8: 4-5-6",
+     "subtitle": "Measure 7: 4-5-6",
      "note": ""
     },
     {
      "src": "waltz-box-skit/14.jpg",
-     "subtitle": "Measure 9",
+     "subtitle": "Measure 8",
      "note": ""
     },
     {
      "src": "waltz-box-skit/15.jpg",
-     "subtitle": "Measure 10",
+     "subtitle": "Measure 9",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-happy-transition-in",
+   "name": "8 · Transition into Happy Section",
+   "section": "Waltz",
+   "fingerprint": "1lu96yq",
+   "frames": [
+    {
+     "src": "waltz-happy-transition-in/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-happy-section",
+   "name": "9 · Happy Section",
+   "section": "Waltz",
+   "fingerprint": "1q60mg9",
+   "frames": [
+    {
+     "src": "waltz-happy-section/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-happy-to-peaceful",
+   "name": "10 · Transition Happy to Peaceful",
+   "section": "Waltz",
+   "fingerprint": "1fzn7o7",
+   "frames": [
+    {
+     "src": "waltz-happy-to-peaceful/01.jpg",
+     "subtitle": "Start",
      "note": ""
     }
    ]
