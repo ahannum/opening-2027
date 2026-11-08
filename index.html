@@ -3963,8 +3963,41 @@
       if (!start) return [];
       return [{ ...structuredClone(start), annotation: { title, subtitle: "Start" } }];
     }
+    // Transition into Happy Section, from Ariel's sketch: Orphan 3 on the spots where Box Skit ends (the
+    // lead on the red dot), then the couples take the colors of the sketch and everyone moves half a tape
+    // (one half step, 11.25°) clockwise, against the line of dance. The teal couples have no arrow in the
+    // sketch but shift too, or the green couples behind them would land on top of them.
+    const HAPPY_COLORS = {
+      rose: [1, 9],
+      violet: [16, 8],
+      green: [2, 3, 5, 10, 11, 13],
+      teal: [4, 6, 7, 12, 14, 15],
+    };
     function happyTransitionInSnapshots() {
-      return holdFrom(boxSkitSnapshots, "Transition into Happy Section");
+      const title = "Transition into Happy Section";
+      const start = boxSkitSnapshots().at(-1);
+      if (!start) return [];
+      const colorOf = (number) => Object.keys(HAPPY_COLORS).find((color) => HAPPY_COLORS[color].includes(number));
+      const halfTape = (2 * Math.PI) / 32;
+      const rotate = (item, by) => {
+        const dx = item.x - CENTER.x;
+        const dy = CENTER.y - item.y;
+        const radius = Math.hypot(dx, dy);
+        const angle = Math.atan2(dy, dx) + by;
+        return {
+          x: Number((CENTER.x + radius * Math.cos(angle)).toFixed(3)),
+          y: Number((CENTER.y - radius * Math.sin(angle)).toFixed(3)),
+        };
+      };
+      const moved = start.items.map((couple) => {
+        const groupColor = colorOf(couple.number) || "neutral";
+        const step = couple.step == null ? couple.step : (couple.step + 31) % 32;
+        return { ...couple, groupColor, step, ...rotate(couple, -halfTape) };
+      });
+      return [
+        { ...structuredClone(start), annotation: { title, subtitle: "Orphan 3" } },
+        { count: moved.length, annotation: { title, subtitle: "Half a tape clockwise" }, items: moved },
+      ];
     }
     function happySectionSnapshots() {
       return holdFrom(happyTransitionInSnapshots, "Happy Section");
@@ -4180,19 +4213,19 @@
       {
         id: "waltz-happy-transition-in",
         section: WALTZ,
-        name: "8 · Transition into Happy Section",
+        name: "8A · Transition into Happy Section",
         snapshots: happyTransitionInSnapshots,
       },
       {
         id: "waltz-happy-section",
         section: WALTZ,
-        name: "9 · Happy Section",
+        name: "8B · Happy Section",
         snapshots: happySectionSnapshots,
       },
       {
         id: "waltz-happy-to-peaceful",
         section: WALTZ,
-        name: "10 · Transition Happy to Peaceful",
+        name: "8C · Transition Happy to Peaceful",
         snapshots: happyToPeacefulSnapshots,
       },
     ];
