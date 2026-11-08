@@ -742,7 +742,7 @@
    "id": "waltz-contraction-expansion",
    "name": "2 · Theme 2: Contraction and Expansion",
    "section": "Waltz",
-   "fingerprint": "7n9vny",
+   "fingerprint": "zg1obb",
    "frames": [
     {
      "src": "waltz-contraction-expansion/01.jpg",
@@ -751,41 +751,46 @@
     },
     {
      "src": "waltz-contraction-expansion/02.jpg",
-     "subtitle": "Measure 1",
+     "subtitle": "Start",
      "note": ""
     },
     {
      "src": "waltz-contraction-expansion/03.jpg",
-     "subtitle": "Measure 2",
+     "subtitle": "Measure 1",
      "note": ""
     },
     {
      "src": "waltz-contraction-expansion/04.jpg",
-     "subtitle": "Measure 3",
+     "subtitle": "Measure 2",
      "note": ""
     },
     {
      "src": "waltz-contraction-expansion/05.jpg",
-     "subtitle": "Measure 4",
+     "subtitle": "Measure 3",
      "note": ""
     },
     {
      "src": "waltz-contraction-expansion/06.jpg",
-     "subtitle": "Measure 5",
+     "subtitle": "Measure 4",
      "note": ""
     },
     {
      "src": "waltz-contraction-expansion/07.jpg",
-     "subtitle": "Measure 6",
+     "subtitle": "Measure 5",
      "note": ""
     },
     {
      "src": "waltz-contraction-expansion/08.jpg",
-     "subtitle": "Measure 7",
+     "subtitle": "Measure 6",
      "note": ""
     },
     {
      "src": "waltz-contraction-expansion/09.jpg",
+     "subtitle": "Measure 7",
+     "note": ""
+    },
+    {
+     "src": "waltz-contraction-expansion/10.jpg",
      "subtitle": "Measure 8",
      "note": ""
     }
