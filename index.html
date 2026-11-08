@@ -839,6 +839,12 @@
       fill: var(--group-color, #d9d9d8);
     }
 
+    /* A color-filled lead/follow couple: the follow's half takes the group color instead of white, so
+       the circle reads as its color while the black lead half still shows which way it faces. */
+    .piece.couple.color-fill.has-group-color .token-base {
+      fill: var(--group-color);
+    }
+
     .piece.couple.partner-symbol .black-half {
       display: none;
     }
@@ -1637,6 +1643,8 @@
       displayMode = defaultCoupleDisplayMode,
       groupColor = defaultGroupColor,
       emphasized = false,
+      // Fill the couple with its group color rather than only ringing it (see .color-fill).
+      colorFill = false,
       // Shown instead of the number, e.g. "1-2" for a pair of dancers drawn as one circle.
       label = null,
       // Small L and F marks: on a couple, in its lead and follow halves; on a same role pair, under
@@ -1644,7 +1652,7 @@
       roleLetters = false,
     }) {
       const group = svgElement("g", {
-        class: `piece ${role}${emphasized ? " emphasized" : ""}`,
+        class: `piece ${role}${emphasized ? " emphasized" : ""}${colorFill ? " color-fill" : ""}`,
         tabindex: "0",
         "data-number": number,
         "data-role": role,
@@ -1665,6 +1673,7 @@
         displayMode,
         groupColor,
         emphasized,
+        colorFill,
         label,
         roleLetters,
         group,
@@ -3966,10 +3975,12 @@
       if (!start) return [];
       return [{ ...structuredClone(start), annotation: { title, subtitle: "Start" } }];
     }
-    // Transition into Happy Section, from Ariel's sketch: Orphan 3 on the spots where Box Skit ends (the
-    // lead on the red dot), then the couples take the colors of the sketch and everyone moves half a tape
-    // (one half step, 11.25°) clockwise, against the line of dance. The teal couples have no arrow in the
-    // sketch but shift too, or the green couples behind them would land on top of them.
+    // Transition into Happy Section, from Ariel's sketch. It opens on Orphan 3 with the couples joined
+    // again: each couple is one token, the lead's half pointing along the line of dance and sitting on
+    // the red dot where the lead ends Box Skit (the couple's center half a token against the line of
+    // dance from it), in the colors of the sketch. Then everyone moves half a tape (one
+    // half step, 11.25°) clockwise, against the line of dance; the teal couples have no arrow in the
+    // sketch but shift too, as Ariel asked.
     const HAPPY_COLORS = {
       rose: [1, 9],
       violet: [16, 8],
@@ -3978,8 +3989,11 @@
     };
     function happyTransitionInSnapshots() {
       const title = "Transition into Happy Section";
-      const start = boxSkitSnapshots().at(-1);
-      if (!start) return [];
+      const boxSkitEnd = boxSkitSnapshots().at(-1);
+      // Big Strings' last frame holds each couple as one token on its red dot, the same dots Box Skit
+      // splits around, so the joined couples are built from it.
+      const joinedOn = bigStringsSnapshots().at(-1);
+      if (!boxSkitEnd || !joinedOn) return [];
       const colorOf = (number) => Object.keys(HAPPY_COLORS).find((color) => HAPPY_COLORS[color].includes(number));
       const halfTape = (2 * Math.PI) / 32;
       const rotate = (item, by) => {
@@ -3992,13 +4006,20 @@
           y: Number((CENTER.y - radius * Math.sin(angle)).toFixed(3)),
         };
       };
-      const moved = start.items.map((couple) => {
-        const groupColor = colorOf(couple.number) || "neutral";
+      const leadAt = new Map(boxSkitEnd.items.filter((item) => item.role === "lead").map((lead) => [lead.number, lead]));
+      const joined = joinedOn.items.map((couple) => {
+        const lead = leadAt.get(couple.number) || couple;
+        return {
+          ...couple, facingMode: "ccw", groupColor: colorOf(couple.number) || "neutral", colorFill: true,
+          ...rotate(lead, -PIECE_RADIUS / 2 / OUTER_RADIUS),
+        };
+      });
+      const moved = joined.map((couple) => {
         const step = couple.step == null ? couple.step : (couple.step + 31) % 32;
-        return { ...couple, groupColor, step, ...rotate(couple, -halfTape) };
+        return { ...couple, step, ...rotate(couple, -halfTape) };
       });
       return [
-        { ...structuredClone(start), annotation: { title, subtitle: "Orphan 3" } },
+        { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
         { count: moved.length, annotation: { title, subtitle: "Half a tape clockwise" }, items: moved },
       ];
     }
@@ -5454,6 +5475,7 @@
           displayMode: item.displayMode,
           groupColor: item.groupColor,
           emphasized: Boolean(item.emphasized),
+          colorFill: Boolean(item.colorFill),
           label: item.label ?? null,
           roleLetters: Boolean(item.roleLetters),
         }));
@@ -5648,6 +5670,7 @@
           groupColor: token.groupColor,
           // Only stored when on, so shots saved before bold outlines existed still match.
           ...(token.emphasized ? { emphasized: true } : {}),
+          ...(token.colorFill ? { colorFill: true } : {}),
           ...(token.label ? { label: token.label } : {}),
           ...(token.roleLetters ? { roleLetters: true } : {}),
           x: Number(token.x.toFixed(3)),
@@ -5767,6 +5790,8 @@
         updateTokenColor(token);
         token.emphasized = Boolean(item.emphasized);
         token.group.classList.toggle("emphasized", token.emphasized);
+        token.colorFill = Boolean(item.colorFill);
+        token.group.classList.toggle("color-fill", token.colorFill);
         if (token.role !== "couple" || !item.facingMode) return;
 
         token.facingMode = item.facingMode;
