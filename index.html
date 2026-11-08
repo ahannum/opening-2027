@@ -843,8 +843,11 @@
       display: none;
     }
 
-    /* A colored couple shown as lead/follow keeps its color as a ring around the split. */
-    .piece.couple.lead-follow-symbol.has-group-color .outline {
+    /* A colored couple shown as lead/follow keeps its color as a ring around the split, and so does a
+       colored lead or follow standing on their own. */
+    .piece.couple.lead-follow-symbol.has-group-color .outline,
+    .piece.lead.has-group-color .outline,
+    .piece.follow.has-group-color .outline {
       stroke: var(--group-color);
       stroke-width: 5;
     }
