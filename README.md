@@ -44,7 +44,13 @@ The palette button (top right) opens **Colors, theme & size**: Auto / Light / Da
 
 **Choreo notes** (under the player's controls) opens a card under the board with the Ground Truth measure-table rows for the current frame: the frame's heading ("Measure 4-6") picks the rows, and the card follows along as you step or play. **All measures** shows the part's whole table with the frame's rows highlighted, and **Deck ↗** opens the Ground Truth deck. The card's on/off choice is saved on the phone, and the notes are kept there for offline use.
 
-The notes come from the **PUBLIC** Ground Truth decks only (the WIP decks need a Google sign-in): the **Choreo notes** GitHub workflow (`.github/workflows/choreo-notes.yml`) runs `tools/sync_notes.py` every hour, which downloads the decks and saves every measure table to `deck/notes.json`, matched to the player's parts by section number ("5 · …"). Run it at once from the repo's Actions tab, or by hand with `python3 tools/sync_notes.py`. To turn the feature off, delete that workflow and `deck/notes.json`; the button then says there are no notes.
+The notes come from the **PUBLIC** Ground Truth decks only (the WIP decks need a Google sign-in): the **Choreo notes** GitHub workflow (`.github/workflows/choreo-notes.yml`) runs `tools/sync_notes.py` every 15 minutes, which downloads the decks and saves every measure table to `deck/notes.json`, matched to the player's parts by section number ("5 · …"), along with each section's "Formation:" line, demo video links and other instructions written on its slides. Run it at once from the repo's Actions tab, or by hand with `python3 tools/sync_notes.py`. To turn the feature off, delete that workflow and `deck/notes.json`; the button then says there are no notes.
+
+## Keeping everything in step
+
+- **A routine changes** (planner or `stories/`): push it. The Slide frames workflow redraws `deck/`, and open players pick up the change within a few minutes (they check again when you come back to the app and every 5 minutes while it's open). The home screen shows when it last checked.
+- **A Ground Truth deck changes:** the Choreo notes workflow copies it within about 15 minutes, and open players pick it up the same way. Run the workflow from the Actions tab to skip the wait.
+- **No merge conflicts:** people edit `index.html`, `stories/` and `app/`; the workflows only write `deck/`. Each workflow rebases onto the latest commit before pushing and retries if someone pushed at the same moment. If your own push is turned down, run `git pull --rebase` and push again. Don't commit `deck/` by hand (for example after running `tools/export_deck.py` locally): two versions of the same picture can't be merged.
 
 ## Slide frames
 

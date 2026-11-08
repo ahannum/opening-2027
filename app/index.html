@@ -441,6 +441,24 @@
     .note-row .cell { white-space: pre-line; }
     .note-row .cell .col { color: var(--muted); font-size: 13px; font-weight: 650; }
     .notes .empty { margin: 0; color: var(--muted); }
+    .notes .formation { margin: 0 0 6px; }
+    .notes .formation b { color: var(--muted); font-size: 13px; }
+    .notes .links { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+    .notes .links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .notes .slide-notes { margin: 0 0 8px; padding-left: 18px; white-space: pre-line; }
+    .notes .slide-notes li + li { margin-top: 2px; }
 
     /* Landscape phones: the frame on the left, notes and controls on the right. */
     @media (orientation: landscape) and (max-height: 560px) {
@@ -867,15 +885,19 @@
     (async () => {
       const saved = await dbGet("meta", "notes");
       if (saved && !notes) { notes = saved; renderNotes(); }
-      try {
-        const response = await fetch(`../deck/notes.json?t=${Date.now()}`);
-        if (response.ok) {
-          notes = await response.json();
-          dbPut("meta", notes, "notes");
-          renderNotes();
-        }
-      } catch {}
+      loadNotes();
     })();
+    async function loadNotes() {
+      try {
+        const response = await fetch(`../deck/notes.json?t=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) return;
+        const text = await response.text();
+        if (notes && JSON.stringify(notes) === JSON.stringify(JSON.parse(text))) return;
+        notes = JSON.parse(text);
+        dbPut("meta", notes, "notes");
+        renderNotes();
+      } catch {}
+    }
 
     // "Measure 4-6" → [4, 6]; "Measures 1–3", "Measure 11,12", "Measure 2: Beat 3" work too.
     function measureRange(label = "") {
@@ -937,6 +959,51 @@
       $("#notesSource").hidden = !source;
       if (source) $("#notesSource").href = source;
       $("#notesTitle").textContent = `Choreo · ${frame.subtitle || `Frame ${current.frameIndex + 1}`}`;
+      // The rest of the section's slides: the formation above the rows, the demo videos below them, and
+      // the slides' other notes below those in the full view.
+      const extra = story && notes?.extras?.find((item) => item.dance === story.section && item.number === parseInt(story.name, 10));
+      const extraNodes = (full, part = "all") => {
+        if (!extra) return [];
+        const nodes = [];
+        if (part !== "after" && extra.formation) {
+          const line = document.createElement("p");
+          line.className = "formation";
+          const label = document.createElement("b");
+          label.textContent = "Formation: ";
+          line.append(label, extra.formation);
+          nodes.push(line);
+        }
+        if (part === "before") return nodes;
+        if (extra.links?.length) {
+          const row = document.createElement("div");
+          row.className = "links";
+          extra.links.forEach(({ text, url }) => {
+            const link = document.createElement("a");
+            link.href = url;
+            link.target = "_blank";
+            link.rel = "noopener";
+            link.textContent = `▶ ${text}`;
+            row.append(link);
+          });
+          nodes.push(row);
+        }
+        if (full && extra.notes?.length) {
+          const list = document.createElement("ul");
+          list.className = "slide-notes";
+          extra.notes.forEach((note) => {
+            const item = document.createElement("li");
+            item.textContent = note;
+            list.append(item);
+          });
+          nodes.push(list);
+        }
+        return nodes;
+      };
+      if (!tables.length && extra) {
+        $("#notesAll").hidden = true;
+        body.replaceChildren(...extraNodes(true));
+        return;
+      }
       if (!tables.length) {
         $("#notesAll").hidden = true;
         const empty = document.createElement("p");
@@ -952,7 +1019,7 @@
       const showAll = notesAll || !matches.length || table.rows.length <= 2;
       $("#notesAll").hidden = !matches.length || table.rows.length <= 2;
       if (!matches.length) $("#notesTitle").textContent += " (all measures)";
-      const nodes = [];
+      const nodes = extraNodes(showAll, "before");
       if (showAll && table.overview) {
         const overview = document.createElement("p");
         overview.className = "overview";
@@ -983,6 +1050,7 @@
         });
         nodes.push(item);
       });
+      nodes.push(...extraNodes(showAll, "after"));
       body.replaceChildren(...nodes);
       // In the full table, bring the frame's rows up to just under the card's heading.
       const first = showAll ? body.querySelector(".note-row.current") : null;
@@ -1010,6 +1078,7 @@
     // ---------- Builder: the planner, hidden, draws every story's boards ----------
     // It always comes fresh from the site, so a pushed change to a routine shows up on the next visit.
     let builderReady = false;
+    let lastSynced = null;   // when the planner last answered, shown on the home screen
     const buildQueue = [];
     const waiting = new Map();   // id -> [resolve]
     let building = null;
@@ -1066,6 +1135,7 @@
       const data = event.data || {};
       if (data.type === "opening-2027-presets") {
         builderReady = true;
+        lastSynced = new Date();
         const look = { css: data.boardCss, fontFamily: data.fontFamily };
         useBoardStyles(look);
         dbPut("meta", look, "boardStyles");
@@ -1121,6 +1191,21 @@
     loadBuilder();
     setTimeout(() => { if (!builderReady) renderStatus(); }, 8000);
 
+    // Stay current while the app is open: check the planner and the choreo notes again whenever the
+    // app comes back on screen (at most once a minute) and every 5 minutes while it's showing. Only
+    // parts whose frames changed are drawn again; the open frame stays where it is.
+    let lastCheck = Date.now();
+    function checkForUpdates(force = false) {
+      if (document.hidden || navigator.onLine === false) return;
+      if (!force && Date.now() - lastCheck < 60000) return;
+      lastCheck = Date.now();
+      loadNotes();
+      if (!building && !buildQueue.length) loadBuilder();
+    }
+    document.addEventListener("visibilitychange", () => checkForUpdates());
+    window.addEventListener("online", () => checkForUpdates(true));
+    setInterval(() => checkForUpdates(true), 5 * 60000);
+
     // ---------- Home list ----------
     function sectionStories(name = section) {
       return stories.filter((story) => story.section === name);
@@ -1168,7 +1253,10 @@
       const missing = stories.filter((story) => !framesById.has(story.id)).length;
       if (missing && builderReady) statusEl.textContent = `Drawing… ${stories.length - missing} of ${stories.length} storyboards ready`;
       else if (missing) statusEl.textContent = `${stories.length - missing} of ${stories.length} storyboards saved on this device. Connect to draw the rest.`;
-      else if (builderReady) statusEl.textContent = "Up to date with the planner. Everything is saved on this device for offline use.";
+      else if (builderReady) {
+        const time = lastSynced ? ` (checked ${lastSynced.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })})` : "";
+        statusEl.textContent = `Up to date with the planner${time}. Everything is saved on this device for offline use.`;
+      }
       else statusEl.textContent = "Saved on this device. Connect to check for changes.";
     }
 

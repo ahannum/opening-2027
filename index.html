@@ -5355,8 +5355,9 @@
     }
 
     if (driveConfigured()) {
-      // Load sign-in early so the Google popup opens straight from the button click.
-      loadScriptOnce("https://accounts.google.com/gsi/client").catch(() => {});
+      // Load sign-in early so the Google popup opens straight from the button click. Not when another
+      // page (the phone player, the presenter, the slide exporter) runs the planner hidden to draw.
+      if (window.parent === window) loadScriptOnce("https://accounts.google.com/gsi/client").catch(() => {});
     } else {
       setDriveStatus("Google Drive isn't connected to this planner yet. The setup steps are in the README.");
     }
