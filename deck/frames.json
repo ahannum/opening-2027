@@ -1060,7 +1060,7 @@
    "id": "waltz-happy-transition-in",
    "name": "8A · Transition into Happy Section",
    "section": "Waltz",
-   "fingerprint": "oe19gh",
+   "fingerprint": "5g8jjd",
    "frames": [
     {
      "src": "waltz-happy-transition-in/01.jpg",
@@ -1091,6 +1091,11 @@
      "src": "waltz-happy-transition-in/06.jpg",
      "subtitle": "Measure 5",
      "note": "In the lines, on 1:\nleft line F faces HG,\nright line L faces HG"
+    },
+    {
+     "src": "waltz-happy-transition-in/07.jpg",
+     "subtitle": "Measure 6",
+     "note": "In the lines, on 1:\nleft line F faces HG,\nright line L faces HG"
     }
    ]
   },
@@ -1098,7 +1103,7 @@
    "id": "waltz-happy-section",
    "name": "8B · Happy Section",
    "section": "Waltz",
-   "fingerprint": "1xgpwe3",
+   "fingerprint": "1i2382d",
    "frames": [
     {
      "src": "waltz-happy-section/01.jpg",
@@ -1111,7 +1116,7 @@
    "id": "waltz-happy-to-peaceful",
    "name": "8C · Transition Happy to Peaceful",
    "section": "Waltz",
-   "fingerprint": "18406ay",
+   "fingerprint": "p0y2n8",
    "frames": [
     {
      "src": "waltz-happy-to-peaceful/01.jpg",
