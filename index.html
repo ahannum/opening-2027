@@ -3946,15 +3946,38 @@
         frame("Measure 6: 4-5-6", [-1, -1], [1, 1]),
         frame("Measure 7: 1-2-3", [0, -1], [0, 1]),
         frame("Measure 7: 4-5-6", [1, 0], [-1, 0]),
-        // Separated again as at the start, the follow on the line-of-dance side.
-        frame("Measure 8", [-1, 0], [1, 0]),
-        // Joined on the dot again, the lead's half pointing along the line of dance ("ccw").
+        // Separated again, the lead on the line-of-dance side (as in the "Little boxes" demo video).
+        frame("Measure 8", [1, 0], [-1, 0]),
+        // Joined again, the lead's half pointing along the line of dance ("ccw"), and the couple shifted
+        // half a token against it so the red dot sits in the middle of the lead's half: the lead is on
+        // the dot and the follow beside them, away from the line of dance.
         {
           count: start.items.length,
           annotation: { title, subtitle: "Measure 9" },
-          items: start.items.map((couple) => ({ ...couple, facingMode: "ccw" })),
+          items: start.items.map((couple) => ({
+            ...couple, facingMode: "ccw", ...spot(couple, [-PIECE_RADIUS / 2 / unit, 0]),
+          })),
         },
       ];
+    }
+
+    // Waltz: the Happy Section comes after Box Skit, split into three parts: the transition into it, the
+    // Happy Section itself, and the transition from it to the Peaceful section. No choreography yet, so
+    // each part is a single "Start" frame holding where the part before it ends (built from that part's
+    // last frame, so it follows any change there); add frames here as Ariel gives them.
+    function holdFrom(previousSnapshots, title) {
+      const start = previousSnapshots().at(-1);
+      if (!start) return [];
+      return [{ ...structuredClone(start), annotation: { title, subtitle: "Start" } }];
+    }
+    function happyTransitionInSnapshots() {
+      return holdFrom(boxSkitSnapshots, "Transition into Happy Section");
+    }
+    function happySectionSnapshots() {
+      return holdFrom(happyTransitionInSnapshots, "Happy Section");
+    }
+    function happyToPeacefulSnapshots() {
+      return holdFrom(happySectionSnapshots, "Transition Happy to Peaceful");
     }
 
     // Saved configurations: ready-made stories listed in the planner and in the presenter. Each returns
@@ -4160,6 +4183,24 @@
         section: WALTZ,
         name: "7 · Box Skit",
         snapshots: boxSkitSnapshots,
+      },
+      {
+        id: "waltz-happy-transition-in",
+        section: WALTZ,
+        name: "8 · Transition into Happy Section",
+        snapshots: happyTransitionInSnapshots,
+      },
+      {
+        id: "waltz-happy-section",
+        section: WALTZ,
+        name: "9 · Happy Section",
+        snapshots: happySectionSnapshots,
+      },
+      {
+        id: "waltz-happy-to-peaceful",
+        section: WALTZ,
+        name: "10 · Transition Happy to Peaceful",
+        snapshots: happyToPeacefulSnapshots,
       },
     ];
 
