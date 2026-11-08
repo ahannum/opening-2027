@@ -3492,8 +3492,8 @@
         { subtitle: "Measure 2", items: podFrame(RING_RADII.threeQuarter) },
         // Lines out level with the nearest tape dots beyond: the outer tape's dots at 45°.
         { subtitle: "Measure 3", items: podFrame(OUTER_RADIUS * Math.SQRT1_2) },
-        // Measure 4-6 a little past those dots, on the middle ring.
-        { subtitle: "Measure 4-6", items: podFrame(RING_RADII.middle) },
+        // Measure 4-6 holds Measure 3's spots.
+        { subtitle: "Measure 4-6", items: podFrame(OUTER_RADIUS * Math.SQRT1_2) },
         // Back in toward the overlap, still in pods.
         { subtitle: "Measure 7", items: podFrame(RING_RADII.threeQuarter / 3) },
         // Overlap.
