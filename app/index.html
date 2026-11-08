@@ -659,6 +659,7 @@
       <div class="extras">
         <button type="button" class="speed" id="choreoBtn" aria-pressed="false" aria-controls="notes">Choreo notes</button>
         <button type="button" class="speed" id="speedBtn">Play speed: 1.5 s per frame</button>
+        <button type="button" class="speed" id="copyBtn">Copy this measure</button>
       </div>
     </div>
   </section>
@@ -1443,6 +1444,85 @@
     $("#prevBtn").addEventListener("click", () => { stopPlay(); go(-1); });
     $("#nextBtn").addEventListener("click", () => { stopPlay(); go(1); });
     $("#playBtn").addEventListener("click", () => (playTimer ? stopPlay() : startPlay()));
+    // ---------- Copy this measure: the board as shown (colors, sizes, theme) as a 1080 px picture ----------
+    const BOARD_VARS = ["--board-bg", "--board-ink", "--board-muted", "--board-guide", "--board-boundary", "--board-center-ring",
+      "--board-quarter", "--board-grid", "--board-dot", "--token-outline", "--token-outline-strong", "--pair-divider",
+      "--lead-fill", "--follow-fill", "--lead-number-fill", "--lead-number-halo", "--number-fill", "--number-halo",
+      "--number-scale", "--dot-scale"];
+
+    async function measurePng(size = 1080) {
+      const shown = board.querySelector("svg");
+      if (!shown) throw new Error("No frame on screen");
+      const clone = shown.cloneNode(true);
+      clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      clone.setAttribute("width", String(size));
+      clone.setAttribute("height", String(size));
+      const rootStyle = getComputedStyle(document.documentElement);
+      // A picture can't see this page's styles, so it carries the board styles and today's values.
+      const vars = BOARD_VARS.map((name) => [name, rootStyle.getPropertyValue(name).trim()]).filter(([, value]) => value);
+      const style = document.createElementNS("http://www.w3.org/2000/svg", "style");
+      style.textContent = `svg { ${vars.map(([name, value]) => `${name}: ${value};`).join(" ")} font-family: ${getComputedStyle(shown).fontFamily}; }\n${$("#boardCss").textContent}`;
+      const background = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      const [x, y, w, h] = (clone.getAttribute("viewBox") || "0 0 720 720").split(/[ ,]+/).map(Number);
+      Object.entries({ x, y, width: w, height: h, fill: rootStyle.getPropertyValue("--board-bg").trim() || "#ffffff" })
+        .forEach(([name, value]) => background.setAttribute(name, String(value)));
+      clone.insertBefore(background, clone.firstChild);
+      clone.insertBefore(style, clone.firstChild);
+      const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml;charset=utf-8" }));
+      try {
+        const image = new Image();
+        await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = url; });
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = size;
+        canvas.getContext("2d").drawImage(image, 0, 0, size, size);
+        return await new Promise((resolve, reject) => canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("Couldn't draw the picture"))), "image/png"));
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    function copyLabel(text) {
+      const button = $("#copyBtn");
+      button.textContent = text;
+      clearTimeout(copyLabel.timer);
+      copyLabel.timer = setTimeout(() => { button.textContent = "Copy this measure"; }, 2200);
+    }
+
+    // Copy to the clipboard where the phone allows it (paste into Slides, Messages, a chat); otherwise
+    // open the share sheet, and as a last resort save the picture.
+    $("#copyBtn").addEventListener("click", async () => {
+      if (!current?.frames) return;
+      stopPlay();
+      const story = stories.find((item) => item.id === current.ids[current.storyIndex]);
+      const frame = current.frames[current.frameIndex];
+      const fileName = `${story ? story.name : "Opening 2027"} - ${frame.subtitle || `frame ${current.frameIndex + 1}`}.png`.replace(/[\\/:*?"<>|]/g, "-");
+      const png = measurePng();
+      try {
+        if (navigator.clipboard?.write && window.ClipboardItem) {
+          // Safari wants the clipboard write started right away, with the picture still being drawn.
+          await navigator.clipboard.write([new ClipboardItem({ "image/png": png })]);
+          copyLabel("Copied ✓ Paste it anywhere");
+          return;
+        }
+      } catch {}
+      try {
+        const file = new File([await png], fileName, { type: "image/png" });
+        if (navigator.canShare?.({ files: [file] })) {
+          await navigator.share({ files: [file], title: fileName.replace(/\.png$/, "") });
+          copyLabel("Shared ✓");
+          return;
+        }
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(file);
+        link.download = fileName;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(link.href), 4000);
+        copyLabel("Saved ✓");
+      } catch (error) {
+        if (error?.name !== "AbortError") copyLabel("Couldn't copy");
+      }
+    });
+
     $("#speedBtn").addEventListener("click", () => {
       speedIndex = (speedIndex + 1) % SPEEDS.length;
       store.set("speedIndex", String(speedIndex));
