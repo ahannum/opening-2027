@@ -972,6 +972,89 @@
      "note": ""
     }
    ]
+  },
+  {
+   "id": "waltz-box-skit",
+   "name": "7 · Box Skit",
+   "section": "Waltz",
+   "fingerprint": "gdd6ta",
+   "frames": [
+    {
+     "src": "waltz-box-skit/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/02.jpg",
+     "subtitle": "Measure 1: 4-5-6",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/03.jpg",
+     "subtitle": "Measure 2: 1-2-3",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/04.jpg",
+     "subtitle": "Measure 2: 4-5-6",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/05.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/06.jpg",
+     "subtitle": "Measure 4: 1-2-3",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/07.jpg",
+     "subtitle": "Measure 4: 4-5-6",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/08.jpg",
+     "subtitle": "Measure 5: 1-2-3",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/09.jpg",
+     "subtitle": "Measure 5: 4-5-6",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/10.jpg",
+     "subtitle": "Measure 6: 1-2-3",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/11.jpg",
+     "subtitle": "Measure 7: 4-5-6",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/12.jpg",
+     "subtitle": "Measure 8: 1-2-3",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/13.jpg",
+     "subtitle": "Measure 8: 4-5-6",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/14.jpg",
+     "subtitle": "Measure 9",
+     "note": ""
+    },
+    {
+     "src": "waltz-box-skit/15.jpg",
+     "subtitle": "Measure 10",
+     "note": ""
+    }
+   ]
   }
  ]
 }
