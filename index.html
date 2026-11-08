@@ -4016,9 +4016,16 @@
           ...rotate(lead, -PIECE_RADIUS / 2 / OUTER_RADIUS),
         };
       });
+      // Measure 1's facings, from the note (facing is where the lead's half points): violet's incomplete
+      // toss across stops with the lead facing radially in; green's complete toss across switches the
+      // lead to the follow's other side, so the lead's half now points against the line of dance; teal
+      // keeps its facing. Rose reorients for the spot it's forming; that facing isn't set yet, so it
+      // keeps its facing for now.
+      const measure1Facing = { violet: "in", green: "cw" };
       const moved = joined.map((couple) => {
         const step = couple.step == null ? couple.step : (couple.step + 31) % 32;
-        return { ...couple, step, ...rotate(couple, -halfTape) };
+        const facingMode = measure1Facing[couple.groupColor] || couple.facingMode;
+        return { ...couple, step, facingMode, ...rotate(couple, -halfTape) };
       });
       return [
         { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
