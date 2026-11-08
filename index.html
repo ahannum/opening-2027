@@ -4147,7 +4147,18 @@
     const TURN_CASCADE_FRAMES = 2;
     const STORY_PRESETS = [
       { id: "intro-circle", section: POLKA, name: "1 · Intro Theme 1: circle → inside circle", snapshots: () => introSectionSnapshots(1) },
-      { id: "intro-two-lines", section: POLKA, name: "2 · Theme 1 variation: 2 lines", snapshots: () => introSectionSnapshots(2) },
+      // Opens on where section 1 ends, as its own "Start" frame (a copy of section 1's last frame, so it
+      // follows any change there), before its own frames.
+      {
+        id: "intro-two-lines", section: POLKA, name: "2 · Theme 1 variation: 2 lines",
+        snapshots: () => {
+          const frames = introSectionSnapshots(2);
+          const introEnd = introSectionSnapshots(1).at(-1);
+          if (!introEnd) return frames;
+          const title = frames[0]?.annotation?.title ?? introEnd.annotation?.title;
+          return [{ ...structuredClone(introEnd), annotation: { title, subtitle: "Start" } }, ...frames];
+        },
+      },
       { id: "intro-brass-x", section: POLKA, name: "3 · Big brass X", snapshots: () => introSectionSnapshots(3) },
       { id: "intro-x-to-circle", section: POLKA, name: "4 · From X to circle", snapshots: () => introSectionSnapshots(4) },
       {
