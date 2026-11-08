@@ -4043,8 +4043,9 @@
       // before its spot on 4. Turned into the line, it goes up to 1 tape a measure until it reaches its
       // place: by Measure 5 each line holds 8 couples evenly spaced from the back spot to the front one,
       // the 4 from the back filling the back half and the 4 from the front the front half. Couples keep
-      // their Measure 1 facing on the circle; in the line, on 1, the left line has the follow facing the
-      // Honored Guests and the right line the lead (lead's half "north" and "south").
+      // their Measure 1 facing on the circle until they reach their turning spot; from there, on 1, the
+      // left line has the follow facing the Honored Guests and the right line the lead (lead's half
+      // "north" and "south").
       const angleOf = (item) => Math.atan2(CENTER.y - item.y, item.x - CENTER.x);
       const tapeAngle = 2 * halfTape;
       const tapeLength = OUTER_RADIUS * tapeAngle;
@@ -4064,6 +4065,7 @@
         const depth = (3 - tapes) * spacing;
         return [couple.number, { angle, direction: Math.sign(gap), left, back, tapes, depth }];
       }));
+      const lineFacing = (path) => (path.left ? "north" : "south");
       const lineFrame = (measure) => {
         const t = measure - 1; // tapes waltzed since Measure 1
         const items = moved.map((couple) => {
@@ -4071,8 +4073,10 @@
           if (t <= path.tapes) {
             const angle = path.angle + path.direction * t * tapeAngle;
             const step = couple.step == null ? null : (((couple.step + path.direction * 2 * t) % 32) + 32) % 32;
+            // Reaching the turning spot on the outer tape, the couple already takes its line's facing.
+            const facingMode = t === path.tapes ? lineFacing(path) : couple.facingMode;
             return {
-              ...couple, step,
+              ...couple, step, facingMode,
               x: Number((CENTER.x + OUTER_RADIUS * Math.cos(angle)).toFixed(3)),
               y: Number((CENTER.y - OUTER_RADIUS * Math.sin(angle)).toFixed(3)),
             };
@@ -4080,7 +4084,7 @@
           const inward = Math.min((t - path.tapes) * tapeLength, path.depth);
           const y = path.back ? spotY - inward : -spotY + inward;
           return {
-            ...couple, ring: null, step: null, facingMode: path.left ? "north" : "south",
+            ...couple, ring: null, step: null, facingMode: lineFacing(path),
             x: Number((CENTER.x + (path.left ? -lineX : lineX)).toFixed(3)),
             y: Number((CENTER.y - y).toFixed(3)),
           };
