@@ -3900,6 +3900,63 @@
       ));
     }
 
+    // Waltz: Box Skit starts where Big Strings ends (built from its last frame, so it follows any change
+    // there): every couple on a red dot of the outer tape. Each couple splits up around its own dot, which
+    // stays put the whole section, and lead and follow move to spots around it, read as they face out:
+    // left is along the line of dance (counterclockwise), right is against it, in front / above / forward
+    // is out past the tape and behind is in toward the center. One frame per half measure Ariel gave.
+    function boxSkitSnapshots() {
+      const title = "Box Skit";
+      const start = bigStringsSnapshots().at(-1);
+      if (!start) return [];
+      // One unit is just far enough from the dot that lead and follow on either side don't overlap.
+      const unit = PIECE_RADIUS + 2;
+      const dotAngle = (couple) => Math.atan2(CENTER.y - couple.y, couple.x - CENTER.x);
+      // `along` is units along the tape (+ = left, toward the line of dance); `out` is units out (+) or in (−).
+      const spot = (couple, [along, out]) => {
+        const radius = OUTER_RADIUS + out * unit;
+        const angle = dotAngle(couple) + (along * unit) / OUTER_RADIUS;
+        return {
+          x: Number((CENTER.x + radius * Math.cos(angle)).toFixed(3)),
+          y: Number((CENTER.y - radius * Math.sin(angle)).toFixed(3)),
+        };
+      };
+      const frame = (subtitle, lead, follow) => {
+        const items = start.items.flatMap((couple) => [["lead", lead], ["follow", follow]]
+          .map(([role, offset]) => ({
+            key: `${couple.number}:${role}`, number: couple.number, role, ring: null, step: null,
+            facingMode: "out", displayMode: "leadFollow", groupColor: couple.groupColor || "neutral",
+            ...spot(couple, offset),
+          })));
+        return { count: items.length, annotation: { title, subtitle }, items };
+      };
+      return [
+        // Splitting the tape along it, the follow on the line-of-dance side.
+        frame("Start", [-1, 0], [1, 0]),
+        frame("Measure 1: 4-5-6", [0, -1], [0, 1]),
+        frame("Measure 2: 1-2-3", [1, -1], [-1, 1]),
+        frame("Measure 2: 4-5-6", [1, 1], [-1, -1]),
+        // Splitting the tape radially, lead out and follow in.
+        frame("Measure 3", [0, 1], [0, -1]),
+        frame("Measure 4: 1-2-3", [0, 1], [0, -1]),
+        frame("Measure 4: 4-5-6", [1, 0], [-1, 0]),
+        frame("Measure 5: 1-2-3", [1, 0], [-1, 0]),
+        frame("Measure 5: 4-5-6", [1, 1], [-1, -1]),
+        frame("Measure 6: 1-2-3", [-1, 1], [1, -1]),
+        frame("Measure 7: 4-5-6", [-1, -1], [1, 1]),
+        frame("Measure 8: 1-2-3", [0, -1], [0, 1]),
+        frame("Measure 8: 4-5-6", [1, 0], [-1, 0]),
+        // Separated again as at the start, the follow on the line-of-dance side.
+        frame("Measure 9", [-1, 0], [1, 0]),
+        // Joined on the dot again, the lead's half pointing along the line of dance ("ccw").
+        {
+          count: start.items.length,
+          annotation: { title, subtitle: "Measure 10" },
+          items: start.items.map((couple) => ({ ...couple, facingMode: "ccw" })),
+        },
+      ];
+    }
+
     // Saved configurations: ready-made stories listed in the planner and in the presenter. Each returns
     // the board snapshot for every frame, so adding one here makes it show up in both pickers.
     // Both pickers group them by `section`, in the order of PRESET_SECTIONS; Polka and Waltz hold the
@@ -4097,6 +4154,12 @@
         section: WALTZ,
         name: "6 · Theme 1: Big Strings",
         snapshots: bigStringsSnapshots,
+      },
+      {
+        id: "waltz-box-skit",
+        section: WALTZ,
+        name: "7 · Box Skit",
+        snapshots: boxSkitSnapshots,
       },
     ];
 
