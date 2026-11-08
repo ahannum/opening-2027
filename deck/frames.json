@@ -1060,7 +1060,7 @@
    "id": "waltz-happy-transition-in",
    "name": "8A · Transition into Happy Section",
    "section": "Waltz",
-   "fingerprint": "1siddm4",
+   "fingerprint": "18ijk7n",
    "frames": [
     {
      "src": "waltz-happy-transition-in/01.jpg",
@@ -1069,8 +1069,8 @@
     },
     {
      "src": "waltz-happy-transition-in/02.jpg",
-     "subtitle": "Half a tape clockwise",
-     "note": ""
+     "subtitle": "Measure 1",
+     "note": "Violet: toss, stop lead facing in\nGreen: toss, L switches sides\nRose: toss + pivot/reorient\nTeal: 1 step (L fwd R), collect"
     }
    ]
   },
