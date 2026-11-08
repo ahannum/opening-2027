@@ -3505,7 +3505,10 @@
         { subtitle: "Measure 8: Beat 4", items: podFrame(INNER_RADIUS, -1, 1) },
         { subtitle: "Measure 9-13", items: podFrame(INNER_RADIUS, -1, 1) },
         // Gallop to 1 line, couples again: leads toward the Honored Guests, follows away.
-        { subtitle: "Measure 14", items: coupleFrame(() => "south") },
+        // On beats 1-2 they're already in the 1 line but keep Measure 9-13's lead/follow split; on 3-4
+        // they turn to leads toward the Honored Guests, follows away.
+        { subtitle: "Measure 14: 1-2", items: coupleFrame((place) => podFacing(podSide(place) > 0)) },
+        { subtitle: "Measure 14: 3-4", items: coupleFrame(() => "south") },
         // Everyone reorients: lead left, follow right.
         { subtitle: "Measure 15", items: coupleFrame(() => "west") },
         // All follows toward the Honored Guests.
