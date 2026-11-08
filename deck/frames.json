@@ -5,7 +5,7 @@
    "id": "intro-circle",
    "name": "1 · Intro Theme 1: circle → inside circle",
    "section": "Polka",
-   "fingerprint": "1sy3e8z",
+   "fingerprint": "1bmj1uy",
    "frames": [
     {
      "src": "intro-circle/01.jpg",
@@ -38,7 +38,7 @@
    "id": "intro-two-lines",
    "name": "2 · Theme 1 variation: 2 lines",
    "section": "Polka",
-   "fingerprint": "9z2qb",
+   "fingerprint": "1kt7s0q",
    "frames": [
     {
      "src": "intro-two-lines/01.jpg",
@@ -136,7 +136,7 @@
    "id": "intro-brass-x",
    "name": "3 · Big brass X",
    "section": "Polka",
-   "fingerprint": "1vawmxc",
+   "fingerprint": "1ytzg8r",
    "frames": [
     {
      "src": "intro-brass-x/01.jpg",
@@ -159,7 +159,7 @@
    "id": "intro-x-to-circle",
    "name": "4 · From X to circle",
    "section": "Polka",
-   "fingerprint": "cnj7hx",
+   "fingerprint": "lkwqzs",
    "frames": [
     {
      "src": "intro-x-to-circle/01.jpg",
@@ -192,7 +192,7 @@
    "id": "hearts-adrift",
    "name": "5 · Hearts adrift",
    "section": "Polka",
-   "fingerprint": "13ldbw8",
+   "fingerprint": "4v231v",
    "frames": [
     {
      "src": "hearts-adrift/01.jpg",
@@ -280,7 +280,7 @@
    "id": "hearts-adrift-to-line",
    "name": "6 · Hearts adrift → turn cascade",
    "section": "Polka",
-   "fingerprint": "b2tslc",
+   "fingerprint": "140tkh7",
    "frames": [
     {
      "src": "hearts-adrift-to-line/01.jpg",
@@ -338,7 +338,7 @@
    "id": "turn-cascade",
    "name": "7 · Turn cascade",
    "section": "Polka",
-   "fingerprint": "1ilzy8h",
+   "fingerprint": "1afjx1w",
    "frames": [
     {
      "src": "turn-cascade/01.jpg",
@@ -356,7 +356,7 @@
    "id": "line-x-grid-prep",
    "name": "8 · Line → X → grid prep",
    "section": "Polka",
-   "fingerprint": "4g4k76",
+   "fingerprint": "ijhx5t",
    "frames": [
     {
      "src": "line-x-grid-prep/01.jpg",
@@ -414,7 +414,7 @@
    "id": "triumphant-crossing",
    "name": "9 · Triumphant grid crossing",
    "section": "Polka",
-   "fingerprint": "1ly2lh0",
+   "fingerprint": "aotfof",
    "frames": [
     {
      "src": "triumphant-crossing/01.jpg",
@@ -522,7 +522,7 @@
    "id": "block-to-pyramid",
    "name": "10 · 4×4 grid cascades → unfurling pyramid",
    "section": "Polka",
-   "fingerprint": "1uzwt8p",
+   "fingerprint": "1doln5o",
    "frames": [
     {
      "src": "block-to-pyramid/01.jpg",
@@ -545,7 +545,7 @@
    "id": "unfurling-pyramid-v2",
    "name": "11 · Unfurling pyramid",
    "section": "Polka",
-   "fingerprint": "1bwqq0q",
+   "fingerprint": "1yniind",
    "frames": [
     {
      "src": "unfurling-pyramid-v2/01.jpg",
@@ -578,7 +578,7 @@
    "id": "pyramid-to-v",
    "name": "11 · Unfurling pyramid → gallop to V",
    "section": "Polka",
-   "fingerprint": "12hpbb2",
+   "fingerprint": "108sr25",
    "frames": [
     {
      "src": "pyramid-to-v/01.jpg",
@@ -606,7 +606,7 @@
    "id": "final-v",
    "name": "12 · V finale",
    "section": "Polka",
-   "fingerprint": "11vkrv6",
+   "fingerprint": "1sdflo1",
    "frames": [
     {
      "src": "final-v/01.jpg",
@@ -699,7 +699,7 @@
    "id": "waltz-intro",
    "name": "1 · Introduction",
    "section": "Waltz",
-   "fingerprint": "1oeqzx6",
+   "fingerprint": "1gq30i1",
    "frames": [
     {
      "src": "waltz-intro/01.jpg",
@@ -742,7 +742,7 @@
    "id": "waltz-contraction-expansion",
    "name": "2 · Theme 2: Contraction and Expansion",
    "section": "Waltz",
-   "fingerprint": "10teijr",
+   "fingerprint": "7n9vny",
    "frames": [
     {
      "src": "waltz-contraction-expansion/01.jpg",
@@ -795,7 +795,7 @@
    "id": "waltz-theme-1",
    "name": "3 · Theme 1: Solo Violin",
    "section": "Waltz",
-   "fingerprint": "jbjt4u",
+   "fingerprint": "kkp399",
    "frames": [
     {
      "src": "waltz-theme-1/01.jpg",
@@ -833,7 +833,7 @@
    "id": "waltz-follows-escape",
    "name": "4 · Hijinks Skit",
    "section": "Waltz",
-   "fingerprint": "1kvrj0g",
+   "fingerprint": "8pdyi3",
    "frames": [
     {
      "src": "waltz-follows-escape/01.jpg",
@@ -881,7 +881,7 @@
    "id": "waltz-turning-gears",
    "name": "5 · Theme 2: Turning Gears",
    "section": "Waltz",
-   "fingerprint": "fjexui",
+   "fingerprint": "a0uwuh",
    "frames": [
     {
      "src": "waltz-turning-gears/01.jpg",
@@ -929,7 +929,7 @@
    "id": "waltz-big-strings",
    "name": "6 · Theme 1: Big Strings",
    "section": "Waltz",
-   "fingerprint": "1ivi3rt",
+   "fingerprint": "g74t58",
    "frames": [
     {
      "src": "waltz-big-strings/01.jpg",
@@ -977,7 +977,7 @@
    "id": "waltz-box-skit",
    "name": "7 · Box Skit",
    "section": "Waltz",
-   "fingerprint": "clvpe2",
+   "fingerprint": "8vcn3t",
    "frames": [
     {
      "src": "waltz-box-skit/01.jpg",
@@ -1060,7 +1060,7 @@
    "id": "waltz-happy-transition-in",
    "name": "8A · Transition into Happy Section",
    "section": "Waltz",
-   "fingerprint": "11549j3",
+   "fingerprint": "1eraowm",
    "frames": [
     {
      "src": "waltz-happy-transition-in/01.jpg",
@@ -1078,7 +1078,7 @@
    "id": "waltz-happy-section",
    "name": "8B · Happy Section",
    "section": "Waltz",
-   "fingerprint": "h3l4h0",
+   "fingerprint": "cagakv",
    "frames": [
     {
      "src": "waltz-happy-section/01.jpg",
@@ -1091,7 +1091,7 @@
    "id": "waltz-happy-to-peaceful",
    "name": "8C · Transition Happy to Peaceful",
    "section": "Waltz",
-   "fingerprint": "1mzramn",
+   "fingerprint": "1el0nhi",
    "frames": [
     {
      "src": "waltz-happy-to-peaceful/01.jpg",
