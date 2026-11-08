@@ -4018,10 +4018,9 @@
       });
       // Measure 1's facings, from the note (facing is where the lead's half points): violet's incomplete
       // toss across stops with the lead facing radially in; green's complete toss across switches the
-      // lead to the follow's other side, so the lead's half now points against the line of dance; teal
-      // keeps its facing. Rose reorients for the spot it's forming; that facing isn't set yet, so it
-      // keeps its facing for now.
-      const measure1Facing = { violet: "in", green: "cw" };
+      // lead to the follow's other side, so the lead's half now points against the line of dance; rose
+      // tosses across and pivots to reorient, ending the same way as green (Ariel); teal keeps its facing.
+      const measure1Facing = { violet: "in", green: "cw", rose: "cw" };
       const moved = joined.map((couple) => {
         const step = couple.step == null ? couple.step : (couple.step + 31) % 32;
         const facingMode = measure1Facing[couple.groupColor] || couple.facingMode;
