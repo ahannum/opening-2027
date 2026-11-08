@@ -38,7 +38,7 @@
    "id": "intro-two-lines",
    "name": "2 · Theme 1 variation: 2 lines",
    "section": "Polka",
-   "fingerprint": "70rex6",
+   "fingerprint": "6wkguf",
    "frames": [
     {
      "src": "intro-two-lines/01.jpg",
@@ -77,61 +77,66 @@
     },
     {
      "src": "intro-two-lines/08.jpg",
-     "subtitle": "Measure 9-13",
+     "subtitle": "Measure 8: Beat 4",
      "note": ""
     },
     {
      "src": "intro-two-lines/09.jpg",
-     "subtitle": "Measure 14",
+     "subtitle": "Measure 9-13",
      "note": ""
     },
     {
      "src": "intro-two-lines/10.jpg",
-     "subtitle": "Measure 15",
+     "subtitle": "Measure 14",
      "note": ""
     },
     {
      "src": "intro-two-lines/11.jpg",
-     "subtitle": "Measure 16",
+     "subtitle": "Measure 15",
      "note": ""
     },
     {
      "src": "intro-two-lines/12.jpg",
-     "subtitle": "Measure 1 Beats 1-2",
+     "subtitle": "Measure 16",
      "note": ""
     },
     {
      "src": "intro-two-lines/13.jpg",
-     "subtitle": "Measure 1 Beats 3-4",
+     "subtitle": "Measure 1 Beats 1-2",
      "note": ""
     },
     {
      "src": "intro-two-lines/14.jpg",
-     "subtitle": "Measure 2 Beats 1-2",
+     "subtitle": "Measure 1 Beats 3-4",
      "note": ""
     },
     {
      "src": "intro-two-lines/15.jpg",
-     "subtitle": "Measure 2 Beats 3-4",
+     "subtitle": "Measure 2 Beats 1-2",
      "note": ""
     },
     {
      "src": "intro-two-lines/16.jpg",
-     "subtitle": "Measure 3 Beats 1-2",
+     "subtitle": "Measure 2 Beats 3-4",
      "note": ""
     },
     {
      "src": "intro-two-lines/17.jpg",
-     "subtitle": "Measure 3 Beats 3-4",
+     "subtitle": "Measure 3 Beats 1-2",
      "note": ""
     },
     {
      "src": "intro-two-lines/18.jpg",
-     "subtitle": "Measure 4 Beats 1-2",
+     "subtitle": "Measure 3 Beats 3-4",
      "note": ""
     },
     {
      "src": "intro-two-lines/19.jpg",
+     "subtitle": "Measure 4 Beats 1-2",
+     "note": ""
+    },
+    {
+     "src": "intro-two-lines/20.jpg",
      "subtitle": "Measure 4 Beats 3-4",
      "note": ""
     }
