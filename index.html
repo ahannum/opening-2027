@@ -3989,6 +3989,12 @@
       "Rose: toss + pivot/reorient",
       "Teal: 1 step (L fwd R), collect",
     ].join("\n");
+    // Ariel's rule for the lines of Measures 2–5 (HG: the Honored Guests).
+    const HAPPY_LINES_NOTE = [
+      "In the lines, on 1:",
+      "left line F faces HG,",
+      "right line L faces HG",
+    ].join("\n");
     function happyTransitionInSnapshots() {
       const title = "Transition into Happy Section";
       const boxSkitEnd = boxSkitSnapshots().at(-1);
@@ -4029,9 +4035,66 @@
         // the front, toward the Honored Guests).
         return { ...couple, step, facingMode, ...rotate(leadAt.get(couple.number) || couple, -halfTape) };
       });
+      // Measures 2–5: everyone forward waltzes to the nearest turning spot and turns there into one of
+      // two straight lines toward the middle, the left line through the two left spots (1's at the
+      // back, 8's at the front) and the right line through the two right ones (16's, 9's). The back
+      // left and front right quarters travel against the line of dance, the others with it. On the
+      // circle a couple covers 1 tape a measure, so it's between dots on 1 and passes the last dot
+      // before its spot on 4. Turned into the line, it goes up to 1 tape a measure until it reaches its
+      // place: by Measure 5 each line holds 8 couples evenly spaced from the back spot to the front one,
+      // the 4 from the back filling the back half and the 4 from the front the front half. Couples keep
+      // their Measure 1 facing on the circle; in the line, on 1, the left line has the follow facing the
+      // Honored Guests and the right line the lead (lead's half "north" and "south").
+      const angleOf = (item) => Math.atan2(CENTER.y - item.y, item.x - CENTER.x);
+      const tapeAngle = 2 * halfTape;
+      const tapeLength = OUTER_RADIUS * tapeAngle;
+      const spotAngle = Math.PI / 2 - halfTape; // the back right spot; the others mirror it
+      const lineX = OUTER_RADIUS * Math.cos(spotAngle);
+      const spotY = OUTER_RADIUS * Math.sin(spotAngle);
+      const spacing = (2 * spotY) / 7;
+      const paths = new Map(moved.map((couple) => {
+        const angle = angleOf(couple);
+        const left = Math.cos(angle) < 0;
+        const back = Math.sin(angle) > 0;
+        const spot = Math.atan2(back ? spotY : -spotY, left ? -lineX : lineX);
+        let gap = spot - angle;
+        gap = Math.atan2(Math.sin(gap), Math.cos(gap));
+        const tapes = Math.round(Math.abs(gap) / tapeAngle);
+        // The couple already on a spot leads its line in deepest; each one behind it stops a place short.
+        const depth = (3 - tapes) * spacing;
+        return [couple.number, { angle, direction: Math.sign(gap), left, back, tapes, depth }];
+      }));
+      const lineFrame = (measure) => {
+        const t = measure - 1; // tapes waltzed since Measure 1
+        const items = moved.map((couple) => {
+          const path = paths.get(couple.number);
+          if (t <= path.tapes) {
+            const angle = path.angle + path.direction * t * tapeAngle;
+            const step = couple.step == null ? null : (((couple.step + path.direction * 2 * t) % 32) + 32) % 32;
+            return {
+              ...couple, step,
+              x: Number((CENTER.x + OUTER_RADIUS * Math.cos(angle)).toFixed(3)),
+              y: Number((CENTER.y - OUTER_RADIUS * Math.sin(angle)).toFixed(3)),
+            };
+          }
+          const inward = Math.min((t - path.tapes) * tapeLength, path.depth);
+          const y = path.back ? spotY - inward : -spotY + inward;
+          return {
+            ...couple, ring: null, step: null, facingMode: path.left ? "north" : "south",
+            x: Number((CENTER.x + (path.left ? -lineX : lineX)).toFixed(3)),
+            y: Number((CENTER.y - y).toFixed(3)),
+          };
+        });
+        return {
+          count: items.length,
+          annotation: { title, subtitle: `Measure ${measure}`, note: HAPPY_LINES_NOTE },
+          items,
+        };
+      };
       return [
         { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
         { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: moved },
+        ...[2, 3, 4, 5].map(lineFrame),
       ];
     }
     function happySectionSnapshots() {
