@@ -3402,9 +3402,10 @@
       const away = (place) => podOf(place) % 2 === 0;
       const podSide = (place) => (away(place) ? -1 : 1);
       const podFacing = (south) => (south ? "east" : "west");
-      const podFrame = (distance, flip = 1) => places.map((place) => ({
+      // `facingFlip` turns the couples' lead/follow split; it follows `flip` unless given.
+      const podFrame = (distance, flip = 1, facingFlip = flip) => places.map((place) => ({
         ...dancer(place, "couple", x(place), CENTER.y + flip * podSide(place) * distance),
-        displayMode: "leadFollow", facingMode: podFacing(flip * podSide(place) > 0),
+        displayMode: "leadFollow", facingMode: podFacing(facingFlip * podSide(place) > 0),
       }));
       // It opens on a circle, everyone on a red dot (the 16 full steps of a tape). Each couple has a
       // dot: the away line's couples, in line order, on the dots from the far left over the top, and
@@ -3498,10 +3499,11 @@
         { subtitle: "Measure 7", items: podFrame(RING_RADII.threeQuarter / 3) },
         // Overlap.
         { subtitle: "Measure 8: Beat 1", note: "2 lines intersect", items: podFrame(0) },
-        // Out to the inner tape: pods A, C, E, G toward the Honored Guests, B, D, F, H away. They're
-        // there by beat 4 of Measure 8 and hold it through Measure 13.
-        { subtitle: "Measure 8: Beat 4", items: podFrame(INNER_RADIUS, -1) },
-        { subtitle: "Measure 9-13", items: podFrame(INNER_RADIUS, -1) },
+        // Out to the inner tape: pods A, C, E, G toward the Honored Guests, B, D, F, H away, keeping the
+        // lead/follow split they had at the overlap. They're there by beat 4 of Measure 8 and hold it
+        // through Measure 13.
+        { subtitle: "Measure 8: Beat 4", items: podFrame(INNER_RADIUS, -1, 1) },
+        { subtitle: "Measure 9-13", items: podFrame(INNER_RADIUS, -1, 1) },
         // Gallop to 1 line, couples again: leads toward the Honored Guests, follows away.
         { subtitle: "Measure 14", items: coupleFrame(() => "south") },
         // Everyone reorients: lead left, follow right.
