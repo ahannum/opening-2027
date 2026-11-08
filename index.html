@@ -3943,15 +3943,15 @@
         frame("Measure 5: 1-2-3", [1, 0], [-1, 0]),
         frame("Measure 5: 4-5-6", [1, 1], [-1, -1]),
         frame("Measure 6: 1-2-3", [-1, 1], [1, -1]),
-        frame("Measure 7: 4-5-6", [-1, -1], [1, 1]),
-        frame("Measure 8: 1-2-3", [0, -1], [0, 1]),
-        frame("Measure 8: 4-5-6", [1, 0], [-1, 0]),
+        frame("Measure 6: 4-5-6", [-1, -1], [1, 1]),
+        frame("Measure 7: 1-2-3", [0, -1], [0, 1]),
+        frame("Measure 7: 4-5-6", [1, 0], [-1, 0]),
         // Separated again as at the start, the follow on the line-of-dance side.
-        frame("Measure 9", [-1, 0], [1, 0]),
+        frame("Measure 8", [-1, 0], [1, 0]),
         // Joined on the dot again, the lead's half pointing along the line of dance ("ccw").
         {
           count: start.items.length,
-          annotation: { title, subtitle: "Measure 10" },
+          annotation: { title, subtitle: "Measure 9" },
           items: start.items.map((couple) => ({ ...couple, facingMode: "ccw" })),
         },
       ];
