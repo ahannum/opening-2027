@@ -3978,6 +3978,17 @@
       green: [2, 3, 5, 10, 11, 13],
       teal: [4, 6, 7, 12, 14, 15],
     };
+    // Ariel's note for Measure 1, short enough to sit in the bottom-left corner clear of couple 8: what
+    // each color does. Violet is an incomplete toss across (stop with the lead facing radially in);
+    // green a complete one (the lead switches to the follow's other side); rose tosses across and uses
+    // the extra step to pivot into the right facing for the next spot; teal already faces right and
+    // takes one step to half tape (lead forward right, like a regular waltz, then collect).
+    const HAPPY_TOSS_NOTE = [
+      "Violet: toss, stop lead facing in",
+      "Green: toss, L switches sides",
+      "Rose: toss + pivot/reorient",
+      "Teal: 1 step (L fwd R), collect",
+    ].join("\n");
     function happyTransitionInSnapshots() {
       const title = "Transition into Happy Section";
       const boxSkitEnd = boxSkitSnapshots().at(-1);
@@ -4011,7 +4022,7 @@
       });
       return [
         { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
-        { count: moved.length, annotation: { title, subtitle: "Half a tape clockwise" }, items: moved },
+        { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: moved },
       ];
     }
     function happySectionSnapshots() {
