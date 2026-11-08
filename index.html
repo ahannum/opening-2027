@@ -3498,7 +3498,9 @@
         { subtitle: "Measure 7", items: podFrame(RING_RADII.threeQuarter / 3) },
         // Overlap.
         { subtitle: "Measure 8: Beat 1", note: "2 lines intersect", items: podFrame(0) },
-        // Out to the inner tape: pods A, C, E, G toward the Honored Guests, B, D, F, H away.
+        // Out to the inner tape: pods A, C, E, G toward the Honored Guests, B, D, F, H away. They're
+        // there by beat 4 of Measure 8 and hold it through Measure 13.
+        { subtitle: "Measure 8: Beat 4", items: podFrame(INNER_RADIUS, -1) },
         { subtitle: "Measure 9-13", items: podFrame(INNER_RADIUS, -1) },
         // Gallop to 1 line, couples again: leads toward the Honored Guests, follows away.
         { subtitle: "Measure 14", items: coupleFrame(() => "south") },
