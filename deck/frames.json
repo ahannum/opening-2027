@@ -151,7 +151,7 @@
    "id": "intro-brass-x",
    "name": "3 · Big brass X",
    "section": "Polka",
-   "fingerprint": "5f9x2m",
+   "fingerprint": "ii4ljb",
    "frames": [
     {
      "src": "intro-brass-x/01.jpg",
@@ -165,7 +165,17 @@
     },
     {
      "src": "intro-brass-x/03.jpg",
-     "subtitle": "Measure 3-4",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "intro-brass-x/04.jpg",
+     "subtitle": "Measure 4: 1-2",
+     "note": ""
+    },
+    {
+     "src": "intro-brass-x/05.jpg",
+     "subtitle": "Measure 4: 3-4",
      "note": ""
     }
    ]
