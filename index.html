@@ -4294,7 +4294,15 @@
         id: "waltz-contraction-expansion",
         section: WALTZ,
         name: "2 · Theme 2: Contraction and Expansion",
-        snapshots: () => structuredClone(window.WALTZ_CONTRACTION_EXPANSION_SNAPSHOTS || []),
+        // Opens on where the Introduction ends, as its own "Start" frame (taken from the intro's last
+        // frame, so it follows any change there), before the part's own frames.
+        snapshots: () => {
+          const frames = structuredClone(window.WALTZ_CONTRACTION_EXPANSION_SNAPSHOTS || []);
+          const introEnd = structuredClone((window.WALTZ_INTRO_SNAPSHOTS || []).at(-1));
+          if (!introEnd) return frames;
+          const title = frames[0]?.annotation?.title || "Contraction + Expansion";
+          return [{ ...introEnd, annotation: { title, subtitle: "Start" } }, ...frames];
+        },
       },
       {
         id: "waltz-theme-1",
