@@ -6,6 +6,248 @@
  "sections": [
   {
    "dance": "Polka",
+   "number": 2,
+   "title": "2 · Theme 1 variation: 2 lines",
+   "overview": "This is the honeymoon stage of your journey together, so peppy, all is fun",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 1",
+     "Gallop, Gallop",
+     "",
+     ""
+    ],
+    [
+     "Measure 2",
+     "Gallop, Gallop",
+     "",
+     ""
+    ],
+    [
+     "Measure 3",
+     "1: Pivot step\n2: Pivot step\n3: Outside turn + send out\n\nThis measure and count 1 of next:\nQueues if helpful: “Piv-ot-send-out-hit”",
+     "Outside turn on 3 and 4 (one arm up), ready for hit on the next 1",
+     "Pivot step on 1, pivot step/plant on 2, lead an outside turn on 3 (to keep it controlled, help rotate the F with both left hand connection and your right hand palm), switch to holding F’s left hand with your right on 4ish so the F can hit on 1 of next measure"
+    ],
+    [
+     "Measure 4",
+     "1: F sendout hit\n2: hold\n3-4: F free spin In via J hook + F free spin in. there’s a moment when you’re almost back to back\nQueues for this measure and next if helpful: “Hit two in 4 1 hands hit 4”",
+     "1: hit of sendout: right arm straight out, ballet fingers, right leg slightly lunged\n3-4: free spin in, low floating arms so you don’t hit L",
+     "1-2: Left arm akimbo. Look out at F.\n3: Arms: J hook to spin follow in and snap left arm to tight bladed. Legs: pivot step outwards (towards/anti HG) on right foot.\n4: Arms: Let go of F hand and snap right arm into tight bladed also. Feet: pivot step onto left foot, so your back is to F (they are in the middle of spinning)."
+    ],
+    [
+     "Measure 5",
+     "1: Finishing the turn and now you’ve swapped places (L outside closer to HG/anti-HG)\n2: grab hands\n3: L sendout hit\n4: hold",
+     "1: finishing free spin\n2: right hand grab L left hand\n3: hit of L sendout, left arm floating, look at L\n4: hold",
+     "1: Feet: pivot step onto right foot, so facing F again\n2: left hand grab F right hand\n3: hit of the sendout: see F sendout notes above\n4: hold"
+    ],
+    [
+     "Measure 6",
+     "1-2: Same kind of turn as above.\n3: You’ve mostly finished the free spins and are facing each other again\n4: Frame, ready to gallop back in the direction you came. Hands should be pointed outwards, so you gallop in over elbows.\nQueues if helpful: “In 2 and 3 frame”",
+     "1: J hook L in and step on right foot\n2: Free spin over right shoulder\n3: mostly facing L again\n4: Frame",
+     "Footwork for free spin in:\n5 steps total, step on 1-2-&-3-4.\nLeft-right-left-right-left\n“1” is a pivot step onto left foot, push off the lunged right foot.\n“2” is another pivot step, but “&”, “3”, and “4” are steps in place.\nEverything is kind on the balls of your feet except the “3” and “4”"
+    ],
+    [
+     "Measure 7",
+     "Gallop, gallop (over elbows)",
+     "",
+     ""
+    ],
+    [
+     "Measure 8",
+     "Gallop, gallop (over elbows)",
+     "",
+     ""
+    ],
+    [
+     "Measure 9-10",
+     "(lines intersect in middle) gallop gallop",
+     "",
+     ""
+    ],
+    [
+     "Measure 11",
+     "1-2 Stop in orientation facing each other\n3-4 turn to face out, Fs offset to the front of Ls",
+     "",
+     ""
+    ],
+    [
+     "Measure 12",
+     "1-2 Both: arm up to the left\n3-4 Both: arm to the right",
+     "",
+     ""
+    ],
+    [
+     "Measure 13",
+     "1-2 Turn to face each other\n3-4 Frame",
+     "",
+     ""
+    ],
+    [
+     "Measure 14",
+     "Gallop Gallop\n(on beat 4 slow momentum to anticipate stopping and switch from open frame to alligator)",
+     "",
+     ""
+    ],
+    [
+     "Measure 15",
+     "1 Stop in 1 line, jumping into the orientation where all L have back towards HG, and snap hands into alligator frame. \n2-4 Hold, but be ready for scorpion dip",
+     "",
+     ""
+    ],
+    [
+     "Measure 16",
+     "1-2 Scorpion dip, facing HG\n3-4 snap up, F now  backing HG",
+     "Turn over left shoulder to get into scorpion dip",
+     "Turn over right shoulder to get into scorpion dip"
+    ],
+    [
+     "Measure 17\n(Becomes Measure 1 of next section)",
+     "1-2 (Reorient Cascade Group 1\n3-4 (Reorient Cascade Group 2\nVery snappy",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "dance": "Polka",
+   "number": 2,
+   "title": "2 · Theme 1 variation: Checkerboard reorient cascades",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 1",
+     "1-2 (Reorient Cascade Group 1\n3-4 (Reorient Cascade Group 2",
+     "",
+     ""
+    ],
+    [
+     "Measure 2",
+     "1-2 (Reorient cascade Group 3)\n3-4 Reorient cascade Group 4",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "dance": "Polka",
+   "number": 3,
+   "title": "3 · Big brass X",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 1",
+     "1-2 Half the group reorients, such that everyone now has F on the side closest to HG\n3-4  F shampoo with right arm",
+     "Shampoo includes a little back bend",
+     "During F shampoo, support the F strongly with hand on Fs back so they’re secure while leaning back"
+    ],
+    [
+     "Measure 2",
+     "1-2 Take frame and orient down line of dance\n3-4 gallop (half the ppl are galloping over elbows)  to X",
+     "",
+     ""
+    ],
+    [
+     "Measure 3",
+     "1-2 Finish gallop to X\n3-4 Stop in X, switch to right-to-right connection in prep for double shampoo",
+     "",
+     ""
+    ],
+    [
+     "Measure 4",
+     "1-2 Both shampoo, both with left hand over head\n3-4 Reorient to prepare to gallop radially outwards, so hands facing down the arm of the X",
+     "",
+     "Have your left foot back a bit so you’re really stable and able to both steady the F while they shampoo and lean back a little while doing it yourself"
+    ]
+   ]
+  },
+  {
+   "dance": "Polka",
+   "number": 4,
+   "title": "4 · From X to circle",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 5",
+     "gallop, gallop",
+     "",
+     ""
+    ],
+    [
+     "Measure 6",
+     "1-2 gallop\n3-4 stop on tape, oriented so L faces radially outward and F faces radially inward",
+     "",
+     ""
+    ],
+    [
+     "Orphan 2",
+     "1-2: floor dip prep: switch to crossed hands",
+     "",
+     ""
+    ],
+    [
+     "Measure 7",
+     "1: floor dip cascade starts",
+     "",
+     ""
+    ],
+    [
+     "Measure 8",
+     "Floor dip cascade continues",
+     "",
+     ""
+    ],
+    [
+     "Measure 9",
+     "Hold dip for 4 beats",
+     "",
+     ""
+    ],
+    [
+     "Music starts slowing down here",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Measure 10",
+     "1- up\n2- F rotates as getting up from dip\n3-4 F standing up and starting to walk away towards next tape",
+     "",
+     ""
+    ],
+    [
+     "11",
+     "1- F walking\n2- L approach F from behind, so F is facing radially outward and so is L\n3- L turn F around by pressing on back of F left arm, forearm near wrist, press it fwd so F rotates over their right shoulder\n4- L drop F’s left arm so its draped over your right shoulder as you take from",
+     "Arms floating before you get turned",
+     ""
+    ]
+   ]
+  },
+  {
+   "dance": "Polka",
    "number": 5,
    "title": "5 · Hearts adrift: Part 1",
    "overview": "This is the only non-joyful moment in the polka. Some polka on the circle, a dip, then F escape, L sad, they reunite and all is well again.\nMood is worried, scared\n\nDemo videos:\nHearts adrift to turn cascade",
@@ -284,15 +526,15 @@
     ],
     [
      "Measure 7",
-     "Wave at each other (both with hand closest to each other, left) while F gallops away",
+     "Look at your partner and wave at each other (both with hand closest to each other, left) while F gallops away.",
      "Facing radially in, galloping LOD.",
      "Still facing radially out"
     ],
     [
      "Measure 8",
      "All: The lead same role partner is the one further radially out.\nAll: You will meet your same role partner on a tape (on either inside or outside circle).",
-     "1-2: Finish galloping to meet same role partner. Note the path of half of ppl will be a little slanty.\n3: If you need to turn around, turn around.",
-     "1: If you need to turn around, turn. If you need to take a couple steps forward to meet up with your partner, take the steps on 2-3. Looking at your location on the previous slide helps!"
+     "1-2: Finish galloping to meet same role partner, look to them. Note the path of half of ppl will be a little slanty.\n3: If you need to turn around, turn around.",
+     "1: Start looking at same role partner. If you need to turn around, turn. If you need to take a couple steps forward to meet up with your partner, take the steps on 2-3. Looking at your location on the previous slide helps!"
     ],
     [
      "Measure 9",
@@ -808,20 +1050,20 @@
     [
      "Measure 7",
      "",
-     "1 hit arms floating, you’ve finished the turn so facing radially out",
+     "1 arms come down with a beckon to L with left hand\n6 arms go to folded tightly over abdomen in prep for cradle lift",
      "1 music has a big “bom”\n2-6 scurry towards F"
     ],
     [
      "Measure 8",
-     "",
-     "Plank and lean weight towards L",
-     "1 Reach forearms under F armpits to prep for drag\n4 Drag (either backwards and down LOD or just down LOD)"
+     "The number of cradle lift rotations you do depends on whether you’re going to an inside circle or outside circle tape for turning gears! Inside circle people do ~1.25 total rotations and outside circle people do ~1.75. All rotate over left shoulder.",
+     "1-2 hold\n3 “down”\n456 lift",
+     "1-2 Wrap arms around F to prep for cradle lift\n3 “down”\n456 big yoink, lift and turn over left shoulder"
     ],
     [
      "Measure 9",
-     "1-5 Still dragging, reach tape on inside or outside circle\n6 F upright",
+     "123 still lifting/rotating, but L no longer adding additional momentum.\n456 putting down",
      "",
-     ""
+     "Make sure F can be stable when you put them down; their legs aren’t still flying around. Put down very controlled to be certain."
     ],
     [
      "Measure 10",
@@ -832,6 +1074,142 @@
     [
      "Measure 11",
      "1 “up” of the updown lift",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "dance": "Waltz",
+   "number": 5,
+   "title": "5 · Theme 2: Turning Gears: INSIDE CIRCLE",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 1",
+     "On tape:\n123: Lift  Follows backing LOD\n456:  Down from lift/ frame",
+     "",
+     ""
+    ],
+    [
+     "Measure 2",
+     "Waltz, moving 2 tapes LOD (Follows backing LOD on 1)",
+     "",
+     ""
+    ],
+    [
+     "Measure 3",
+     "Waltz, moving 2 tapes LOD (Follows backing LOD on 1)",
+     "",
+     ""
+    ],
+    [
+     "Measure 4",
+     "Total move 2 tapes LOD, but with moves:\n123: Outside turn and catch so Fs go from backing LOD to then forwarding  (Move one tape)\n456: step step step in this orientation (Fs forward LOD, Ls backing) (Move one tape)",
+     "“Step-step-step” is left-right-left",
+     "“Step-step-step” is right-left-right"
+    ],
+    [
+     "Measure 5",
+     "Splitting tape:\n123: Pause\n456: Follow inside turn over left shoulder in place",
+     "",
+     ""
+    ],
+    [
+     "Measure 6",
+     "Reverse waltz, moving 2 tapes against LOD",
+     "Rev waltz step 1 is on right foot",
+     "Rev waltz step 1 is on left foot"
+    ],
+    [
+     "Measure 7",
+     "Reverse waltz, moving 2 tapes Against LOD",
+     "",
+     ""
+    ],
+    [
+     "Measure 8",
+     "On tape\n123: Pause (Fs facing LOD)\n456: Reorient (over F left shoulder, L right shoulder) to now have Fs backing LOD",
+     "",
+     ""
+    ],
+    [
+     "Orphan 3",
+     "F outside turn (so F rotating again over left shoulder)",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "dance": "Waltz",
+   "number": 5,
+   "title": "5 · Theme 2: Turning Gears: OUTSIDE CIRCLE",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 1",
+     "123: Lift  Follows forwarding  LOD\n456:  Down from lift/ frame",
+     "",
+     ""
+    ],
+    [
+     "Measure 2",
+     "Reverse waltz, moving 1 tape against LOD",
+     "",
+     ""
+    ],
+    [
+     "Measure 3",
+     "Reverse waltz, moving 1 tape against LOD",
+     "",
+     ""
+    ],
+    [
+     "Measure 4",
+     "Moving 1 tape\n123: F inside turn and catch\n456: Left,Right Left Follows, Right Left Right Leads (F backing LOD)",
+     "",
+     ""
+    ],
+    [
+     "Measure 5",
+     "123: Pause F backing LOD\n456: F outside Turn and frame",
+     "",
+     ""
+    ],
+    [
+     "Measure 6",
+     "Waltz 1 tape LOD",
+     "",
+     ""
+    ],
+    [
+     "Measure 7",
+     "Waltz 1 tape LOD",
+     "",
+     ""
+    ],
+    [
+     "Measure 8",
+     "Waltz 1 tape LOD",
+     "",
+     ""
+    ],
+    [
+     "Orphan 3",
+     "F outside turn (so F rotating again over left shoulder)",
      "",
      ""
     ]
