@@ -1505,21 +1505,36 @@
       return { x: same.reduce((sum, s) => sum + s.x, 0) / same.length, y: same.reduce((sum, s) => sum + s.y, 0) / same.length };
     }
 
-    // The direction a dancer starts out in. Moves around the circle point along it (so a big rotation
-    // doesn't point across the middle); a dancer at the center, or one crossing it, points straight.
+    // The direction a dancer starts out in, one of three kinds of move:
+    //  - around the circle (about the same distance from the center): along the circle, so a big
+    //    rotation doesn't point across the middle;
+    //  - radial (into or out of the center, or straight through it): exactly toward/away from the center;
+    //  - any other straight line: snapped to the nearest of up, down, left, right when it's close to one.
+    const DEG = Math.PI / 180;
     function travelDirection(from, to) {
       const ax = from.x - BOARD_CENTER, ay = from.y - BOARD_CENTER;
       const bx = to.x - BOARD_CENTER, by = to.y - BOARD_CENTER;
       const r1 = Math.hypot(ax, ay), r2 = Math.hypot(bx, by);
+      const chord = Math.atan2(to.y - from.y, to.x - from.x);
+      // Into or out of the very center, or straight across it: the line already runs through the center.
+      if (r1 < 30 || r2 < 30) return chord;
       let dTheta = Math.atan2(by, bx) - Math.atan2(ay, ax);
       dTheta = Math.atan2(Math.sin(dTheta), Math.cos(dTheta));
-      if (r1 < 30 || r2 < 30 || Math.abs(dTheta) > (150 * Math.PI) / 180) {
-        return Math.atan2(to.y - from.y, to.x - from.x);
-      }
+      if (Math.abs(dTheta) > 150 * DEG) return chord;
       const ux = ax / r1, uy = ay / r1;   // outward
-      const vx = (r2 - r1) * ux + r1 * dTheta * -uy;
-      const vy = (r2 - r1) * uy + r1 * dTheta * ux;
-      return Math.atan2(vy, vx);
+      // Radial: hardly any turn around the center.
+      if (Math.abs(dTheta) < 10 * DEG) return r2 >= r1 ? Math.atan2(uy, ux) : Math.atan2(-uy, -ux);
+      // Around the circle: the distance from the center stays about the same.
+      if (Math.abs(r2 - r1) < 0.08 * Math.max(r1, r2)) {
+        const vx = (r2 - r1) * ux + r1 * dTheta * -uy;
+        const vy = (r2 - r1) * uy + r1 * dTheta * ux;
+        return Math.atan2(vy, vx);
+      }
+      // A straight line across the floor.
+      const square = Math.round(chord / (90 * DEG)) * 90 * DEG;
+      let off = chord - square;
+      off = Math.atan2(Math.sin(off), Math.cos(off));
+      return Math.abs(off) <= 30 * DEG ? square : chord;
     }
 
     function drawArrows(nextFrame) {
