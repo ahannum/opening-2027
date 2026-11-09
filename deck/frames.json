@@ -217,7 +217,7 @@
    "id": "hearts-adrift",
    "name": "5 · Hearts adrift",
    "section": "Polka",
-   "fingerprint": "1ldtm46",
+   "fingerprint": "16ncsf0",
    "frames": [
     {
      "src": "hearts-adrift/01.jpg",
@@ -246,56 +246,61 @@
     },
     {
      "src": "hearts-adrift/06.jpg",
-     "subtitle": "Measures 11–12",
+     "subtitle": "Measure 11",
      "note": ""
     },
     {
      "src": "hearts-adrift/07.jpg",
-     "subtitle": "Measure 13",
+     "subtitle": "Measure 12",
      "note": ""
     },
     {
      "src": "hearts-adrift/08.jpg",
-     "subtitle": "Measure 14",
+     "subtitle": "Measure 13",
      "note": ""
     },
     {
      "src": "hearts-adrift/09.jpg",
-     "subtitle": "Measure 15",
+     "subtitle": "Measure 14",
      "note": ""
     },
     {
      "src": "hearts-adrift/10.jpg",
-     "subtitle": "Measure 1",
+     "subtitle": "Measure 15",
      "note": ""
     },
     {
      "src": "hearts-adrift/11.jpg",
-     "subtitle": "Measure 2",
+     "subtitle": "Measure 1",
      "note": ""
     },
     {
      "src": "hearts-adrift/12.jpg",
-     "subtitle": "Measure 3",
+     "subtitle": "Measure 2",
      "note": ""
     },
     {
      "src": "hearts-adrift/13.jpg",
-     "subtitle": "Measure 4",
+     "subtitle": "Measure 3",
      "note": ""
     },
     {
      "src": "hearts-adrift/14.jpg",
-     "subtitle": "Measure 5",
+     "subtitle": "Measure 4",
      "note": ""
     },
     {
      "src": "hearts-adrift/15.jpg",
-     "subtitle": "Measure 6",
+     "subtitle": "Measure 5",
      "note": ""
     },
     {
      "src": "hearts-adrift/16.jpg",
+     "subtitle": "Measure 6",
+     "note": ""
+    },
+    {
+     "src": "hearts-adrift/17.jpg",
      "subtitle": "Measures 7–9",
      "note": ""
     }
