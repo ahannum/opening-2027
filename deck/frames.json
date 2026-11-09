@@ -217,7 +217,7 @@
    "id": "hearts-adrift",
    "name": "5 · Hearts adrift",
    "section": "Polka",
-   "fingerprint": "4v231v",
+   "fingerprint": "1ldtm46",
    "frames": [
     {
      "src": "hearts-adrift/01.jpg",
@@ -271,32 +271,32 @@
     },
     {
      "src": "hearts-adrift/11.jpg",
-     "subtitle": "Measure 1",
-     "note": ""
-    },
-    {
-     "src": "hearts-adrift/12.jpg",
      "subtitle": "Measure 2",
      "note": ""
     },
     {
-     "src": "hearts-adrift/13.jpg",
+     "src": "hearts-adrift/12.jpg",
      "subtitle": "Measure 3",
      "note": ""
     },
     {
-     "src": "hearts-adrift/14.jpg",
+     "src": "hearts-adrift/13.jpg",
      "subtitle": "Measure 4",
      "note": ""
     },
     {
-     "src": "hearts-adrift/15.jpg",
+     "src": "hearts-adrift/14.jpg",
      "subtitle": "Measure 5",
      "note": ""
     },
     {
+     "src": "hearts-adrift/15.jpg",
+     "subtitle": "Measure 6",
+     "note": ""
+    },
+    {
      "src": "hearts-adrift/16.jpg",
-     "subtitle": "Measures 6–8",
+     "subtitle": "Measures 7–9",
      "note": ""
     }
    ]
