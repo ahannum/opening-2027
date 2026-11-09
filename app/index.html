@@ -418,7 +418,17 @@
       padding: 10px 14px 6px;
       background: var(--surface);
     }
-    .notes-head strong { flex: 1; min-width: 0; font-size: 15px; }
+    .notes-head strong { flex: 1; min-width: 0; font-size: 16px; line-height: 1.2; }
+    .notes-head strong::before {
+      content: "Choreo";
+      display: block;
+      margin-bottom: 1px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
     .notes-head button, .notes-head a {
       flex: none;
       min-height: 30px;
@@ -434,12 +444,57 @@
     }
     .notes-head button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
     .notes .overview { margin: 0 0 8px; color: var(--muted); white-space: pre-line; }
-    .note-row { padding: 6px 8px; border-radius: 10px; }
-    .note-row + .note-row { margin-top: 2px; }
-    .note-row.current { background: var(--accent-soft); }
-    .note-row .counts { font-weight: 700; }
-    .note-row .cell { white-space: pre-line; }
-    .note-row .cell .col { color: var(--muted); font-size: 13px; font-weight: 650; }
+    /* One measure: its label, then the Choreo lines, then one block per role (F, L) with a badge. */
+    .note-row { padding: 8px 10px 9px; border-left: 3px solid transparent; border-radius: 10px; }
+    .note-row + .note-row { margin-top: 4px; }
+    .note-row.current { background: var(--accent-soft); border-left-color: var(--accent); }
+    .note-row .counts {
+      margin-bottom: 4px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .note-row:not(.current) .counts { color: var(--muted); }
+    .note-row .cell { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 8px; align-items: start; }
+    .note-row .cell + .cell { margin-top: 6px; }
+    .note-row .cell .lines { display: grid; gap: 3px; grid-column: 2; }
+    .note-row .cell.choreo .lines, .note-row .cell.named .lines { grid-column: 1 / -1; }
+    .note-row .line { overflow-wrap: anywhere; }
+    .note-row .line.has-beat { display: grid; grid-template-columns: minmax(2.2em, auto) minmax(0, 1fr); column-gap: 6px; }
+    .note-row .beat {
+      display: inline-block;
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+    }
+    .note-row .tag {
+      display: grid;
+      place-items: center;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 6px;
+      border: 1.5px solid var(--token-outline);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .note-row .tag.lead { color: var(--lead-number-fill); background: var(--lead-fill); }
+    .note-row .tag.follow { color: #101416; background: var(--follow-fill); }
+    /* Other columns ("Group notes") get their name as a small heading above the text. */
+    .note-row .tag.other {
+      grid-column: 1 / -1;
+      display: block;
+      height: auto;
+      padding: 0;
+      border: 0;
+      color: var(--muted);
+      background: none;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
     .notes .empty { margin: 0; color: var(--muted); }
     .notes .formation { margin: 0 0 6px; }
     .notes .formation b { color: var(--muted); font-size: 13px; }
@@ -659,6 +714,7 @@
       <div class="extras">
         <button type="button" class="speed" id="choreoBtn" aria-pressed="false" aria-controls="notes">Choreo notes</button>
         <button type="button" class="speed" id="speedBtn">Play speed: 1.5 s per frame</button>
+        <button type="button" class="speed" id="arrowsBtn" aria-pressed="true">Arrows: on</button>
         <button type="button" class="speed" id="copyBtn">Copy this measure</button>
       </div>
     </div>
@@ -946,6 +1002,51 @@
       return [];
     }
 
+    // One cell of a table row. The Choreo column reads on its own; F notes and L notes get a round badge
+    // in the viewer's follow and lead colors, any other column its name. Each line of the cell is its
+    // own line, with a leading count ("1-2:", "1 and 2:") or label ("All:", "Group 2:") set off in bold.
+    function noteCell(text, column) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      if (column === null) cell.classList.add("choreo");
+      if (column !== null) {
+        const tag = document.createElement("span");
+        const role = /^\s*(f|follow)/i.test(column) ? "follow" : /^\s*(l|lead)/i.test(column) ? "lead" : "other";
+        tag.className = `tag ${role}`;
+        if (role === "other") cell.classList.add("named");
+        tag.textContent = role === "follow" ? "F" : role === "lead" ? "L" : column;
+        tag.title = column;
+        cell.append(tag);
+      }
+      const lines = document.createElement("div");
+      lines.className = "lines";
+      text.split(/[\n\v\u2028]+/).map((line) => line.trim()).filter(Boolean).forEach((line) => {
+        const div = document.createElement("div");
+        div.className = "line";
+        const beat = line.match(/^((?:\d+|and)(?:\s*(?:[-–,&]|and)\s*\d+)*)\s*[:.)]\s*(.+)$/i);
+        // Or a short lead-in label: "All:", "Group 2:", "Arms:", "Upper left & lower right arm of the X:".
+        const label = !beat && line.match(/^([A-Z][^:]{0,40}):\s+(.+)$/);
+        if (beat) {
+          const count = document.createElement("span");
+          count.className = "beat";
+          count.textContent = beat[1].replace(/\s+/g, "");
+          const rest = document.createElement("span");
+          rest.textContent = beat[2];
+          div.classList.add("has-beat");
+          div.append(count, rest);
+        } else if (label) {
+          const lead = document.createElement("b");
+          lead.textContent = `${label[1]}: `;
+          div.append(lead, label[2]);
+        } else {
+          div.textContent = line;
+        }
+        lines.append(div);
+      });
+      cell.append(lines);
+      return cell;
+    }
+
     function renderNotes() {
       const panel = $("#notes");
       $("#choreoBtn").setAttribute("aria-pressed", String(showNotes));
@@ -959,7 +1060,7 @@
       const source = notes?.source?.[story?.section];
       $("#notesSource").hidden = !source;
       if (source) $("#notesSource").href = source;
-      $("#notesTitle").textContent = `Choreo · ${frame.subtitle || `Frame ${current.frameIndex + 1}`}`;
+      $("#notesTitle").textContent = frame.subtitle || `Frame ${current.frameIndex + 1}`;
       // The rest of the section's slides: the formation above the rows, the demo videos below them, and
       // the slides' other notes below those in the full view.
       const extra = story && notes?.extras?.find((item) => item.dance === story.section && item.number === parseInt(story.name, 10));
@@ -1036,18 +1137,8 @@
         counts.textContent = row[0];
         item.append(counts);
         row.slice(1).forEach((text, c) => {
-          if (!text) return;
-          const cell = document.createElement("div");
-          cell.className = "cell";
-          // The Choreo column reads on its own; the others (F notes, L notes, …) get their name.
-          if (c > 0) {
-            const label = document.createElement("span");
-            label.className = "col";
-            label.textContent = `${table.columns[c + 1]}: `;
-            cell.append(label);
-          }
-          cell.append(text);
-          item.append(cell);
+          if (!text || !text.trim()) return;
+          item.append(noteCell(text, c === 0 ? null : table.columns[c + 1] || ""));
         });
         nodes.push(item);
       });
@@ -1353,6 +1444,7 @@
       const { frames, frameIndex, ids, storyIndex } = current;
       const frame = frames[frameIndex];
       board.innerHTML = frame.svg;
+      if (showArrows) drawArrows(nextFrameSvg());
       board.setAttribute("aria-label", `${frame.title} — ${frame.subtitle || `frame ${frameIndex + 1}`}`);
       setCaption(frame.subtitle || `Frame ${frameIndex + 1}`, frame.note || "");
       scrubber.max = String(frames.length);
@@ -1368,6 +1460,117 @@
       $("#nextLabel").textContent = atEnd && hasNextStory ? "Next part" : "Next";
       renderNotes();
     }
+
+    // ---------- Arrows: which way each dancer travels on the way to the next frame ----------
+    let showArrows = store.get("showArrows", "on") !== "off";
+    const BOARD_CENTER = 360;   // the planner's board is 720 × 720, centered on the circle
+    const DOT_RADIUS = 23;
+    const parsedFrames = new WeakMap();   // frame -> Map of dancer key -> {x, y}
+
+    // The frame after this one: the next frame of this part, or the first frame of the next part.
+    function nextFrameSvg() {
+      const { frames, frameIndex, ids, storyIndex } = current;
+      if (frameIndex + 1 < frames.length) return frames[frameIndex + 1];
+      return framesById.get(ids[storyIndex + 1])?.[0] || null;
+    }
+
+    function piecePosition(piece) {
+      const move = (piece.getAttribute("transform") || "").match(/translate\(\s*(-?[\d.]+)[\s,]+(-?[\d.]+)/);
+      return move ? { x: Number(move[1]), y: Number(move[2]), number: piece.getAttribute("data-number") } : null;
+    }
+
+    function piecePositions(root) {
+      const spots = new Map();
+      root.querySelectorAll(".piece").forEach((piece) => {
+        const spot = piecePosition(piece);
+        if (spot) spots.set(`${piece.getAttribute("data-role")}-${spot.number}`, spot);
+      });
+      return spots;
+    }
+
+    function framePositions(frame) {
+      if (!parsedFrames.has(frame)) {
+        const doc = new DOMParser().parseFromString(frame.svg, "image/svg+xml");
+        parsedFrames.set(frame, piecePositions(doc));
+      }
+      return parsedFrames.get(frame);
+    }
+
+    // Where a dancer is in the next frame: the same piece, or else the pieces with the same number
+    // (a couple that splits into its lead and follow, or the other way round) averaged.
+    function findNext(key, number, next) {
+      if (next.has(key)) return next.get(key);
+      const same = [...next.values()].filter((spot) => spot.number === number);
+      if (!same.length) return null;
+      return { x: same.reduce((sum, s) => sum + s.x, 0) / same.length, y: same.reduce((sum, s) => sum + s.y, 0) / same.length };
+    }
+
+    // The direction a dancer starts out in. Moves around the circle point along it (so a big rotation
+    // doesn't point across the middle); a dancer at the center, or one crossing it, points straight.
+    function travelDirection(from, to) {
+      const ax = from.x - BOARD_CENTER, ay = from.y - BOARD_CENTER;
+      const bx = to.x - BOARD_CENTER, by = to.y - BOARD_CENTER;
+      const r1 = Math.hypot(ax, ay), r2 = Math.hypot(bx, by);
+      let dTheta = Math.atan2(by, bx) - Math.atan2(ay, ax);
+      dTheta = Math.atan2(Math.sin(dTheta), Math.cos(dTheta));
+      if (r1 < 30 || r2 < 30 || Math.abs(dTheta) > (150 * Math.PI) / 180) {
+        return Math.atan2(to.y - from.y, to.x - from.x);
+      }
+      const ux = ax / r1, uy = ay / r1;   // outward
+      const vx = (r2 - r1) * ux + r1 * dTheta * -uy;
+      const vy = (r2 - r1) * uy + r1 * dTheta * ux;
+      return Math.atan2(vy, vx);
+    }
+
+    function drawArrows(nextFrame) {
+      const shown = board.querySelector("svg");
+      if (!shown || !nextFrame) return;
+      const next = framePositions(nextFrame);
+      const NS = "http://www.w3.org/2000/svg";
+      // One layer over every dot, so a neighbor's dot never covers an arrow.
+      const layer = document.createElementNS(NS, "g");
+      layer.setAttribute("class", "travel-arrows");
+      shown.append(layer);
+      shown.querySelectorAll(".piece").forEach((piece) => {
+        const here = piecePosition(piece);
+        if (!here) return;
+        const there = findNext(`${piece.dataset.role}-${piece.dataset.number}`, piece.dataset.number, next);
+        if (!there || Math.hypot(there.x - here.x, there.y - here.y) < 6) return;
+        const angle = (travelDirection(here, there) * 180) / Math.PI;
+        // Drawn pointing right just outside the dot, then turned; it grows with the dots.
+        const spot = document.createElementNS(NS, "g");
+        spot.setAttribute("transform", `translate(${here.x} ${here.y})`);
+        const arrow = document.createElementNS(NS, "g");
+        arrow.setAttribute("class", "travel-arrow");
+        arrow.setAttribute("style", "scale: var(--dot-scale, 1); pointer-events: none");
+        spot.append(arrow);
+        const turn = document.createElementNS(NS, "g");
+        turn.setAttribute("transform", `rotate(${angle.toFixed(1)})`);
+        const tip = DOT_RADIUS + 19;
+        const d = `M ${DOT_RADIUS + 4} 0 L ${tip - 2} 0 M ${tip - 9} -7 L ${tip} 0 L ${tip - 9} 7`;
+        [["var(--board-bg, #fff)", 7], ["var(--board-ink, #222)", 3.2]].forEach(([color, width]) => {
+          const path = document.createElementNS(NS, "path");
+          Object.entries({ d, fill: "none", stroke: color, "stroke-width": width, "stroke-linecap": "round", "stroke-linejoin": "round" })
+            .forEach(([name, value]) => path.setAttribute(name, String(value)));
+          turn.append(path);
+        });
+        arrow.append(turn);
+        layer.append(spot);
+      });
+    }
+
+    function renderArrowsBtn() {
+      const button = $("#arrowsBtn");
+      button.textContent = `Arrows: ${showArrows ? "on" : "off"}`;
+      button.setAttribute("aria-pressed", String(showArrows));
+    }
+    renderArrowsBtn();
+    $("#arrowsBtn").addEventListener("click", () => {
+      showArrows = !showArrows;
+      store.set("showArrows", showArrows ? "on" : "off");
+      renderArrowsBtn();
+      if (current?.frames) showFrame();
+    });
 
     function go(delta) {
       if (!current?.frames) return;
