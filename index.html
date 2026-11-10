@@ -4162,7 +4162,9 @@
       // Whoever faces away has an upside-down number.
       const followX = INNER_RADIUS * Math.sin(0.75 * tapeAngle);
       const quarterColor = (path) => (path.back ? (path.left ? "amber" : "blue") : (path.left ? "green" : "rose"));
-      const splitFrame = (measure) => {
+      // `spread`: the "[positions not to scale]" copy (Ariel), with each lead pushed out a token's width
+      // plus a little past its follow, so both numbers show in full.
+      const splitFrame = (measure, spread = false) => {
         // Lead and follow stay at their couple's Measure 5 level along the line (Ariel); only x changes.
         const before = new Map(lineFrame(measure - 1).items.map((couple) => [couple.number, couple]));
         const items = moved.flatMap((couple) => {
@@ -4176,15 +4178,18 @@
           });
           // The lead stays on its Measure 5 spot; the follow only steps in, straight across (Ariel).
           const side = path.left ? -1 : 1;
+          // A hair further in than the ¾-tape line (Ariel), so a bit more of each lead shows.
+          const inner = followX - 6;
           return [
-            solo("lead", place.x, !path.left),
-            // A hair further in than the ¾-tape line (Ariel), so a bit more of each lead shows.
-            solo("follow", CENTER.x + side * (followX - 6), path.back),
+            solo("lead", spread ? CENTER.x + side * (inner + 2 * PIECE_RADIUS + 4) : place.x, !path.left),
+            solo("follow", CENTER.x + side * inner, path.back),
           ];
         });
         return {
           count: items.length,
-          annotation: { title, subtitle: `Measure ${measure}`, note: HAPPY_SPLIT_NOTE },
+          annotation: {
+            title, subtitle: `Measure ${measure}${spread ? " [positions not to scale]" : ""}`, note: HAPPY_SPLIT_NOTE,
+          },
           items,
         };
       };
@@ -4193,10 +4198,14 @@
         { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: measure1 },
         ...[2, 3, 4, 5].map(lineFrame),
         splitFrame(6),
+        splitFrame(6, true),
       ];
     }
     function happySectionSnapshots() {
-      return holdFrom(happyTransitionInSnapshots, "Hide and Seek: Part 2");
+      // Starts from Part 1's real last positions, not its "[positions not to scale]" copy.
+      const toScale = () => happyTransitionInSnapshots()
+        .filter((frame) => !frame.annotation.subtitle.includes("not to scale"));
+      return holdFrom(toScale, "Hide and Seek: Part 2");
     }
     function happyToPeacefulSnapshots() {
       return holdFrom(happySectionSnapshots, "Hide and Seek: Part 3");
