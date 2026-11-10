@@ -1088,9 +1088,9 @@
   },
   {
    "id": "waltz-happy-transition-in",
-   "name": "8A · Transition into Happy Section",
+   "name": "8A · Hide and Seek: Part 1",
    "section": "Waltz",
-   "fingerprint": "5g8jjd",
+   "fingerprint": "1h9y8bq",
    "frames": [
     {
      "src": "waltz-happy-transition-in/01.jpg",
@@ -1131,9 +1131,9 @@
   },
   {
    "id": "waltz-happy-section",
-   "name": "8B · Happy Section",
+   "name": "8B · Hide and Seek: Part 2",
    "section": "Waltz",
-   "fingerprint": "1i2382d",
+   "fingerprint": "1qej3ii",
    "frames": [
     {
      "src": "waltz-happy-section/01.jpg",
@@ -1144,9 +1144,9 @@
   },
   {
    "id": "waltz-happy-to-peaceful",
-   "name": "8C · Transition Happy to Peaceful",
+   "name": "8C · Hide and Seek: Part 3",
    "section": "Waltz",
-   "fingerprint": "p0y2n8",
+   "fingerprint": "1myxtec",
    "frames": [
     {
      "src": "waltz-happy-to-peaceful/01.jpg",
