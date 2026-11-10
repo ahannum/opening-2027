@@ -4194,7 +4194,9 @@
         return {
           count: items.length,
           annotation: {
-            title, subtitle: `Measure ${measure}${spread ? " [not to scale]" : ""}`, note: HAPPY_SPLIT_NOTE,
+            // Not to scale, only the line on numbers and facing stays in the note (Ariel).
+            title, subtitle: `Measure ${measure}${spread ? " [not to scale]" : ""}`,
+            note: spread ? HAPPY_SPLIT_NOTE.split("\n").at(-1) : HAPPY_SPLIT_NOTE,
           },
           items,
         };
