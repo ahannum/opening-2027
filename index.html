@@ -4159,6 +4159,10 @@
     // Line to Triumphant Crossing is sections 7 and 8: its first two frames are the turn cascade (from
     // the cascade position into the line), the rest go from the line through the X to the grid.
     const TURN_CASCADE_FRAMES = 2;
+    // A story's frames with "(WIP)" added to each title, for the working copies under Works in progress.
+    const wipCopy = (frames) => structuredClone(frames).map((frame) => (
+      { ...frame, annotation: { ...frame.annotation, title: `${frame.annotation?.title ?? ""} (WIP)`.trim() } }
+    ));
     const STORY_PRESETS = [
       { id: "intro-circle", section: POLKA, name: "1 · Intro Theme 1: circle → inside circle", snapshots: () => introSectionSnapshots(1) },
       // Opens on where section 1 ends, as its own "Start" frame (a copy of section 1's last frame, so it
@@ -4271,6 +4275,20 @@
           frame,
           unfurlingPyramidMeasureLabel(frame)
         )),
+      },
+      // Working copies of Waltz 6 and 7 to try changes on, built from the same frames (so they start from
+      // whatever the locked versions hold now) with "(WIP)" on each frame's title.
+      {
+        id: "waltz-big-strings-wip",
+        section: WIP,
+        name: "Waltz 6 · Theme 1: Big Strings (WIP)",
+        snapshots: () => wipCopy(bigStringsSnapshots()),
+      },
+      {
+        id: "waltz-box-skit-wip",
+        section: WIP,
+        name: "Waltz 7 · Box Skit (WIP)",
+        snapshots: () => wipCopy(boxSkitSnapshots()),
       },
       {
         id: "pyramid-to-v",
