@@ -4294,6 +4294,9 @@
       const [start] = holdFrom(happyTransitionInSnapshots, "Hide and Seek: Part 2");
       if (!start) return [];
       const title = "Hide and Seek: Part 2";
+      // Before that, Part 2 opens on Part 1's to-scale Measure 11, as danced (Ariel).
+      const toScale = happyTransitionInSnapshots().at(-2);
+      const toScaleStart = { ...structuredClone(toScale), annotation: { title, subtitle: "Start" } };
       // The follows hold their rows. The leads move one follow a measure along the line of dance (Ariel):
       // down the left line toward the Honored Guests, up the right line away from them, zig-zagging so
       // they're inside the follow line one measure and outside the next. The lead at the end of a line
@@ -4329,6 +4332,7 @@
       };
       const notes = HAPPY_PART2_NOTES;
       return [
+        toScaleStart,
         start,
         // Lead moves on Measures 1, 2, 5 and 6; everyone holds for the hide and seek and the offer.
         leadFrame(1, 1, notes.move),
