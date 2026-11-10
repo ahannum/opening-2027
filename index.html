@@ -1857,6 +1857,10 @@
       if (token.facingMode === "in") return radial + Math.PI;
       if (token.facingMode === "cw") return radial + Math.PI / 2;
       if (token.facingMode === "ccw") return radial - Math.PI / 2;
+      // "deg:<angle>": the lead's half points this many degrees round from east, clockwise on screen.
+      if (typeof token.facingMode === "string" && token.facingMode.startsWith("deg:")) {
+        return (Number(token.facingMode.slice(4)) * Math.PI) / 180;
+      }
       if (token.facingMode === "squareOut" || token.facingMode === "squareIn") {
         const distances = [
           { distance: Math.abs(token.y - SQUARE_MIN), angle: -Math.PI / 2 },
@@ -4343,8 +4347,8 @@
       start: ["Not to scale: L line where F line", "was, F inside it"],
       go: ["F: step, cross, step, point, 1 L", "along LOD, zig-zag (out, in).", "End F crosses into other line. L hold"],
       frame: ["Back to frame: low hand J hook,", "into frame the way you waltz"],
-      out: ["Waltz to outside circle"],
-      arrive: ["On the outside circle:", "1 in front of HG, 14, 15… to its left"],
+      out: ["Waltz to outside circle,", "F facing the dot you arrive on"],
+      arrive: ["On the outside circle, F backing LOD:", "1 in front of HG, 14, 15… to its left"],
       lod: ["Waltz 1 tape LOD"],
     };
     function happyToPeacefulSnapshots() {
@@ -4431,8 +4435,12 @@
         coupleFrame(6, notes.out, (number) => {
           const { x, y } = linePlace.get(number);
           const end = onCircle(number);
-          return couple(number, { x: fix((x + end.x) / 2), y: fix((y + end.y) / 2) }, "out");
+          const mid = { x: fix((x + end.x) / 2), y: fix((y + end.y) / 2) };
+          // The follow faces the dot the couple arrives on (Ariel), so the lead's half points away from it.
+          const away = (Math.atan2(mid.y - end.y, mid.x - end.x) * 180) / Math.PI;
+          return couple(number, mid, `deg:${away.toFixed(1)}`);
         }),
+        // On the outside tape the follow backs the line of dance: the lead's half points along it.
         coupleFrame(7, notes.arrive, (number) => couple(number, onCircle(number), "ccw")),
         coupleFrame(8, notes.lod, (number) => couple(number, onCircle(number, 1), "ccw")),
       ];
