@@ -3985,10 +3985,9 @@
       ];
     }
 
-    // Waltz: Hide and Seek (section 8) comes after Box Skit, split into Parts 1–3. No choreography yet
-    // for Part 3, so
-    // each part is a single "Start" frame holding where the part before it ends (built from that part's
-    // last frame, so it follows any change there); add frames here as Ariel gives them.
+    // Waltz: Hide and Seek (section 8) comes after Box Skit, split into Parts 1–3. Each part starts from a
+    // "Start" frame holding where the part before it ends (built from that part's last frame, so it
+    // follows any change there).
     function holdFrom(previousSnapshots, title) {
       const start = previousSnapshots().at(-1);
       if (!start) return [];
@@ -4339,8 +4338,104 @@
         leadFrame(8, 4, notes.grumpy),
       ];
     }
+    // Ariel's notes for Part 3 (WIP Ground Truth: Waltz), short enough for the bottom-left corner.
+    const HAPPY_PART3_NOTES = {
+      start: ["Not to scale: L line where F line", "was, F inside it"],
+      go: ["F: step, cross, step, point, 1 L", "along LOD, zig-zag (out, in).", "End F crosses into other line. L hold"],
+      frame: ["Back to frame: low hand J hook,", "into frame the way you waltz"],
+      out: ["Waltz to outside circle"],
+      arrive: ["On the outside circle:", "1 in front of HG, 14, 15… to its left"],
+      lod: ["Waltz 1 tape LOD"],
+    };
     function happyToPeacefulSnapshots() {
-      return holdFrom(happySectionSnapshots, "Hide and Seek: Part 3");
+      // Part 3 mirrors Part 2 (Ariel): now the follows travel, one lead a measure along the same loop the
+      // leads took (down the left line toward the Honored Guests, up the right line, the end follow
+      // crossing into the other line), so after 4 they're back with their own lead. Not to scale, the
+      // leads stand where Part 2's follow lines were and the follows zig-zag around them, out on odd
+      // measures and in on even ones, so they start and end inside their lead.
+      const end2 = happySectionSnapshots().at(-1);
+      const fullLines = happyTransitionInSnapshots().find((frame) => frame.annotation?.subtitle === "Measure 6");
+      const circleTemplate = bigStringsSnapshots().at(-1)?.items[0];
+      if (!end2 || !fullLines || !circleTemplate) return [];
+      const title = "Hide and Seek: Part 3";
+      const rowGap = 2 * PIECE_RADIUS + 2;
+      const rowOf = (item) => Math.round((item.y - CENTER.y) / rowGap + 3.5);
+      const slotOf = (item) => (item.x < CENTER.x ? rowOf(item) : 15 - rowOf(item));
+      const fix = (value) => Number(value.toFixed(3));
+      const followFrame = (subtitle, moves, note, travelFacing = true) => {
+        const items = end2.items.map((item) => {
+          const side = item.x < CENTER.x ? -1 : 1;
+          if (item.role === "lead") {
+            return { ...structuredClone(item), x: fix(CENTER.x + side * HAPPY_SPREAD_F_X) };
+          }
+          const slot = (slotOf(item) + moves) % 16;
+          const left = slot < 8;
+          const row = left ? slot : 15 - slot;
+          const out = moves % 2 === 1;
+          const { facingAway, ...rest } = item;
+          return {
+            ...rest,
+            // Travelling, left follows face the Honored Guests and right follows face away, the way
+            // their line goes; the start keeps Part 2's facings.
+            ...(travelFacing ? (left ? {} : { facingAway: true }) : (facingAway ? { facingAway } : {})),
+            x: fix(CENTER.x + (left ? -1 : 1) * (HAPPY_SPREAD_F_X + (out ? 1 : -1) * HAPPY_LEAD_GAP)),
+            y: fix(CENTER.y + (row - 3.5) * rowGap),
+          };
+        });
+        return { count: items.length, annotation: { title, subtitle, note: note.join("\n") }, items };
+      };
+      // Reunited, each couple sits in its lead's row, back to scale in the full lines of Part 1's Measure 6.
+      const leads = end2.items.filter((item) => item.role === "lead");
+      const lineSpots = (left) => fullLines.items.filter((couple) => (couple.x < CENTER.x) === left)
+        .sort((a, b) => a.y - b.y);
+      const spots = { true: lineSpots(true), false: lineSpots(false) };
+      const template = fullLines.items[0];
+      const linePlace = new Map(leads.map((lead) => {
+        const left = lead.x < CENTER.x;
+        const spot = spots[left][rowOf(lead)];
+        return [lead.number, { left, x: spot.x, y: spot.y, slot: slotOf(lead) }];
+      }));
+      // On the outer tape after 2 waltzes (Ariel): 1, the last in the left line, on the red dot in front of
+      // the Honored Guests, and the loop's order going round from it, 14, 15 … up the left side, then down
+      // the right; one dot (a tape) apart.
+      const slotOne = linePlace.get(1).slot;
+      const tape = Math.PI / 8;
+      const templateAngle = Math.atan2(CENTER.y - circleTemplate.y, circleTemplate.x - CENTER.x);
+      const onCircle = (number, tapesAlong = 0) => {
+        const back = (slotOne - linePlace.get(number).slot + 16) % 16;
+        const angle = -Math.PI / 2 - back * tape + tapesAlong * tape;
+        return {
+          ring: "outer",
+          step: circleTemplate.step == null ? null
+            : wrapStep(circleTemplate.step + Math.round((angle - templateAngle) / (Math.PI / 16))),
+          x: fix(CENTER.x + OUTER_RADIUS * Math.cos(angle)),
+          y: fix(CENTER.y - OUTER_RADIUS * Math.sin(angle)),
+        };
+      };
+      const couple = (number, place, facingMode) => ({
+        ...structuredClone(template), key: String(number), number, groupColor: "neutral",
+        ring: null, step: null, facingMode, ...place,
+      });
+      const coupleFrame = (measure, note, place) => {
+        const items = [...linePlace.keys()].sort((a, b) => a - b).map((number) => place(number));
+        return { count: items.length, annotation: { title, subtitle: `Measure ${measure}`, note: note.join("\n") }, items };
+      };
+      const notes = HAPPY_PART3_NOTES;
+      return [
+        followFrame("Start [not to scale]", 0, notes.start, false),
+        ...[1, 2, 3, 4].map((moves) => followFrame(`Measure ${moves} [not to scale]`, moves, notes.go)),
+        coupleFrame(5, notes.frame, (number) => {
+          const { left, x, y } = linePlace.get(number);
+          return couple(number, { x, y }, left ? "west" : "east");
+        }),
+        coupleFrame(6, notes.out, (number) => {
+          const { x, y } = linePlace.get(number);
+          const end = onCircle(number);
+          return couple(number, { x: fix((x + end.x) / 2), y: fix((y + end.y) / 2) }, "out");
+        }),
+        coupleFrame(7, notes.arrive, (number) => couple(number, onCircle(number), "ccw")),
+        coupleFrame(8, notes.lod, (number) => couple(number, onCircle(number, 1), "ccw")),
+      ];
     }
 
     // Saved configurations: ready-made stories listed in the planner and in the presenter. Each returns
