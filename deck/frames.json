@@ -1090,7 +1090,7 @@
    "id": "waltz-happy-transition-in",
    "name": "8A · Hide and Seek: Part 1",
    "section": "Waltz",
-   "fingerprint": "lfawk1",
+   "fingerprint": "1u2dtmk",
    "frames": [
     {
      "src": "waltz-happy-transition-in/01.jpg",
@@ -1115,6 +1115,11 @@
     {
      "src": "waltz-happy-transition-in/05.jpg",
      "subtitle": "Measure 4",
+     "note": "In the lines, on 1:\nleft line F faces HG,\nright line L faces HG"
+    },
+    {
+     "src": "waltz-happy-transition-in/06.jpg",
+     "subtitle": "Measure 5",
      "note": "In the lines, on 1:\nleft line F faces HG,\nright line L faces HG"
     }
    ]
