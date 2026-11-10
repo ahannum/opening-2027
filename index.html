@@ -4216,7 +4216,9 @@
       const followX = INNER_RADIUS * Math.sin(0.75 * tapeAngle);
       // `spread`: the "[not to scale]" copy (Ariel), with each lead pushed out a token's width
       // plus a little past its follow, so both numbers show in full.
-      const splitFrame = (measure, spread = false, note = HAPPY_SPLIT_NOTE) => {
+      // `leadOut`: how far past its spot in the full lines each lead steps out, away from its follow
+      // (Measure 10, Ariel: leads split the tape more, so their numbers show better).
+      const splitFrame = (measure, spread = false, note = HAPPY_SPLIT_NOTE, leadOut = 0) => {
         // Lead and follow stay at their couple's level in the full lines (Ariel); only x changes.
         const before = full;
         const items = moved.flatMap((couple) => {
@@ -4234,7 +4236,8 @@
           const inner = spread ? followX + 4 : followX - 6;
           return [
             solo(couple, path, "lead", {
-              x: spread ? CENTER.x + side * (inner + 2 * PIECE_RADIUS + 4) : place.x, y, facingAway: !path.left,
+              x: spread ? CENTER.x + side * (inner + 2 * PIECE_RADIUS + 4) : place.x + side * leadOut,
+              y, facingAway: !path.left,
             }),
             solo(couple, path, "follow", { x: CENTER.x + side * inner, y, facingAway: path.back }),
           ];
@@ -4259,7 +4262,7 @@
         shadowFrame("Measure 8: 4-5-6", notes.center, [0, 0], [0, 2]),
         shadowFrame("Measure 9: 1-2-3", notes.right, [0.5, 0], [-0.5, 2]),
         shadowFrame("Measure 9: 4-5-6", notes.center, [0, 0], [0, 2]),
-        splitFrame(10, false, notes.turn.join("\n")),
+        splitFrame(10, false, notes.turn.join("\n"), 14),
         splitFrame(11),
         splitFrame(11, true),
       ];
