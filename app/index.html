@@ -1528,14 +1528,15 @@
       dTheta = Math.atan2(Math.sin(dTheta), Math.cos(dTheta));
       if (Math.abs(dTheta) > 150 * DEG) return chord;
       const ux = ax / r1, uy = ay / r1;   // outward
-      // Radial: hardly any turn around the center.
-      if (Math.abs(dTheta) < 10 * DEG) return r2 >= r1 ? Math.atan2(uy, ux) : Math.atan2(-uy, -ux);
-      // Around the circle: the distance from the center stays about the same.
+      // Around the circle: the distance from the center stays about the same, however small the step
+      // (e.g. half a tape along the circle), so check this before the radial case.
       if (Math.abs(r2 - r1) < 0.08 * Math.max(r1, r2)) {
         const vx = (r2 - r1) * ux + r1 * dTheta * -uy;
         const vy = (r2 - r1) * uy + r1 * dTheta * ux;
         return Math.atan2(vy, vx);
       }
+      // Radial: hardly any turn around the center.
+      if (Math.abs(dTheta) < 10 * DEG) return r2 >= r1 ? Math.atan2(uy, ux) : Math.atan2(-uy, -ux);
       // A straight line across the floor.
       return Math.abs(off) <= 30 * DEG ? square : chord;
     }
