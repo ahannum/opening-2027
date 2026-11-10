@@ -4130,10 +4130,16 @@
       // Measures 2 and 3 (Ariel): instead of spreading along the circle and the lines, each couple
       // heads straight from its Measure 1 spot to its Measure 4 place, fast at first and slowing as it
       // gets close (ease-out: 5/9 of the way by Measure 2, 8/9 by Measure 3), already in its line's facing.
+      // The innermost couples, the middle two of each line, are already in place by Measure 3 (3/4 of
+      // the way by Measure 2).
       const finalAt = new Map(innerFrame(4).items.map((couple) => [couple.number, couple]));
+      const fromMiddle = (couple) => Math.abs(couple.y - CENTER.y);
+      const innermost = new Set([...finalAt.values()]
+        .sort((a, b) => fromMiddle(a) - fromMiddle(b)).slice(0, 4).map((couple) => couple.number));
       const travelFrame = (measure) => {
-        const share = 1 - (1 - (measure - 1) / 3) ** 2;
         const items = measure1.map((couple) => {
+          const arrives = innermost.has(couple.number) ? 3 : 4;
+          const share = 1 - (1 - Math.min(1, (measure - 1) / (arrives - 1))) ** 2;
           const end = finalAt.get(couple.number);
           return {
             ...couple, ring: null, step: null, facingMode: end.facingMode,
