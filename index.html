@@ -4172,10 +4172,11 @@
             ...(facingAway ? { facingAway: true } : {}),
             x: Number(x.toFixed(3)), y: place.y,
           });
-          // The lead stays right where the couple stood in its line (Ariel); only the follow moves.
+          // The lead stays in its line, just slightly out from where the couple stood (Ariel): half a
+          // token outside its follow, so its number peeks out.
           const side = path.left ? -1 : 1;
           return [
-            solo("lead", place.x, !path.left),
+            solo("lead", CENTER.x + side * (followX + PIECE_RADIUS), !path.left),
             solo("follow", CENTER.x + side * followX, path.back),
           ];
         });
