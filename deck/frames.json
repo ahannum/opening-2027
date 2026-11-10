@@ -1090,7 +1090,7 @@
    "id": "waltz-happy-transition-in",
    "name": "8A · Hide and Seek: Part 1",
    "section": "Waltz",
-   "fingerprint": "1348ung",
+   "fingerprint": "1n5wfjc",
    "frames": [
     {
      "src": "waltz-happy-transition-in/01.jpg",
@@ -1126,6 +1126,11 @@
      "src": "waltz-happy-transition-in/07.jpg",
      "subtitle": "Measure 6",
      "note": "F in to ¾ tape: back F face away,\nfront F face HG. Left L face HG,\nright L face away.\nUpside-down number = faces away"
+    },
+    {
+     "src": "waltz-happy-transition-in/08.jpg",
+     "subtitle": "Measure 6 [positions not to scale]",
+     "note": "F in to ¾ tape: back F face away,\nfront F face HG. Left L face HG,\nright L face away.\nUpside-down number = faces away"
     }
    ]
   },
@@ -1133,11 +1138,11 @@
    "id": "waltz-happy-section",
    "name": "8B · Hide and Seek: Part 2",
    "section": "Waltz",
-   "fingerprint": "1qcio25",
+   "fingerprint": "1ym4k83",
    "frames": [
     {
      "src": "waltz-happy-section/01.jpg",
-     "subtitle": "Start",
+     "subtitle": "Start [not to horizontal scale]",
      "note": ""
     }
    ]
@@ -1146,11 +1151,11 @@
    "id": "waltz-happy-to-peaceful",
    "name": "8C · Hide and Seek: Part 3",
    "section": "Waltz",
-   "fingerprint": "bak6gm",
+   "fingerprint": "15s5u5w",
    "frames": [
     {
      "src": "waltz-happy-to-peaceful/01.jpg",
-     "subtitle": "Start",
+     "subtitle": "Start [not to horizontal scale]",
      "note": ""
     }
    ]
