@@ -1642,6 +1642,8 @@
       // Small L and F marks: on a couple, in its lead and follow halves; on a same role pair, under
       // its two numbers, saying which of the two dances the lead part and which the follow part.
       roleLetters = false,
+      // Facing away from the Honored Guests: the number is drawn upside down.
+      facingAway = false,
     }) {
       const group = svgElement("g", {
         class: `piece ${role}${emphasized ? " emphasized" : ""}`,
@@ -1667,6 +1669,7 @@
         emphasized,
         label,
         roleLetters,
+        facingAway,
         group,
         blackHalf: null,
         text: null,
@@ -1749,6 +1752,7 @@
 
       pieceLayer.append(group);
       updateTokenColor(token);
+      updateFacingAway(token);
       setTokenPosition(token, x, y);
 
       group.addEventListener("pointerdown", (event) => startDrag(event, token));
@@ -1763,6 +1767,12 @@
       const color = GROUP_COLORS[token.groupColor] || GROUP_COLORS.neutral;
       token.group.style.setProperty("--group-color", color);
       token.group.classList.toggle("has-group-color", Boolean(GROUP_COLORS[token.groupColor]) && token.groupColor !== "neutral");
+    }
+
+    function updateFacingAway(token) {
+      if (!token.text) return;
+      if (token.facingAway) token.text.setAttribute("transform", "rotate(180)");
+      else token.text.removeAttribute("transform");
     }
 
     function setTokenPosition(token, x, y) {
@@ -4009,6 +4019,13 @@
       "left line F faces HG,",
       "right line L faces HG",
     ].join("\n");
+    // Ariel's Measure 6: follows sent in, everyone's facing, and how facing away is shown.
+    const HAPPY_SPLIT_NOTE = [
+      "F in to ¾ tape: back F face away,",
+      "front F face HG. Left L face HG,",
+      "right L face away.",
+      "Upside-down number = faces away",
+    ].join("\n");
     function happyTransitionInSnapshots() {
       const title = "Hide and Seek: Part 1";
       const boxSkitEnd = boxSkitSnapshots().at(-1);
@@ -4091,25 +4108,27 @@
       const innerEnd = Math.sqrt(INNER_RADIUS ** 2 - lineX ** 2);
       const placeIn = (path) => (spotY - path.depth) * (innerEnd / spotY);
       // A couple in its line, `share` of the way from its turning spot down to its Measure 5 place.
-      const inLine = (couple, path, share) => {
-        const reach = spotY + (placeIn(path) - spotY) * share;
+      const inLine = (couple, path, share) => inLineAt(couple, path, spotY + (placeIn(path) - spotY) * share);
+      // A couple in its line, `reach` from the middle along it.
+      const inLineAt = (couple, path, reach) => {
         return {
           ...couple, ring: null, step: null, facingMode: lineFacing(path),
           x: Number((CENTER.x + (path.left ? -lineX : lineX)).toFixed(3)),
           y: Number((CENTER.y - (path.back ? reach : -reach)).toFixed(3)),
         };
       };
-      const innerFrame = (measure) => ({
-        count: moved.length,
-        annotation: { title, subtitle: `Measure ${measure}`, note: HAPPY_LINES_NOTE },
-        items: moved.map((couple) => ({ ...inLine(couple, paths.get(couple.number), 1), groupColor: "neutral" })),
-      });
       // Measures 2–4: couples still on the circle waltz along it a tape a measure toward their
-      // turning spot; once there they turn into their line and head down it to their Measure 5 place
-      // (Ariel: same two lines, only the spread within them is the inner one), fast at first and slowing
-      // as they get close, so the lines fill unevenly. The innermost couples (already on their spots on
-      // Measure 1) are in place by Measure 3, the next ones by Measure 4, the rest by Measure 5; the last
-      // group (12, 5, 13, 7) is on its spots on the outer tape on Measure 4.
+      // turning spot; once there they turn into their line (Ariel: same two lines, only the spread within
+      // them is the inner one). The measure a couple first comes into its line it stands just outside the
+      // inner tape, where 15, 2, 10 and 7 stood on Measure 4 (Ariel); the next measure it's on its
+      // Measure 5 place. So the innermost
+      // couples (already on their spots on Measure 1) are just inside on Measure 2 and in place by
+      // Measure 3, the next ones by Measure 4, 15, 2, 10 and 7 by Measure 5. The last group (12, 5, 13,
+      // 4) is on its spots on the outer tape on Measure 4 and just outside the inner tape on Measure 5,
+      // reaching its place as the couples split on Measure 6.
+      // That entry spot: ¾ of the way from the turning spot to the Measure 5 place of the second couple
+      // from each end of a line (one spacing deep).
+      const entryReach = spotY - 0.75 * (spotY - (spotY - spacing) * (innerEnd / spotY));
       const lineFrame = (measure) => {
         const t = measure - 1; // tapes waltzed since Measure 1
         const items = moved.map((couple) => {
@@ -4125,23 +4144,52 @@
               y: Number((CENTER.y - OUTER_RADIUS * Math.sin(angle)).toFixed(3)),
             };
           }
-          const arrives = Math.min(path.tapes + 2, 4); // tapes waltzed when the couple is in place
-          const share = 1 - (1 - Math.min(1, (t - path.tapes) / (arrives - path.tapes))) ** 2;
-          return inLine(couple, path, share);
+          if (t === path.tapes + 1) return inLineAt(couple, path, entryReach);
+          return inLine(couple, path, 1);
         });
         return {
           count: items.length,
           annotation: { title, subtitle: `Measure ${measure}`, note: HAPPY_LINES_NOTE },
-          // From Measure 2 on the color outlines are dropped (Ariel): they only label Measure 1's tosses.
-          items: items.map((couple) => ({ ...couple, groupColor: "neutral" })),
+          // Measures 2–4 keep Measure 1's color outlines (Ariel); Measure 5 drops them.
+          items: measure >= 5 ? items.map((couple) => ({ ...couple, groupColor: "neutral" })) : items,
+        };
+      };
+      // Measure 6 (Ariel): the couples split. Each quarter of the two lines (left/right line, back/front
+      // half, front toward the Honored Guests) gets its own color. Leads hold their Measure 5 places;
+      // follows are sent in toward the middle, onto the ¾-tape line: the x of the inner tape point ¾ of a
+      // tape from the middle tape, on their own line's side, so the two lines stay. Back follows face away
+      // from the Honored Guests, front follows face them; left leads face them, right leads face away.
+      // Whoever faces away has an upside-down number.
+      const followX = INNER_RADIUS * Math.sin(0.75 * tapeAngle);
+      const quarterColor = (path) => (path.back ? (path.left ? "amber" : "blue") : (path.left ? "green" : "rose"));
+      const splitFrame = (measure) => {
+        const items = moved.flatMap((couple) => {
+          const path = paths.get(couple.number);
+          const place = inLine(couple, path, 1);
+          const solo = (role, x, facingAway) => ({
+            key: `${couple.number}:${role}`, number: couple.number, role, ring: null, step: null,
+            facingMode: place.facingMode, displayMode: "partner", groupColor: quarterColor(path),
+            ...(facingAway ? { facingAway: true } : {}),
+            x: Number(x.toFixed(3)), y: place.y,
+          });
+          // The lead stays right where the couple stood in its line (Ariel); only the follow moves.
+          const side = path.left ? -1 : 1;
+          return [
+            solo("lead", place.x, !path.left),
+            solo("follow", CENTER.x + side * followX, path.back),
+          ];
+        });
+        return {
+          count: items.length,
+          annotation: { title, subtitle: `Measure ${measure}`, note: HAPPY_SPLIT_NOTE },
+          items,
         };
       };
       return [
         { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
         { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: measure1 },
-        ...[2, 3, 4].map(lineFrame),
-        // Measure 6 holds Measure 5's inner lines (Ariel).
-        ...[5, 6].map(innerFrame),
+        ...[2, 3, 4, 5].map(lineFrame),
+        splitFrame(6),
       ];
     }
     function happySectionSnapshots() {
@@ -5628,6 +5676,7 @@
           emphasized: Boolean(item.emphasized),
           label: item.label ?? null,
           roleLetters: Boolean(item.roleLetters),
+          facingAway: Boolean(item.facingAway),
         }));
       });
       refreshSelection();
@@ -5822,6 +5871,7 @@
           ...(token.emphasized ? { emphasized: true } : {}),
           ...(token.label ? { label: token.label } : {}),
           ...(token.roleLetters ? { roleLetters: true } : {}),
+          ...(token.facingAway ? { facingAway: true } : {}),
           x: Number(token.x.toFixed(3)),
           y: Number(token.y.toFixed(3)),
         })),
@@ -5939,6 +5989,8 @@
         updateTokenColor(token);
         token.emphasized = Boolean(item.emphasized);
         token.group.classList.toggle("emphasized", token.emphasized);
+        token.facingAway = Boolean(item.facingAway);
+        updateFacingAway(token);
         if (token.role !== "couple" || !item.facingMode) return;
 
         token.facingMode = item.facingMode;
