@@ -72,9 +72,9 @@
     ],
     [
      "Measure 11",
-     "1-2 Stop in orientation facing each other\n3-4 turn to face out, Fs offset to the front of Ls",
-     "",
-     ""
+     "1-2 Stop in orientation facing each other, drop frame to low\n3-4 turn to face out, Fs offset to the front of Ls",
+     "3-4 low float",
+     "3-4 L bladed"
     ],
     [
      "Measure 12",
@@ -84,9 +84,9 @@
     ],
     [
      "Measure 13",
-     "1-2 Turn to face each other\n3-4 Frame",
-     "",
-     ""
+     "1-2 Turn to face each other, arms low\n3-4 Frame",
+     "1-2 Arms floating low",
+     "1-2 bladed"
     ],
     [
      "Measure 14",
@@ -1305,7 +1305,40 @@
    "number": 3,
    "formation": "F on grid, Lead on ¾ Circle",
    "notes": [],
-   "links": []
+   "links": [
+    {
+     "text": "3–4. Solo String to Hijinks Skit (up til L/F reunite)",
+     "url": "https://youtu.be/4hFv9szhATw"
+    }
+   ]
+  },
+  {
+   "dance": "Waltz",
+   "number": 4,
+   "formation": "",
+   "notes": [],
+   "links": [
+    {
+     "text": "3–4. Solo String to Hijinks Skit (up til L/F reunite)",
+     "url": "https://youtu.be/4hFv9szhATw"
+    }
+   ]
+  },
+  {
+   "dance": "Waltz",
+   "number": 5,
+   "formation": "",
+   "notes": [],
+   "links": [
+    {
+     "text": "5–6. Turning Gears to Big Strings (inside circle)",
+     "url": "https://youtu.be/JB0ex0Drx6k"
+    },
+    {
+     "text": "5–6. Turning Gears to Big Strings (outside circle)",
+     "url": "https://youtu.be/_vVnN-vFix4"
+    }
+   ]
   }
  ]
 }
