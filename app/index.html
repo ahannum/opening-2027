@@ -1516,6 +1516,12 @@
       const bx = to.x - BOARD_CENTER, by = to.y - BOARD_CENTER;
       const r1 = Math.hypot(ax, ay), r2 = Math.hypot(bx, by);
       const chord = Math.atan2(to.y - from.y, to.x - from.x);
+      // Straight up, down, left or right already (e.g. a line closing up along itself): keep it on
+      // that line, even when it also happens to head toward the center.
+      const square = Math.round(chord / (90 * DEG)) * 90 * DEG;
+      let off = chord - square;
+      off = Math.atan2(Math.sin(off), Math.cos(off));
+      if (Math.abs(off) <= 3 * DEG) return square;
       // Into or out of the very center, or straight across it: the line already runs through the center.
       if (r1 < 30 || r2 < 30) return chord;
       let dTheta = Math.atan2(by, bx) - Math.atan2(ay, ax);
@@ -1531,9 +1537,6 @@
         return Math.atan2(vy, vx);
       }
       // A straight line across the floor.
-      const square = Math.round(chord / (90 * DEG)) * 90 * DEG;
-      let off = chord - square;
-      off = Math.atan2(Math.sin(off), Math.cos(off));
       return Math.abs(off) <= 30 * DEG ? square : chord;
     }
 
