@@ -4173,8 +4173,11 @@
         const items = moved.flatMap((couple) => {
           const path = paths.get(couple.number);
           const place = { ...inLine(couple, path, 1), y: before.get(couple.number).y };
-          // Not to scale, the rows also spread out along the line (Ariel) so they stop overlapping.
-          const y = spread ? CENTER.y + (place.y - CENTER.y) * 1.25 : place.y;
+          // Not to scale, the 8 rows of each line sit evenly spaced (Ariel builds Part 2 from these), in
+          // their Measure 5 order, a token's width plus a little apart and centered on the middle.
+          const row = [...before.values()].filter((other) => paths.get(other.number).left === path.left)
+            .filter((other) => other.y < place.y).length;
+          const y = spread ? CENTER.y + (row - 3.5) * (2 * PIECE_RADIUS + 2) : place.y;
           const solo = (role, x, facingAway) => ({
             key: `${couple.number}:${role}`, number: couple.number, role, ring: null, step: null,
             facingMode: place.facingMode, displayMode: "partner", groupColor: quarterColor(path),
