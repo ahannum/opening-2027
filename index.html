@@ -4127,10 +4127,30 @@
           items,
         };
       };
+      // Measures 2 and 3 (Ariel): instead of spreading along the circle and the lines, each couple
+      // heads straight from its Measure 1 spot to its Measure 4 place, fast at first and slowing as it
+      // gets close (ease-out: 5/9 of the way by Measure 2, 8/9 by Measure 3), already in its line's facing.
+      const finalAt = new Map(innerFrame(4).items.map((couple) => [couple.number, couple]));
+      const travelFrame = (measure) => {
+        const share = 1 - (1 - (measure - 1) / 3) ** 2;
+        const items = measure1.map((couple) => {
+          const end = finalAt.get(couple.number);
+          return {
+            ...couple, ring: null, step: null, facingMode: end.facingMode,
+            x: Number((couple.x + (end.x - couple.x) * share).toFixed(3)),
+            y: Number((couple.y + (end.y - couple.y) * share).toFixed(3)),
+          };
+        });
+        return {
+          count: items.length,
+          annotation: { title, subtitle: `Measure ${measure}`, note: HAPPY_LINES_NOTE },
+          items,
+        };
+      };
       return [
         { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
         { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: measure1 },
-        ...[2, 3].map(lineFrame),
+        ...[2, 3].map(travelFrame),
         // Measure 5 holds Measure 4's inner lines (Ariel).
         ...[4, 5].map(innerFrame),
       ];
