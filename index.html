@@ -4122,16 +4122,15 @@
       };
       // Measures 2–4: couples still on the circle waltz along it a tape a measure toward their
       // turning spot; once there they turn into their line (Ariel: same two lines, only the spread within
-      // them is the inner one). The measure a couple first comes into its line it stands just outside the
-      // inner tape, where 15, 2, 10 and 7 stood on Measure 4 (Ariel); the next measure it's on its
-      // Measure 5 place. So the innermost
-      // couples (already on their spots on Measure 1) are just inside on Measure 2 and in place by
-      // Measure 3, the next ones by Measure 4, 15, 2, 10 and 7 by Measure 5. The last group (12, 5, 13,
-      // 4) is on its spots on the outer tape on Measure 4 and just outside the inner tape on Measure 5,
-      // where it stays as the couples split on Measure 6.
-      // That entry spot: ¾ of the way from the turning spot to the Measure 5 place of the second couple
-      // from each end of a line (one spacing deep).
-      const entryReach = spotY - 0.75 * (spotY - (spotY - spacing) * (innerEnd / spotY));
+      // them is the inner one). From its turning spot a couple steps down its line one circle a measure
+      // (Ariel): onto the halfway ring (midway between the outer and inner tapes), then the inner tape,
+      // then its Measure 5 place, so each line stays spread from the outer tape to the middle. Everyone
+      // is in place on Measure 5, so the later groups squeeze: the first group (on its spots on Measure
+      // 1) is on the halfway ring on Measure 2, the inner tape on 3 and in place on 4; the next group
+      // one measure behind it, in place on 5; the third skips the inner tape (halfway ring on 4, in
+      // place on 5); the last (12, 5, 13, 4) goes straight from its spot on Measure 4 to its place.
+      const ringReach = (radius) => Math.sqrt(radius ** 2 - lineX ** 2);
+      const lineSteps = [ringReach(MIDDLE_RADIUS), innerEnd];
       const lineFrame = (measure) => {
         const t = measure - 1; // tapes waltzed since Measure 1
         const items = moved.map((couple) => {
@@ -4147,7 +4146,8 @@
               y: Number((CENTER.y - OUTER_RADIUS * Math.sin(angle)).toFixed(3)),
             };
           }
-          if (t === path.tapes + 1) return inLineAt(couple, path, entryReach);
+          const stepsIn = t - path.tapes; // measures since the couple turned into its line
+          if (t < 4 && stepsIn <= lineSteps.length) return inLineAt(couple, path, lineSteps[stepsIn - 1]);
           return inLine(couple, path, 1);
         });
         return {
