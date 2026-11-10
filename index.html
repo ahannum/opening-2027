@@ -4125,7 +4125,7 @@
       // couples (already on their spots on Measure 1) are just inside on Measure 2 and in place by
       // Measure 3, the next ones by Measure 4, 15, 2, 10 and 7 by Measure 5. The last group (12, 5, 13,
       // 4) is on its spots on the outer tape on Measure 4 and just outside the inner tape on Measure 5,
-      // reaching its place as the couples split on Measure 6.
+      // where it stays as the couples split on Measure 6.
       // That entry spot: ¾ of the way from the turning spot to the Measure 5 place of the second couple
       // from each end of a line (one spacing deep).
       const entryReach = spotY - 0.75 * (spotY - (spotY - spacing) * (innerEnd / spotY));
@@ -4163,21 +4163,23 @@
       const followX = INNER_RADIUS * Math.sin(0.75 * tapeAngle);
       const quarterColor = (path) => (path.back ? (path.left ? "amber" : "blue") : (path.left ? "green" : "rose"));
       const splitFrame = (measure) => {
+        // Lead and follow stay at their couple's Measure 5 level along the line (Ariel); only x changes.
+        const before = new Map(lineFrame(measure - 1).items.map((couple) => [couple.number, couple]));
         const items = moved.flatMap((couple) => {
           const path = paths.get(couple.number);
-          const place = inLine(couple, path, 1);
+          const place = { ...inLine(couple, path, 1), y: before.get(couple.number).y };
           const solo = (role, x, facingAway) => ({
             key: `${couple.number}:${role}`, number: couple.number, role, ring: null, step: null,
             facingMode: place.facingMode, displayMode: "partner", groupColor: quarterColor(path),
             ...(facingAway ? { facingAway: true } : {}),
             x: Number(x.toFixed(3)), y: place.y,
           });
-          // The lead stays in its line, just slightly out from where the couple stood (Ariel): half a
-          // token outside its follow, so its number peeks out.
+          // The lead stays on its Measure 5 spot; the follow only steps in, straight across (Ariel).
           const side = path.left ? -1 : 1;
           return [
-            solo("lead", CENTER.x + side * (followX + PIECE_RADIUS), !path.left),
-            solo("follow", CENTER.x + side * followX, path.back),
+            solo("lead", place.x, !path.left),
+            // A hair further in than the ¾-tape line (Ariel), so a bit more of each lead shows.
+            solo("follow", CENTER.x + side * (followX - 6), path.back),
           ];
         });
         return {
