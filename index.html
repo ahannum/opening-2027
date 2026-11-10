@@ -4444,9 +4444,10 @@
           const away = (Math.atan2(mid.y - end.y, mid.x - end.x) * 180) / Math.PI;
           return couple(number, mid, `deg:${away.toFixed(1)}`);
         }),
-        // On the outside tape the follow backs the line of dance: the lead's half points along it.
-        coupleFrame(7, notes.arrive, (number) => couple(number, onCircle(number), "ccw")),
-        coupleFrame(8, notes.lod, (number) => couple(number, onCircle(number, 1), "ccw")),
+        // On the outside tape the follow backs the line of dance, so the follow's half is toward it and
+        // the lead's half points against it (Ariel).
+        coupleFrame(7, notes.arrive, (number) => couple(number, onCircle(number), "cw")),
+        coupleFrame(8, notes.lod, (number) => couple(number, onCircle(number, 1), "cw")),
       ];
     }
 
