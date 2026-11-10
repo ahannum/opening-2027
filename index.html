@@ -3989,8 +3989,8 @@
       const start = previousSnapshots().at(-1);
       if (!start) return [];
       // A start copied from a frame that isn't to scale says so (Hide and Seek's spread-out Measure 6).
-      const notToScale = /not to (horizontal )?scale/.test(start.annotation?.subtitle ?? "");
-      const subtitle = notToScale ? "Start [not to horizontal scale]" : "Start";
+      const notToScale = /not to scale/.test(start.annotation?.subtitle ?? "");
+      const subtitle = notToScale ? "Start [not to scale]" : "Start";
       return [{ ...structuredClone(start), annotation: { title, subtitle } }];
     }
     // Hide and Seek: Part 1, from Ariel's sketch. It opens on Orphan 3 with the couples joined
@@ -4165,7 +4165,7 @@
       // Whoever faces away has an upside-down number.
       const followX = INNER_RADIUS * Math.sin(0.75 * tapeAngle);
       const quarterColor = (path) => (path.back ? (path.left ? "amber" : "blue") : (path.left ? "green" : "rose"));
-      // `spread`: the "[positions not to scale]" copy (Ariel), with each lead pushed out a token's width
+      // `spread`: the "[not to scale]" copy (Ariel), with each lead pushed out a token's width
       // plus a little past its follow, so both numbers show in full.
       const splitFrame = (measure, spread = false) => {
         // Lead and follow stay at their couple's Measure 5 level along the line (Ariel); only x changes.
@@ -4194,7 +4194,7 @@
         return {
           count: items.length,
           annotation: {
-            title, subtitle: `Measure ${measure}${spread ? " [positions not to scale]" : ""}`, note: HAPPY_SPLIT_NOTE,
+            title, subtitle: `Measure ${measure}${spread ? " [not to scale]" : ""}`, note: HAPPY_SPLIT_NOTE,
           },
           items,
         };
@@ -4208,8 +4208,8 @@
       ];
     }
     function happySectionSnapshots() {
-      // Starts from Part 1's "[positions not to scale]" copy of Measure 6, so every L and F number shows;
-      // Ariel builds Part 2 from there, with the caveat that leads and follows aren't to horizontal scale.
+      // Starts from Part 1's "[not to scale]" copy of Measure 6, so every L and F number shows;
+      // Ariel builds Part 2 from there, with the caveat that leads and follows aren't to scale.
       return holdFrom(happyTransitionInSnapshots, "Hide and Seek: Part 2");
     }
     function happyToPeacefulSnapshots() {
