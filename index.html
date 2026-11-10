@@ -4092,8 +4092,9 @@
       const innerFrame = (measure) => {
         const lines = lineFrame(4);
         const scale = innerEnd / spotY;
+        // From Measure 2 on the color outlines are dropped (Ariel): they only label Measure 1's tosses.
         const items = lines.items.map((couple) => ({
-          ...couple,
+          ...couple, groupColor: "neutral",
           y: Number((CENTER.y + (couple.y - CENTER.y) * scale).toFixed(3)),
         }));
         return { ...lines, annotation: { ...lines.annotation, subtitle: `Measure ${measure}` }, items };
@@ -4142,7 +4143,7 @@
           const share = 1 - (1 - Math.min(1, (measure - 1) / (arrives - 1))) ** 2;
           const end = finalAt.get(couple.number);
           return {
-            ...couple, ring: null, step: null, facingMode: end.facingMode,
+            ...couple, ring: null, step: null, facingMode: end.facingMode, groupColor: "neutral",
             x: Number((couple.x + (end.x - couple.x) * share).toFixed(3)),
             y: Number((couple.y + (end.y - couple.y) * share).toFixed(3)),
           };
