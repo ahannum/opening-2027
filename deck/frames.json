@@ -1090,7 +1090,7 @@
    "id": "waltz-happy-transition-in",
    "name": "8A · Hide and Seek: Part 1",
    "section": "Waltz",
-   "fingerprint": "1j98byl",
+   "fingerprint": "128m1id",
    "frames": [
     {
      "src": "waltz-happy-transition-in/01.jpg",
@@ -1173,12 +1173,52 @@
    "id": "waltz-happy-section",
    "name": "8B · Hide and Seek: Part 2",
    "section": "Waltz",
-   "fingerprint": "1aio25t",
+   "fingerprint": "1sz54nx",
    "frames": [
     {
      "src": "waltz-happy-section/01.jpg",
      "subtitle": "Start [not to scale]",
      "note": ""
+    },
+    {
+     "src": "waltz-happy-section/02.jpg",
+     "subtitle": "Measure 1 [not to scale]",
+     "note": "L: 1 F along LOD, zig-zag (in,\nout). End L tosses across into\nthe other line. F: low float"
+    },
+    {
+     "src": "waltz-happy-section/03.jpg",
+     "subtitle": "Measure 2 [not to scale]",
+     "note": "L: 1 F along LOD, zig-zag (in,\nout). End L tosses across into\nthe other line. F: low float"
+    },
+    {
+     "src": "waltz-happy-section/04.jpg",
+     "subtitle": "Measure 3 [not to scale]",
+     "note": "Pause (hold M2). F look in + shrug.\nL quick duck, facing out E or W"
+    },
+    {
+     "src": "waltz-happy-section/05.jpg",
+     "subtitle": "Measure 4 [not to scale]",
+     "note": "F look out, outside arm up, back\nto center. L pop up on last count"
+    },
+    {
+     "src": "waltz-happy-section/06.jpg",
+     "subtitle": "Measure 5 [not to scale]",
+     "note": "L: 1 F along LOD, zig-zag (in,\nout). End L tosses across into\nthe other line. F: low float"
+    },
+    {
+     "src": "waltz-happy-section/07.jpg",
+     "subtitle": "Measure 6 [not to scale]",
+     "note": "L: 1 F along LOD, zig-zag (in,\nout). End L tosses across into\nthe other line. F: low float"
+    },
+    {
+     "src": "waltz-happy-section/08.jpg",
+     "subtitle": "Measure 7 [not to scale]",
+     "note": "Offer: L jump (½ turn if needed),\noffer hand closest to F.\nF look at offer"
+    },
+    {
+     "src": "waltz-happy-section/09.jpg",
+     "subtitle": "Measure 8 [not to scale]",
+     "note": "You're not my lead:\nF cross arms grumpily"
     }
    ]
   },
@@ -1186,7 +1226,7 @@
    "id": "waltz-happy-to-peaceful",
    "name": "8C · Hide and Seek: Part 3",
    "section": "Waltz",
-   "fingerprint": "5y63do",
+   "fingerprint": "1frefte",
    "frames": [
     {
      "src": "waltz-happy-to-peaceful/01.jpg",
