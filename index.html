@@ -4131,7 +4131,8 @@
         { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
         { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: measure1 },
         ...[2, 3].map(lineFrame),
-        innerFrame(4),
+        // Measure 5 holds Measure 4's inner lines (Ariel).
+        ...[4, 5].map(innerFrame),
       ];
     }
     function happySectionSnapshots() {
