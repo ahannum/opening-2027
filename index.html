@@ -3988,7 +3988,10 @@
     function holdFrom(previousSnapshots, title) {
       const start = previousSnapshots().at(-1);
       if (!start) return [];
-      return [{ ...structuredClone(start), annotation: { title, subtitle: "Start" } }];
+      // A start copied from a frame that isn't to scale says so (Hide and Seek's spread-out Measure 6).
+      const notToScale = /not to (horizontal )?scale/.test(start.annotation?.subtitle ?? "");
+      const subtitle = notToScale ? "Start [not to horizontal scale]" : "Start";
+      return [{ ...structuredClone(start), annotation: { title, subtitle } }];
     }
     // Hide and Seek: Part 1, from Ariel's sketch. It opens on Orphan 3 with the couples joined
     // again: each couple is one token, the lead's half pointing along the line of dance and sitting on
@@ -4202,10 +4205,9 @@
       ];
     }
     function happySectionSnapshots() {
-      // Starts from Part 1's real last positions, not its "[positions not to scale]" copy.
-      const toScale = () => happyTransitionInSnapshots()
-        .filter((frame) => !frame.annotation.subtitle.includes("not to scale"));
-      return holdFrom(toScale, "Hide and Seek: Part 2");
+      // Starts from Part 1's "[positions not to scale]" copy of Measure 6, so every L and F number shows;
+      // Ariel builds Part 2 from there, with the caveat that leads and follows aren't to horizontal scale.
+      return holdFrom(happyTransitionInSnapshots, "Hide and Seek: Part 2");
     }
     function happyToPeacefulSnapshots() {
       return holdFrom(happySectionSnapshots, "Hide and Seek: Part 3");
