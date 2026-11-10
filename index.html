@@ -1644,6 +1644,8 @@
       roleLetters = false,
       // Facing away from the Honored Guests: the number is drawn upside down.
       facingAway = false,
+      // Degrees to turn the number so its bottom points where the dancer faces (90: west, −90: east).
+      numberAngle = null,
     }) {
       const group = svgElement("g", {
         class: `piece ${role}${emphasized ? " emphasized" : ""}`,
@@ -1670,6 +1672,7 @@
         label,
         roleLetters,
         facingAway,
+        numberAngle,
         group,
         blackHalf: null,
         text: null,
@@ -1771,7 +1774,8 @@
 
     function updateFacingAway(token) {
       if (!token.text) return;
-      if (token.facingAway) token.text.setAttribute("transform", "rotate(180)");
+      const angle = token.numberAngle ?? (token.facingAway ? 180 : 0);
+      if (angle) token.text.setAttribute("transform", `rotate(${angle})`);
       else token.text.removeAttribute("transform");
     }
 
@@ -3988,7 +3992,7 @@
     function holdFrom(previousSnapshots, title) {
       const start = previousSnapshots().at(-1);
       if (!start) return [];
-      // A start copied from a frame that isn't to scale says so (Hide and Seek's spread-out Measure 6).
+      // A start copied from a frame that isn't to scale says so (Hide and Seek's spread-out Measure 7).
       const notToScale = /not to scale/.test(start.annotation?.subtitle ?? "");
       const subtitle = notToScale ? "Start [not to scale]" : "Start";
       return [{ ...structuredClone(start), annotation: { title, subtitle } }];
@@ -4022,13 +4026,22 @@
       "left line F faces HG,",
       "right line L faces HG",
     ].join("\n");
-    // Ariel's Measure 6: follows sent in, everyone's facing, and how facing away is shown.
+    // Ariel's Measure 11: the pause before Part 2, everyone's facing, and how facing away is shown.
     const HAPPY_SPLIT_NOTE = [
-      "F in to ¾ tape: back F face away,",
-      "front F face HG. Left L face HG,",
-      "right L face away.",
+      "Pause, prep for Part 2: back F face",
+      "away, front F face HG. Left L face",
+      "HG, right L face away.",
       "Upside-down number = faces away",
     ].join("\n");
+    // Ariel's notes for Measures 7–10 (Ground Truth): the couples split into shadow position across the
+    // line and box east–west, side, center, side, before the follows turn to the inside.
+    const HAPPY_SHADOW_NOTES = {
+      shadow: ["Shadow: F outside the line, in", "front of L, both facing E or W", "Number's bottom = way they face"],
+      left: ["F a little left, L right", "(like Box Skit)"],
+      right: ["F right, L left"],
+      center: ["Center"],
+      turn: ["L inside turn: F 1 or 1½ turns", "from shadow to inside of line", "(¾ tape)"],
+    };
     function happyTransitionInSnapshots() {
       const title = "Hide and Seek: Part 1";
       const boxSkitEnd = boxSkitSnapshots().at(-1);
@@ -4104,7 +4117,7 @@
       // Rose (1 and 9) is already on its turning spot on Measure 1, so its pivot ends in its line's facing.
       const measure1 = moved.map((couple) => (couple.groupColor === "rose"
         ? { ...couple, facingMode: lineFacing(paths.get(couple.number)) } : couple));
-      // Measure 5 (Ariel): both lines sit inside the inner circle, each 8 couples evenly spread with
+      // Full lines (Measure 6, first drawn as Measure 5; Ariel): both lines sit inside the inner circle, each 8 couples evenly spread with
       // its ends on the inner tape, facing toward and away from the Honored Guests. A couple's place
       // there is its place in the full line (spot to spot on the outer tape, `depth` in from its spot)
       // closed up evenly toward the middle.
@@ -4124,11 +4137,12 @@
       // turning spot; once there they turn into their line (Ariel: same two lines, only the spread within
       // them is the inner one). From its turning spot a couple steps down its line one circle a measure
       // (Ariel): onto the halfway ring (midway between the outer and inner tapes), then the inner tape,
-      // then its Measure 5 place, so each line stays spread from the outer tape to the middle. Everyone
-      // is in place on Measure 5, so the later groups squeeze: the first group (on its spots on Measure
-      // 1) is on the halfway ring on Measure 2, the inner tape on 3 and in place on 4; the next group
-      // one measure behind it, in place on 5; the third skips the inner tape (halfway ring on 4, in
-      // place on 5); the last (12, 5, 13, 4) goes straight from its spot on Measure 4 to its place.
+      // then its place in the lines, so each line stays spread from the outer tape to the middle.
+      // Everyone is in place on Measure 6 (Ariel: one more measure than first drawn): the first group (on
+      // its spots on Measure 1) is on the halfway ring on Measure 2, the inner tape on 3 and in place on
+      // 4; each next group one measure behind, so 15, 2, 10 and 7 are in place on 6; only the last
+      // (12, 5, 13, 4) squeezes, skipping the inner tape (spot on 4, halfway ring on 5, in place on 6).
+      const LINES_FULL = 6; // the measure everyone stands in place in the lines
       const ringReach = (radius) => Math.sqrt(radius ** 2 - lineX ** 2);
       const lineSteps = [ringReach(MIDDLE_RADIUS), innerEnd];
       const lineFrame = (measure) => {
@@ -4147,51 +4161,82 @@
             };
           }
           const stepsIn = t - path.tapes; // measures since the couple turned into its line
-          if (t < 4 && stepsIn <= lineSteps.length) return inLineAt(couple, path, lineSteps[stepsIn - 1]);
+          if (measure < LINES_FULL && stepsIn <= lineSteps.length) {
+            return inLineAt(couple, path, lineSteps[stepsIn - 1]);
+          }
           return inLine(couple, path, 1);
         });
         return {
           count: items.length,
           annotation: { title, subtitle: `Measure ${measure}`, note: HAPPY_LINES_NOTE },
-          // Measures 2–4 keep Measure 1's color outlines (Ariel); Measure 5 drops them.
-          items: measure >= 5 ? items.map((couple) => ({ ...couple, groupColor: "neutral" })) : items,
+          // While the lines fill they keep Measure 1's color outlines (Ariel); full lines drop them.
+          items: measure >= LINES_FULL ? items.map((couple) => ({ ...couple, groupColor: "neutral" })) : items,
         };
       };
-      // Measure 6 (Ariel): the couples split. Each quarter of the two lines (left/right line, back/front
-      // half, front toward the Honored Guests) gets its own color. Leads hold their Measure 5 places;
-      // follows are sent in toward the middle, onto the ¾-tape line: the x of the inner tape point ¾ of a
-      // tape from the middle tape, on their own line's side, so the two lines stay. Back follows face away
-      // from the Honored Guests, front follows face them; left leads face them, right leads face away.
-      // Whoever faces away has an upside-down number.
-      const followX = INNER_RADIUS * Math.sin(0.75 * tapeAngle);
+      // From Measure 7 the couples are split (Ariel). Each quarter of the two lines (left/right line,
+      // back/front half, front toward the Honored Guests) gets its own color. A dancer's number turns to
+      // show where they face: upright faces the Honored Guests, upside down faces away, and sideways its
+      // bottom points east or west.
       const quarterColor = (path) => (path.back ? (path.left ? "amber" : "blue") : (path.left ? "green" : "rose"));
+      const full = new Map(lineFrame(LINES_FULL).items.map((couple) => [couple.number, couple]));
+      const solo = (couple, path, role, { x, y, facingAway = false, numberAngle = null }) => ({
+        key: `${couple.number}:${role}`, number: couple.number, role, ring: null, step: null,
+        facingMode: lineFacing(path), displayMode: "partner", groupColor: quarterColor(path),
+        ...(facingAway ? { facingAway: true } : {}),
+        ...(numberAngle != null ? { numberAngle } : {}),
+        x: Number(x.toFixed(3)), y: Number(y.toFixed(3)),
+      });
+      // Measures 7–9 (Ariel's notes), like Box Skit but boxing east–west across the line instead of
+      // radially, and only side, center, side (no front/back switching). Each couple's spot in the full
+      // lines stays put; the lead stands on it and the follow is in front of the lead, out from the
+      // line (west of the left line, east of the right one), both facing out. Offsets are in Box Skit's
+      // units: `along` the line, + to the dancers' left as they face out (south on the left line, north on
+      // the right), and `out` from the line.
+      const unit = PIECE_RADIUS + 2;
+      const shadowFrame = (subtitle, note, lead, follow) => {
+        const items = moved.flatMap((couple) => {
+          const path = paths.get(couple.number);
+          const spot = full.get(couple.number);
+          const side = path.left ? -1 : 1;
+          const at = ([along, out]) => ({
+            x: spot.x + side * out * unit,
+            y: spot.y - side * along * unit,
+            // Facing west the number's bottom points west (turned 90°), facing east −90°.
+            numberAngle: path.left ? 90 : -90,
+          });
+          return [solo(couple, path, "lead", at(lead)), solo(couple, path, "follow", at(follow))];
+        });
+        return { count: items.length, annotation: { title, subtitle, note: note.join("\n") }, items };
+      };
+      // Measure 10 the lead's inside turn takes each follow from shadow to the inside of the line, where
+      // Measure 11 holds them. Leads hold their places in the full lines; follows end on the ¾-tape line:
+      // the x of the inner tape point ¾ of a tape from the middle tape, on their own line's side, so the
+      // two lines stay. Back follows face away from the Honored Guests, front follows face them; left
+      // leads face them, right leads face away.
+      const followX = INNER_RADIUS * Math.sin(0.75 * tapeAngle);
       // `spread`: the "[not to scale]" copy (Ariel), with each lead pushed out a token's width
       // plus a little past its follow, so both numbers show in full.
-      const splitFrame = (measure, spread = false) => {
-        // Lead and follow stay at their couple's Measure 5 level along the line (Ariel); only x changes.
-        const before = new Map(lineFrame(measure - 1).items.map((couple) => [couple.number, couple]));
+      const splitFrame = (measure, spread = false, note = HAPPY_SPLIT_NOTE) => {
+        // Lead and follow stay at their couple's level in the full lines (Ariel); only x changes.
+        const before = full;
         const items = moved.flatMap((couple) => {
           const path = paths.get(couple.number);
           const place = { ...inLine(couple, path, 1), y: before.get(couple.number).y };
           // Not to scale, the 8 rows of each line sit evenly spaced (Ariel builds Part 2 from these), in
-          // their Measure 5 order, a token's width plus a little apart and centered on the middle.
+          // their order in the lines, a token's width plus a little apart and centered on the middle.
           const row = [...before.values()].filter((other) => paths.get(other.number).left === path.left)
             .filter((other) => other.y < place.y).length;
           const y = spread ? CENTER.y + (row - 3.5) * (2 * PIECE_RADIUS + 2) : place.y;
-          const solo = (role, x, facingAway) => ({
-            key: `${couple.number}:${role}`, number: couple.number, role, ring: null, step: null,
-            facingMode: place.facingMode, displayMode: "partner", groupColor: quarterColor(path),
-            ...(facingAway ? { facingAway: true } : {}),
-            x: Number(x.toFixed(3)), y: Number(y.toFixed(3)),
-          });
-          // The lead stays on its Measure 5 spot; the follow only steps in, straight across (Ariel).
+          // The lead stays on its spot in the full lines; the follow ends straight across from it (Ariel).
           const side = path.left ? -1 : 1;
           // A hair further in than the ¾-tape line (Ariel), so a bit more of each lead shows.
           // Not to scale, the two follow lines sit a little further apart (Ariel).
           const inner = spread ? followX + 4 : followX - 6;
           return [
-            solo("lead", spread ? CENTER.x + side * (inner + 2 * PIECE_RADIUS + 4) : place.x, !path.left),
-            solo("follow", CENTER.x + side * inner, path.back),
+            solo(couple, path, "lead", {
+              x: spread ? CENTER.x + side * (inner + 2 * PIECE_RADIUS + 4) : place.x, y, facingAway: !path.left,
+            }),
+            solo(couple, path, "follow", { x: CENTER.x + side * inner, y, facingAway: path.back }),
           ];
         });
         return {
@@ -4199,21 +4244,28 @@
           annotation: {
             // Not to scale, only the line on numbers and facing stays in the note (Ariel).
             title, subtitle: `Measure ${measure}${spread ? " [not to scale]" : ""}`,
-            note: spread ? HAPPY_SPLIT_NOTE.split("\n").at(-1) : HAPPY_SPLIT_NOTE,
+            note: spread ? HAPPY_SPLIT_NOTE.split("\n").at(-1) : note,
           },
           items,
         };
       };
+      const notes = HAPPY_SHADOW_NOTES;
       return [
         { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
         { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: measure1 },
-        ...[2, 3, 4, 5].map(lineFrame),
-        splitFrame(6),
-        splitFrame(6, true),
+        ...[2, 3, 4, 5, 6].map(lineFrame),
+        shadowFrame("Measure 7", notes.shadow, [0, 0], [0, 2]),
+        shadowFrame("Measure 8: 1-2-3", notes.left, [-0.5, 0], [0.5, 2]),
+        shadowFrame("Measure 8: 4-5-6", notes.center, [0, 0], [0, 2]),
+        shadowFrame("Measure 9: 1-2-3", notes.right, [0.5, 0], [-0.5, 2]),
+        shadowFrame("Measure 9: 4-5-6", notes.center, [0, 0], [0, 2]),
+        splitFrame(10, false, notes.turn.join("\n")),
+        splitFrame(11),
+        splitFrame(11, true),
       ];
     }
     function happySectionSnapshots() {
-      // Starts from Part 1's "[not to scale]" copy of Measure 6, so every L and F number shows;
+      // Starts from Part 1's "[not to scale]" copy of Measure 7, so every L and F number shows;
       // Ariel builds Part 2 from there, with the caveat that leads and follows aren't to scale.
       return holdFrom(happyTransitionInSnapshots, "Hide and Seek: Part 2");
     }
@@ -5699,6 +5751,7 @@
           label: item.label ?? null,
           roleLetters: Boolean(item.roleLetters),
           facingAway: Boolean(item.facingAway),
+          numberAngle: item.numberAngle ?? null,
         }));
       });
       refreshSelection();
@@ -5894,6 +5947,7 @@
           ...(token.label ? { label: token.label } : {}),
           ...(token.roleLetters ? { roleLetters: true } : {}),
           ...(token.facingAway ? { facingAway: true } : {}),
+          ...(token.numberAngle != null ? { numberAngle: token.numberAngle } : {}),
           x: Number(token.x.toFixed(3)),
           y: Number(token.y.toFixed(3)),
         })),
@@ -6012,6 +6066,7 @@
         token.emphasized = Boolean(item.emphasized);
         token.group.classList.toggle("emphasized", token.emphasized);
         token.facingAway = Boolean(item.facingAway);
+        token.numberAngle = item.numberAngle ?? null;
         updateFacingAway(token);
         if (token.role !== "couple" || !item.facingMode) return;
 
