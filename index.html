@@ -4039,8 +4039,9 @@
       // Measure 1's facings, from the note (facing is where the lead's half points): violet's incomplete
       // toss across stops with the lead facing radially in; green's complete toss across switches the
       // lead to the follow's other side, so the lead's half now points against the line of dance; rose
-      // tosses across and pivots to reorient, ending the same way as green (Ariel); teal keeps its facing.
-      const measure1Facing = { violet: "in", green: "cw", rose: "cw" };
+      // tosses across and pivots to reorient, already into the facing of the line it starts on its
+      // turning spot (set below, once the lines are worked out); teal keeps its facing.
+      const measure1Facing = { violet: "in", green: "cw" };
       const moved = joined.map((couple) => {
         const step = couple.step == null ? couple.step : (couple.step + 31) % 32;
         const facingMode = measure1Facing[couple.groupColor] || couple.facingMode;
@@ -4080,13 +4081,17 @@
         return [couple.number, { angle, direction: Math.sign(gap), left, back, tapes, depth }];
       }));
       const lineFacing = (path) => (path.left ? "north" : "south");
-      // Measures 5 and 6: both lines close up evenly toward the middle until their ends sit on the inner
-      // tape, so the whole of each line is inside the inner circle.
+      // Rose (1 and 9) is already on its turning spot on Measure 1, so its pivot ends in its line's facing.
+      const measure1 = moved.map((couple) => (couple.groupColor === "rose"
+        ? { ...couple, facingMode: lineFacing(paths.get(couple.number)) } : couple));
+      // Measure 4 (Ariel): both lines already sit inside the inner circle, each 8 couples evenly spread
+      // with its ends on the inner tape, facing toward and away from the Honored Guests. They're the
+      // full lines (spot to spot on the outer tape, as worked out below) closed up evenly toward the
+      // middle.
       const innerEnd = Math.sqrt(INNER_RADIUS ** 2 - lineX ** 2);
       const innerFrame = (measure) => {
         const lines = lineFrame(4);
-        const share = (measure - 4) / 2;
-        const scale = 1 - share * (1 - innerEnd / spotY);
+        const scale = innerEnd / spotY;
         const items = lines.items.map((couple) => ({
           ...couple,
           y: Number((CENTER.y + (couple.y - CENTER.y) * scale).toFixed(3)),
@@ -4124,9 +4129,9 @@
       };
       return [
         { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
-        { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: moved },
-        ...[2, 3, 4].map(lineFrame),
-        ...[5, 6].map(innerFrame),
+        { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: measure1 },
+        ...[2, 3].map(lineFrame),
+        innerFrame(4),
       ];
     }
     function happySectionSnapshots() {
