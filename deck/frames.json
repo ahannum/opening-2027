@@ -1226,12 +1226,52 @@
    "id": "waltz-happy-to-peaceful",
    "name": "8C · Hide and Seek: Part 3",
    "section": "Waltz",
-   "fingerprint": "1frefte",
+   "fingerprint": "1kdmas1",
    "frames": [
     {
      "src": "waltz-happy-to-peaceful/01.jpg",
      "subtitle": "Start [not to scale]",
-     "note": ""
+     "note": "Not to scale: L line where F line\nwas, F inside it"
+    },
+    {
+     "src": "waltz-happy-to-peaceful/02.jpg",
+     "subtitle": "Measure 1 [not to scale]",
+     "note": "F: step, cross, step, point, 1 L\nalong LOD, zig-zag (out, in).\nEnd F crosses into other line. L hold"
+    },
+    {
+     "src": "waltz-happy-to-peaceful/03.jpg",
+     "subtitle": "Measure 2 [not to scale]",
+     "note": "F: step, cross, step, point, 1 L\nalong LOD, zig-zag (out, in).\nEnd F crosses into other line. L hold"
+    },
+    {
+     "src": "waltz-happy-to-peaceful/04.jpg",
+     "subtitle": "Measure 3 [not to scale]",
+     "note": "F: step, cross, step, point, 1 L\nalong LOD, zig-zag (out, in).\nEnd F crosses into other line. L hold"
+    },
+    {
+     "src": "waltz-happy-to-peaceful/05.jpg",
+     "subtitle": "Measure 4 [not to scale]",
+     "note": "F: step, cross, step, point, 1 L\nalong LOD, zig-zag (out, in).\nEnd F crosses into other line. L hold"
+    },
+    {
+     "src": "waltz-happy-to-peaceful/06.jpg",
+     "subtitle": "Measure 5",
+     "note": "Back to frame: low hand J hook,\ninto frame the way you waltz"
+    },
+    {
+     "src": "waltz-happy-to-peaceful/07.jpg",
+     "subtitle": "Measure 6",
+     "note": "Waltz to outside circle"
+    },
+    {
+     "src": "waltz-happy-to-peaceful/08.jpg",
+     "subtitle": "Measure 7",
+     "note": "On the outside circle:\n1 in front of HG, 14, 15… to its left"
+    },
+    {
+     "src": "waltz-happy-to-peaceful/09.jpg",
+     "subtitle": "Measure 8",
+     "note": "Waltz 1 tape LOD"
     }
    ]
   }
