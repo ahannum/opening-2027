@@ -1032,6 +1032,8 @@
           <button id="gridFormationBtn" type="button">Grid</button>
           <button id="crossFormationBtn" type="button">Cross</button>
           <button id="pyramidFormationBtn" type="button">Pyramid</button>
+          <button id="threeRingFormationBtn" type="button" title="Couples on the inner tape, the ½ ring, and the outer tape. Click again for a different split.">Three Rings</button>
+          <button id="spiralXFormationBtn" type="button" title="Four arms of an X, one couple per ring from the center ring out to the outer tape, each ring turned a bit further.">Spiral X</button>
         </div>
         <h3 class="mini-heading">Saved configurations</h3>
         <div class="button-grid compact">
@@ -2470,6 +2472,8 @@
         twoLines: ["two lines", formationTwoLineTargets],
         cross: ["cross", formationCrossTargets],
         pyramid: ["pyramid", formationPyramidTargets],
+        threeRings: ["three rings", formationThreeRingTargets],
+        spiralX: ["spiral X", formationSpiralXTargets],
         grid: ["grid", formationGridTargets],
         square: ["square", formationSquareTargets],
       };
@@ -2487,7 +2491,8 @@
       const targets = createTargets();
 
       animateConstrainedTargets(targets, () => {
-        setStatus(`${capitalize(label)} formation ready`);
+        const detail = kind === "threeRings" ? ` (${threeRingSummary})` : "";
+        setStatus(`${capitalize(label)} formation ready${detail}`);
       });
       setStatus(`Moving to ${label}`);
     }
@@ -2508,6 +2513,79 @@
         }));
       });
 
+      return targets;
+    }
+
+    // Three Rings prototype: inner tape, ½ ring, outer tape. Each split is couples per ring out of 16
+    // (inner, middle, outer); clicking Three Rings again moves to the next split.
+    const THREE_RING_SPLITS = [
+      { counts: [4, 6, 6], offsets: [0, 0, 16 / 6] },
+      { counts: [4, 4, 8], offsets: [0, 4, 0] },
+      { counts: [3, 5, 8], offsets: [0, 0, 2] },
+    ];
+    let threeRingSplitIndex = -1;
+    let threeRingSummary = "";
+
+    function formationThreeRingTargets() {
+      threeRingSplitIndex = (threeRingSplitIndex + 1) % THREE_RING_SPLITS.length;
+      const { counts, offsets } = THREE_RING_SPLITS[threeRingSplitIndex];
+      const activeTokens = formationScope();
+      const total = counts.reduce((sum, count) => sum + count, 0);
+      // Scale the split to however many tokens are in scope (32 when leads and follows are apart).
+      let assigned = 0;
+      const ringCounts = counts.map((count, index) => {
+        const share = index === counts.length - 1
+          ? activeTokens.length - assigned
+          : Math.round((count * activeTokens.length) / total);
+        assigned += share;
+        return share;
+      });
+      const rings = ["inner", "middle", "outer"];
+      const targets = new Map();
+      let cursor = 0;
+      rings.forEach((ring, ringIndex) => {
+        const count = ringCounts[ringIndex];
+        const group = activeTokens.slice(cursor, cursor + count);
+        cursor += count;
+        group.forEach((token, index) => {
+          const rawStep = offsets[ringIndex] * (HALF_STEPS / 32) + index * (HALF_STEPS / count);
+          const point = stepPosition(rawStep, ring);
+          // Counts that don't divide the 32 half-steps sit at exact even angles, off the snap points.
+          if (Math.abs(rawStep - Math.round(rawStep)) > 1e-6) {
+            targets.set(token, pointToFreeTarget(point.x, point.y));
+            return;
+          }
+          targets.set(token, anchorToTarget({ ring, step: wrapStep(rawStep), x: point.x, y: point.y, locked: true }));
+        });
+      });
+      threeRingSummary = ringCounts.map((count, index) => `${count} ${RING_LABELS[rings[index]]}`).join(" · ");
+      return targets;
+    }
+
+    // Spiral X prototype: an X of four arms, four rings deep (center ring, inner tape, ½ ring,
+    // outer tape). Each ring out turns the arms two half-steps (22.5°) further, so the X curls.
+    // The arms always sweep counterclockwise (left-facing) and there is deliberately no toggle:
+    // the clockwise, right-facing version reads like a swastika.
+    const SPIRAL_X_RINGS = ["center", "inner", "middle", "outer"];
+    const SPIRAL_X_TWIST = 2;
+
+    function formationSpiralXTargets() {
+      const activeTokens = formationScope();
+      const groups = splitEvenly(activeTokens, SPIRAL_X_RINGS.length);
+      const targets = new Map();
+      groups.forEach((group, ringIndex) => {
+        const ring = SPIRAL_X_RINGS[ringIndex];
+        const twist = SPIRAL_X_TWIST * ringIndex;
+        group.forEach((token, index) => {
+          const rawStep = twist + index * (HALF_STEPS / group.length);
+          const point = stepPosition(rawStep, ring);
+          if (Math.abs(rawStep - Math.round(rawStep)) > 1e-6) {
+            targets.set(token, pointToFreeTarget(point.x, point.y));
+            return;
+          }
+          targets.set(token, anchorToTarget({ ring, step: wrapStep(rawStep), x: point.x, y: point.y, locked: true }));
+        });
+      });
       return targets;
     }
 
@@ -4519,6 +4597,37 @@
       ];
     }
 
+    // Prototype of the section after Peaceful Frolicking: from the outer tape into the Spiral X
+    // (see formationSpiralXTargets). Peaceful Frolicking ends with every couple on an even half
+    // step, which line up with the X's spokes, so every move is straight in or out:
+    // step % 8 = 0 → center ring (spoke base), 2 → stays on the inner tape, 4 → ½ ring,
+    // 6 → ½ ring, then out to the outer tape in Measure 4.
+    function spiralXSectionSnapshots() {
+      const title = "Next section (prototype)";
+      const start = peacefulFrolickingSnapshots().at(-1);
+      if (!start) return [];
+      const fix = (value) => Number(value.toFixed(3));
+      const SPIRAL = { 0: "center", 2: "inner", 4: "middle", 6: "outer" };
+      // "out" puts the lead's half outward, so F sits radially in from L.
+      const place = (item, ring) => {
+        const point = stepPosition(item.step, ring);
+        return { ...structuredClone(item), ring, facingMode: "out", x: fix(point.x), y: fix(point.y) };
+      };
+      const frame = (subtitle, ringFor) => {
+        const items = start.items.map((item) => place(item, ringFor(SPIRAL[((item.step % 8) + 8) % 8])));
+        return { count: items.length, annotation: { title, subtitle }, items };
+      };
+      const measure2 = (final) => (final === "center" || final === "inner" ? final : "middle");
+      return [
+        { ...structuredClone(start), annotation: { title, subtitle: "Start" } },
+        frame("Measure 1", () => "inner"),
+        frame("Measure 2", measure2),
+        frame("Measure 3", measure2),
+        frame("Measure 4", (final) => final),
+        frame("Measure 5", (final) => final),
+      ];
+    }
+
     // Saved configurations: ready-made stories listed in the planner and in the presenter. Each returns
     // the board snapshot for every frame, so adding one here makes it show up in both pickers.
     // Both pickers group them by `section`, in the order of PRESET_SECTIONS; Polka and Waltz hold the
@@ -4775,6 +4884,13 @@
         section: WALTZ,
         name: "9 · Theme 1: Peaceful Frolicking",
         snapshots: peacefulFrolickingSnapshots,
+      },
+      // Prototype, shown in the phone player so dancers can see where it's heading.
+      {
+        id: "waltz-spiral-x",
+        section: WALTZ,
+        name: "10 · Into the Spiral X (prototype)",
+        snapshots: spiralXSectionSnapshots,
       },
     ];
 
@@ -7164,6 +7280,8 @@
     document.querySelector("#advanceLinesBtn").addEventListener("click", advanceTwoLines);
     document.querySelector("#crossFormationBtn").addEventListener("click", () => applyFormation("cross"));
     document.querySelector("#pyramidFormationBtn").addEventListener("click", () => applyFormation("pyramid"));
+    document.querySelector("#threeRingFormationBtn").addEventListener("click", () => applyFormation("threeRings"));
+    document.querySelector("#spiralXFormationBtn").addEventListener("click", () => applyFormation("spiralX"));
     populatePresetSelect();
     document.querySelector("#loadPresetBtn").addEventListener("click", () => loadStoryPreset());
     document.querySelector("#presentBtn").addEventListener("click", openPresenter);
