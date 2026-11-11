@@ -4488,31 +4488,34 @@
         const items = start.items.flatMap((item) => [place(item)].flat());
         return { count: items.length, annotation: { title, subtitle }, items };
       };
-      // Splitting the tape, L facing the line of dance and F backing it.
+      // Separated, splitting the tape, F toward the line of dance (L facing it, F backing it).
       const split = (item) => apart(item, 0, [-1, 0, "ccw"], [1, 0, "cw"]);
-      // Skaters, both facing the line of dance, F radially out from L.
-      const skaters = (halfSteps) => (item) => apart(item, halfSteps, [0, -1, "ccw"], [0, 1, "ccw"]);
+      // Connected; a couple's facingMode is where the lead's half sits: "cw" puts F toward the line of
+      // dance, "in" puts F radially out from L (skaters, facing the line of dance).
+      const at = (halfSteps, facingMode = "cw") => (item) => couple(item, halfSteps, facingMode);
+      // Ariel's measure-by-measure list (11/10).
       return [
         { ...structuredClone(start), annotation: { title, subtitle: "Start" } },
         frame("Measure 1", split),
         frame("Measure 2", split),
-        frame("Measure 3", (item) => couple(item, 0)),
-        // ½ tape, 1 forward along the line of dance.
-        frame("Measure 4", skaters(1)),
+        frame("Measure 3", at(0)),
+        // Skaters, ½ tape along the line of dance (between two red dots).
+        frame("Measure 4", at(1, "in")),
         // 1 tape: ½ tape to ½ tape.
-        frame("Measure 5", skaters(3)),
-        frame("Measure 6", skaters(3)),
-        // ½ tape forward, back on a tape.
-        frame("Measure 7", (item) => couple(item, 4)),
-        frame("Measure 8", (item) => couple(item, 6)),
-        frame("Measure 9", (item) => couple(item, 8)),
-        frame("Measure 10", (item) => couple(item, 8)),
-        frame("Measure 11", (item) => couple(item, 8)),
-        frame("Measure 12", (item) => couple(item, 8)),
-        frame("Measure 13", (item) => couple(item, 8)),
-        frame("Measure 14", (item) => couple(item, 8)),
-        frame("Measure 15", (item) => couple(item, 8)),
-        frame("Measure 16", (item) => couple(item, 8)),
+        frame("Measure 5", at(3, "in")),
+        // ½ tape more, back on a red dot, F toward the line of dance.
+        frame("Measure 6", at(4)),
+        frame("Measure 7", at(4)),
+        frame("Measure 8", at(6)),
+        frame("Measure 9", at(8)),
+        frame("Measure 10", at(10)),
+        frame("Measure 11", at(10)),
+        frame("Measure 12", at(12)),
+        // Same spot, F now radially out from L.
+        frame("Measure 13", at(12, "in")),
+        frame("Measure 14", at(12, "in")),
+        frame("Measure 15", at(12, "in")),
+        frame("Measure 16", at(12, "in")),
       ];
     }
 
