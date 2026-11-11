@@ -3515,10 +3515,11 @@
         { subtitle: "Measure 1", items: unfoldFrame(0.5) },
         // Pods B, D, F, H toward the Honored Guests, A, C, E, G away, already spread out to the ¾ ring.
         { subtitle: "Measure 2", items: podFrame(RING_RADII.threeQuarter) },
-        // Lines out level with the nearest tape dots beyond: the outer tape's dots at 45°.
-        { subtitle: "Measure 3", items: podFrame(OUTER_RADIUS * Math.SQRT1_2) },
+        // Measure 3 takes them further apart, out to the outer tape: each line touches it at its top
+        // or bottom dot, square to the spoke through it.
+        { subtitle: "Measure 3", items: podFrame(OUTER_RADIUS) },
         // Measure 4-6 holds Measure 3's spots.
-        { subtitle: "Measure 4-6", items: podFrame(OUTER_RADIUS * Math.SQRT1_2) },
+        { subtitle: "Measure 4-6", items: podFrame(OUTER_RADIUS) },
         // Back in toward the overlap, still in pods.
         { subtitle: "Measure 7", items: podFrame(RING_RADII.threeQuarter / 3) },
         // Overlap.
