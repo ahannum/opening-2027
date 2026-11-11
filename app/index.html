@@ -1510,8 +1510,12 @@
     //    rotation doesn't point across the middle;
     //  - radial (into or out of the center, or straight through it): exactly toward/away from the center;
     //  - any other straight line: snapped to the nearest of up, down, left, right when it's close to one.
+    // `schematic` frames ("[not to scale]") are lines and grids, not spots on the circle, so they skip
+    // the circle and radial cases (dancers there can be about as far from the center at both ends
+    // without travelling around it), and any step that isn't nearly level or plumb is drawn at a clean
+    // 45°, so a lead moving one row while crossing the follow line reads clearly as a diagonal.
     const DEG = Math.PI / 180;
-    function travelDirection(from, to) {
+    function travelDirection(from, to, schematic = false) {
       const ax = from.x - BOARD_CENTER, ay = from.y - BOARD_CENTER;
       const bx = to.x - BOARD_CENTER, by = to.y - BOARD_CENTER;
       const r1 = Math.hypot(ax, ay), r2 = Math.hypot(bx, by);
@@ -1522,6 +1526,7 @@
       let off = chord - square;
       off = Math.atan2(Math.sin(off), Math.cos(off));
       if (Math.abs(off) <= 3 * DEG) return square;
+      if (schematic) return Math.abs(off) <= 15 * DEG ? square : square + Math.sign(off) * 45 * DEG;
       // Into or out of the very center, or straight across it: the line already runs through the center.
       if (r1 < 30 || r2 < 30) return chord;
       let dTheta = Math.atan2(by, bx) - Math.atan2(ay, ax);
@@ -1538,9 +1543,7 @@
       // Radial: hardly any turn around the center.
       if (Math.abs(dTheta) < 10 * DEG) return r2 >= r1 ? Math.atan2(uy, ux) : Math.atan2(-uy, -ux);
       // A straight line across the floor.
-      // Only snap when it's nearly level or plumb: a lead moving one row along while crossing to the
-      // other side of the follow line (about 26° off) still reads as a diagonal.
-      return Math.abs(off) <= 15 * DEG ? square : chord;
+      return Math.abs(off) <= 30 * DEG ? square : chord;
     }
 
     function drawArrows(nextFrame) {
@@ -1548,6 +1551,8 @@
       if (!shown || !nextFrame) return;
       const next = framePositions(nextFrame);
       const here = piecePositions(shown);
+      const { frames, frameIndex } = current;
+      const schematic = /not to scale/i.test(frames[frameIndex]?.subtitle || "");
       const NS = "http://www.w3.org/2000/svg";
       // One layer over every dot, so a neighbor's dot never covers an arrow.
       const layer = document.createElementNS(NS, "g");
@@ -1564,7 +1569,7 @@
         // couple then lands somewhere else (e.g. back to scale after a "[not to scale]" frame).
         const partner = role === "lead" ? here.get(`follow-${number}`) : role === "follow" ? here.get(`lead-${number}`) : null;
         const joining = partner && !next.has(key) && Math.hypot(partner.x - from.x, partner.y - from.y) >= 6;
-        const angle = ((joining ? Math.atan2(partner.y - from.y, partner.x - from.x) : travelDirection(from, there)) * 180) / Math.PI;
+        const angle = ((joining ? Math.atan2(partner.y - from.y, partner.x - from.x) : travelDirection(from, there, schematic)) * 180) / Math.PI;
         // Drawn pointing right just outside the dot, then turned; it grows with the dots.
         const spot = document.createElementNS(NS, "g");
         spot.setAttribute("transform", `translate(${from.x} ${from.y})`);
