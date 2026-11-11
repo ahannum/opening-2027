@@ -1372,6 +1372,44 @@
      "note": ""
     }
    ]
+  },
+  {
+   "id": "waltz-spiral-x",
+   "name": "10 · Into the Spiral X (prototype)",
+   "section": "Waltz",
+   "fingerprint": "1kufjxv",
+   "frames": [
+    {
+     "src": "waltz-spiral-x/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "waltz-spiral-x/02.jpg",
+     "subtitle": "Measure 1",
+     "note": ""
+    },
+    {
+     "src": "waltz-spiral-x/03.jpg",
+     "subtitle": "Measure 2",
+     "note": ""
+    },
+    {
+     "src": "waltz-spiral-x/04.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-spiral-x/05.jpg",
+     "subtitle": "Measure 4",
+     "note": ""
+    },
+    {
+     "src": "waltz-spiral-x/06.jpg",
+     "subtitle": "Measure 5",
+     "note": ""
+    }
+   ]
   }
  ]
 }
