@@ -1538,27 +1538,36 @@
       // Radial: hardly any turn around the center.
       if (Math.abs(dTheta) < 10 * DEG) return r2 >= r1 ? Math.atan2(uy, ux) : Math.atan2(-uy, -ux);
       // A straight line across the floor.
-      return Math.abs(off) <= 30 * DEG ? square : chord;
+      // Only snap when it's nearly level or plumb: a lead moving one row along while crossing to the
+      // other side of the follow line (about 26° off) still reads as a diagonal.
+      return Math.abs(off) <= 15 * DEG ? square : chord;
     }
 
     function drawArrows(nextFrame) {
       const shown = board.querySelector("svg");
       if (!shown || !nextFrame) return;
       const next = framePositions(nextFrame);
+      const here = piecePositions(shown);
       const NS = "http://www.w3.org/2000/svg";
       // One layer over every dot, so a neighbor's dot never covers an arrow.
       const layer = document.createElementNS(NS, "g");
       layer.setAttribute("class", "travel-arrows");
       shown.append(layer);
       shown.querySelectorAll(".piece").forEach((piece) => {
-        const here = piecePosition(piece);
-        if (!here) return;
-        const there = findNext(`${piece.dataset.role}-${piece.dataset.number}`, piece.dataset.number, next);
-        if (!there || Math.hypot(there.x - here.x, there.y - here.y) < 6) return;
-        const angle = (travelDirection(here, there) * 180) / Math.PI;
+        const from = piecePosition(piece);
+        if (!from) return;
+        const { role, number } = piece.dataset;
+        const key = `${role}-${number}`;
+        const there = findNext(key, number, next);
+        if (!there || Math.hypot(there.x - from.x, there.y - from.y) < 6) return;
+        // A lead and follow joining back into one couple point straight at each other, even when the
+        // couple then lands somewhere else (e.g. back to scale after a "[not to scale]" frame).
+        const partner = role === "lead" ? here.get(`follow-${number}`) : role === "follow" ? here.get(`lead-${number}`) : null;
+        const joining = partner && !next.has(key) && Math.hypot(partner.x - from.x, partner.y - from.y) >= 6;
+        const angle = ((joining ? Math.atan2(partner.y - from.y, partner.x - from.x) : travelDirection(from, there)) * 180) / Math.PI;
         // Drawn pointing right just outside the dot, then turned; it grows with the dots.
         const spot = document.createElementNS(NS, "g");
-        spot.setAttribute("transform", `translate(${here.x} ${here.y})`);
+        spot.setAttribute("transform", `translate(${from.x} ${from.y})`);
         const arrow = document.createElementNS(NS, "g");
         arrow.setAttribute("class", "travel-arrow");
         arrow.setAttribute("style", "scale: var(--dot-scale, 1); pointer-events: none");
