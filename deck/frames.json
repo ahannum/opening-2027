@@ -1374,38 +1374,38 @@
    ]
   },
   {
-   "id": "waltz-spiral-x",
-   "name": "10 · Into the Spiral X (prototype)",
+   "id": "waltz-unfurling-concentric-rings",
+   "name": "10 · Unfurling Concentric Rings",
    "section": "Waltz",
-   "fingerprint": "1kufjxv",
+   "fingerprint": "1j52q09",
    "frames": [
     {
-     "src": "waltz-spiral-x/01.jpg",
+     "src": "waltz-unfurling-concentric-rings/01.jpg",
      "subtitle": "Start",
      "note": ""
     },
     {
-     "src": "waltz-spiral-x/02.jpg",
+     "src": "waltz-unfurling-concentric-rings/02.jpg",
      "subtitle": "Measure 1",
      "note": ""
     },
     {
-     "src": "waltz-spiral-x/03.jpg",
+     "src": "waltz-unfurling-concentric-rings/03.jpg",
      "subtitle": "Measure 2",
      "note": ""
     },
     {
-     "src": "waltz-spiral-x/04.jpg",
+     "src": "waltz-unfurling-concentric-rings/04.jpg",
      "subtitle": "Measure 3",
      "note": ""
     },
     {
-     "src": "waltz-spiral-x/05.jpg",
+     "src": "waltz-unfurling-concentric-rings/05.jpg",
      "subtitle": "Measure 4",
      "note": ""
     },
     {
-     "src": "waltz-spiral-x/06.jpg",
+     "src": "waltz-unfurling-concentric-rings/06.jpg",
      "subtitle": "Measure 5",
      "note": ""
     }
