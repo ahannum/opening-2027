@@ -4347,7 +4347,7 @@
         leadFrame(8, 4, notes.grumpy),
       ];
     }
-    // Ariel's notes for Part 3 (WIP Ground Truth: Waltz), short enough for the bottom-left corner.
+    // Ariel's notes for Part 3 (WIP Ground Truth: Waltz). Not shown on the frames any more (Ariel).
     const HAPPY_PART3_NOTES = {
       start: ["Not to scale: L line where F line", "was, F inside it"],
       go: ["F: step, cross, step, point, 1 L", "along LOD, zig-zag (out, in).", "End F crosses into other line. L hold"],
@@ -4391,7 +4391,8 @@
             y: fix(CENTER.y + (row - 3.5) * rowGap),
           };
         });
-        return { count: items.length, annotation: { title, subtitle, note: note.join("\n") }, items };
+        // No notes on Part 3's frames (Ariel); HAPPY_PART3_NOTES keeps them for reference.
+        return { count: items.length, annotation: { title, subtitle }, items };
       };
       // Reunited, each couple sits in its lead's row, back to scale in the full lines of Part 1's Measure 6.
       const leads = end2.items.filter((item) => item.role === "lead");
@@ -4427,7 +4428,7 @@
       });
       const coupleFrame = (measure, note, place) => {
         const items = [...linePlace.keys()].sort((a, b) => a - b).map((number) => place(number));
-        return { count: items.length, annotation: { title, subtitle: `Measure ${measure}`, note: note.join("\n") }, items };
+        return { count: items.length, annotation: { title, subtitle: `Measure ${measure}` }, items };
       };
       const notes = HAPPY_PART3_NOTES;
       return [
@@ -4449,6 +4450,69 @@
         // the lead's half points against it (Ariel).
         coupleFrame(7, notes.arrive, (number) => couple(number, onCircle(number), "cw")),
         coupleFrame(8, notes.lod, (number) => couple(number, onCircle(number, 1), "cw")),
+      ];
+    }
+
+    // Waltz 9 · Theme 1: Peaceful Frolicking, from the WIP Ground Truth table. It starts where Hide and
+    // Seek Part 3 ends: every couple on a red dot of the outer tape, F backing the line of dance. One
+    // tape is one red dot (2 half steps) along the line of dance (counterclockwise).
+    function peacefulFrolickingSnapshots() {
+      const title = "Peaceful Frolicking";
+      const start = happyToPeacefulSnapshots().at(-1);
+      if (!start) return [];
+      const fix = (value) => Number(value.toFixed(3));
+      const unit = PIECE_RADIUS + 2;
+      const angleOf = (item) => Math.atan2(CENTER.y - item.y, item.x - CENTER.x);
+      // A couple token `halfSteps` half steps along the outer tape from where it starts.
+      const couple = (item, halfSteps, facingMode = item.facingMode) => {
+        const angle = angleOf(item) + (halfSteps * Math.PI) / 16;
+        return {
+          ...structuredClone(item), facingMode, ring: "outer",
+          step: item.step == null ? null : wrapStep(item.step + halfSteps),
+          x: fix(CENTER.x + OUTER_RADIUS * Math.cos(angle)),
+          y: fix(CENTER.y - OUTER_RADIUS * Math.sin(angle)),
+        };
+      };
+      // Lead and follow apart, `halfSteps` along the tape; offsets are [along, out] in units (+ along =
+      // toward the line of dance, + out = past the tape), like Box Skit.
+      const apart = (item, halfSteps, lead, follow) => [["lead", lead], ["follow", follow]].map(([role, [along, out, facingMode]]) => {
+        const radius = OUTER_RADIUS + out * unit;
+        const angle = angleOf(item) + (halfSteps * Math.PI) / 16 + (along * unit) / OUTER_RADIUS;
+        return {
+          key: `${item.number}:${role}`, number: item.number, role, ring: null, step: null,
+          facingMode, displayMode: "leadFollow", groupColor: item.groupColor || "neutral",
+          x: fix(CENTER.x + radius * Math.cos(angle)), y: fix(CENTER.y - radius * Math.sin(angle)),
+        };
+      });
+      const frame = (subtitle, place) => {
+        const items = start.items.flatMap((item) => [place(item)].flat());
+        return { count: items.length, annotation: { title, subtitle }, items };
+      };
+      // Splitting the tape, L facing the line of dance and F backing it.
+      const split = (item) => apart(item, 0, [-1, 0, "ccw"], [1, 0, "cw"]);
+      // Skaters, both facing the line of dance, F radially out from L.
+      const skaters = (halfSteps) => (item) => apart(item, halfSteps, [0, -1, "ccw"], [0, 1, "ccw"]);
+      return [
+        { ...structuredClone(start), annotation: { title, subtitle: "Start" } },
+        frame("Measure 1", split),
+        frame("Measure 2", split),
+        frame("Measure 3", (item) => couple(item, 0)),
+        // ½ tape, 1 forward along the line of dance.
+        frame("Measure 4", skaters(1)),
+        // 1 tape: ½ tape to ½ tape.
+        frame("Measure 5", skaters(3)),
+        frame("Measure 6", skaters(3)),
+        // ½ tape forward, back on a tape.
+        frame("Measure 7", (item) => couple(item, 4)),
+        frame("Measure 8", (item) => couple(item, 6)),
+        frame("Measure 9", (item) => couple(item, 8)),
+        frame("Measure 10", (item) => couple(item, 8)),
+        frame("Measure 11", (item) => couple(item, 8)),
+        frame("Measure 12", (item) => couple(item, 8)),
+        frame("Measure 13", (item) => couple(item, 8)),
+        frame("Measure 14", (item) => couple(item, 8)),
+        frame("Measure 15", (item) => couple(item, 8)),
+        frame("Measure 16", (item) => couple(item, 8)),
       ];
     }
 
@@ -4702,6 +4766,12 @@
         section: WALTZ,
         name: "8C · Hide and Seek: Part 3",
         snapshots: happyToPeacefulSnapshots,
+      },
+      {
+        id: "waltz-peaceful-frolicking",
+        section: WALTZ,
+        name: "9 · Theme 1: Peaceful Frolicking",
+        snapshots: peacefulFrolickingSnapshots,
       },
     ];
 
