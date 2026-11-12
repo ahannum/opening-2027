@@ -1085,20 +1085,24 @@
       }));
     }
 
-    // Demo videos ask for the password ("dance") once per device. It keeps the links from casual
-    // viewers only: the video addresses themselves are in deck/notes.json, which is public.
-    const DEMO_PASSWORD = "dance";
+    // Demo videos ask for their dance's password once per device (Ariel: Waltz "dansemacabre", Polka
+    // "dance"; capitals and spaces don't matter). It keeps the links from casual viewers only: the
+    // video addresses themselves are in deck/notes.json, which is public.
+    const DEMO_PASSWORDS = { Waltz: "dansemacabre", Polka: "dance" };
     document.addEventListener("click", (event) => {
       const link = event.target.closest?.("a.demo-link");
-      if (!link || store.get("demoUnlocked", "0") === "1") return;
+      if (!link) return;
+      const dance = current?.section in DEMO_PASSWORDS ? current.section : "Polka";
+      const key = `demoUnlocked:${dance}`;
+      if (store.get(key, "0") === "1") return;
       event.preventDefault();
-      const answer = window.prompt("Type the password to watch the demo video");
+      const answer = window.prompt(`Type the ${dance} password to watch the demo video`);
       if (answer === null) return;
-      if (answer.trim().toLowerCase() !== DEMO_PASSWORD) {
+      if (answer.replace(/\s+/g, "").toLowerCase() !== DEMO_PASSWORDS[dance]) {
         window.alert("That's not the password.");
         return;
       }
-      store.set("demoUnlocked", "1");
+      store.set(key, "1");
       window.open(link.href, "_blank", "noopener");
     });
 
