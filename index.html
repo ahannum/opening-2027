@@ -4179,8 +4179,8 @@
       // place: by Measure 4 each line holds 8 couples evenly spaced from the back spot to the front one,
       // the 4 from the back filling the back half and the 4 from the front the front half. Couples keep
       // their Measure 1 facing on the circle until they reach their turning spot; from there, on 1, the
-      // left line has the follow facing the Honored Guests and the right line the lead (lead's half
-      // "north" and "south").
+      // left line has the follow facing the Honored Guests and the right line the lead (so the lead's
+      // half sits toward the Honored Guests on the left, "south", and away on the right, "north").
       const angleOf = (item) => Math.atan2(CENTER.y - item.y, item.x - CENTER.x);
       const tapeAngle = 2 * halfTape;
       const tapeLength = OUTER_RADIUS * tapeAngle;
@@ -4200,7 +4200,11 @@
         const depth = (3 - tapes) * spacing;
         return [couple.number, { angle, direction: Math.sign(gap), left, back, tapes, depth }];
       }));
-      const lineFacing = (path) => (path.left ? "north" : "south");
+      // A joined couple's lead half sits toward the Honored Guests on the left line and away from them
+      // on the right (Ariel): "south" on the left, "north" on the right.
+      const lineFacing = (path) => (path.left ? "south" : "north");
+      // Split dancers from Measure 7 keep the old values; their facing is drawn by number angle instead.
+      const soloFacing = (path) => (path.left ? "north" : "south");
       // Rose (1 and 9) is already on its turning spot on Measure 1, so its pivot ends in its line's facing.
       const measure1 = moved.map((couple) => (couple.groupColor === "rose"
         ? { ...couple, facingMode: lineFacing(paths.get(couple.number)) } : couple));
@@ -4272,7 +4276,7 @@
       const full = new Map(lineFrame(LINES_FULL).items.map((couple) => [couple.number, couple]));
       const solo = (couple, path, role, { x, y, facingAway = false, numberAngle = null }) => ({
         key: `${couple.number}:${role}`, number: couple.number, role, ring: null, step: null,
-        facingMode: lineFacing(path), displayMode: "partner", groupColor: quarterColor(path),
+        facingMode: soloFacing(path), displayMode: "partner", groupColor: quarterColor(path),
         ...(facingAway ? { facingAway: true } : {}),
         ...(numberAngle != null ? { numberAngle } : {}),
         x: Number(x.toFixed(3)), y: Number(y.toFixed(3)),
