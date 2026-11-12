@@ -4205,9 +4205,13 @@
       const lineFacing = (path) => (path.left ? "south" : "north");
       // Split dancers from Measure 7 keep the old values; their facing is drawn by number angle instead.
       const soloFacing = (path) => (path.left ? "north" : "south");
-      // Rose (1 and 9) is already on its turning spot on Measure 1, so its pivot ends in its line's facing.
-      const measure1 = moved.map((couple) => (couple.groupColor === "rose"
-        ? { ...couple, facingMode: lineFacing(paths.get(couple.number)) } : couple));
+      // Rose (1 and 9) is already on its turning spot on Measure 1; on Measure 1 its lead's half points
+      // the other way from its line's facing (Ariel), and 8 has its lead's half pointing out, not in.
+      const measure1 = moved.map((couple) => {
+        if (couple.groupColor === "rose") return { ...couple, facingMode: soloFacing(paths.get(couple.number)) };
+        if (couple.number === 8) return { ...couple, facingMode: "out" };
+        return couple;
+      });
       // Full lines (Measure 6, first drawn as Measure 5; Ariel): both lines sit inside the inner circle, each 8 couples evenly spread with
       // its ends on the inner tape, facing toward and away from the Honored Guests. A couple's place
       // there is its place in the full line (spot to spot on the outer tape, `depth` in from its spot)
