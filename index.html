@@ -4535,10 +4535,11 @@
           return moves === 4 ? { ...frame, annotation: { ...frame.annotation, noArrows: true } } : frame;
         }),
         coupleFrame(5, notes.frame, (number) => {
-          const { left, x, y } = linePlace.get(number);
-          // Joined, F backing toward the outside circle they waltz out to next (Ariel): the lead's half
-          // points in toward the middle.
-          return couple(number, { x, y }, left ? "east" : "west");
+          const { x, y } = linePlace.get(number);
+          // Joined in their places in the lines, each couple oriented radially (Ariel): F's half straight out
+          // from the center toward the outside circle they waltz out to next, the lead's half in, so every
+          // couple is turned a little differently.
+          return couple(number, { x, y }, "in");
         }),
         coupleFrame(6, notes.out, (number) => {
           const { x, y } = linePlace.get(number);
