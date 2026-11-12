@@ -4536,7 +4536,9 @@
         }),
         coupleFrame(5, notes.frame, (number) => {
           const { left, x, y } = linePlace.get(number);
-          return couple(number, { x, y }, left ? "west" : "east");
+          // Joined, F backing toward the outside circle they waltz out to next (Ariel): the lead's half
+          // points in toward the middle.
+          return couple(number, { x, y }, left ? "east" : "west");
         }),
         coupleFrame(6, notes.out, (number) => {
           const { x, y } = linePlace.get(number);
