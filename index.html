@@ -4124,8 +4124,9 @@
     // line and box east–west, side, center, side, before the follows turn to the inside.
     const HAPPY_SHADOW_NOTES = {
       shadow: ["Shadow: F outside the line, in", "front of L, both facing E or W", "Number's bottom = way they face"],
-      left: ["F a little left, L right", "(like Box Skit)"],
-      right: ["F right, L left"],
+      // As the WIP table words them (Ariel, 11/11): Measure 8 boxes L left first, Measure 9 L right.
+      m8: ["L lunge left a little", "(like Box Skit), F right"],
+      m9: ["L right, F left"],
       center: ["Center"],
       turn: ["L inside turn: F 1 or 1½ turns", "from shadow to inside of line", "(¾ tape)"],
     };
@@ -4363,10 +4364,10 @@
         { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: measure1 },
         ...[2, 3, 4, 5, 6].map(lineFrame),
         shadowFrame("Measure 7", notes.shadow, [0, 0], [0, 2]),
-        // Measure 8 boxes right first, Measure 9 left (Ariel swapped them).
-        shadowFrame("Measure 8: 1-2-3", notes.right, [0.5, 0], [-0.5, 2]),
+        // Measure 8: L to the left of F (as they face E or W) first, Measure 9 the other way (Ariel).
+        shadowFrame("Measure 8: 1-2-3", notes.m8, [0.5, 0], [-0.5, 2]),
         shadowFrame("Measure 8: 4-5-6", notes.center, [0, 0], [0, 2]),
-        shadowFrame("Measure 9: 1-2-3", notes.left, [-0.5, 0], [0.5, 2]),
+        shadowFrame("Measure 9: 1-2-3", notes.m9, [-0.5, 0], [0.5, 2]),
         shadowFrame("Measure 9: 4-5-6", notes.center, [0, 0], [0, 2]),
         splitFrame(10, false, notes.turn.join("\n"), 14),
         splitFrame(11),
@@ -4438,7 +4439,9 @@
         leadFrame(6, 4, notes.move),
         leadFrame(7, 4, notes.offer),
         leadFrame(8, 4, notes.grumpy),
-      ];
+      ].map((frame) => (/^Measure 8\b/.test(frame.annotation.subtitle)
+        // No travel arrows on Measure 8 in the phone player (Ariel).
+        ? { ...frame, annotation: { ...frame.annotation, noArrows: true } } : frame));
     }
     // Ariel's notes for Part 3 (WIP Ground Truth: Waltz). Not shown on the frames any more (Ariel).
     const HAPPY_PART3_NOTES = {
@@ -4526,7 +4529,11 @@
       const notes = HAPPY_PART3_NOTES;
       return [
         followFrame("Start [not to scale]", 0, notes.start, false),
-        ...[1, 2, 3, 4].map((moves) => followFrame(`Measure ${moves} [not to scale]`, moves, notes.go)),
+        // No travel arrows on Measure 4 in the phone player (Ariel).
+        ...[1, 2, 3, 4].map((moves) => {
+          const frame = followFrame(`Measure ${moves} [not to scale]`, moves, notes.go);
+          return moves === 4 ? { ...frame, annotation: { ...frame.annotation, noArrows: true } } : frame;
+        }),
         coupleFrame(5, notes.frame, (number) => {
           const { left, x, y } = linePlace.get(number);
           return couple(number, { x, y }, left ? "west" : "east");
@@ -4577,9 +4584,10 @@
           x: fix(CENTER.x + radius * Math.cos(angle)), y: fix(CENTER.y - radius * Math.sin(angle)),
         };
       });
-      const frame = (subtitle, place) => {
+      // `noArrows`: no travel arrows on this frame in the phone player.
+      const frame = (subtitle, place, noArrows = false) => {
         const items = start.items.flatMap((item) => [place(item)].flat());
-        return { count: items.length, annotation: { title, subtitle }, items };
+        return { count: items.length, annotation: { title, subtitle, ...(noArrows ? { noArrows } : {}) }, items };
       };
       // Separated, splitting the tape, F toward the line of dance (L facing it, F backing it).
       const split = (item) => apart(item, 0, [-1, 0, "ccw"], [1, 0, "cw"]);
@@ -4590,7 +4598,8 @@
       return [
         { ...structuredClone(start), annotation: { title, subtitle: "Start" } },
         frame("Measure 1", split),
-        frame("Measure 2", split),
+        // No travel arrows on Measure 2 in the phone player (Ariel).
+        frame("Measure 2", split, true),
         frame("Measure 3", at(0)),
         // Skaters, ½ tape along the line of dance (between two red dots).
         frame("Measure 4", at(1, "in")),
