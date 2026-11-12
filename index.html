@@ -4363,9 +4363,10 @@
         { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: measure1 },
         ...[2, 3, 4, 5, 6].map(lineFrame),
         shadowFrame("Measure 7", notes.shadow, [0, 0], [0, 2]),
-        shadowFrame("Measure 8: 1-2-3", notes.left, [-0.5, 0], [0.5, 2]),
+        // Measure 8 boxes right first, Measure 9 left (Ariel swapped them).
+        shadowFrame("Measure 8: 1-2-3", notes.right, [0.5, 0], [-0.5, 2]),
         shadowFrame("Measure 8: 4-5-6", notes.center, [0, 0], [0, 2]),
-        shadowFrame("Measure 9: 1-2-3", notes.right, [0.5, 0], [-0.5, 2]),
+        shadowFrame("Measure 9: 1-2-3", notes.left, [-0.5, 0], [0.5, 2]),
         shadowFrame("Measure 9: 4-5-6", notes.center, [0, 0], [0, 2]),
         splitFrame(10, false, notes.turn.join("\n"), 14),
         splitFrame(11),
