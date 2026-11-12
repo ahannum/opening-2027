@@ -1086,9 +1086,9 @@
     }
 
     // Demo videos ask for their dance's password once per device (Ariel: Waltz "dansemacabre", Polka
-    // "dance"; capitals and spaces don't matter). It keeps the links from casual viewers only: the
+    // "carnival"; capitals and spaces don't matter). It keeps the links from casual viewers only: the
     // video addresses themselves are in deck/notes.json, which is public.
-    const DEMO_PASSWORDS = { Waltz: "dansemacabre", Polka: "dance" };
+    const DEMO_PASSWORDS = { Waltz: "dansemacabre", Polka: "carnival" };
     document.addEventListener("click", (event) => {
       const link = event.target.closest?.("a.demo-link");
       if (!link) return;
