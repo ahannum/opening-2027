@@ -4209,9 +4209,9 @@
       // their line's facing, the same as on Measure 2 (Ariel).
       const measure1 = moved.map((couple) => (["rose", "violet"].includes(couple.groupColor)
         ? { ...couple, facingMode: lineFacing(paths.get(couple.number)) } : couple));
-      // Full lines (Measure 6, first drawn as Measure 5; Ariel): both lines sit inside the inner circle, each 8 couples evenly spread with
-      // its ends on the inner tape, facing toward and away from the Honored Guests. A couple's place
-      // there is its place in the full line (spot to spot on the outer tape, `depth` in from its spot)
+      // Full lines (Measure 6, first drawn as Measure 5; Ariel): both lines sit inside the inside circle, each 8 couples evenly spread with
+      // its ends on the inside circle, facing toward and away from the Honored Guests. A couple's final spot
+      // there is its place in the full line (spot to spot on the outside circle, `depth` in from its spot)
       // closed up evenly toward the middle.
       const innerEnd = Math.sqrt(INNER_RADIUS ** 2 - lineX ** 2);
       const placeIn = (path) => (spotY - path.depth) * (innerEnd / spotY);
@@ -4225,15 +4225,20 @@
           y: Number((CENTER.y - (path.back ? reach : -reach)).toFixed(3)),
         };
       };
-      // Measures 2–4: couples still on the circle waltz along it a tape a measure toward their
+      // Ariel's names for the rings: the outside circle (outer tape), the ¾ circle (MIDDLE_RADIUS, midway
+      // between the outside and inside circles), the inside circle (inner tape), and each couple's final
+      // spot in the lines.
+      // Measures 2–4: couples still on the outside circle waltz along it a tape a measure toward their
       // turning spot; once there they turn into their line (Ariel: same two lines, only the spread within
       // them is the inner one). From its turning spot a couple steps down its line one circle a measure
-      // (Ariel): onto the halfway ring (midway between the outer and inner tapes), then the inner tape,
-      // then its place in the lines, so each line stays spread from the outer tape to the middle.
-      // Everyone is in place on Measure 6 (Ariel: one more measure than first drawn): the first group (on
-      // its spots on Measure 1) is on the halfway ring on Measure 2, the inner tape on 3 and in place on
-      // 4; each next group one measure behind, so 15, 2, 10 and 7 are in place on 6; only the last
-      // (12, 5, 13, 4) squeezes, skipping the inner tape (spot on 4, halfway ring on 5, in place on 6).
+      // (Ariel): onto the ¾ circle, then the inside circle, then its final spot, so each line stays spread
+      // from the outside circle to the middle. Everyone is on their final spot on Measure 6:
+      //   1, 8, 9, 16 (on their turning spots on Measure 1): ¾ circle on 2, inside circle on 3, a third of
+      //     the way out from the middle on 4, final spot on 5;
+      //   3, 6, 11, 14: turning spot on 2, ¾ circle on 3, inside circle on 4, final spot on 5;
+      //   2, 7, 10, 15: turning spot on 3, ¾ circle on 4, inside circle on 5, final spot on 6;
+      //   4, 5, 12, 13: turning spot on 4, ¾ circle on 5, final spot (the line's end, on the inside
+      //     circle) on 6.
       const LINES_FULL = 6; // the measure everyone stands in place in the lines
       const ringReach = (radius) => Math.sqrt(radius ** 2 - lineX ** 2);
       const lineSteps = [ringReach(MIDDLE_RADIUS), innerEnd];
@@ -4244,7 +4249,7 @@
           if (t <= path.tapes) {
             const angle = path.angle + path.direction * t * tapeAngle;
             const step = couple.step == null ? null : (((couple.step + path.direction * 2 * t) % 32) + 32) % 32;
-            // Reaching the turning spot on the outer tape, the couple already takes its line's facing.
+            // Reaching the turning spot on the outside circle, the couple already takes its line's facing.
             const facingMode = t === path.tapes ? lineFacing(path) : couple.facingMode;
             return {
               ...couple, step, facingMode,
@@ -4257,7 +4262,7 @@
             return inLineAt(couple, path, lineSteps[stepsIn - 1]);
           }
           // Measure 4 (Ariel): the first group (1, 16, 8, 9) needn't be in its final place yet, so it
-          // spreads evenly between the inner tape couples, a third of the way out from the middle,
+          // spreads evenly between the inside-circle couples, a third of the way out from the middle,
           // instead of crowding the middle; it closes in on Measure 5.
           if (measure === 4 && path.tapes === 0) return inLineAt(couple, path, innerEnd / 3);
           return inLine(couple, path, 1);
@@ -4383,7 +4388,8 @@
       const title = "Hide and Seek: Part 2";
       // Before that, Part 2 opens on Part 1's to-scale Measure 11, as danced (Ariel).
       const toScale = happyTransitionInSnapshots().at(-2);
-      const toScaleStart = { ...structuredClone(toScale), annotation: { title, subtitle: "Start" } };
+      // No travel arrows on this first frame in the phone player (Ariel).
+      const toScaleStart = { ...structuredClone(toScale), annotation: { title, subtitle: "Start", noArrows: true } };
       // The follows hold their rows. The leads move one follow a measure along the line of dance (Ariel):
       // down the left line toward the Honored Guests, up the right line away from them, zig-zagging so
       // they're inside the follow line one measure and outside the next. The lead at the end of a line
