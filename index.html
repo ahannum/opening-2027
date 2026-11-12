@@ -4205,13 +4205,10 @@
       const lineFacing = (path) => (path.left ? "south" : "north");
       // Split dancers from Measure 7 keep the old values; their facing is drawn by number angle instead.
       const soloFacing = (path) => (path.left ? "north" : "south");
-      // Rose (1 and 9) is already on its turning spot on Measure 1; on Measure 1 its lead's half points
-      // the other way from its line's facing (Ariel), and 8 has its lead's half pointing out, not in.
-      const measure1 = moved.map((couple) => {
-        if (couple.groupColor === "rose") return { ...couple, facingMode: soloFacing(paths.get(couple.number)) };
-        if (couple.number === 8) return { ...couple, facingMode: "out" };
-        return couple;
-      });
+      // Rose (1, 9) and violet (8, 16) are already on their turning spots on Measure 1, so they end it in
+      // their line's facing, the same as on Measure 2 (Ariel).
+      const measure1 = moved.map((couple) => (["rose", "violet"].includes(couple.groupColor)
+        ? { ...couple, facingMode: lineFacing(paths.get(couple.number)) } : couple));
       // Full lines (Measure 6, first drawn as Measure 5; Ariel): both lines sit inside the inner circle, each 8 couples evenly spread with
       // its ends on the inner tape, facing toward and away from the Honored Guests. A couple's place
       // there is its place in the full line (spot to spot on the outer tape, `depth` in from its spot)
@@ -4353,6 +4350,9 @@
         };
       };
       const notes = HAPPY_SHADOW_NOTES;
+      // No travel arrows in the phone player from Measure 6 on (Ariel).
+      const noArrows = (frame) => (Number(frame.annotation?.subtitle?.match(/^Measure (\d+)/)?.[1]) >= 6
+        ? { ...frame, annotation: { ...frame.annotation, noArrows: true } } : frame);
       return [
         { count: joined.length, annotation: { title, subtitle: "Start: Orphan 3" }, items: joined },
         { count: moved.length, annotation: { title, subtitle: "Measure 1", note: HAPPY_TOSS_NOTE }, items: measure1 },
@@ -4365,7 +4365,7 @@
         splitFrame(10, false, notes.turn.join("\n"), 14),
         splitFrame(11),
         splitFrame(11, true),
-      ];
+      ].map(noArrows);
     }
     // Ariel's notes for Part 2 (WIP Ground Truth: Waltz), short enough for the bottom-left corner.
     const HAPPY_PART2_NOTES = {
@@ -4952,8 +4952,8 @@
           piece.classList.remove("selected", "active", "dragging");
           piece.removeAttribute("tabindex");
         });
-        const { subtitle = "", note = "" } = snapshot.annotation || {};
-        return { svg: clone.outerHTML, title: preset.name, subtitle, note };
+        const { subtitle = "", note = "", noArrows = false } = snapshot.annotation || {};
+        return { svg: clone.outerHTML, title: preset.name, subtitle, note, ...(noArrows ? { noArrows } : {}) };
       });
     }
 

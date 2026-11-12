@@ -1444,7 +1444,8 @@
       const { frames, frameIndex, ids, storyIndex } = current;
       const frame = frames[frameIndex];
       board.innerHTML = frame.svg;
-      if (showArrows) drawArrows(nextFrameSvg());
+      // A frame can opt out of arrows (planner annotation `noArrows`).
+      if (showArrows && !frame.noArrows) drawArrows(nextFrameSvg());
       board.setAttribute("aria-label", `${frame.title} — ${frame.subtitle || `frame ${frameIndex + 1}`}`);
       setCaption(frame.subtitle || `Frame ${frameIndex + 1}`, frame.note || "");
       scrubber.max = String(frames.length);
