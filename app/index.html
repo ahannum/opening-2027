@@ -278,6 +278,24 @@
       overflow-wrap: anywhere;
     }
     .titles .part { margin-top: 2px; font-size: 15px; color: var(--muted); }
+    /* The section's demo videos, from the Ground Truth slides' "Demo video:" line. */
+    .demo-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 6px; }
+    .demo-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      max-width: 100%;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
     .stage {
       min-height: 0;
@@ -662,6 +680,7 @@
       <div class="titles">
         <div class="story" id="storyTitle"></div>
         <div class="part" id="storyPart"></div>
+        <div class="demo-links" id="demoLinks" hidden></div>
       </div>
       <button type="button" class="icon-btn settings-btn" aria-label="Colors, theme and size">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.7 1.8-1.6 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5C21 6.4 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.3" fill="currentColor"/><circle cx="10" cy="7" r="1.3" fill="currentColor"/><circle cx="14.5" cy="7" r="1.3" fill="currentColor"/></svg>
@@ -1047,7 +1066,44 @@
       return cell;
     }
 
+    // The section's demo videos at the top of the player, under the part's name (one link per video).
+    function renderDemoLinks() {
+      const row = $("#demoLinks");
+      const story = current && stories.find((item) => item.id === current.ids[current.storyIndex]);
+      const extra = story && notes?.extras?.find((item) => item.dance === story.section && item.number === parseInt(story.name, 10));
+      const links = extra?.links || [];
+      row.hidden = !links.length;
+      row.replaceChildren(...links.map(({ text, url }) => {
+        const link = document.createElement("a");
+        link.href = url;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.className = "demo-link";
+        link.textContent = links.length === 1 ? "▶ Demo video" : `▶ ${text}`;
+        link.title = text;
+        return link;
+      }));
+    }
+
+    // Demo videos ask for the password ("dance") once per device. It keeps the links from casual
+    // viewers only: the video addresses themselves are in deck/notes.json, which is public.
+    const DEMO_PASSWORD = "dance";
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest?.("a.demo-link");
+      if (!link || store.get("demoUnlocked", "0") === "1") return;
+      event.preventDefault();
+      const answer = window.prompt("Type the password to watch the demo video");
+      if (answer === null) return;
+      if (answer.trim().toLowerCase() !== DEMO_PASSWORD) {
+        window.alert("That's not the password.");
+        return;
+      }
+      store.set("demoUnlocked", "1");
+      window.open(link.href, "_blank", "noopener");
+    });
+
     function renderNotes() {
+      renderDemoLinks();
       const panel = $("#notes");
       $("#choreoBtn").setAttribute("aria-pressed", String(showNotes));
       $("#notesAll").setAttribute("aria-pressed", String(notesAll));
@@ -1085,6 +1141,7 @@
             link.target = "_blank";
             link.rel = "noopener";
             link.textContent = `▶ ${text}`;
+            link.classList.add("demo-link");
             row.append(link);
           });
           nodes.push(row);
@@ -1400,6 +1457,7 @@
       player.hidden = false;
       $("#storyTitle").textContent = story.name;
       $("#storyPart").textContent = `${story.section} · part ${storyIndex + 1} of ${ids.length}`;
+      renderDemoLinks();
       document.title = `${story.name} · Opening 2027`;
 
       if (!current.frames) {
