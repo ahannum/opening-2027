@@ -4758,8 +4758,8 @@
     // (the same X as before), as couples. On Orphan 3 each couple splits side by side, square to the
     // Honored Guests: the lead on the spot and the follow on the lead's right in the lower half of the
     // X (to the left as the Honored Guests see it), mirrored in the upper half (the follow to the
-    // lead's east). Measures 1–4 of reaches hold the X with the couples back together. Every couple
-    // frame has the two outline groups and the north/south facing below; 11A starts from the end.
+    // lead's east). Measures 1–4 of reaches hold the X with the couples back together, with the two
+    // outline groups and the north/south facing below; 11A starts from the end.
     function spiralToXSnapshots() {
       const title = "Unfurling Spiral → X";
       const end = spiralXSectionSnapshots().at(-1);
@@ -4777,7 +4777,7 @@
         const step = wrapStep(xStep(item) - tapesBack * 2);
         return at(item, step, spiralFacing(step, item.ring));
       };
-      // Measures 1–4 (Ariel, 11/14), on every couple frame of 10C (cross, X and reaches): two outline
+      // Measures 1–4 of reaches (Ariel, 11/14): two outline
       // groups, the cross's up-down spokes (2, 3, 16, 9 / 1, 8, 11, 10) and its side spokes; and the
       // upper spokes (2, 3, 16, 9 and 13, 4, 7, 6) with F facing north, the lower ones (5, 12, 15, 14
       // and 1, 8, 11, 10) F facing south ("north"/"south" name where the lead's half points).
@@ -4794,6 +4794,17 @@
       };
       const x = (item) => at(item, xStep(item), "out");
       const xFrame = (subtitle) => frame(subtitle, x);
+      // The first part (Ariel, 11/14) has no outlines: Measures 1–2 the cross travels round with every
+      // follow backing the line of dance (the follow's half on the line of dance side, "cw"); Measure 3
+      // the X is square to the room, side by side: the upper half facing north with F on the lead's
+      // right (F to the east, the lead's half "west"), the lower half the opposite way round (also F
+      // to the east, so F on the lead's left facing south).
+      const plain = (subtitle, place, facing) => {
+        const items = end.items.map((item) => ({ ...place(item), facingMode: facing(item), groupColor: "neutral" }));
+        return { count: items.length, annotation: { title, subtitle }, items };
+      };
+      const travel = () => "cw";
+      const square = () => "west";
       // The X split side by side, both facing the Honored Guests (south), the lead on the X spot and
       // the follow one piece width to the west in the lower half, to the east in the upper half. No
       // outlines.
@@ -4811,9 +4822,9 @@
       };
       return [
         { ...structuredClone(end), annotation: { ...end.annotation, title, subtitle: "Start" } },
-        frame("Measure 1", cross(2)),
-        frame("Measure 2", cross(1)),
-        xFrame("Measure 3"),
+        plain("Measure 1", cross(2), travel),
+        plain("Measure 2", cross(1), travel),
+        plain("Measure 3", x, square),
         splitX("Orphan 3"),
         xFrame("Measure 1"),
         xFrame("Measure 2"),
