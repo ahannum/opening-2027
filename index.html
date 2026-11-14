@@ -4839,15 +4839,15 @@
     }
 
     // Waltz section 11A, Cascade Diagonal Line: X → | (Ariel, 11/13). Measure 1 holds the X with the
-    // follows backing toward the center line, Measures 2–3 waltz into a straight up-and-down line
-    // through the middle (halfway, then there; no hold in it); Measures 4 and 5 turn
-    // the line 1 tape clockwise each (22.5°), which lands it on the diagonal from the front left (1
-    // and 13, nearest the Honored Guests) to the back right (Ariel, 11/14), spread out on Measure 5
-    // so 5 and 13 are on the corners; Measure 6 holds,
-    // and Measures 7–8 (the Rumbles) keep it. In the line, the two upper arms of the X fill the top
-    // half and the two lower arms the bottom, paired by ring (outer couples at the ends, center couples
-    // in the middle), the arm on the left taking the outer slot of each pair on top and the arm on
-    // the right on the bottom, so the line is the same turned half way round.
+    // follows backing toward the center line; Measure 2 is the transition, straight from the X into
+    // the diagonal line from the front left (nearest the Honored Guests) to the back right, spread so
+    // its end couples (1 at the front, 5 at the back) are on the square's corners; Measures 3, 4 and 5
+    // are in the diagonal line (Ariel, 11/14), Measure 6 holds and Measures 7–8 (the Rumbles) keep
+    // it. The line is built as a straight up-and-down line through the middle, then turned 2 tapes
+    // clockwise: the two upper arms of the X fill the top half and the two lower arms the bottom,
+    // paired by ring (outer couples at the ends, center couples in the middle), the arm on the left
+    // taking the outer slot of each pair, so 1 is the outermost couple toward the Honored Guests
+    // (Ariel, 11/14).
     function xToLineSnapshots() {
       const title = "Cascade Diagonal Line: X → |";
       const end = spiralToXSnapshots().at(-1);
@@ -4859,15 +4859,15 @@
         const upper = half === "top";
         end.items
           .filter((item) => (item.y < CENTER.y) === upper)
-          .sort((a, b) => order[a.ring] - order[b.ring] || (upper ? b.x - a.x : a.x - b.x))
+          .sort((a, b) => order[a.ring] - order[b.ring] || b.x - a.x)
           .forEach((item, index) => {
             // As spread as the board allows: 16 couples nearly touching from top to bottom.
             const distance = (index + 0.5) * PIECE_RADIUS * 1.92;
             slot.set(item.number, { x: CENTER.x, y: CENTER.y + (upper ? -distance : distance) });
           });
       });
-      // From Measure 5 the diagonal spreads out so its end couples (5 and 13) are on the square's
-      // corners, everyone evenly spaced (Ariel, 11/14).
+      // The diagonal is spread out so its end couples (1 and 5) are on the square's corners, everyone
+      // evenly spaced (Ariel, 11/14).
       const SPREAD = (OUTER_RADIUS * Math.SQRT2) / (7.5 * PIECE_RADIUS * 1.92);
       // Turned `tapes` clockwise on the board (22.5° a tape), `progress` of the way from the X, and
       // `spread` times as far from the center.
@@ -4894,7 +4894,8 @@
         groupColor: item.groupColor,
         facingMode: item.groupColor === "teal" ? "cw" : "ccw",
       });
-      // Measures 3–5 (Ariel, 11/14): every follow forward along the line of dance (backing against it).
+      // Measures 3–5 (Ariel, 11/14): in the diagonal line, every follow forward along the line of dance
+      // (backing against it).
       const forwardLook = () => ({ facingMode: "ccw" });
       // Measure 1 (Ariel, 11/14): still on the Start spots, outlines kept, every follow (violet and teal
       // groups alike) backing toward the center line: the follow's half toward it, the lead's half
@@ -4906,10 +4907,10 @@
       return [
         { ...structuredClone(end), annotation: { title, subtitle: "Start" } },
         measure1,
-        // Measures 2–3 waltz into the line (halfway, then there), no hold in it (Ariel, 11/14).
-        frame("Measure 2", 0.5, 0, 1, measure2Look),
-        frame("Measure 3", 1, 0, 1, forwardLook),
-        frame("Measure 4", 1, 1, 1, forwardLook),
+        // Measure 2 is the transition into the diagonal line; Measures 3–5 are in it (Ariel, 11/14).
+        frame("Measure 2", 1, 2, SPREAD, measure2Look),
+        frame("Measure 3", 1, 2, SPREAD, forwardLook),
+        frame("Measure 4", 1, 2, SPREAD, forwardLook),
         frame("Measure 5", 1, 2, SPREAD, forwardLook),
         frame("Measure 6", 1, 2, SPREAD),
         frame("Measure 7", 1, 2, SPREAD),
