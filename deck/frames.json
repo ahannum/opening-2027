@@ -1468,7 +1468,7 @@
    "id": "waltz-spiral-to-x",
    "name": "10C · Unfurling Spiral → X",
    "section": "Waltz",
-   "fingerprint": "nwbegx",
+   "fingerprint": "1n4xtxj",
    "frames": [
     {
      "src": "waltz-spiral-to-x/01.jpg",
@@ -1478,7 +1478,7 @@
     {
      "src": "waltz-spiral-to-x/02.jpg",
      "subtitle": "Measure 1",
-     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+     "note": ""
     },
     {
      "src": "waltz-spiral-to-x/03.jpg",
@@ -1521,7 +1521,7 @@
    "id": "waltz-x-to-line",
    "name": "11A · Cascade Diagonal Line: X → |",
    "section": "Waltz",
-   "fingerprint": "z26pk8",
+   "fingerprint": "zbmly4",
    "frames": [
     {
      "src": "waltz-x-to-line/01.jpg",
@@ -1574,7 +1574,7 @@
    "id": "waltz-x-to-i",
    "name": "11A · X → I",
    "section": "Waltz",
-   "fingerprint": "wkytzw",
+   "fingerprint": "1b1t1bs",
    "frames": [
     {
      "src": "waltz-x-to-i/01.jpg",
