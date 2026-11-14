@@ -4733,15 +4733,15 @@
     }
 
     // Waltz section 10C, Unfurling Spiral → X (Ariel, 11/14): Measure 1 the spiral straightens into a
-    // cross (+) on the room's axes, no more travel along the spiral; Measure 2 the cross turns 1 tape
+    // cross (+) on the room's axes, no more travel along the spiral, outlines off and every follow
+    // backing the line of dance; Measure 2 the cross turns 1 tape
     // along the line of dance; Measure 3 one more tape puts each arm on the room's diagonal, the X
-    // (the same X as before), with each couple split side by side and square to the Honored Guests:
-    // the lead on the spot and the follow on the lead's right, which is to the left as the Honored
-    // Guests see it. Orphan 3 and Measures 1–4 of reaches hold the X, still split and square to the
-    // Honored Guests, but with each follow just in front of their lead (toward the Honored Guests).
-    // `{ couplesX: true }` returns only the X as couples (follows toward the Honored Guests in the
-    // lower half, away from them in the upper half), which 11A starts from.
-    function spiralToXSnapshots({ couplesX = false } = {}) {
+    // (the same X as before), as couples. On Orphan 3 each couple splits side by side, square to the
+    // Honored Guests (Ariel, 11/14): the lead on the spot and the follow on the lead's right in the
+    // lower half of the X (to the left as the Honored Guests see it), mirrored in the upper half (the
+    // follow to the lead's east). Measures 1–4 of reaches hold the X with the couples back together,
+    // facing out along their spoke like 11A, which starts from there.
+    function spiralToXSnapshots() {
       const title = "Unfurling Spiral → X";
       const end = spiralXSectionSnapshots().at(-1);
       if (!end) return [];
@@ -4762,24 +4762,19 @@
         const step = wrapStep(xStep(item) - tapesBack * 2);
         return at(item, step, spiralFacing(step, item.ring));
       };
-      // In the X the outlines come off (Ariel, 11/13). Facing (Ariel, 11/14): the lower half of the X
-      // (5, 12, 15, 14, 1, 8, 11, 10) has the follow toward the Honored Guests, the upper half the
-      // follow away from them, so each half's follows are on its outside.
-      const x = (item) => {
-        const shot = at(item, xStep(item), "out");
-        return { ...shot, facingMode: shot.y > CENTER.y ? "north" : "south", groupColor: "neutral" };
-      };
+      // In the X the outlines come off (Ariel, 11/13). Couples face out along their spoke, as in 11A.
+      const x = (item) => ({ ...at(item, xStep(item), "out"), groupColor: "neutral" });
       const xFrame = (subtitle) => {
         const shot = frame(subtitle, x);
         delete shot.annotation.note;
         return shot;
       };
-      if (couplesX) return [xFrame("X")];
-      // The X split, both facing the Honored Guests (south), the lead on the X spot and the follow one
-      // piece width away: to the west on Measure 3 (side by side), to the south for the reaches.
-      const splitX = (subtitle, dx, dy) => {
+      // The X split side by side, both facing the Honored Guests (south), the lead on the X spot and
+      // the follow one piece width to the west in the lower half, to the east in the upper half.
+      const splitX = (subtitle) => {
         const items = end.items.flatMap((item) => {
           const spot = x(item);
+          const dx = spot.y > CENTER.y ? -1 : 1, dy = 0;
           const dancer = (role, offset) => ({
             ...spot, key: `${item.number}:${role}`, role, ring: null, step: null, facingMode: "south",
             x: fix(spot.x + offset * dx), y: fix(spot.y + offset * dy),
@@ -4788,17 +4783,20 @@
         });
         return { count: items.length, annotation: { title, subtitle }, items };
       };
-      const reach = (subtitle) => splitX(subtitle, 0, 1);
+      // Measure 1 (Ariel, 11/14): no outlines, everyone with the follow backing the line of dance
+      // (the lead's half toward it, "ccw").
+      const measure1 = frame("Measure 1", (item) => ({ ...cross(2)(item), facingMode: "ccw", groupColor: "neutral" }));
+      delete measure1.annotation.note;
       return [
         { ...structuredClone(end), annotation: { ...end.annotation, title, subtitle: "Start" } },
-        frame("Measure 1", cross(2)),
+        measure1,
         frame("Measure 2", cross(1)),
-        splitX("Measure 3", -1, 0),
-        reach("Orphan 3"),
-        reach("Measure 1"),
-        reach("Measure 2"),
-        reach("Measure 3"),
-        reach("Measure 4"),
+        xFrame("Measure 3"),
+        splitX("Orphan 3"),
+        xFrame("Measure 1"),
+        xFrame("Measure 2"),
+        xFrame("Measure 3"),
+        xFrame("Measure 4"),
       ];
     }
 
@@ -4811,7 +4809,7 @@
     // the right on the bottom, so the line is the same turned half way round.
     function xToLineSnapshots() {
       const title = "Cascade Diagonal Line: X → |";
-      const end = spiralToXSnapshots({ couplesX: true }).at(-1);
+      const end = spiralToXSnapshots().at(-1);
       if (!end) return [];
       const fix = (value) => Number(value.toFixed(3));
       const order = { center: 0, inner: 1, middle: 2, outer: 3 };
@@ -4861,7 +4859,7 @@
     // Starter frames: the measure-by-measure path and the I's facing are still to come.
     function xToISnapshots() {
       const title = "X → I";
-      const start = spiralToXSnapshots({ couplesX: true }).at(-1);
+      const start = spiralToXSnapshots().at(-1);
       if (!start) return [];
       const fix = (value) => Number(value.toFixed(3));
       // Spot 0 is nearest the Honored Guests (bottom of the board).
