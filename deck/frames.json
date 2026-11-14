@@ -729,7 +729,7 @@
    "id": "waltz-intro",
    "name": "1 · Introduction",
    "section": "Waltz",
-   "fingerprint": "1gq30i1",
+   "fingerprint": "1rdbnk3",
    "frames": [
     {
      "src": "waltz-intro/01.jpg",
@@ -772,7 +772,7 @@
    "id": "waltz-contraction-expansion",
    "name": "2 · Theme 2: Contraction and Expansion",
    "section": "Waltz",
-   "fingerprint": "7n9vny",
+   "fingerprint": "14h9gvp",
    "frames": [
     {
      "src": "waltz-contraction-expansion/01.jpg",
@@ -823,9 +823,9 @@
   },
   {
    "id": "waltz-theme-1",
-   "name": "3 · Theme 1: Solo Violin",
+   "name": "3 · Theme 1: Solo Strings",
    "section": "Waltz",
-   "fingerprint": "kkp399",
+   "fingerprint": "10pshnc",
    "frames": [
     {
      "src": "waltz-theme-1/01.jpg",
@@ -911,7 +911,7 @@
    "id": "waltz-turning-gears",
    "name": "5 · Theme 2: Turning Gears",
    "section": "Waltz",
-   "fingerprint": "a0uwuh",
+   "fingerprint": "jgf945",
    "frames": [
     {
      "src": "waltz-turning-gears/01.jpg",
@@ -959,7 +959,7 @@
    "id": "waltz-big-strings",
    "name": "6 · Theme 1: Big Strings",
    "section": "Waltz",
-   "fingerprint": "g74t58",
+   "fingerprint": "s2hyy4",
    "frames": [
     {
      "src": "waltz-big-strings/01.jpg",
@@ -1284,7 +1284,7 @@
    "id": "waltz-peaceful-frolicking",
    "name": "9 · Theme 1: Peaceful Frolicking",
    "section": "Waltz",
-   "fingerprint": "yywhdq",
+   "fingerprint": "86kzvw",
    "frames": [
     {
      "src": "waltz-peaceful-frolicking/01.jpg",
@@ -1375,9 +1375,9 @@
   },
   {
    "id": "waltz-getting-to-spiral",
-   "name": "10A · Getting to Spiral",
+   "name": "10A · Unfurling Spiral: Part 1 – Getting to Spiral",
    "section": "Waltz",
-   "fingerprint": "15yd9v6",
+   "fingerprint": "z66rt2",
    "frames": [
     {
      "src": "waltz-getting-to-spiral/01.jpg",
@@ -1423,9 +1423,9 @@
   },
   {
    "id": "waltz-unfurling-spiral",
-   "name": "10B · Unfurling Spiral",
+   "name": "10B · Unfurling Spiral: Part 2 – Unfurling",
    "section": "Waltz",
-   "fingerprint": "y2c254",
+   "fingerprint": "15fi9wc",
    "frames": [
     {
      "src": "waltz-unfurling-spiral/01.jpg",
@@ -1466,9 +1466,9 @@
   },
   {
    "id": "waltz-spiral-to-x",
-   "name": "10C · Unfurling Spiral → X",
+   "name": "10C · Unfurling Spiral: Part 3 – Spiral → X",
    "section": "Waltz",
-   "fingerprint": "1eu3h8w",
+   "fingerprint": "1fqpab2",
    "frames": [
     {
      "src": "waltz-spiral-to-x/01.jpg",
@@ -1566,24 +1566,6 @@
     {
      "src": "waltz-x-to-line/09.jpg",
      "subtitle": "Measure 8",
-     "note": ""
-    }
-   ]
-  },
-  {
-   "id": "waltz-x-to-i",
-   "name": "11A · X → I",
-   "section": "Waltz",
-   "fingerprint": "1ispix4",
-   "frames": [
-    {
-     "src": "waltz-x-to-i/01.jpg",
-     "subtitle": "Start: X",
-     "note": ""
-    },
-    {
-     "src": "waltz-x-to-i/02.jpg",
-     "subtitle": "End: I",
      "note": ""
     }
    ]
