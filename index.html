@@ -4667,10 +4667,7 @@
       const measure2 = (final) => (final === "center" || final === "inner" ? final : "middle");
       // Ariel (11/13): Measures 2–3 one tape along the line of dance, Measure 4 one more (2 in all).
       return [
-        {
-          ...structuredClone(start), annotation: { title, subtitle: "Start" },
-          items: start.items.map((item) => ({ ...structuredClone(item), groupColor: GROUP_COLOR[finalRing(item)] })),
-        },
+        { ...structuredClone(start), annotation: { title, subtitle: "Start" } },
         frame("Measure 1", () => "inner"),
         frame("Measure 2", measure2, 1),
         frame("Measure 3", measure2, 1),
