@@ -1442,6 +1442,9 @@
     async function showFromRoute() {
       const match = location.hash.match(/^#([A-Za-z0-9-]+)$/);
       if (!match) return closePlayer();
+      // Renamed parts: old links still open the part under its new id.
+      const RENAMED = { "waltz-unfurling-concentric-rings": "waltz-unfurling-spiral" };
+      if (RENAMED[match[1]]) return location.replace(`#${RENAMED[match[1]]}`);
       const id = match[1];
       const story = stories.find((item) => item.id === id);
       if (!story) return; // the list hasn't loaded yet; this runs again when it does

@@ -4624,13 +4624,13 @@
       ];
     }
 
-    // Waltz section 10, Unfurling Concentric Rings (prototype of its start): from the outer tape into the Spiral X
+    // Waltz section 10, Unfurling Spiral (prototype of its start): from the outer tape into the Spiral X
     // (see formationSpiralXTargets). Peaceful Frolicking ends with every couple on an even half
     // step, which line up with the X's spokes, so every move is straight in or out:
     // step % 8 = 0 → center ring (spoke base), 2 → stays on the inner tape, 4 → ½ ring,
     // 6 → ½ ring, then out to the outer tape in Measure 4.
     function spiralXSectionSnapshots() {
-      const title = "Unfurling Concentric Rings";
+      const title = "Unfurling Spiral";
       const start = peacefulFrolickingSnapshots().at(-1);
       if (!start) return [];
       const fix = (value) => Number(value.toFixed(3));
@@ -4935,9 +4935,9 @@
       },
       // Prototype, shown in the phone player so dancers can see where it's heading.
       {
-        id: "waltz-unfurling-concentric-rings",
+        id: "waltz-unfurling-spiral",
         section: WALTZ,
-        name: "10 · Unfurling Concentric Rings",
+        name: "10 · Unfurling Spiral",
         snapshots: spiralXSectionSnapshots,
       },
     ];
