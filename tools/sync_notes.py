@@ -31,7 +31,7 @@ OUT = os.path.join(ROOT, "deck", "notes.json")
 A = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
 P = "{http://schemas.openxmlformats.org/presentationml/2006/main}"
 R = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
-# "10A · Getting to Spiral": an optional part letter after the number.
+# "10A · Unfurling Spiral: Part 1 – Getting to Spiral": an optional part letter after the number.
 HEADER = re.compile(r"^(\d+)([A-Z])?(?:\s*→\s*\d+)?\s*·\s*(.+)$")
 
 

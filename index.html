@@ -3947,7 +3947,7 @@
     // times over: each time the odd couples go 2 red dots along the line of dance on the inner tape and
     // the even couples 1 red dot against it on the outer tape.
     function turningGearsSnapshots() {
-      const title = "Turning Gears";
+      const title = "Theme 2: Turning Gears";
       const start = followsEscapeSnapshots().at(-1);
       if (!start) return [];
       const turned = (item, halfSteps) => {
@@ -3986,7 +3986,7 @@
     // 16 (staying put, they'd be on the spots the inside couples land on). Measure 3: everyone goes 1
     // tape on the outer tape. Then Measure 4 holds, 5–7 go 1 tape each, and 8 holds.
     function bigStringsSnapshots() {
-      const title = "Big Strings";
+      const title = "Theme 1: Big Strings";
       const start = turningGearsSnapshots().at(-1);
       if (!start) return [];
       const move = (item, halfSteps, ring) => {
@@ -4560,7 +4560,7 @@
     // Seek Part 3 ends: every couple on a red dot of the outer tape, F backing the line of dance. One
     // tape is one red dot (2 half steps) along the line of dance (counterclockwise).
     function peacefulFrolickingSnapshots() {
-      const title = "Peaceful Frolicking";
+      const title = "Theme 1: Peaceful Frolicking";
       const start = happyToPeacefulSnapshots().at(-1);
       if (!start) return [];
       const fix = (value) => Number(value.toFixed(3));
@@ -4628,7 +4628,7 @@
     // dip and ride on the tape, waltz 2 tapes along the line of dance, then straight in to the ½ ring
     // (Ariel's "¾ circle", halfway between the tapes) and on to the inner tape for Orphan 3.
     function gettingToSpiralSnapshots() {
-      const title = "Getting to Spiral";
+      const title = "Unfurling Spiral: Part 1 – Getting to Spiral";
       const end = peacefulFrolickingSnapshots().at(-1);
       if (!end) return [];
       const fix = (value) => Number(value.toFixed(3));
@@ -4683,7 +4683,7 @@
     ].join("\n");
 
     function spiralXSectionSnapshots() {
-      const title = "Unfurling Spiral";
+      const title = "Unfurling Spiral: Part 2 – Unfurling";
       const start = gettingToSpiralSnapshots().at(-1);
       if (!start) return [];
       const fix = (value) => Number(value.toFixed(3));
@@ -4760,7 +4760,7 @@
     // as on Measure 3. Measures 1–4 of reaches hold the X with the couples back together, with the two
     // outline groups and the north/south facing below; 11A starts from the end.
     function spiralToXSnapshots() {
-      const title = "Unfurling Spiral → X";
+      const title = "Unfurling Spiral: Part 3 – Spiral → X";
       const end = spiralXSectionSnapshots().at(-1);
       if (!end) return [];
       const fix = (value) => Number(value.toFixed(3));
@@ -4897,31 +4897,6 @@
         frame("Measure 6", 1, 2, SPREAD),
         frame("Measure 7", 1, 2, SPREAD),
         frame("Measure 8", 1, 2, SPREAD),
-      ];
-    }
-
-    // Waltz section 11A, X → I (Ariel, 11/13): from 10C's X into the I, one line of all 16 couples down
-    // the middle of the room, front (Honored Guests) to back, spaced like the Polka's 1 line. Couples
-    // keep their front-to-back order from the X (ties left before right), so nobody crosses far.
-    // Starter frames: the measure-by-measure path and the I's facing are still to come.
-    function xToISnapshots() {
-      const title = "X → I";
-      const start = spiralToXSnapshots().at(-1);
-      if (!start) return [];
-      const fix = (value) => Number(value.toFixed(3));
-      // Spot 0 is nearest the Honored Guests (bottom of the board).
-      const order = [...start.items].sort((a, b) => (b.y - a.y) || (a.x - b.x)).map((item) => item.key);
-      const i = (facingMode) => {
-        const items = start.items.map((item) => ({
-          ...structuredClone(item), ring: null, step: null, facingMode, groupColor: "neutral",
-          x: CENTER.x, y: fix(spreadValue(COUPLE_COUNT - 1 - order.indexOf(item.key), COUPLE_COUNT, SQUARE_MIN, SQUARE_MAX)),
-        }));
-        return { count: items.length, annotation: { title, subtitle: "End: I" }, items };
-      };
-      return [
-        { ...structuredClone(start), annotation: { title, subtitle: "Start: X" } },
-        // Leads toward the Honored Guests for now.
-        i("south"),
       ];
     }
 
@@ -5131,7 +5106,7 @@
       {
         id: "waltz-theme-1",
         section: WALTZ,
-        name: "3 · Theme 1: Solo Violin",
+        name: "3 · Theme 1: Solo Strings",
         snapshots: () => structuredClone(window.WALTZ_THEME_1_SNAPSHOTS || []),
       },
       {
@@ -5185,20 +5160,20 @@
       {
         id: "waltz-getting-to-spiral",
         section: WALTZ,
-        name: "10A · Getting to Spiral",
+        name: "10A · Unfurling Spiral: Part 1 – Getting to Spiral",
         snapshots: gettingToSpiralSnapshots,
       },
       // Prototype, shown in the phone player so dancers can see where it's heading.
       {
         id: "waltz-unfurling-spiral",
         section: WALTZ,
-        name: "10B · Unfurling Spiral",
+        name: "10B · Unfurling Spiral: Part 2 – Unfurling",
         snapshots: spiralXSectionSnapshots,
       },
       {
         id: "waltz-spiral-to-x",
         section: WALTZ,
-        name: "10C · Unfurling Spiral → X",
+        name: "10C · Unfurling Spiral: Part 3 – Spiral → X",
         snapshots: spiralToXSnapshots,
       },
       {
@@ -5206,12 +5181,6 @@
         section: WALTZ,
         name: "11A · Cascade Diagonal Line: X → |",
         snapshots: xToLineSnapshots,
-      },
-      {
-        id: "waltz-x-to-i",
-        section: WALTZ,
-        name: "11A · X → I",
-        snapshots: xToISnapshots,
       },
     ];
 
