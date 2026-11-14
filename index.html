@@ -4687,9 +4687,12 @@
       const start = gettingToSpiralSnapshots().at(-1);
       if (!start) return [];
       const fix = (value) => Number(value.toFixed(3));
-      // Which spots start each arm, by step % 8 where Getting to Spiral ends. Ariel (11/13): center
-      // 1, 5, 9, 13; inner 4, 8, 12, 16; ½ ring 3, 7, 11, 15; outer 2, 6, 10, 14.
-      const SPIRAL = { 6: "center", 0: "inner", 2: "middle", 4: "outer" };
+      // Which spots start each arm, by step % 8 where Getting to Spiral ends. Backed out from 10C
+      // (Ariel, 11/14): the spiral sits 1 tape further along the line of dance than at first, so 10C
+      // starts with the outer couples (the arms' tips) on the room's cardinal spots, and 10C's Measure
+      // 2 is already the X (Measure 3 turns in place). Center 4, 8, 12, 16; inner 3, 7, 11, 15;
+      // ½ ring 2, 6, 10, 14; outer 1, 5, 9, 13.
+      const SPIRAL = { 0: "center", 2: "inner", 4: "middle", 6: "outer" };
       // "out" puts the lead's half outward, so F sits radially in from L.
       // `tapes`: how far each couple has traveled along the line of dance (1 tape = 2 half steps).
       // Rings are still picked by where the couple started.
@@ -4752,10 +4755,11 @@
       return shot;
     }
 
-    // Waltz section 10C, Unfurling Spiral → X (Ariel, 11/14): Measure 1 the spiral straightens into a
-    // cross (+) on the room's axes, no more travel along the spiral; Measure 2 the cross turns 1 tape
-    // along the line of dance; Measure 3 one more tape puts each arm on the room's diagonal, the X
-    // (the same X as before), as couples. On Orphan 3 each couple splits side by side, square to the
+    // Waltz section 10C, Unfurling Spiral → X (Ariel, 11/14): it starts with the spiral's outer couples
+    // on the room's cardinal spots. Measure 1 the spiral straightens into a cross (+) 1 tape along the
+    // line of dance from there; Measure 2 one more tape puts each arm on the room's diagonal, the X
+    // (the same X as before), as couples; Measure 3's turns are in place, so it holds the X. On
+    // Orphan 3 each couple splits side by side, square to the
     // Honored Guests: the lead on the spot and the follow to the lead's east, in both halves of the X,
     // as on Measure 3. Measures 1–4 of reaches hold the X with the couples back together, with the two
     // outline groups and the north/south facing below; 11A starts from the end.
@@ -4768,21 +4772,21 @@
         const point = stepPosition(step, item.ring);
         return { ...structuredClone(item), step, facingMode, x: fix(point.x), y: fix(point.y) };
       };
-      // Each arm's step on the X's diagonal: 1 tape past its outer couple's spiral spot, along the line
-      // of dance (outer 1 tape, middle 2, inner 3, center 4), counted from the end of 10B.
-      const xStep = (item) => wrapStep(item.step + 4 + 2 + (3 - SPIRAL_ARM.indexOf(item.ring)) * 2);
-      // The cross is the X 2 tapes back against the line of dance (45°), so every arm is on an axis.
+      // Each arm's step on the X's diagonal: 2 tapes past its outer couple's spiral spot (a cardinal
+      // spot), along the line of dance, counted from the end of 10B.
+      const xStep = (item) => wrapStep(item.step + 4 + (3 - SPIRAL_ARM.indexOf(item.ring)) * 2);
+      // The cross is the X `tapesBack` tapes back against the line of dance (2 tapes = on the axes).
       const cross = (tapesBack) => (item) => {
         const step = wrapStep(xStep(item) - tapesBack * 2);
         return at(item, step, spiralFacing(step, item.ring));
       };
       // Measures 1–4 of reaches (Ariel, 11/14): two outline
-      // groups, the cross's up-down spokes (2, 3, 16, 9 / 1, 8, 11, 10) and its side spokes; and the
-      // upper spokes (2, 3, 16, 9 and 13, 4, 7, 6) with F facing north, the lower ones (5, 12, 15, 14
-      // and 1, 8, 11, 10) F facing south ("north"/"south" name where the lead's half points).
-      const GROUP_1 = new Set([2, 3, 16, 9, 1, 8, 11, 10]);
-      const UPPER = new Set([2, 3, 16, 9, 13, 4, 7, 6]);
-      const NOTE = ["Outline:", "Violet: group 1 (2 3 16 9 1 8 11 10)", "Teal: group 2 (14 15 12 5 13 4 7 6)"].join("\n");
+      // groups, the cross's up-down spokes (5, 2, 3, 16 / 8, 11, 10, 13) and its side spokes; and the
+      // upper spokes (5, 2, 3, 16 and 4, 7, 6, 9) with F facing north, the lower ones (12, 15, 14, 1
+      // and 8, 11, 10, 13) F facing south ("north"/"south" name where the lead's half points).
+      const GROUP_1 = new Set([5, 2, 3, 16, 8, 11, 10, 13]);
+      const UPPER = new Set([5, 2, 3, 16, 4, 7, 6, 9]);
+      const NOTE = ["Outline:", "Violet: group 1 (5 2 3 16 8 11 10 13)", "Teal: group 2 (1 14 15 12 4 7 6 9)"].join("\n");
       const look = (item) => ({
         facingMode: UPPER.has(item.number) ? "south" : "north",
         groupColor: GROUP_1.has(item.number) ? "violet" : "teal",
@@ -4821,8 +4825,10 @@
       };
       return [
         { ...structuredClone(end), annotation: { ...end.annotation, title, subtitle: "Start" } },
-        plain("Measure 1", cross(2), travel),
-        plain("Measure 2", cross(1), travel),
+        // Measure 1 every arm lines up 1 tape on from the cardinal spots, Measure 2 one more tape lands
+        // on the X, and Measure 3's turns are in place, so it ends where Measure 2 does (Ariel, 11/14).
+        plain("Measure 1", cross(1), travel),
+        plain("Measure 2", x, travel),
         plain("Measure 3", x, square),
         splitX("Orphan 3"),
         xFrame("Measure 1"),
@@ -4835,9 +4841,9 @@
     // Waltz section 11A, Cascade Diagonal Line: X → | (Ariel, 11/13). Measure 1 holds the X with the
     // follows backing toward the center line, Measures 2–3 waltz into a straight up-and-down line
     // through the middle (halfway, then there; no hold in it); Measures 4 and 5 turn
-    // the line 1 tape clockwise each (22.5°), which lands it on the diagonal from the front left (14
-    // and 10, nearest the Honored Guests) to the back right (Ariel, 11/14), spread out on Measure 5
-    // so 2 and 10 are on the corners; Measure 6 holds,
+    // the line 1 tape clockwise each (22.5°), which lands it on the diagonal from the front left (1
+    // and 13, nearest the Honored Guests) to the back right (Ariel, 11/14), spread out on Measure 5
+    // so 5 and 13 are on the corners; Measure 6 holds,
     // and Measures 7–8 (the Rumbles) keep it. In the line, the two upper arms of the X fill the top
     // half and the two lower arms the bottom, paired by ring (outer couples at the ends, center couples
     // in the middle), the arm on the left taking the outer slot of each pair on top and the arm on
@@ -4860,7 +4866,7 @@
             slot.set(item.number, { x: CENTER.x, y: CENTER.y + (upper ? -distance : distance) });
           });
       });
-      // From Measure 5 the diagonal spreads out so its end couples (2 and 10) are on the square's
+      // From Measure 5 the diagonal spreads out so its end couples (5 and 13) are on the square's
       // corners, everyone evenly spaced (Ariel, 11/14).
       const SPREAD = (OUTER_RADIUS * Math.SQRT2) / (7.5 * PIECE_RADIUS * 1.92);
       // Turned `tapes` clockwise on the board (22.5° a tape), `progress` of the way from the X, and
