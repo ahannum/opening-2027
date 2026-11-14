@@ -1425,7 +1425,7 @@
    "id": "waltz-unfurling-spiral",
    "name": "10B · Unfurling Spiral",
    "section": "Waltz",
-   "fingerprint": "16sjiwp",
+   "fingerprint": "145ff7x",
    "frames": [
     {
      "src": "waltz-unfurling-spiral/01.jpg",
@@ -1460,6 +1460,59 @@
     {
      "src": "waltz-unfurling-spiral/07.jpg",
      "subtitle": "Measure 6",
+     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+    }
+   ]
+  },
+  {
+   "id": "waltz-spiral-to-x",
+   "name": "10C · Unfurling Spiral → X",
+   "section": "Waltz",
+   "fingerprint": "31alpx",
+   "frames": [
+    {
+     "src": "waltz-spiral-to-x/01.jpg",
+     "subtitle": "Start",
+     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+    },
+    {
+     "src": "waltz-spiral-to-x/02.jpg",
+     "subtitle": "Measure 1",
+     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+    },
+    {
+     "src": "waltz-spiral-to-x/03.jpg",
+     "subtitle": "Measure 2",
+     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+    },
+    {
+     "src": "waltz-spiral-to-x/04.jpg",
+     "subtitle": "Measure 3",
+     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+    },
+    {
+     "src": "waltz-spiral-to-x/05.jpg",
+     "subtitle": "Orphan 3",
+     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+    },
+    {
+     "src": "waltz-spiral-to-x/06.jpg",
+     "subtitle": "Measure 1",
+     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+    },
+    {
+     "src": "waltz-spiral-to-x/07.jpg",
+     "subtitle": "Measure 2",
+     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+    },
+    {
+     "src": "waltz-spiral-to-x/08.jpg",
+     "subtitle": "Measure 3",
+     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+    },
+    {
+     "src": "waltz-spiral-to-x/09.jpg",
+     "subtitle": "Measure 4",
      "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
     }
    ]
