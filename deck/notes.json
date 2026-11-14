@@ -7,6 +7,7 @@
   {
    "dance": "Polka",
    "number": 2,
+   "part": "",
    "title": "2 · Theme 1 variation: 2 lines",
    "overview": "This is the honeymoon stage of your journey together, so peppy, all is fun",
    "columns": [
@@ -117,6 +118,7 @@
   {
    "dance": "Polka",
    "number": 2,
+   "part": "",
    "title": "2 · Theme 1 variation: Checkerboard reorient cascades",
    "overview": "",
    "columns": [
@@ -143,6 +145,7 @@
   {
    "dance": "Polka",
    "number": 3,
+   "part": "",
    "title": "3 · Big brass X",
    "overview": "",
    "columns": [
@@ -181,6 +184,7 @@
   {
    "dance": "Polka",
    "number": 4,
+   "part": "",
    "title": "4 · From X to circle",
    "overview": "",
    "columns": [
@@ -249,6 +253,7 @@
   {
    "dance": "Polka",
    "number": 5,
+   "part": "",
    "title": "5 · Hearts adrift: Part 1",
    "overview": "This is the only non-joyful moment in the polka. Some polka on the circle, a dip, then F escape, L sad, they reunite and all is well again.\nMood is worried, scared\n\nDemo videos:\nHearts adrift to turn cascade",
    "columns": [
@@ -359,6 +364,7 @@
   {
    "dance": "Polka",
    "number": 5,
+   "part": "",
    "title": "5 · Hearts adrift: Part 2 (pas de basque → L show off)",
    "overview": "You have now gotten past the uncertainty of hearts adrift, and your love has triumphed!\n\nDemo videos:\nHearts adrift to turn cascade,  Leads show off: slightly better view",
    "columns": [
@@ -445,6 +451,7 @@
   {
    "dance": "Polka",
    "number": 6,
+   "part": "",
    "title": "6 · Hearts adrift → turn cascade",
    "overview": "",
    "columns": [
@@ -477,6 +484,7 @@
   {
    "dance": "Polka",
    "number": 7,
+   "part": "",
    "title": "7 · Turn cascade",
    "overview": "We’re still happy here, just saying bye to our partners to hang out with buds for a bit",
    "columns": [
@@ -497,6 +505,7 @@
   {
    "dance": "Polka",
    "number": 8,
+   "part": "",
    "title": "8 · Line → X → grid prep",
    "overview": "We’re still happy here, just saying bye to our partners to hang out with buds for a bit",
    "columns": [
@@ -589,6 +598,7 @@
   {
    "dance": "Polka",
    "number": 9,
+   "part": "",
    "title": "9 · Triumphant grid crossing",
    "overview": "Start in L grid and F grid next to each other, grids gallop through each other, then reunite into 1 grid. Do some cascade dips on the grid.\n\nDemo videos:\nGrid cascades up to plank lift,",
    "columns": [
@@ -621,6 +631,7 @@
   {
    "dance": "Polka",
    "number": 10,
+   "part": "",
    "title": "10 · 4×4 grid cascades",
    "overview": "Start in L grid and F grid next to each other, grids gallop through each other, then reunite into 1 grid. Do some cascade dips on the grid.\n\nDemo videos:\nGrid cascades up to plank lift,",
    "columns": [
@@ -677,6 +688,7 @@
   {
    "dance": "Polka",
    "number": 11,
+   "part": "",
    "title": "11 · Unfurling pyramid",
    "overview": "On every beat 4, a different row is reaching their final pyramid position (leads put right foot down), and the follows hit their snappy send out on the following beat 1.\nThe final pyramid position is denoted by the location where the lead plants their left foot.\nMood: grand, expansive, epic\nDemo videos:\nPlank lift + poisson cascade as group 4",
    "columns": [
@@ -804,6 +816,7 @@
   {
    "dance": "Polka",
    "number": 12,
+   "part": "",
    "title": "12 · V finale",
    "overview": "Snappy sendout cascade, pinwheel cascade, triangle lift, end in deep dip",
    "columns": [
@@ -872,6 +885,7 @@
   {
    "dance": "Waltz",
    "number": 2,
+   "part": "",
    "title": "2 · Theme 2: Contraction and Expansion",
    "overview": "",
    "columns": [
@@ -940,6 +954,7 @@
   {
    "dance": "Waltz",
    "number": 3,
+   "part": "",
    "title": "3 · Theme 1: Solo Strings",
    "overview": "",
    "columns": [
@@ -1008,6 +1023,7 @@
   {
    "dance": "Waltz",
    "number": 4,
+   "part": "",
    "title": "4 · Hijinks Skit",
    "overview": "",
    "columns": [
@@ -1088,6 +1104,7 @@
   {
    "dance": "Waltz",
    "number": 5,
+   "part": "",
    "title": "5 · Theme 2: Turning Gears: INSIDE CIRCLE",
    "overview": "",
    "columns": [
@@ -1156,6 +1173,7 @@
   {
    "dance": "Waltz",
    "number": 5,
+   "part": "",
    "title": "5 · Theme 2: Turning Gears: OUTSIDE CIRCLE",
    "overview": "",
    "columns": [
@@ -1224,6 +1242,7 @@
   {
    "dance": "Waltz",
    "number": 7,
+   "part": "",
    "title": "7 · Box Skit",
    "overview": "",
    "columns": [
@@ -1304,6 +1323,7 @@
   {
    "dance": "Waltz",
    "number": 8,
+   "part": "",
    "title": "8 · Hide and seek. Part 1: transition from circle to 2 lines",
    "overview": "",
    "columns": [
@@ -1390,6 +1410,7 @@
   {
    "dance": "Waltz",
    "number": 8,
+   "part": "",
    "title": "8 · Hide and seek. Part 2: The hide and seek",
    "overview": "",
    "columns": [
@@ -1452,6 +1473,7 @@
   {
    "dance": "Waltz",
    "number": 8,
+   "part": "",
    "title": "8 · Hide and seek. Part 3: Partners reunite and return to circle",
    "overview": "",
    "columns": [
@@ -1514,6 +1536,7 @@
   {
    "dance": "Waltz",
    "number": 9,
+   "part": "",
    "title": "9 · Theme 1: Peaceful Frolicking",
    "overview": "",
    "columns": [
