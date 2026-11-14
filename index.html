@@ -4624,14 +4624,43 @@
       ];
     }
 
-    // Waltz section 10, Unfurling Spiral (prototype of its start): from the outer tape into the Spiral X
-    // (see formationSpiralXTargets). Peaceful Frolicking ends with every couple on an even half
+    // Waltz section 10A, Getting to Spiral (Ariel, 11/13): from Peaceful Frolicking's last tape spot,
+    // dip and ride on the tape, waltz 2 tapes along the line of dance, then straight in to the ½ ring
+    // (Ariel's "¾ circle", halfway between the tapes) and on to the inner tape for Orphan 3.
+    function gettingToSpiralSnapshots() {
+      const title = "Getting to Spiral";
+      const end = peacefulFrolickingSnapshots().at(-1);
+      if (!end) return [];
+      const fix = (value) => Number(value.toFixed(3));
+      // `tapes` along the line of dance (1 tape = 2 half steps); "cw" puts F toward the line of dance.
+      const frame = (subtitle, ring, tapes, facingMode) => {
+        const items = end.items.map((item) => {
+          const step = wrapStep(item.step + tapes * 2);
+          const point = stepPosition(step, ring);
+          return { ...structuredClone(item), ring, step, facingMode, x: fix(point.x), y: fix(point.y) };
+        });
+        return { count: items.length, annotation: { title, subtitle }, items };
+      };
+      return [
+        { ...structuredClone(end), annotation: { title, subtitle: "Measure 1: Dip" } },
+        frame("Measure 2: Ride", "outer", 0, "cw"),
+        frame("Measure 3: Ride", "outer", 0, "cw"),
+        frame("Measure 4: F outside turn", "outer", 0, "cw"),
+        frame("Measure 5: Waltz 1 tape", "outer", 1, "cw"),
+        frame("Measure 6: Waltz 1 tape", "outer", 2, "cw"),
+        frame("Measure 7: In to ¾ circle", "middle", 2, "cw"),
+        frame("Measure 8: In to inside circle", "inner", 2, "cw"),
+      ];
+    }
+
+    // Waltz section 10B, Unfurling Spiral (prototype of its start): from the inner tape into the Spiral X
+    // (see formationSpiralXTargets). Getting to Spiral ends with every couple on an even half
     // step, which line up with the X's spokes, so every move is straight in or out:
     // step % 8 = 0 → center ring (spoke base), 2 → stays on the inner tape, 4 → ½ ring,
     // 6 → ½ ring, then out to the outer tape in Measure 4.
     function spiralXSectionSnapshots() {
       const title = "Unfurling Spiral";
-      const start = peacefulFrolickingSnapshots().at(-1);
+      const start = gettingToSpiralSnapshots().at(-1);
       if (!start) return [];
       const fix = (value) => Number(value.toFixed(3));
       const SPIRAL = { 0: "center", 2: "inner", 4: "middle", 6: "outer" };
@@ -4666,8 +4695,11 @@
       };
       const measure2 = (final) => (final === "center" || final === "inner" ? final : "middle");
       // Ariel (11/13): Measures 2–3 one tape along the line of dance, Measure 4 one more (2 in all).
+      // It opens on Orphan 3 on the inner tape (no group outlines yet), held through Measure 1.
+      const orphan = frame("Start: Orphan 3", () => "inner");
+      orphan.items.forEach((item) => { item.groupColor = "neutral"; });
       return [
-        { ...structuredClone(start), annotation: { title, subtitle: "Start" } },
+        orphan,
         frame("Measure 1", () => "inner"),
         frame("Measure 2", measure2, 1),
         frame("Measure 3", measure2, 1),
@@ -4933,11 +4965,17 @@
         name: "9 · Theme 1: Peaceful Frolicking",
         snapshots: peacefulFrolickingSnapshots,
       },
+      {
+        id: "waltz-getting-to-spiral",
+        section: WALTZ,
+        name: "10A · Getting to Spiral",
+        snapshots: gettingToSpiralSnapshots,
+      },
       // Prototype, shown in the phone player so dancers can see where it's heading.
       {
         id: "waltz-unfurling-spiral",
         section: WALTZ,
-        name: "10 · Unfurling Spiral",
+        name: "10B · Unfurling Spiral",
         snapshots: spiralXSectionSnapshots,
       },
     ];
