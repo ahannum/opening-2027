@@ -4839,8 +4839,8 @@
     }
 
     // Waltz section 11A, Cascade Diagonal Line: X → | (Ariel, 11/13). Measure 1 holds the X with the
-    // follows backing toward the center line; Measure 2 is the transition, straight from the X into
-    // an up-and-down line through the middle, and Measure 3 stays in it; Measures 4 and 5 waltz the
+    // follows backing toward the center line; Measures 2–3 waltz into an up-and-down line through
+    // the middle (halfway, then there; no hold in it); Measures 4 and 5 waltz the
     // line 1 tape clockwise each (22.5°), onto the diagonal from the front left (nearest the Honored
     // Guests) to the back right, spread on Measure 5 so its end couples (1 at the front, 5 at the
     // back) are on the square's corners (Ariel, 11/14); Measure 6 holds and Measures 7–8 (the
@@ -4907,9 +4907,9 @@
       return [
         { ...structuredClone(end), annotation: { title, subtitle: "Start" } },
         measure1,
-        // Measure 2 is the transition into the line, Measure 3 stays in it, Measures 4–5 turn it onto
-        // the diagonal (Ariel, 11/14).
-        frame("Measure 2", 1, 0, 1, measure2Look),
+        // Measures 2–3 waltz into the line (halfway, then there), Measures 4–5 turn it onto the
+        // diagonal (Ariel, 11/14).
+        frame("Measure 2", 0.5, 0, 1, measure2Look),
         frame("Measure 3", 1, 0, 1, forwardLook),
         frame("Measure 4", 1, 1, 1, forwardLook),
         frame("Measure 5", 1, 2, SPREAD, forwardLook),
