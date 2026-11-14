@@ -4882,9 +4882,20 @@
           y: fix(CENTER.y + x0 * Math.sin(turn) + y0 * Math.cos(turn)),
         };
       };
-      const frame = (subtitle, progress, tapes, spread) => ({
-        count: end.items.length, annotation: { title, subtitle }, items: end.items.map((item) => place(item, progress, tapes, spread)),
+      // `look(item)` can set a couple's facingMode or groupColor for the frame.
+      const frame = (subtitle, progress, tapes, spread, look = () => ({})) => ({
+        count: end.items.length, annotation: { title, subtitle },
+        items: end.items.map((item) => ({ ...place(item, progress, tapes, spread), ...look(item) })),
       });
+      // Measure 2 (Ariel, 11/14): the follows back the way their couple waltzes, in the Start colors.
+      // Teal waltzes along the line of dance (counterclockwise), so F backs it; violet waltzes against
+      // it, so F backs against it. The follow's half points the way they go, the lead's half away.
+      const measure2Look = (item) => ({
+        groupColor: item.groupColor,
+        facingMode: item.groupColor === "teal" ? "cw" : "ccw",
+      });
+      // Measures 3–5 (Ariel, 11/14): every follow forward along the line of dance (backing against it).
+      const forwardLook = () => ({ facingMode: "ccw" });
       // Measure 1 (Ariel, 11/14): still on the Start spots, outlines kept, every follow (violet and teal
       // groups alike) backing toward the center line: the follow's half toward it, the lead's half
       // pointing away ("west" left of the line, "east" right of it).
@@ -4896,10 +4907,10 @@
         { ...structuredClone(end), annotation: { title, subtitle: "Start" } },
         measure1,
         // Measures 2–3 waltz into the line (halfway, then there), no hold in it (Ariel, 11/14).
-        frame("Measure 2", 0.5, 0),
-        frame("Measure 3", 1, 0),
-        frame("Measure 4", 1, 1),
-        frame("Measure 5", 1, 2, SPREAD),
+        frame("Measure 2", 0.5, 0, 1, measure2Look),
+        frame("Measure 3", 1, 0, 1, forwardLook),
+        frame("Measure 4", 1, 1, 1, forwardLook),
+        frame("Measure 5", 1, 2, SPREAD, forwardLook),
         frame("Measure 6", 1, 2, SPREAD),
         frame("Measure 7", 1, 2, SPREAD),
         frame("Measure 8", 1, 2, SPREAD),
