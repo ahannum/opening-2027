@@ -4636,22 +4636,37 @@
       const fix = (value) => Number(value.toFixed(3));
       const SPIRAL = { 0: "center", 2: "inner", 4: "middle", 6: "outer" };
       // "out" puts the lead's half outward, so F sits radially in from L.
-      const place = (item, ring) => {
-        const point = stepPosition(item.step, ring);
-        return { ...structuredClone(item), ring, facingMode: "out", x: fix(point.x), y: fix(point.y) };
+      // `tapes`: how far each couple has traveled along the line of dance (1 tape = 2 half steps).
+      // Rings are still picked by where the couple started.
+      // Each spiral arm runs center → inner → middle → outer, 2 half steps further along per ring.
+      // `alongArm`: the lead's half points down the arm toward its outer end, so F sits next to L
+      // on the inner side of the arm (Ariel, 11/13).
+      const ARM = ["center", "inner", "middle", "outer"];
+      const armFacing = (step, ring) => {
+        const k = ARM.indexOf(ring);
+        const from = k > 0 ? stepPosition(step - 2, ARM[k - 1]) : stepPosition(step, ring);
+        const to = k < ARM.length - 1 ? stepPosition(step + 2, ARM[k + 1]) : stepPosition(step, ring);
+        return `deg:${((Math.atan2(to.y - from.y, to.x - from.x) * 180) / Math.PI).toFixed(1)}`;
       };
-      const frame = (subtitle, ringFor) => {
-        const items = start.items.map((item) => place(item, ringFor(SPIRAL[((item.step % 8) + 8) % 8])));
+      const place = (item, ring, tapes, alongArm) => {
+        const step = wrapStep(item.step + tapes * 2);
+        const point = stepPosition(step, ring);
+        const facingMode = alongArm ? armFacing(step, ring) : "out";
+        return { ...structuredClone(item), ring, step, facingMode, x: fix(point.x), y: fix(point.y) };
+      };
+      const frame = (subtitle, ringFor, tapes = 0, alongArm = false) => {
+        const items = start.items.map((item) => place(item, ringFor(SPIRAL[((item.step % 8) + 8) % 8]), tapes, alongArm));
         return { count: items.length, annotation: { title, subtitle }, items };
       };
       const measure2 = (final) => (final === "center" || final === "inner" ? final : "middle");
+      // Ariel (11/13): Measures 2–3 one tape along the line of dance, Measure 4 one more (2 in all).
       return [
         { ...structuredClone(start), annotation: { title, subtitle: "Start" } },
         frame("Measure 1", () => "inner"),
-        frame("Measure 2", measure2),
-        frame("Measure 3", measure2),
-        frame("Measure 4", (final) => final),
-        frame("Measure 5", (final) => final),
+        frame("Measure 2", measure2, 1),
+        frame("Measure 3", measure2, 1),
+        frame("Measure 4", (final) => final, 2, true),
+        frame("Measure 5", (final) => final, 2, true),
       ];
     }
 
