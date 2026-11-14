@@ -4753,14 +4753,13 @@
     }
 
     // Waltz section 10C, Unfurling Spiral → X (Ariel, 11/14): Measure 1 the spiral straightens into a
-    // cross (+) on the room's axes, no more travel along the spiral, outlines off and every follow
-    // backing the line of dance; Measure 2 the cross turns 1 tape
+    // cross (+) on the room's axes, no more travel along the spiral; Measure 2 the cross turns 1 tape
     // along the line of dance; Measure 3 one more tape puts each arm on the room's diagonal, the X
     // (the same X as before), as couples. On Orphan 3 each couple splits side by side, square to the
-    // Honored Guests (Ariel, 11/14): the lead on the spot and the follow on the lead's right in the
-    // lower half of the X (to the left as the Honored Guests see it), mirrored in the upper half (the
-    // follow to the lead's east). Measures 1–4 of reaches hold the X with the couples back together,
-    // facing out along their spoke like 11A, which starts from there.
+    // Honored Guests: the lead on the spot and the follow on the lead's right in the lower half of the
+    // X (to the left as the Honored Guests see it), mirrored in the upper half (the follow to the
+    // lead's east). Measures 1–4 of reaches hold the X with the couples back together. Every couple
+    // frame has the two outline groups and the north/south facing below; 11A starts from the end.
     function spiralToXSnapshots() {
       const title = "Unfurling Spiral → X";
       const end = spiralXSectionSnapshots().at(-1);
@@ -4770,10 +4769,6 @@
         const point = stepPosition(step, item.ring);
         return { ...structuredClone(item), step, facingMode, x: fix(point.x), y: fix(point.y) };
       };
-      const frame = (subtitle, place) => {
-        const items = end.items.map(place);
-        return { count: items.length, annotation: { title, subtitle, note: SPIRAL_COLOR_NOTE }, items };
-      };
       // Each arm's step on the X's diagonal: 1 tape past its outer couple's spiral spot, along the line
       // of dance (outer 1 tape, middle 2, inner 3, center 4), counted from the end of 10B.
       const xStep = (item) => wrapStep(item.step + 4 + 2 + (3 - SPIRAL_ARM.indexOf(item.ring)) * 2);
@@ -4782,35 +4777,41 @@
         const step = wrapStep(xStep(item) - tapesBack * 2);
         return at(item, step, spiralFacing(step, item.ring));
       };
-      // In the X the outlines come off (Ariel, 11/13). Couples face out along their spoke, as in 11A.
-      const x = (item) => ({ ...at(item, xStep(item), "out"), groupColor: "neutral" });
-      const xFrame = (subtitle) => {
-        const shot = frame(subtitle, x);
-        delete shot.annotation.note;
-        return shot;
+      // Measures 1–4 (Ariel, 11/14), on every couple frame of 10C (cross, X and reaches): two outline
+      // groups, the cross's up-down spokes (2, 3, 16, 9 / 1, 8, 11, 10) and its side spokes; and the
+      // upper spokes (2, 3, 16, 9 and 13, 4, 7, 6) with F facing north, the lower ones (5, 12, 15, 14
+      // and 1, 8, 11, 10) F facing south ("north"/"south" name where the lead's half points).
+      const GROUP_1 = new Set([2, 3, 16, 9, 1, 8, 11, 10]);
+      const UPPER = new Set([2, 3, 16, 9, 13, 4, 7, 6]);
+      const NOTE = ["Outline:", "Violet: group 1 (2 3 16 9 1 8 11 10)", "Teal: group 2 (14 15 12 5 13 4 7 6)"].join("\n");
+      const look = (item) => ({
+        facingMode: UPPER.has(item.number) ? "south" : "north",
+        groupColor: GROUP_1.has(item.number) ? "violet" : "teal",
+      });
+      const frame = (subtitle, place) => {
+        const items = end.items.map((item) => ({ ...place(item), ...look(item) }));
+        return { count: items.length, annotation: { title, subtitle, note: NOTE }, items };
       };
+      const x = (item) => at(item, xStep(item), "out");
+      const xFrame = (subtitle) => frame(subtitle, x);
       // The X split side by side, both facing the Honored Guests (south), the lead on the X spot and
-      // the follow one piece width to the west in the lower half, to the east in the upper half.
+      // the follow one piece width to the west in the lower half, to the east in the upper half. No
+      // outlines.
       const splitX = (subtitle) => {
         const items = end.items.flatMap((item) => {
           const spot = x(item);
           const dx = spot.y > CENTER.y ? -1 : 1, dy = 0;
           const dancer = (role, offset) => ({
             ...spot, key: `${item.number}:${role}`, role, ring: null, step: null, facingMode: "south",
-            x: fix(spot.x + offset * dx), y: fix(spot.y + offset * dy),
+            groupColor: "neutral", x: fix(spot.x + offset * dx), y: fix(spot.y + offset * dy),
           });
           return [dancer("lead", 0), dancer("follow", PIECE_RADIUS * 2)];
         });
         return { count: items.length, annotation: { title, subtitle }, items };
       };
-      // Measure 1 (Ariel, 11/14): no outlines, and since the cross travels round, every couple has the
-      // follow backing the line of dance: the follow's half on the line of dance side ("cw"; 10B's
-      // outer couples are "ccw", the lead backing it).
-      const measure1 = frame("Measure 1", (item) => ({ ...cross(2)(item), facingMode: "cw", groupColor: "neutral" }));
-      delete measure1.annotation.note;
       return [
         { ...structuredClone(end), annotation: { ...end.annotation, title, subtitle: "Start" } },
-        measure1,
+        frame("Measure 1", cross(2)),
         frame("Measure 2", cross(1)),
         xFrame("Measure 3"),
         splitX("Orphan 3"),
@@ -4853,7 +4854,7 @@
         const y0 = lerp(item.y, target.y, progress) - CENTER.y;
         const turn = (-tapes * Math.PI) / 8;
         return {
-          ...structuredClone(item), ring: null, step: null, facingMode: "out",
+          ...structuredClone(item), ring: null, step: null, facingMode: "out", groupColor: "neutral",
           x: fix(CENTER.x + x0 * Math.cos(turn) - y0 * Math.sin(turn)),
           y: fix(CENTER.y + x0 * Math.sin(turn) + y0 * Math.cos(turn)),
         };
@@ -4887,7 +4888,7 @@
       const order = [...start.items].sort((a, b) => (b.y - a.y) || (a.x - b.x)).map((item) => item.key);
       const i = (facingMode) => {
         const items = start.items.map((item) => ({
-          ...structuredClone(item), ring: null, step: null, facingMode,
+          ...structuredClone(item), ring: null, step: null, facingMode, groupColor: "neutral",
           x: CENTER.x, y: fix(spreadValue(COUPLE_COUNT - 1 - order.indexOf(item.key), COUPLE_COUNT, SQUARE_MIN, SQUARE_MAX)),
         }));
         return { count: items.length, annotation: { title, subtitle: "End: I" }, items };
