@@ -1518,6 +1518,59 @@
    ]
   },
   {
+   "id": "waltz-x-to-line",
+   "name": "11A · Cascade Diagonal Line: X → |",
+   "section": "Waltz",
+   "fingerprint": "zbmly4",
+   "frames": [
+    {
+     "src": "waltz-x-to-line/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "waltz-x-to-line/02.jpg",
+     "subtitle": "Measure 1",
+     "note": ""
+    },
+    {
+     "src": "waltz-x-to-line/03.jpg",
+     "subtitle": "Measure 2",
+     "note": ""
+    },
+    {
+     "src": "waltz-x-to-line/04.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-x-to-line/05.jpg",
+     "subtitle": "Measure 4",
+     "note": ""
+    },
+    {
+     "src": "waltz-x-to-line/06.jpg",
+     "subtitle": "Measure 5",
+     "note": ""
+    },
+    {
+     "src": "waltz-x-to-line/07.jpg",
+     "subtitle": "Measure 6",
+     "note": ""
+    },
+    {
+     "src": "waltz-x-to-line/08.jpg",
+     "subtitle": "Measure 7",
+     "note": ""
+    },
+    {
+     "src": "waltz-x-to-line/09.jpg",
+     "subtitle": "Measure 8",
+     "note": ""
+    }
+   ]
+  },
+  {
    "id": "waltz-x-to-i",
    "name": "11A · X → I",
    "section": "Waltz",
