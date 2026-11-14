@@ -4783,9 +4783,10 @@
         });
         return { count: items.length, annotation: { title, subtitle }, items };
       };
-      // Measure 1 (Ariel, 11/14): no outlines, everyone with the follow backing the line of dance
-      // (the lead's half toward it, "ccw").
-      const measure1 = frame("Measure 1", (item) => ({ ...cross(2)(item), facingMode: "ccw", groupColor: "neutral" }));
+      // Measure 1 (Ariel, 11/14): no outlines, and since the cross travels round, every couple has the
+      // follow backing the line of dance: the follow's half on the line of dance side ("cw"; 10B's
+      // outer couples are "ccw", the lead backing it).
+      const measure1 = frame("Measure 1", (item) => ({ ...cross(2)(item), facingMode: "cw", groupColor: "neutral" }));
       delete measure1.annotation.note;
       return [
         { ...structuredClone(end), annotation: { ...end.annotation, title, subtitle: "Start" } },
