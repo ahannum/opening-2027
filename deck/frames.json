@@ -1468,7 +1468,7 @@
    "id": "waltz-spiral-to-x",
    "name": "10C · Unfurling Spiral → X",
    "section": "Waltz",
-   "fingerprint": "hfao3s",
+   "fingerprint": "15t3ikn",
    "frames": [
     {
      "src": "waltz-spiral-to-x/01.jpg",
@@ -1478,17 +1478,17 @@
     {
      "src": "waltz-spiral-to-x/02.jpg",
      "subtitle": "Measure 1",
-     "note": ""
+     "note": "Outline:\nViolet: group 1 (2 3 16 9 1 8 11 10)\nTeal: group 2 (14 15 12 5 13 4 7 6)"
     },
     {
      "src": "waltz-spiral-to-x/03.jpg",
      "subtitle": "Measure 2",
-     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+     "note": "Outline:\nViolet: group 1 (2 3 16 9 1 8 11 10)\nTeal: group 2 (14 15 12 5 13 4 7 6)"
     },
     {
      "src": "waltz-spiral-to-x/04.jpg",
      "subtitle": "Measure 3",
-     "note": ""
+     "note": "Outline:\nViolet: group 1 (2 3 16 9 1 8 11 10)\nTeal: group 2 (14 15 12 5 13 4 7 6)"
     },
     {
      "src": "waltz-spiral-to-x/05.jpg",
@@ -1498,22 +1498,22 @@
     {
      "src": "waltz-spiral-to-x/06.jpg",
      "subtitle": "Measure 1",
-     "note": ""
+     "note": "Outline:\nViolet: group 1 (2 3 16 9 1 8 11 10)\nTeal: group 2 (14 15 12 5 13 4 7 6)"
     },
     {
      "src": "waltz-spiral-to-x/07.jpg",
      "subtitle": "Measure 2",
-     "note": ""
+     "note": "Outline:\nViolet: group 1 (2 3 16 9 1 8 11 10)\nTeal: group 2 (14 15 12 5 13 4 7 6)"
     },
     {
      "src": "waltz-spiral-to-x/08.jpg",
      "subtitle": "Measure 3",
-     "note": ""
+     "note": "Outline:\nViolet: group 1 (2 3 16 9 1 8 11 10)\nTeal: group 2 (14 15 12 5 13 4 7 6)"
     },
     {
      "src": "waltz-spiral-to-x/09.jpg",
      "subtitle": "Measure 4",
-     "note": ""
+     "note": "Outline:\nViolet: group 1 (2 3 16 9 1 8 11 10)\nTeal: group 2 (14 15 12 5 13 4 7 6)"
     }
    ]
   },
@@ -1521,7 +1521,7 @@
    "id": "waltz-x-to-line",
    "name": "11A · Cascade Diagonal Line: X → |",
    "section": "Waltz",
-   "fingerprint": "zbmly4",
+   "fingerprint": "16nio4k",
    "frames": [
     {
      "src": "waltz-x-to-line/01.jpg",
@@ -1574,7 +1574,7 @@
    "id": "waltz-x-to-i",
    "name": "11A · X → I",
    "section": "Waltz",
-   "fingerprint": "1b1t1bs",
+   "fingerprint": "1ispix4",
    "frames": [
     {
      "src": "waltz-x-to-i/01.jpg",
