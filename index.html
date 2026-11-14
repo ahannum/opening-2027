@@ -4642,14 +4642,15 @@
         return { count: items.length, annotation: { title, subtitle }, items };
       };
       return [
-        { ...structuredClone(end), annotation: { title, subtitle: "Measure 1: Dip" } },
-        frame("Measure 2: Ride", "outer", 0, "cw"),
-        frame("Measure 3: Ride", "outer", 0, "cw"),
-        frame("Measure 4: F outside turn", "outer", 0, "cw"),
-        frame("Measure 5: Waltz 1 tape", "outer", 1, "cw"),
-        frame("Measure 6: Waltz 1 tape", "outer", 2, "cw"),
-        frame("Measure 7: In to ¾ circle", "middle", 2, "cw"),
-        frame("Measure 8: In to inside circle", "inner", 2, "cw"),
+        { ...structuredClone(end), annotation: { title, subtitle: "Measure 1" } },
+        frame("Measure 2", "outer", 0, "cw"),
+        frame("Measure 3", "outer", 0, "cw"),
+        frame("Measure 4", "outer", 0, "cw"),
+        frame("Measure 5", "outer", 1, "cw"),
+        // From Measure 6, F radially in from L ("out" puts the lead's half outward) (Ariel, 11/13).
+        frame("Measure 6", "outer", 2, "out"),
+        frame("Measure 7", "middle", 2, "out"),
+        frame("Measure 8", "inner", 2, "out"),
       ];
     }
 
@@ -4689,15 +4690,25 @@
           x: fix(point.x), y: fix(point.y),
         };
       };
+      // What the outlines mean, on every frame that shows them (Ariel, 11/13).
+      const COLOR_NOTE = [
+        "Outline = where you end up:",
+        "Amber: center ring",
+        "Green: inside circle",
+        "Blue: ¾ circle",
+        "Rose: outside circle",
+      ].join("\n");
       const frame = (subtitle, ringFor, tapes = 0, alongArm = false) => {
         const items = start.items.map((item) => place(item, ringFor(finalRing(item)), tapes, alongArm));
-        return { count: items.length, annotation: { title, subtitle }, items };
+        return { count: items.length, annotation: { title, subtitle, note: COLOR_NOTE }, items };
       };
       const measure2 = (final) => (final === "center" || final === "inner" ? final : "middle");
-      // Ariel (11/13): Measures 2–3 one tape along the line of dance, Measure 4 one more (2 in all).
+      // Ariel (11/13): Measures 2–3 one tape along the line of dance, Measure 4 one more (2 in all),
+      // Measure 6 one more again (3).
       // It opens on Orphan 3 on the inner tape (no group outlines yet), held through Measure 1.
       const orphan = frame("Start: Orphan 3", () => "inner");
       orphan.items.forEach((item) => { item.groupColor = "neutral"; });
+      delete orphan.annotation.note;
       return [
         orphan,
         frame("Measure 1", () => "inner"),
@@ -4705,6 +4716,8 @@
         frame("Measure 3", measure2, 1),
         frame("Measure 4", (final) => final, 2, true),
         frame("Measure 5", (final) => final, 2, true),
+        // The whole spiral 1 tape along the line of dance (Ariel, 11/13).
+        frame("Measure 6", (final) => final, 3, true),
       ];
     }
 

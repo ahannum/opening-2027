@@ -989,7 +989,11 @@
 
     function notesTables(story) {
       const number = parseInt(story.name, 10);
-      return notes ? notes.sections.filter((table) => table.dance === story.section && table.number === number) : [];
+      const tables = notes ? notes.sections.filter((table) => table.dance === story.section && table.number === number) : [];
+      // A lettered part ("10A · …") takes the tables whose slide carries the same letter, when there are any.
+      const part = story.name.match(/^\d+([A-Z])\b/)?.[1];
+      const own = part ? tables.filter((table) => table.part === part) : [];
+      return own.length ? own : tables;
     }
     // A section split over slides (Hearts adrift Part 1 and Part 2) starts its count again, so a frame
     // whose measure drops back to a lower number moves on to the next table.

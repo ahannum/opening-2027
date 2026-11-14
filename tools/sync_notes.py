@@ -31,7 +31,8 @@ OUT = os.path.join(ROOT, "deck", "notes.json")
 A = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
 P = "{http://schemas.openxmlformats.org/presentationml/2006/main}"
 R = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
-HEADER = re.compile(r"^(\d+)(?:\s*→\s*\d+)?\s*·\s*(.+)$")
+# "10A · Getting to Spiral": an optional part letter after the number.
+HEADER = re.compile(r"^(\d+)([A-Z])?(?:\s*→\s*\d+)?\s*·\s*(.+)$")
 
 
 def paragraph(p):
@@ -121,7 +122,8 @@ def sections(dance, data, extras):
             found.append({
                 "dance": dance,
                 "number": int(header.group(1)),
-                "title": f"{header.group(1)} · {header.group(2).strip()}",
+                "part": header.group(2) or "",
+                "title": f"{header.group(1)}{header.group(2) or ''} · {header.group(3).strip()}",
                 "overview": overview,
                 "columns": [c or f"Column {i + 1}" for i, c in enumerate(columns)],
                 "rows": body,
