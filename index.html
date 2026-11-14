@@ -4833,8 +4833,8 @@
     }
 
     // Waltz section 11A, Cascade Diagonal Line: X → | (Ariel, 11/13). Measure 1 holds the X with the
-    // follows backing toward the center line, Measure 2 waltz into a straight up-and-down line through
-    // the middle, Measure 3 hold; Measures 4 and 5 turn
+    // follows backing toward the center line, Measures 2–3 waltz into a straight up-and-down line
+    // through the middle (halfway, then there; no hold in it); Measures 4 and 5 turn
     // the line 1 tape counterclockwise each (22.5°), which lands it on the diagonal; Measure 6 holds,
     // and Measures 7–8 (the Rumbles) keep it. In the line, the two upper arms of the X fill the top
     // half and the two lower arms the bottom, paired by ring (outer couples at the ends, center couples
@@ -4883,7 +4883,8 @@
       return [
         { ...structuredClone(end), annotation: { title, subtitle: "Start" } },
         measure1,
-        frame("Measure 2", 1, 0),
+        // Measures 2–3 waltz into the line (halfway, then there), no hold in it (Ariel, 11/14).
+        frame("Measure 2", 0.5, 0),
         frame("Measure 3", 1, 0),
         frame("Measure 4", 1, 1),
         frame("Measure 5", 1, 2),
