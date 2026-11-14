@@ -4832,8 +4832,9 @@
       ];
     }
 
-    // Waltz section 11A, Cascade Diagonal Line: X → | (Ariel, 11/13). Measure 1 waltz toward a straight
-    // up-and-down line through the middle, Measure 2 finish it, Measure 3 hold; Measures 4 and 5 turn
+    // Waltz section 11A, Cascade Diagonal Line: X → | (Ariel, 11/13). Measure 1 holds the X with the
+    // follows backing toward the center line, Measure 2 waltz into a straight up-and-down line through
+    // the middle, Measure 3 hold; Measures 4 and 5 turn
     // the line 1 tape counterclockwise each (22.5°), which lands it on the diagonal; Measure 6 holds,
     // and Measures 7–8 (the Rumbles) keep it. In the line, the two upper arms of the X fill the top
     // half and the two lower arms the bottom, paired by ring (outer couples at the ends, center couples
@@ -4872,9 +4873,16 @@
       const frame = (subtitle, progress, tapes) => ({
         count: end.items.length, annotation: { title, subtitle }, items: end.items.map((item) => place(item, progress, tapes)),
       });
+      // Measure 1 (Ariel, 11/14): still on the Start spots, outlines kept, every follow (violet and teal
+      // groups alike) backing toward the center line: the follow's half toward it, the lead's half
+      // pointing away ("west" left of the line, "east" right of it).
+      const measure1 = {
+        count: end.items.length, annotation: { title, subtitle: "Measure 1" },
+        items: end.items.map((item) => ({ ...structuredClone(item), facingMode: item.x < CENTER.x ? "west" : "east" })),
+      };
       return [
         { ...structuredClone(end), annotation: { title, subtitle: "Start" } },
-        frame("Measure 1", 0.5, 0),
+        measure1,
         frame("Measure 2", 1, 0),
         frame("Measure 3", 1, 0),
         frame("Measure 4", 1, 1),
