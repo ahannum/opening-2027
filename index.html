@@ -4777,6 +4777,59 @@
       ];
     }
 
+    // Waltz section 11A, Cascade Diagonal Line: X → | (Ariel, 11/13). Measure 1 waltz toward a straight
+    // up-and-down line through the middle, Measure 2 finish it, Measure 3 hold; Measures 4 and 5 turn
+    // the line 1 tape counterclockwise each (22.5°), which lands it on the diagonal; Measure 6 holds,
+    // and Measures 7–8 (the Rumbles) keep it. In the line, the two upper arms of the X fill the top
+    // half and the two lower arms the bottom, paired by ring (outer couples at the ends, center couples
+    // in the middle), the arm on the left taking the outer slot of each pair on top and the arm on
+    // the right on the bottom, so the line is the same turned half way round.
+    function xToLineSnapshots() {
+      const title = "Cascade Diagonal Line: X → |";
+      const end = spiralToXSnapshots().at(-1);
+      if (!end) return [];
+      const fix = (value) => Number(value.toFixed(3));
+      const order = { center: 0, inner: 1, middle: 2, outer: 3 };
+      const slot = new Map();
+      ["top", "bottom"].forEach((half) => {
+        const upper = half === "top";
+        end.items
+          .filter((item) => (item.y < CENTER.y) === upper)
+          .sort((a, b) => order[a.ring] - order[b.ring] || (upper ? b.x - a.x : a.x - b.x))
+          .forEach((item, index) => {
+            // As spread as the board allows: 16 couples nearly touching from top to bottom.
+            const distance = (index + 0.5) * PIECE_RADIUS * 1.92;
+            slot.set(item.number, { x: CENTER.x, y: CENTER.y + (upper ? -distance : distance) });
+          });
+      });
+      // Turned `tapes` counterclockwise on the board (22.5° a tape), `progress` of the way from the X.
+      const place = (item, progress, tapes = 0) => {
+        const target = slot.get(item.number);
+        const x0 = lerp(item.x, target.x, progress) - CENTER.x;
+        const y0 = lerp(item.y, target.y, progress) - CENTER.y;
+        const turn = (-tapes * Math.PI) / 8;
+        return {
+          ...structuredClone(item), ring: null, step: null, facingMode: "out",
+          x: fix(CENTER.x + x0 * Math.cos(turn) - y0 * Math.sin(turn)),
+          y: fix(CENTER.y + x0 * Math.sin(turn) + y0 * Math.cos(turn)),
+        };
+      };
+      const frame = (subtitle, progress, tapes) => ({
+        count: end.items.length, annotation: { title, subtitle }, items: end.items.map((item) => place(item, progress, tapes)),
+      });
+      return [
+        { ...structuredClone(end), annotation: { title, subtitle: "Start" } },
+        frame("Measure 1", 0.5, 0),
+        frame("Measure 2", 1, 0),
+        frame("Measure 3", 1, 0),
+        frame("Measure 4", 1, 1),
+        frame("Measure 5", 1, 2),
+        frame("Measure 6", 1, 2),
+        frame("Measure 7", 1, 2),
+        frame("Measure 8", 1, 2),
+      ];
+    }
+
     // Waltz section 11A, X → I (Ariel, 11/13): from 10C's X into the I, one line of all 16 couples down
     // the middle of the room, front (Honored Guests) to back, spaced like the Polka's 1 line. Couples
     // keep their front-to-back order from the X (ties left before right), so nobody crosses far.
@@ -5077,6 +5130,12 @@
         section: WALTZ,
         name: "10C · Unfurling Spiral → X",
         snapshots: spiralToXSnapshots,
+      },
+      {
+        id: "waltz-x-to-line",
+        section: WALTZ,
+        name: "11A · Cascade Diagonal Line: X → |",
+        snapshots: xToLineSnapshots,
       },
       {
         id: "waltz-x-to-i",
