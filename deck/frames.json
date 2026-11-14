@@ -1425,7 +1425,7 @@
    "id": "waltz-unfurling-spiral",
    "name": "10B · Unfurling Spiral",
    "section": "Waltz",
-   "fingerprint": "145ff7x",
+   "fingerprint": "12ik25f",
    "frames": [
     {
      "src": "waltz-unfurling-spiral/01.jpg",
@@ -1468,7 +1468,7 @@
    "id": "waltz-spiral-to-x",
    "name": "10C · Unfurling Spiral → X",
    "section": "Waltz",
-   "fingerprint": "31alpx",
+   "fingerprint": "5gjavb",
    "frames": [
     {
      "src": "waltz-spiral-to-x/01.jpg",
@@ -1488,32 +1488,50 @@
     {
      "src": "waltz-spiral-to-x/04.jpg",
      "subtitle": "Measure 3",
-     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+     "note": ""
     },
     {
      "src": "waltz-spiral-to-x/05.jpg",
      "subtitle": "Orphan 3",
-     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+     "note": ""
     },
     {
      "src": "waltz-spiral-to-x/06.jpg",
      "subtitle": "Measure 1",
-     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+     "note": ""
     },
     {
      "src": "waltz-spiral-to-x/07.jpg",
      "subtitle": "Measure 2",
-     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+     "note": ""
     },
     {
      "src": "waltz-spiral-to-x/08.jpg",
      "subtitle": "Measure 3",
-     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+     "note": ""
     },
     {
      "src": "waltz-spiral-to-x/09.jpg",
      "subtitle": "Measure 4",
-     "note": "Outline = where you end up:\nAmber: center ring\nGreen: inside circle\nBlue: ¾ circle\nRose: outside circle"
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-x-to-i",
+   "name": "11A · X → I",
+   "section": "Waltz",
+   "fingerprint": "1b1t1bs",
+   "frames": [
+    {
+     "src": "waltz-x-to-i/01.jpg",
+     "subtitle": "Start: X",
+     "note": ""
+    },
+    {
+     "src": "waltz-x-to-i/02.jpg",
+     "subtitle": "End: I",
+     "note": ""
     }
    ]
   }
