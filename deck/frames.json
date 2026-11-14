@@ -1374,14 +1374,62 @@
    ]
   },
   {
-   "id": "waltz-unfurling-spiral",
-   "name": "10 · Unfurling Spiral",
+   "id": "waltz-getting-to-spiral",
+   "name": "10A · Getting to Spiral",
    "section": "Waltz",
-   "fingerprint": "1t3fz19",
+   "fingerprint": "13dtxbb",
+   "frames": [
+    {
+     "src": "waltz-getting-to-spiral/01.jpg",
+     "subtitle": "Measure 1: Dip",
+     "note": ""
+    },
+    {
+     "src": "waltz-getting-to-spiral/02.jpg",
+     "subtitle": "Measure 2: Ride",
+     "note": ""
+    },
+    {
+     "src": "waltz-getting-to-spiral/03.jpg",
+     "subtitle": "Measure 3: Ride",
+     "note": ""
+    },
+    {
+     "src": "waltz-getting-to-spiral/04.jpg",
+     "subtitle": "Measure 4: F outside turn",
+     "note": ""
+    },
+    {
+     "src": "waltz-getting-to-spiral/05.jpg",
+     "subtitle": "Measure 5: Waltz 1 tape",
+     "note": ""
+    },
+    {
+     "src": "waltz-getting-to-spiral/06.jpg",
+     "subtitle": "Measure 6: Waltz 1 tape",
+     "note": ""
+    },
+    {
+     "src": "waltz-getting-to-spiral/07.jpg",
+     "subtitle": "Measure 7: In to ¾ circle",
+     "note": ""
+    },
+    {
+     "src": "waltz-getting-to-spiral/08.jpg",
+     "subtitle": "Measure 8: In to inside circle",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-unfurling-spiral",
+   "name": "10B · Unfurling Spiral",
+   "section": "Waltz",
+   "fingerprint": "h567o",
    "frames": [
     {
      "src": "waltz-unfurling-spiral/01.jpg",
-     "subtitle": "Start",
+     "subtitle": "Start: Orphan 3",
      "note": ""
     },
     {
