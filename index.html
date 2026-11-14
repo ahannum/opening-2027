@@ -4648,20 +4648,29 @@
         const to = k < ARM.length - 1 ? stepPosition(step + 2, ARM[k + 1]) : stepPosition(step, ring);
         return `deg:${((Math.atan2(to.y - from.y, to.x - from.x) * 180) / Math.PI).toFixed(1)}`;
       };
+      // Outline color per group, by the ring the couple ends on (Ariel, 11/13).
+      const GROUP_COLOR = { center: "amber", inner: "green", middle: "blue", outer: "rose" };
+      const finalRing = (item) => SPIRAL[((item.step % 8) + 8) % 8];
       const place = (item, ring, tapes, alongArm) => {
         const step = wrapStep(item.step + tapes * 2);
         const point = stepPosition(step, ring);
         const facingMode = alongArm ? armFacing(step, ring) : "out";
-        return { ...structuredClone(item), ring, step, facingMode, x: fix(point.x), y: fix(point.y) };
+        return {
+          ...structuredClone(item), ring, step, facingMode, groupColor: GROUP_COLOR[finalRing(item)],
+          x: fix(point.x), y: fix(point.y),
+        };
       };
       const frame = (subtitle, ringFor, tapes = 0, alongArm = false) => {
-        const items = start.items.map((item) => place(item, ringFor(SPIRAL[((item.step % 8) + 8) % 8]), tapes, alongArm));
+        const items = start.items.map((item) => place(item, ringFor(finalRing(item)), tapes, alongArm));
         return { count: items.length, annotation: { title, subtitle }, items };
       };
       const measure2 = (final) => (final === "center" || final === "inner" ? final : "middle");
       // Ariel (11/13): Measures 2–3 one tape along the line of dance, Measure 4 one more (2 in all).
       return [
-        { ...structuredClone(start), annotation: { title, subtitle: "Start" } },
+        {
+          ...structuredClone(start), annotation: { title, subtitle: "Start" },
+          items: start.items.map((item) => ({ ...structuredClone(item), groupColor: GROUP_COLOR[finalRing(item)] })),
+        },
         frame("Measure 1", () => "inner"),
         frame("Measure 2", measure2, 1),
         frame("Measure 3", measure2, 1),
