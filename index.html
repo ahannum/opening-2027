@@ -4835,7 +4835,8 @@
     // Waltz section 11A, Cascade Diagonal Line: X → | (Ariel, 11/13). Measure 1 holds the X with the
     // follows backing toward the center line, Measures 2–3 waltz into a straight up-and-down line
     // through the middle (halfway, then there; no hold in it); Measures 4 and 5 turn
-    // the line 1 tape counterclockwise each (22.5°), which lands it on the diagonal; Measure 6 holds,
+    // the line 1 tape clockwise each (22.5°), which lands it on the diagonal from the front left (14
+    // and 10, nearest the Honored Guests) to the back right (Ariel, 11/14); Measure 6 holds,
     // and Measures 7–8 (the Rumbles) keep it. In the line, the two upper arms of the X fill the top
     // half and the two lower arms the bottom, paired by ring (outer couples at the ends, center couples
     // in the middle), the arm on the left taking the outer slot of each pair on top and the arm on
@@ -4858,12 +4859,12 @@
             slot.set(item.number, { x: CENTER.x, y: CENTER.y + (upper ? -distance : distance) });
           });
       });
-      // Turned `tapes` counterclockwise on the board (22.5° a tape), `progress` of the way from the X.
+      // Turned `tapes` clockwise on the board (22.5° a tape), `progress` of the way from the X.
       const place = (item, progress, tapes = 0) => {
         const target = slot.get(item.number);
         const x0 = lerp(item.x, target.x, progress) - CENTER.x;
         const y0 = lerp(item.y, target.y, progress) - CENTER.y;
-        const turn = (-tapes * Math.PI) / 8;
+        const turn = (tapes * Math.PI) / 8;
         return {
           ...structuredClone(item), ring: null, step: null, facingMode: "out", groupColor: "neutral",
           x: fix(CENTER.x + x0 * Math.cos(turn) - y0 * Math.sin(turn)),
