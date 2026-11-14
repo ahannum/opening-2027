@@ -4669,6 +4669,10 @@
       const to = k < SPIRAL_ARM.length - 1 ? stepPosition(step + 2, SPIRAL_ARM[k + 1]) : stepPosition(step, ring);
       return `deg:${((Math.atan2(to.y - from.y, to.x - from.x) * 180) / Math.PI).toFixed(1)}`;
     }
+    // In the spiral: down the arm, but the outer group's leads back the line of dance (Ariel, 11/13).
+    function spiralFacing(step, ring) {
+      return ring === "outer" ? "ccw" : spiralArmFacing(step, ring);
+    }
     // What the outlines mean, on every frame that shows them (Ariel, 11/13).
     const SPIRAL_COLOR_NOTE = [
       "Outline = where you end up:",
@@ -4692,10 +4696,13 @@
       // Outline color per group, by the ring the couple ends on (Ariel, 11/13).
       const GROUP_COLOR = { center: "amber", inner: "green", middle: "blue", outer: "rose" };
       const finalRing = (item) => SPIRAL[((item.step % 8) + 8) % 8];
+      // `alongArm`: facing down the couple's spiral arm (from Measure 2, while still on the way to
+      // their ring), except the outermost group, whose leads back the line of dance, L on the line of
+      // dance side ("ccw") (Ariel, 11/13).
       const place = (item, ring, tapes, alongArm) => {
         const step = wrapStep(item.step + tapes * 2);
         const point = stepPosition(step, ring);
-        const facingMode = alongArm ? spiralArmFacing(step, ring) : "out";
+        const facingMode = !alongArm ? "out" : spiralFacing(step, finalRing(item));
         return {
           ...structuredClone(item), ring, step, facingMode, groupColor: GROUP_COLOR[finalRing(item)],
           x: fix(point.x), y: fix(point.y),
@@ -4716,8 +4723,8 @@
       return [
         orphan,
         frame("Measure 1", () => "inner"),
-        frame("Measure 2", measure2, 1),
-        frame("Measure 3", measure2, 1),
+        frame("Measure 2", measure2, 1, true),
+        frame("Measure 3", measure2, 1, true),
         frame("Measure 4", (final) => final, 2, true),
         frame("Measure 5", (final) => final, 2, true),
         // The whole spiral 1 tape along the line of dance (Ariel, 11/13).
@@ -4745,19 +4752,53 @@
       };
       const waltz = (tapes) => (item) => {
         const step = wrapStep(item.step + tapes * 2);
-        return at(item, step, spiralArmFacing(step, item.ring));
+        return at(item, step, spiralFacing(step, item.ring));
       };
-      const x = (item) => at(item, wrapStep(item.step + 4 + 2 + (3 - SPIRAL_ARM.indexOf(item.ring)) * 2), "out");
+      // In the X the outlines come off (Ariel, 11/13).
+      const x = (item) => ({
+        ...at(item, wrapStep(item.step + 4 + 2 + (3 - SPIRAL_ARM.indexOf(item.ring)) * 2), "out"),
+        groupColor: "neutral",
+      });
+      const xFrame = (subtitle) => {
+        const shot = frame(subtitle, x);
+        delete shot.annotation.note;
+        return shot;
+      };
       return [
         { ...structuredClone(end), annotation: { ...end.annotation, title, subtitle: "Start" } },
         frame("Measure 1", waltz(1)),
         frame("Measure 2", waltz(2)),
-        frame("Measure 3", x),
-        frame("Orphan 3", x),
-        frame("Measure 1", x),
-        frame("Measure 2", x),
-        frame("Measure 3", x),
-        frame("Measure 4", x),
+        xFrame("Measure 3"),
+        xFrame("Orphan 3"),
+        xFrame("Measure 1"),
+        xFrame("Measure 2"),
+        xFrame("Measure 3"),
+        xFrame("Measure 4"),
+      ];
+    }
+
+    // Waltz section 11A, X → I (Ariel, 11/13): from 10C's X into the I, one line of all 16 couples down
+    // the middle of the room, front (Honored Guests) to back, spaced like the Polka's 1 line. Couples
+    // keep their front-to-back order from the X (ties left before right), so nobody crosses far.
+    // Starter frames: the measure-by-measure path and the I's facing are still to come.
+    function xToISnapshots() {
+      const title = "X → I";
+      const start = spiralToXSnapshots().at(-1);
+      if (!start) return [];
+      const fix = (value) => Number(value.toFixed(3));
+      // Spot 0 is nearest the Honored Guests (bottom of the board).
+      const order = [...start.items].sort((a, b) => (b.y - a.y) || (a.x - b.x)).map((item) => item.key);
+      const i = (facingMode) => {
+        const items = start.items.map((item) => ({
+          ...structuredClone(item), ring: null, step: null, facingMode,
+          x: CENTER.x, y: fix(spreadValue(COUPLE_COUNT - 1 - order.indexOf(item.key), COUPLE_COUNT, SQUARE_MIN, SQUARE_MAX)),
+        }));
+        return { count: items.length, annotation: { title, subtitle: "End: I" }, items };
+      };
+      return [
+        { ...structuredClone(start), annotation: { title, subtitle: "Start: X" } },
+        // Leads toward the Honored Guests for now.
+        i("south"),
       ];
     }
 
@@ -5036,6 +5077,12 @@
         section: WALTZ,
         name: "10C · Unfurling Spiral → X",
         snapshots: spiralToXSnapshots,
+      },
+      {
+        id: "waltz-x-to-i",
+        section: WALTZ,
+        name: "11A · X → I",
+        snapshots: xToISnapshots,
       },
     ];
 
