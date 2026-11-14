@@ -4727,9 +4727,29 @@
         frame("Measure 3", measure2, 1, true),
         frame("Measure 4", (final) => final, 2, true),
         frame("Measure 5", (final) => final, 2, true),
-        // The whole spiral 1 tape along the line of dance (Ariel, 11/13).
-        frame("Measure 6", (final) => final, 3, true),
+        measure6(frame("Measure 6", (final) => final, 3, true)),
       ];
+    }
+    // 10B Measure 6 (Ariel, 11/14): the spiral already eases toward 10C's cross. The outer couples
+    // waltz 1 tape along the line of dance and each ring further in a quarter tape more (middle 1¼,
+    // inner 1½, center 1¾), on the same rings but off the spiral's spots; 10C's Measure 1 still snaps
+    // into the cross. `step` stays the spiral spot (1 tape on), which 10C counts from.
+    function measure6(shot) {
+      const EXTRA_TAPES = { outer: 0, middle: 0.25, inner: 0.5, center: 0.75 };
+      const fix = (value) => Number(value.toFixed(3));
+      shot.items = shot.items.map((item) => {
+        const turn = -EXTRA_TAPES[item.ring] * 2 * (360 / HALF_STEPS);
+        const angle = stepAngle(item.step) + (turn * Math.PI) / 180;
+        const radius = RING_RADII[item.ring];
+        const facingMode = item.facingMode.startsWith("deg:")
+          ? `deg:${(Number(item.facingMode.slice(4)) + turn).toFixed(1)}`
+          : item.facingMode;
+        return {
+          ...item, facingMode,
+          x: fix(CENTER.x + radius * Math.cos(angle)), y: fix(CENTER.y + radius * Math.sin(angle)),
+        };
+      });
+      return shot;
     }
 
     // Waltz section 10C, Unfurling Spiral → X (Ariel, 11/14): Measure 1 the spiral straightens into a
