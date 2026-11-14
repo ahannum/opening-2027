@@ -4756,9 +4756,8 @@
     // cross (+) on the room's axes, no more travel along the spiral; Measure 2 the cross turns 1 tape
     // along the line of dance; Measure 3 one more tape puts each arm on the room's diagonal, the X
     // (the same X as before), as couples. On Orphan 3 each couple splits side by side, square to the
-    // Honored Guests: the lead on the spot and the follow on the lead's right in the lower half of the
-    // X (to the left as the Honored Guests see it), mirrored in the upper half (the follow to the
-    // lead's east). Measures 1–4 of reaches hold the X with the couples back together, with the two
+    // Honored Guests: the lead on the spot and the follow to the lead's east, in both halves of the X,
+    // as on Measure 3. Measures 1–4 of reaches hold the X with the couples back together, with the two
     // outline groups and the north/south facing below; 11A starts from the end.
     function spiralToXSnapshots() {
       const title = "Unfurling Spiral → X";
@@ -4806,12 +4805,12 @@
       const travel = () => "cw";
       const square = () => "west";
       // The X split side by side, both facing the Honored Guests (south), the lead on the X spot and
-      // the follow one piece width to the west in the lower half, to the east in the upper half. No
+      // the follow one piece width to the east, in both halves like Measure 3 (Ariel, 11/14). No
       // outlines.
       const splitX = (subtitle) => {
         const items = end.items.flatMap((item) => {
           const spot = x(item);
-          const dx = spot.y > CENTER.y ? -1 : 1, dy = 0;
+          const dx = 1, dy = 0;
           const dancer = (role, offset) => ({
             ...spot, key: `${item.number}:${role}`, role, ring: null, step: null, facingMode: "south",
             groupColor: "neutral", x: fix(spot.x + offset * dx), y: fix(spot.y + offset * dy),
