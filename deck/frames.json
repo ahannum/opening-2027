@@ -1374,38 +1374,38 @@
    ]
   },
   {
-   "id": "waltz-unfurling-concentric-rings",
-   "name": "10 · Unfurling Concentric Rings",
+   "id": "waltz-unfurling-spiral",
+   "name": "10 · Unfurling Spiral",
    "section": "Waltz",
-   "fingerprint": "9i0gav",
+   "fingerprint": "1t3fz19",
    "frames": [
     {
-     "src": "waltz-unfurling-concentric-rings/01.jpg",
+     "src": "waltz-unfurling-spiral/01.jpg",
      "subtitle": "Start",
      "note": ""
     },
     {
-     "src": "waltz-unfurling-concentric-rings/02.jpg",
+     "src": "waltz-unfurling-spiral/02.jpg",
      "subtitle": "Measure 1",
      "note": ""
     },
     {
-     "src": "waltz-unfurling-concentric-rings/03.jpg",
+     "src": "waltz-unfurling-spiral/03.jpg",
      "subtitle": "Measure 2",
      "note": ""
     },
     {
-     "src": "waltz-unfurling-concentric-rings/04.jpg",
+     "src": "waltz-unfurling-spiral/04.jpg",
      "subtitle": "Measure 3",
      "note": ""
     },
     {
-     "src": "waltz-unfurling-concentric-rings/05.jpg",
+     "src": "waltz-unfurling-spiral/05.jpg",
      "subtitle": "Measure 4",
      "note": ""
     },
     {
-     "src": "waltz-unfurling-concentric-rings/06.jpg",
+     "src": "waltz-unfurling-spiral/06.jpg",
      "subtitle": "Measure 5",
      "note": ""
     }
