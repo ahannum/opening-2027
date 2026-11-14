@@ -4659,45 +4659,49 @@
     // step, which line up with the X's spokes, so every move is straight in or out:
     // step % 8 = 0 → center ring (spoke base), 2 → stays on the inner tape, 4 → ½ ring,
     // 6 → ½ ring, then out to the outer tape in Measure 4.
+    // Each spiral arm runs center → inner → middle → outer, 2 half steps further along per ring.
+    // `spiralArmFacing`: the lead's half points down the arm toward its outer end, so F sits next to
+    // L on the inner side of the arm (Ariel, 11/13).
+    const SPIRAL_ARM = ["center", "inner", "middle", "outer"];
+    function spiralArmFacing(step, ring) {
+      const k = SPIRAL_ARM.indexOf(ring);
+      const from = k > 0 ? stepPosition(step - 2, SPIRAL_ARM[k - 1]) : stepPosition(step, ring);
+      const to = k < SPIRAL_ARM.length - 1 ? stepPosition(step + 2, SPIRAL_ARM[k + 1]) : stepPosition(step, ring);
+      return `deg:${((Math.atan2(to.y - from.y, to.x - from.x) * 180) / Math.PI).toFixed(1)}`;
+    }
+    // What the outlines mean, on every frame that shows them (Ariel, 11/13).
+    const SPIRAL_COLOR_NOTE = [
+      "Outline = where you end up:",
+      "Amber: center ring",
+      "Green: inside circle",
+      "Blue: ¾ circle",
+      "Rose: outside circle",
+    ].join("\n");
+
     function spiralXSectionSnapshots() {
       const title = "Unfurling Spiral";
       const start = gettingToSpiralSnapshots().at(-1);
       if (!start) return [];
       const fix = (value) => Number(value.toFixed(3));
-      const SPIRAL = { 0: "center", 2: "inner", 4: "middle", 6: "outer" };
+      // Which spots start each arm, by step % 8 where Getting to Spiral ends. Ariel (11/13): center
+      // 1, 5, 9, 13; inner 4, 8, 12, 16; ½ ring 3, 7, 11, 15; outer 2, 6, 10, 14.
+      const SPIRAL = { 6: "center", 0: "inner", 2: "middle", 4: "outer" };
       // "out" puts the lead's half outward, so F sits radially in from L.
       // `tapes`: how far each couple has traveled along the line of dance (1 tape = 2 half steps).
       // Rings are still picked by where the couple started.
-      // Each spiral arm runs center → inner → middle → outer, 2 half steps further along per ring.
-      // `alongArm`: the lead's half points down the arm toward its outer end, so F sits next to L
-      // on the inner side of the arm (Ariel, 11/13).
-      const ARM = ["center", "inner", "middle", "outer"];
-      const armFacing = (step, ring) => {
-        const k = ARM.indexOf(ring);
-        const from = k > 0 ? stepPosition(step - 2, ARM[k - 1]) : stepPosition(step, ring);
-        const to = k < ARM.length - 1 ? stepPosition(step + 2, ARM[k + 1]) : stepPosition(step, ring);
-        return `deg:${((Math.atan2(to.y - from.y, to.x - from.x) * 180) / Math.PI).toFixed(1)}`;
-      };
       // Outline color per group, by the ring the couple ends on (Ariel, 11/13).
       const GROUP_COLOR = { center: "amber", inner: "green", middle: "blue", outer: "rose" };
       const finalRing = (item) => SPIRAL[((item.step % 8) + 8) % 8];
       const place = (item, ring, tapes, alongArm) => {
         const step = wrapStep(item.step + tapes * 2);
         const point = stepPosition(step, ring);
-        const facingMode = alongArm ? armFacing(step, ring) : "out";
+        const facingMode = alongArm ? spiralArmFacing(step, ring) : "out";
         return {
           ...structuredClone(item), ring, step, facingMode, groupColor: GROUP_COLOR[finalRing(item)],
           x: fix(point.x), y: fix(point.y),
         };
       };
-      // What the outlines mean, on every frame that shows them (Ariel, 11/13).
-      const COLOR_NOTE = [
-        "Outline = where you end up:",
-        "Amber: center ring",
-        "Green: inside circle",
-        "Blue: ¾ circle",
-        "Rose: outside circle",
-      ].join("\n");
+      const COLOR_NOTE = SPIRAL_COLOR_NOTE;
       const frame = (subtitle, ringFor, tapes = 0, alongArm = false) => {
         const items = start.items.map((item) => place(item, ringFor(finalRing(item)), tapes, alongArm));
         return { count: items.length, annotation: { title, subtitle, note: COLOR_NOTE }, items };
@@ -4718,6 +4722,42 @@
         frame("Measure 5", (final) => final, 2, true),
         // The whole spiral 1 tape along the line of dance (Ariel, 11/13).
         frame("Measure 6", (final) => final, 3, true),
+      ];
+    }
+
+    // Waltz section 10C, Unfurling Spiral → X, from Ariel's WIP Ground Truth table (11/13): Measures
+    // 1–2 waltz (outside turn catch), the spiral 1 tape along the line of dance each; Measure 3 waltz
+    // and unfold into the X on the room's diagonals (Ariel): each arm straightens onto the diagonal
+    // 1 tape past its outer couple, all along the line of dance (outer 1 tape, middle 2, inner 3,
+    // center 4); then Orphan 3 and Measures 1–4 of reaches hold it, leads facing out along their spoke.
+    function spiralToXSnapshots() {
+      const title = "Unfurling Spiral → X";
+      const end = spiralXSectionSnapshots().at(-1);
+      if (!end) return [];
+      const fix = (value) => Number(value.toFixed(3));
+      const at = (item, step, facingMode) => {
+        const point = stepPosition(step, item.ring);
+        return { ...structuredClone(item), step, facingMode, x: fix(point.x), y: fix(point.y) };
+      };
+      const frame = (subtitle, place) => {
+        const items = end.items.map(place);
+        return { count: items.length, annotation: { title, subtitle, note: SPIRAL_COLOR_NOTE }, items };
+      };
+      const waltz = (tapes) => (item) => {
+        const step = wrapStep(item.step + tapes * 2);
+        return at(item, step, spiralArmFacing(step, item.ring));
+      };
+      const x = (item) => at(item, wrapStep(item.step + 4 + 2 + (3 - SPIRAL_ARM.indexOf(item.ring)) * 2), "out");
+      return [
+        { ...structuredClone(end), annotation: { ...end.annotation, title, subtitle: "Start" } },
+        frame("Measure 1", waltz(1)),
+        frame("Measure 2", waltz(2)),
+        frame("Measure 3", x),
+        frame("Orphan 3", x),
+        frame("Measure 1", x),
+        frame("Measure 2", x),
+        frame("Measure 3", x),
+        frame("Measure 4", x),
       ];
     }
 
@@ -4990,6 +5030,12 @@
         section: WALTZ,
         name: "10B · Unfurling Spiral",
         snapshots: spiralXSectionSnapshots,
+      },
+      {
+        id: "waltz-spiral-to-x",
+        section: WALTZ,
+        name: "10C · Unfurling Spiral → X",
+        snapshots: spiralToXSnapshots,
       },
     ];
 
