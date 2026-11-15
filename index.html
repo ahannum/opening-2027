@@ -4761,8 +4761,8 @@
     // line of dance from there; Measure 2 one more tape puts each arm on the room's diagonal, the X
     // (the same X as before), as couples; Measure 3's turns are in place, so it holds the X. On
     // Orphan 3 each couple splits side by side, square to the
-    // Honored Guests: the lead on the spot and the follow to the lead's east, in both halves of the X,
-    // as on Measure 3. Measures 1–4 of reaches hold the X with the couples back together, with the two
+    // Honored Guests: the lead on the spot, the follow to the lead's east in the upper half and to
+    // the west in the lower half (12, 15, 14, 1 / 8, 11, 10, 13; Ariel, 11/15). Measures 1–4 of reaches hold the X with the couples back together, with the two
     // outline groups and the north/south facing below; 11A starts from the end.
     function spiralToXSnapshots() {
       const title = "Unfurling Spiral: Part 3 – Spiral → X";
@@ -4821,7 +4821,10 @@
             ...spot, key: `${item.number}:${role}`, role, ring: null, step: null, facingMode: "south",
             groupColor: "neutral", x: fix(spot.x + offset * dx), y: fix(spot.y + offset * dy),
           });
-          return [dancer("lead", 0), dancer("follow", PIECE_RADIUS * 2)];
+          // Lower half (12, 15, 14, 1 / 8, 11, 10, 13): F on the lead's left as seen on the board,
+          // to the west (Ariel, 11/15); the upper half keeps F to the east.
+          const side = UPPER.has(item.number) ? 1 : -1;
+          return [dancer("lead", 0), dancer("follow", side * PIECE_RADIUS * 2)];
         });
         return { count: items.length, annotation: { title, subtitle }, items };
       };
