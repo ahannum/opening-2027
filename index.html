@@ -4720,7 +4720,7 @@
       };
       const measure2 = (final) => (final === "center" || final === "inner" ? final : "middle");
       // Ariel (11/13): Measures 2–3 one tape along the line of dance, Measure 4 one more (2 in all),
-      // Measure 6 one more again (3).
+      // Measure 6 one more again (3), straightened into a + (Ariel, 11/15).
       // It opens on Orphan 3 on the inner tape (no group outlines yet), held through Measure 1.
       const orphan = frame("Start: Orphan 3", () => "inner");
       orphan.items.forEach((item) => { item.groupColor = "neutral"; });
@@ -4730,23 +4730,32 @@
         frame("Measure 1", () => "inner"),
         frame("Measure 2", measure2, 1, true),
         frame("Measure 3", measure2, 1, true),
-        frame("Measure 4", (final) => final, 2, true),
-        frame("Measure 5", (final) => final, 2, true),
-        measure6(frame("Measure 6", (final) => final, 3, true)),
+        easeArms(frame("Measure 4", (final) => final, 2, true), SPIRAL_EASE_TAPES),
+        easeArms(frame("Measure 5", (final) => final, 2, true), SPIRAL_EASE_TAPES),
+        easeArms(frame("Measure 6", (final) => final, 3, true), SPIRAL_PLUS_TAPES, plusFacing),
       ];
     }
-    // 10B Measure 6 (Ariel, 11/14): the spiral already eases toward 10C's cross. The outer couples
-    // waltz 1 tape along the line of dance and each ring further in a quarter tape more (middle 1¼,
-    // inner 1½, center 1¾), on the same rings but off the spiral's spots; 10C's Measure 1 still snaps
-    // into the cross. `step` stays the spiral spot (1 tape on), which 10C counts from.
-    function measure6(shot) {
-      const EXTRA_TAPES = { outer: 0, middle: 0.25, inner: 0.5, center: 0.75 };
+    // 10B Measures 4–5 (Ariel, 11/15): the spiral already eases toward the +. The outer couples stay
+    // on their spiral spots and each ring further in sits ½ tape more along the line of dance than
+    // the ring outside it (¾ circle ½, inside circle 1, center ring 1½), on the same rings but off
+    // the spiral's spots (like the old Measure 6, which eased a quarter tape a ring).
+    const SPIRAL_EASE_TAPES = { outer: 0, middle: 0.5, inner: 1, center: 1.5 };
+    // 10B Measure 6 (Ariel, 11/15): a +, everyone on it. The outer couples waltz 1 tape along the line
+    // of dance onto the room's cardinal spots and each arm lines up straight in from its outer couple
+    // (each ring further in travels 1 tape more than the ring outside it).
+    const SPIRAL_PLUS_TAPES = { outer: 0, middle: 1, inner: 2, center: 3 };
+    // On the +, down the arm is straight out from the center (F radially in from L), and the outer
+    // group's leads still back the line of dance.
+    const plusFacing = (item) => (item.ring === "outer" ? "ccw" : "out");
+    // Moves each couple `extraTapes[ring]` tapes further along the line of dance on its ring, turning
+    // an along-the-arm facing with it. `step` stays the spiral spot, which 10C counts from.
+    function easeArms(shot, extraTapes, facing) {
       const fix = (value) => Number(value.toFixed(3));
       shot.items = shot.items.map((item) => {
-        const turn = -EXTRA_TAPES[item.ring] * 2 * (360 / HALF_STEPS);
+        const turn = -extraTapes[item.ring] * 2 * (360 / HALF_STEPS);
         const angle = stepAngle(item.step) + (turn * Math.PI) / 180;
         const radius = RING_RADII[item.ring];
-        const facingMode = item.facingMode.startsWith("deg:")
+        const facingMode = facing ? facing(item) : item.facingMode.startsWith("deg:")
           ? `deg:${(Number(item.facingMode.slice(4)) + turn).toFixed(1)}`
           : item.facingMode;
         return {
