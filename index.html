@@ -4869,6 +4869,10 @@
       // The diagonal is spread out so its end couples (1 and 5) are on the square's corners, everyone
       // evenly spaced (Ariel, 11/14).
       const SPREAD = (OUTER_RADIUS * Math.SQRT2) / (7.5 * PIECE_RADIUS * 1.92);
+      // Measures 3 and 4 are drawn in so the line fits the floor square, its end couples on the
+      // square's edges: straight up and down on Measure 3, one tape turned on Measure 4 (Ariel, 11/15).
+      const FIT_STRAIGHT = OUTER_RADIUS / (7.5 * PIECE_RADIUS * 1.92);
+      const FIT_TURNED = FIT_STRAIGHT / Math.cos(Math.PI / 8);
       // Turned `tapes` clockwise on the board (22.5° a tape), `progress` of the way from the X, and
       // `spread` times as far from the center.
       const place = (item, progress, tapes = 0, spread = 1) => {
@@ -4910,8 +4914,8 @@
         // Measures 2–3 waltz into the line (halfway, then there), Measures 4–5 turn it onto the
         // diagonal (Ariel, 11/14).
         frame("Measure 2", 0.5, 0, 1, measure2Look),
-        frame("Measure 3", 1, 0, 1, forwardLook),
-        frame("Measure 4", 1, 1, 1, forwardLook),
+        frame("Measure 3", 1, 0, FIT_STRAIGHT, forwardLook),
+        frame("Measure 4", 1, 1, FIT_TURNED, forwardLook),
         frame("Measure 5", 1, 2, SPREAD, forwardLook),
         frame("Measure 6", 1, 2, SPREAD),
         frame("Measure 7", 1, 2, SPREAD),
