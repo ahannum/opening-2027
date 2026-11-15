@@ -1468,7 +1468,7 @@
    "id": "waltz-spiral-to-x",
    "name": "10C · Unfurling Spiral: Part 3 – Spiral → X",
    "section": "Waltz",
-   "fingerprint": "1ib773m",
+   "fingerprint": "190b7a6",
    "frames": [
     {
      "src": "waltz-spiral-to-x/01.jpg",
@@ -1498,22 +1498,22 @@
     {
      "src": "waltz-spiral-to-x/06.jpg",
      "subtitle": "Measure 1",
-     "note": "Outline:\nViolet: group 1 (5 2 3 16 8 11 10 13)\nTeal: group 2 (1 14 15 12 4 7 6 9)"
+     "note": "Outline:\nTeal: group 1 (1 14 15 12 4 7 6 9)\nViolet: group 2 (5 2 3 16 8 11 10 13)"
     },
     {
      "src": "waltz-spiral-to-x/07.jpg",
      "subtitle": "Measure 2",
-     "note": "Outline:\nViolet: group 1 (5 2 3 16 8 11 10 13)\nTeal: group 2 (1 14 15 12 4 7 6 9)"
+     "note": "Outline:\nTeal: group 1 (1 14 15 12 4 7 6 9)\nViolet: group 2 (5 2 3 16 8 11 10 13)"
     },
     {
      "src": "waltz-spiral-to-x/08.jpg",
      "subtitle": "Measure 3",
-     "note": "Outline:\nViolet: group 1 (5 2 3 16 8 11 10 13)\nTeal: group 2 (1 14 15 12 4 7 6 9)"
+     "note": "Outline:\nTeal: group 1 (1 14 15 12 4 7 6 9)\nViolet: group 2 (5 2 3 16 8 11 10 13)"
     },
     {
      "src": "waltz-spiral-to-x/09.jpg",
      "subtitle": "Measure 4",
-     "note": "Outline:\nViolet: group 1 (5 2 3 16 8 11 10 13)\nTeal: group 2 (1 14 15 12 4 7 6 9)"
+     "note": "Outline:\nTeal: group 1 (1 14 15 12 4 7 6 9)\nViolet: group 2 (5 2 3 16 8 11 10 13)"
     }
    ]
   },
