@@ -4673,13 +4673,14 @@
     function spiralFacing(step, ring) {
       return ring === "outer" ? "ccw" : spiralArmFacing(step, ring);
     }
-    // What the outlines mean, on every frame that shows them (Ariel, 11/13).
+    // What the outlines mean, on every frame that shows them (Ariel, 11/13). Groups 1–4 count from the
+    // center out, and the amber outline is called Yellow (Ariel, 11/15).
     const SPIRAL_COLOR_NOTE = [
       "Outline = where you end up:",
-      "Amber: center ring",
-      "Green: inside circle",
-      "Blue: ¾ circle",
-      "Rose: outside circle",
+      "Yellow: group 1, center ring",
+      "Green: group 2, inside circle",
+      "Blue: group 3, ¾ circle",
+      "Rose: group 4, outside circle",
     ].join("\n");
 
     function spiralXSectionSnapshots() {
