@@ -4781,15 +4781,16 @@
         return at(item, step, spiralFacing(step, item.ring));
       };
       // Measures 1–4 of reaches (Ariel, 11/14): two outline
-      // groups, the cross's up-down spokes (5, 2, 3, 16 / 8, 11, 10, 13) and its side spokes; and the
+      // groups, the cross's up-down spokes (5, 2, 3, 16 / 8, 11, 10, 13, violet, group 2 since 11/15)
+      // and its side spokes (teal, group 1); and the
       // upper spokes (5, 2, 3, 16 and 4, 7, 6, 9) with F facing north, the lower ones (12, 15, 14, 1
       // and 8, 11, 10, 13) F facing south ("north"/"south" name where the lead's half points).
-      const GROUP_1 = new Set([5, 2, 3, 16, 8, 11, 10, 13]);
+      const UP_DOWN = new Set([5, 2, 3, 16, 8, 11, 10, 13]);
       const UPPER = new Set([5, 2, 3, 16, 4, 7, 6, 9]);
-      const NOTE = ["Outline:", "Violet: group 1 (5 2 3 16 8 11 10 13)", "Teal: group 2 (1 14 15 12 4 7 6 9)"].join("\n");
+      const NOTE = ["Outline:", "Teal: group 1 (1 14 15 12 4 7 6 9)", "Violet: group 2 (5 2 3 16 8 11 10 13)"].join("\n");
       const look = (item) => ({
         facingMode: UPPER.has(item.number) ? "south" : "north",
-        groupColor: GROUP_1.has(item.number) ? "violet" : "teal",
+        groupColor: UP_DOWN.has(item.number) ? "violet" : "teal",
       });
       const frame = (subtitle, place) => {
         const items = end.items.map((item) => ({ ...place(item), ...look(item) }));
