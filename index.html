@@ -4731,8 +4731,8 @@
         frame("Measure 2", measure2, 1, true),
         frame("Measure 3", measure2, 1, true),
         easeArms(frame("Measure 4", (final) => final, 2, true), SPIRAL_EASE_TAPES),
-        easeArms(frame("Measure 5", (final) => final, 2, true), SPIRAL_EASE_TAPES),
-        easeArms(frame("Measure 6", (final) => final, 3, true), SPIRAL_PLUS_TAPES, plusFacing),
+        easeArms(frame("Measure 5", (final) => final, 2, true), SPIRAL_EASE_TAPES, backingLod),
+        easeArms(frame("Measure 6", (final) => final, 3, true), SPIRAL_PLUS_TAPES, backingLod),
       ];
     }
     // 10B Measures 4–5 (Ariel, 11/15): the spiral already eases toward the +. The outer couples stay
@@ -4744,9 +4744,9 @@
     // of dance onto the room's cardinal spots and each arm lines up straight in from its outer couple
     // (each ring further in travels 1 tape more than the ring outside it).
     const SPIRAL_PLUS_TAPES = { outer: 0, middle: 1, inner: 2, center: 3 };
-    // On the +, down the arm is straight out from the center (F radially in from L), and the outer
-    // group's leads still back the line of dance.
-    const plusFacing = (item) => (item.ring === "outer" ? "ccw" : "out");
+    // Measures 5–6: every follow backs the line of dance (the follow's half on the line of dance
+    // side, "cw") (Ariel, 11/16).
+    const backingLod = () => "cw";
     // Moves each couple `extraTapes[ring]` tapes further along the line of dance on its ring, turning
     // an along-the-arm facing with it. `step` stays the spiral spot, which 10C counts from.
     function easeArms(shot, extraTapes, facing) {
