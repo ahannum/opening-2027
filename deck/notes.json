@@ -1241,6 +1241,69 @@
   },
   {
    "dance": "Waltz",
+   "number": 6,
+   "part": "",
+   "title": "6 · Theme 1: Big Strings",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 1",
+     "Waltz, Waltz, 1 tape down LOD",
+     "F backing LOD",
+     ""
+    ],
+    [
+     "Measure 2",
+     "Waltz, Waltz, 1 tape down LOD",
+     "",
+     ""
+    ],
+    [
+     "Measure 3",
+     "Pivot , pivot 1 tape down LOD",
+     "",
+     ""
+    ],
+    [
+     "Measure 4",
+     "F outside turn on tape, Frame",
+     "F backing LOD",
+     ""
+    ],
+    [
+     "Measure 5",
+     "Waltz, Waltz, 1 tape down LOD",
+     "F backing LOD",
+     ""
+    ],
+    [
+     "Measure 6",
+     "Waltz, Waltz, 1 tape down LOD",
+     "",
+     ""
+    ],
+    [
+     "Measure 7",
+     "Pivot, Pivot, 1 Tape LOD",
+     "",
+     ""
+    ],
+    [
+     "Measure 8",
+     "Lead Free spin now end L / F facing each other, F facing LOD and L backing, angled slightly out",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "dance": "Waltz",
    "number": 7,
    "part": "",
    "title": "7 · Box Skit",
@@ -1643,6 +1706,201 @@
      ""
     ]
    ]
+  },
+  {
+   "dance": "Waltz",
+   "number": 10,
+   "part": "A",
+   "title": "10A · Unfurling Spiral: Part 1 – Getting to Spiral",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 0 (last measure of previous section)",
+     "123- prep for dip\n456- into dip\nOn Tape",
+     "",
+     ""
+    ],
+    [
+     "Orphan 3\n“hold-2-3”",
+     "Hold (stay in dip)",
+     "",
+     ""
+    ],
+    [
+     "Measure 1\n“hold-2-3-Up-5-6”",
+     "123- still in dip (hold)\n456 - come out of dip / prep for ride",
+     "",
+     ""
+    ],
+    [
+     "Measure 2",
+     "Ride (start and end w L facing down LOD)",
+     "Left arm up, right arm on L shoulder",
+     "L arm up"
+    ],
+    [
+     "Measure 3",
+     "Ride",
+     "",
+     ""
+    ],
+    [
+     "Measure 4\n“spin-2-3-frame-5-6”",
+     "123 F outside turn / free spin\nStaying on Tape\n456 Frame, L facing down LOD",
+     "Both arms up during spin",
+     ""
+    ],
+    [
+     "Measure 5",
+     "Waltz 1 Tape LOD on outside circle",
+     "",
+     ""
+    ],
+    [
+     "Measure 6",
+     "Waltz 1 Tape LOD on outside circle",
+     "",
+     ""
+    ],
+    [
+     "Measure 7",
+     "Waltz a little over ¾ radially in on inside (alligator)",
+     "",
+     ""
+    ],
+    [
+     "Measure 8",
+     "Waltz to inside circle directly radially inwards (alligator)",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "dance": "Waltz",
+   "number": 10,
+   "part": "B",
+   "title": "10B · Unfurling Spiral: Part 2 – Unfurling",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Orphan 3\n“1-2-down”",
+     "Inside circle, lift prep on 3",
+     "",
+     ""
+    ],
+    [
+     "Measure 1\n“up-2-3-4-5-6”",
+     "Up Down Lift 1, on Inside Circle, F facing radially outward",
+     "",
+     ""
+    ],
+    [
+     "Measure 2\n“waltz-2-3-pivot-pivot-down”",
+     "Waltz, pivot-prep\n● Yellow, Group 1: pivots are more “step step,” a shuffle to change orientation\n● Green, Group 2: feels mostly in place at first, then pivot pivot (under-rotated); L ends backing the spiral at the end of the waltz\n● Blue, Group 3: F forwarding the direction you’re waltzing on 1\n● Rose, Group 4: F forwarding the direction you’re waltzing on 1\nTip: pivots are slightly under-rotated each time to hit the necessary orientation in spiral",
+     "",
+     ""
+    ],
+    [
+     "Measure 3\n“up-2-3-4-5-6”",
+     "Up Down Lift 2, in spiral, F facing down the arm of the spiral",
+     "",
+     ""
+    ],
+    [
+     "Measure 4\n“waltz-2-3-pivot-pivot-down”",
+     "Waltz, pivot-prep\nPivots slightly under-rotated",
+     "",
+     ""
+    ],
+    [
+     "Measure 5",
+     "Up down lift 3 (ROTATING!) F starts facing down the arm of the spiral, end backing LOD.\n\nNote: This rotating lift is less than 180 degrees (~ 120 degrees, depending on your group)",
+     "",
+     ""
+    ],
+    [
+     "Measure 6",
+     "Waltz, F start backing LOD, 1 measure to transition from spiral to a “+”",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "dance": "Waltz",
+   "number": 10,
+   "part": "C",
+   "title": "10C · Unfurling Spiral: Part 3 – Spiral → X",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 1",
+     "Waltz 1 tape down LOD, F starts backing LOD as usual",
+     "",
+     ""
+    ],
+    [
+     "Measure 2",
+     "Same as above",
+     "",
+     ""
+    ],
+    [
+     "Measure 3",
+     "Arrive in X position:\n 123 F outside turn switching sides with Lead (moving more while L stay in place)\n456 Lead inside turn in place, ending in an open frame F to the right  of L",
+     "",
+     ""
+    ],
+    [
+     "Orphan 3",
+     "Prep for Call + Response\nEveryone is open frame, F to right of L",
+     "",
+     ""
+    ],
+    [
+     "Measure 1\n\nGroup 1 Calls: \"In 2 3, dip 5 6\"\nGroup 2 Calls: \"In 2 3, reorient 5 6\"",
+     "123 Everyone: F free spin in over left shoulder\n456:\n● Teal, Group 1 (1, 4, 6, 7, 9, 12, 14, 15): trust fall dip\n● Violet, Group 2 (2, 3, 5, 8, 10, 11, 13, 16): reorient",
+     "",
+     ""
+    ],
+    [
+     "Measure 2\n\nGroup 1 Calls: \"Hold 2 3, hold 5 6\"\nGroup 2 Calls: \"prep 2 down, up 5 6\"",
+     "● Teal, Group 1: 123 hold, 456 hold\n● Violet, Group 2: 12 hold, 3 prep (down), 456 up of updown lift",
+     "Left leg goes up during lift",
+     ""
+    ],
+    [
+     "Measure 3\n\nGroup 1 Calls: \"Up 2 3, Out 5 6\"\nGroup 2 Calls: \"1 2 3, Out 5 6\"",
+     "● Teal, Group 1: 123 up from dip, 456 return to F on right side of L with hand connection\n● Violet, Group 2: 123 down from up/down  lift in frame, 456 return to F on right side of L with hand connection",
+     "",
+     ""
+    ],
+    [
+     "Measure 4\n\n\"In 2 3, dip 5 6\"",
+     "Both groups: 123 F turn into L, 456 dip\n\nEnd dip:\ntorso more out directly out at audience",
+     "Arms up during spin and dip\n\nFor the dip, outside foot/foot closest to audience pointed in dip::\nGroup 1 F Foot Right is out and pointed, \nGroup 2 F Foot left is out and pointed",
+     "J hook on 1 for the free spin, then kinda track the F as they spin, and when their back is turned to you, you can catch their waist as they turn, starting to form the hold for the dip, and they’ll just keep turning into it."
+    ]
+   ]
   }
  ],
  "extras": [
@@ -1800,6 +2058,13 @@
      "url": "https://youtu.be/Zupbk7Ffn6c"
     }
    ]
+  },
+  {
+   "dance": "Waltz",
+   "number": 10,
+   "formation": "outside circle → inside circle",
+   "notes": [],
+   "links": []
   }
  ]
 }
