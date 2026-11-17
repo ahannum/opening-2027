@@ -1566,6 +1566,84 @@
    ]
   },
   {
+   "id": "waltz-line-cascade",
+   "name": "11B · Cascade Vertical Line: Cascade",
+   "section": "Waltz",
+   "fingerprint": "wdkvqf",
+   "frames": [
+    {
+     "src": "waltz-line-cascade/01.jpg",
+     "subtitle": "Start",
+     "note": "Front to back: 1, 13, 14, 10, 15, 11, 12, 8, 4, 16, 7, 3, then 6, 2, 9, 5 together"
+    },
+    {
+     "src": "waltz-line-cascade/02.jpg",
+     "subtitle": "Measure 1: Beat 1",
+     "note": "Couple 1 goes"
+    },
+    {
+     "src": "waltz-line-cascade/03.jpg",
+     "subtitle": "Measure 1: Beat 2",
+     "note": "Couple 13 goes"
+    },
+    {
+     "src": "waltz-line-cascade/04.jpg",
+     "subtitle": "Measure 1: Beat 3",
+     "note": "Couple 14 goes"
+    },
+    {
+     "src": "waltz-line-cascade/05.jpg",
+     "subtitle": "Measure 1: Beat 4",
+     "note": "Couple 10 goes"
+    },
+    {
+     "src": "waltz-line-cascade/06.jpg",
+     "subtitle": "Measure 1: Beat 5",
+     "note": "Couple 15 goes"
+    },
+    {
+     "src": "waltz-line-cascade/07.jpg",
+     "subtitle": "Measure 1: Beat 6",
+     "note": "Couple 11 goes"
+    },
+    {
+     "src": "waltz-line-cascade/08.jpg",
+     "subtitle": "Measure 2: Beat 1",
+     "note": "Couple 12 goes"
+    },
+    {
+     "src": "waltz-line-cascade/09.jpg",
+     "subtitle": "Measure 2: Beat 2",
+     "note": "Couple 8 goes"
+    },
+    {
+     "src": "waltz-line-cascade/10.jpg",
+     "subtitle": "Measure 2: Beat 3",
+     "note": "Couple 4 goes"
+    },
+    {
+     "src": "waltz-line-cascade/11.jpg",
+     "subtitle": "Measure 2: Beat 4",
+     "note": "Couple 16 goes"
+    },
+    {
+     "src": "waltz-line-cascade/12.jpg",
+     "subtitle": "Measure 2: Beat 5",
+     "note": "Couple 7 goes"
+    },
+    {
+     "src": "waltz-line-cascade/13.jpg",
+     "subtitle": "Measure 2: Beat 6",
+     "note": "Couple 3 goes"
+    },
+    {
+     "src": "waltz-line-cascade/14.jpg",
+     "subtitle": "Measure 3",
+     "note": "Group: 6, 2, 9, 5"
+    }
+   ]
+  },
+  {
    "id": "waltz-transition-to-blooms",
    "name": "12 · Transition to the blooms",
    "section": "Waltz",
