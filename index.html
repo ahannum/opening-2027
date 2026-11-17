@@ -4943,6 +4943,35 @@
       ];
     }
     const bloomsTransitionSnapshots = () => xToLineSnapshots("blooms");
+    // Waltz section 11B, Cascade (Ariel, 11/16): 3 measures in the vertical line, counted in 6. The
+    // cascade runs front to back (from the Honored Guests): one couple a beat through Measures 1–2,
+    // each colored in cascade order on its beat and staying colored; the back 4 couples go together
+    // as one group on Measure 3. What each couple does on its beat is still to come.
+    function lineCascadeSnapshots() {
+      const title = "Cascade Vertical Line: Cascade";
+      const end = xToLineSnapshots().at(-1);
+      if (!end) return [];
+      const order = [...end.items].sort((a, b) => b.y - a.y).map((item) => item.number);
+      const singles = order.slice(0, 12);
+      const group = order.slice(12);
+      const shot = (subtitle, gone, groupGoes, note) => ({
+        count: end.items.length, annotation: { title, subtitle, ...(note ? { note } : {}) },
+        items: end.items.map((item) => {
+          const index = singles.indexOf(item.number);
+          const groupColor = index >= 0 && index < gone ? `cascade${index + 1}`
+            : groupGoes && group.includes(item.number) ? "cascade16" : "neutral";
+          return { ...structuredClone(item), groupColor };
+        }),
+      });
+      const beats = singles.map((number, index) => shot(
+        `Measure ${Math.floor(index / 6) + 1}: Beat ${(index % 6) + 1}`, index + 1, false, `Couple ${number} goes`,
+      ));
+      return [
+        shot("Start", 0, false, `Front to back: ${singles.join(", ")}, then ${group.join(", ")} together`),
+        ...beats,
+        shot("Measure 3", 12, true, `Group: ${group.join(", ")}`),
+      ];
+    }
 
     // Saved configurations: ready-made stories listed in the planner and in the presenter. Each returns
     // the board snapshot for every frame, so adding one here makes it show up in both pickers.
@@ -5225,6 +5254,12 @@
         section: WALTZ,
         name: "11A · Cascade Vertical Line: X → |",
         snapshots: () => xToLineSnapshots(),
+      },
+      {
+        id: "waltz-line-cascade",
+        section: WALTZ,
+        name: "11B · Cascade Vertical Line: Cascade",
+        snapshots: lineCascadeSnapshots,
       },
       {
         id: "waltz-transition-to-blooms",
