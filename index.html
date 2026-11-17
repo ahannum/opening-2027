@@ -4857,15 +4857,15 @@
 
     // Waltz section 11A, Cascade Vertical Line: X → | (Ariel, 11/13). Measure 1 holds the X with the
     // follows backing toward the center line; Measures 2–3 waltz into an up-and-down line through
-    // the middle (halfway, then there; no hold in it); Measures 4 and 5 waltz the
-    // line 1 tape clockwise each (22.5°), onto the diagonal from the front left (nearest the Honored
-    // Guests) to the back right, spread on Measure 5 so its end couples (1 at the front, 5 at the
-    // back) are on the square's corners (Ariel, 11/14); Measure 6 holds and Measures 7–8 (the
-    // Rumbles) keep it. In the line, the two upper arms of the X fill the top half and the two lower
+    // the middle (halfway, then there; no hold in it); Measures 4–7 hold the line (Ariel, 11/16).
+    // Section 12, Transition to the blooms (`bloomsTransitionSnapshots`, Ariel, 11/16), starts from
+    // that line: Measures 1 and 2 waltz it 1 tape clockwise each (22.5°), onto the diagonal from the
+    // front left (nearest the Honored Guests) to the back right, and Measure 3 holds. The line keeps
+    // the same length as it turns, so its end couples stay on the circle (Ariel, 11/16). In the line, the two upper arms of the X fill the top half and the two lower
     // arms the bottom, paired by ring (outer couples at the ends, center couples in the middle), the
     // arm on the left taking the outer slot of each pair, so 1 is the outermost couple toward the
     // Honored Guests (Ariel, 11/14).
-    function xToLineSnapshots() {
+    function xToLineSnapshots(part) {
       const title = "Cascade Vertical Line: X → |";
       const end = spiralToXSnapshots().at(-1);
       if (!end) return [];
@@ -4883,13 +4883,9 @@
             slot.set(item.number, { x: CENTER.x, y: CENTER.y + (upper ? -distance : distance) });
           });
       });
-      // The diagonal is spread out so its end couples (1 and 5) are on the square's corners, everyone
-      // evenly spaced (Ariel, 11/14).
-      const SPREAD = (OUTER_RADIUS * Math.SQRT2) / (7.5 * PIECE_RADIUS * 1.92);
-      // Measures 3 and 4 are drawn in so the line fits the floor square, its end couples on the
-      // square's edges: straight up and down on Measure 3, one tape turned on Measure 4 (Ariel, 11/15).
-      const FIT_STRAIGHT = OUTER_RADIUS / (7.5 * PIECE_RADIUS * 1.92);
-      const FIT_TURNED = FIT_STRAIGHT / Math.cos(Math.PI / 8);
+      // The line is drawn in so its end couples sit on the outer circle, everyone evenly spaced,
+      // straight up and down and turned alike (Ariel, 11/16: the diagonal stays on the circle).
+      const FIT = OUTER_RADIUS / (7.5 * PIECE_RADIUS * 1.92);
       // Turned `tapes` clockwise on the board (22.5° a tape), `progress` of the way from the X, and
       // `spread` times as far from the center.
       const place = (item, progress, tapes = 0, spread = 1) => {
@@ -4925,20 +4921,28 @@
         count: end.items.length, annotation: { title, subtitle: "Measure 1" },
         items: end.items.map((item) => ({ ...structuredClone(item), facingMode: item.x < CENTER.x ? "west" : "east" })),
       };
+      if (part === "blooms") {
+        const blooms = "Transition to the blooms";
+        const line = frame("Start", 1, 0, FIT, forwardLook);
+        line.annotation.title = blooms;
+        return [
+          line,
+          // Measures 1–2 turn the line onto the diagonal, 1 tape each; Measure 3 holds (Ariel, 11/16).
+          { ...frame("Measure 1", 1, 1, FIT, forwardLook), annotation: { title: blooms, subtitle: "Measure 1" } },
+          { ...frame("Measure 2", 1, 2, FIT, forwardLook), annotation: { title: blooms, subtitle: "Measure 2" } },
+          { ...frame("Measure 3", 1, 2, FIT), annotation: { title: blooms, subtitle: "Measure 3" } },
+        ];
+      }
       return [
         { ...structuredClone(end), annotation: { title, subtitle: "Start" } },
         measure1,
-        // Measures 2–3 waltz into the line (halfway, then there), Measures 4–5 turn it onto the
-        // diagonal (Ariel, 11/14).
+        // Measures 2–3 waltz into the line (halfway, then there), Measures 4–7 hold it (Ariel, 11/16).
         frame("Measure 2", 0.5, 0, 1, measure2Look),
-        frame("Measure 3", 1, 0, FIT_STRAIGHT, forwardLook),
-        frame("Measure 4", 1, 1, FIT_TURNED, forwardLook),
-        frame("Measure 5", 1, 2, SPREAD, forwardLook),
-        frame("Measure 6", 1, 2, SPREAD),
-        frame("Measure 7", 1, 2, SPREAD),
-        frame("Measure 8", 1, 2, SPREAD),
+        ...["Measure 3", "Measure 4", "Measure 5", "Measure 6", "Measure 7"]
+          .map((subtitle) => frame(subtitle, 1, 0, FIT, forwardLook)),
       ];
     }
+    const bloomsTransitionSnapshots = () => xToLineSnapshots("blooms");
 
     // Saved configurations: ready-made stories listed in the planner and in the presenter. Each returns
     // the board snapshot for every frame, so adding one here makes it show up in both pickers.
@@ -5220,7 +5224,13 @@
         id: "waltz-x-to-line",
         section: WALTZ,
         name: "11A · Cascade Vertical Line: X → |",
-        snapshots: xToLineSnapshots,
+        snapshots: () => xToLineSnapshots(),
+      },
+      {
+        id: "waltz-transition-to-blooms",
+        section: WALTZ,
+        name: "12 · Transition to the blooms",
+        snapshots: bloomsTransitionSnapshots,
       },
     ];
 
