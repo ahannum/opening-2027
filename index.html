@@ -4934,6 +4934,16 @@
             named(frame("Measure 1", 1, 4, FIT, forwardLook), flowers, "Measure 1"),
           ],
           swirl: [named(frame("Start", 1, 4, FIT, forwardLook), swirl, "Start")],
+          // Section 15 is seeded in the same horizontal line (Ariel, 11/16), every other couple
+          // facing the Honored Guests the other way round: from couple 1 at the left end, the lead
+          // faces the Honored Guests (the lead's half to the north), then the follow (the lead's half
+          // to the south), and so on.
+          bombastic: (() => {
+            const line = frame("Start", 1, 4, FIT);
+            const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
+            line.items.forEach((item) => { item.facingMode = byX.indexOf(item.number) % 2 ? "south" : "north"; });
+            return [named(line, "Theme 1: Bombastic", "Start")];
+          })(),
         };
       }
       if (part === "blooms") {
@@ -4960,6 +4970,7 @@
     const bloomsTransitionSnapshots = () => xToLineSnapshots("blooms");
     const flowerBloomingSnapshots = () => xToLineSnapshots("horizontal").flowers;
     const swirlingCascadeSnapshots = () => xToLineSnapshots("horizontal").swirl;
+    const bombasticSnapshots = () => xToLineSnapshots("horizontal").bombastic;
     // Waltz section 11B, Cascade (Ariel, 11/16): 3 measures in the vertical line, counted in 6. The
     // cascade runs front to back (from the Honored Guests): one couple a beat through Measures 1–2,
     // each colored in cascade order on its beat and staying colored; the back 4 couples go together
@@ -5295,6 +5306,12 @@
         section: WALTZ,
         name: "14 · Swirling Cascade",
         snapshots: swirlingCascadeSnapshots,
+      },
+      {
+        id: "waltz-bombastic",
+        section: WALTZ,
+        name: "15 · Theme 1: Bombastic",
+        snapshots: bombasticSnapshots,
       },
     ];
 
