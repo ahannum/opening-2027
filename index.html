@@ -4855,7 +4855,7 @@
       ];
     }
 
-    // Waltz section 11A, Cascade Diagonal Line: X → | (Ariel, 11/13). Measure 1 holds the X with the
+    // Waltz section 11A, Cascade Vertical Line: X → | (Ariel, 11/13). Measure 1 holds the X with the
     // follows backing toward the center line; Measures 2–3 waltz into an up-and-down line through
     // the middle (halfway, then there; no hold in it); Measures 4 and 5 waltz the
     // line 1 tape clockwise each (22.5°), onto the diagonal from the front left (nearest the Honored
@@ -4866,7 +4866,7 @@
     // arm on the left taking the outer slot of each pair, so 1 is the outermost couple toward the
     // Honored Guests (Ariel, 11/14).
     function xToLineSnapshots() {
-      const title = "Cascade Diagonal Line: X → |";
+      const title = "Cascade Vertical Line: X → |";
       const end = spiralToXSnapshots().at(-1);
       if (!end) return [];
       const fix = (value) => Number(value.toFixed(3));
@@ -5219,7 +5219,7 @@
       {
         id: "waltz-x-to-line",
         section: WALTZ,
-        name: "11A · Cascade Diagonal Line: X → |",
+        name: "11A · Cascade Vertical Line: X → |",
         snapshots: xToLineSnapshots,
       },
     ];
