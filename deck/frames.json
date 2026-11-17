@@ -1521,7 +1521,7 @@
    "id": "waltz-x-to-line",
    "name": "11A · Cascade Vertical Line: X → |",
    "section": "Waltz",
-   "fingerprint": "17z51ly",
+   "fingerprint": "2ku50o",
    "frames": [
     {
      "src": "waltz-x-to-line/01.jpg",
@@ -1562,10 +1562,33 @@
      "src": "waltz-x-to-line/08.jpg",
      "subtitle": "Measure 7",
      "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-transition-to-blooms",
+   "name": "12 · Transition to the blooms",
+   "section": "Waltz",
+   "fingerprint": "1izvg9v",
+   "frames": [
+    {
+     "src": "waltz-transition-to-blooms/01.jpg",
+     "subtitle": "Start",
+     "note": ""
     },
     {
-     "src": "waltz-x-to-line/09.jpg",
-     "subtitle": "Measure 8",
+     "src": "waltz-transition-to-blooms/02.jpg",
+     "subtitle": "Measure 1",
+     "note": ""
+    },
+    {
+     "src": "waltz-transition-to-blooms/03.jpg",
+     "subtitle": "Measure 2",
+     "note": ""
+    },
+    {
+     "src": "waltz-transition-to-blooms/04.jpg",
+     "subtitle": "Measure 3",
      "note": ""
     }
    ]
