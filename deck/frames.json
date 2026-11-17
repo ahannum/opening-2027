@@ -1670,6 +1670,37 @@
      "note": ""
     }
    ]
+  },
+  {
+   "id": "waltz-flower-blooming",
+   "name": "13 · Flower Blooming Diagonal",
+   "section": "Waltz",
+   "fingerprint": "1mszqam",
+   "frames": [
+    {
+     "src": "waltz-flower-blooming/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "waltz-flower-blooming/02.jpg",
+     "subtitle": "Measure 1",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-swirling-cascade",
+   "name": "14 · Swirling Cascade",
+   "section": "Waltz",
+   "fingerprint": "qfxbn4",
+   "frames": [
+    {
+     "src": "waltz-swirling-cascade/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    }
+   ]
   }
  ]
 }
