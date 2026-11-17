@@ -4857,7 +4857,8 @@
 
     // Waltz section 11A, Cascade Vertical Line: X → | (Ariel, 11/13). Measure 1 holds the X with the
     // follows backing toward the center line; Measures 2–3 waltz into an up-and-down line through
-    // the middle (halfway, then there; no hold in it); Measures 4–7 hold the line (Ariel, 11/16).
+    // the middle (halfway, then there; no hold in it). Measures 4–6 split each couple facing the
+    // Honored Guests (L behind F, side steps, a crossing gallop) and Measure 7 rejoins the line (11/17).
     // Section 12, Transition to the blooms (`bloomsTransitionSnapshots`, Ariel, 11/16), starts from
     // that line: Measures 1 and 2 waltz it 1 tape clockwise each (22.5°), onto the diagonal from the
     // front left (nearest the Honored Guests) to the back right, and Measure 3 holds. The line keeps
@@ -4958,13 +4959,32 @@
           { ...frame("Measure 3", 1, 2, FIT), annotation: { title: blooms, subtitle: "Measure 3" } },
         ];
       }
+      // Measures 4–6 (Ariel, 11/17): the couples split, everyone facing the Honored Guests. Measure 4,
+      // F turns and L slots in behind (upstage), a little to L's left so the tokens only overlap a
+      // little; Measure 5, L steps to their left (east) and F to their right (west); Measure 6, each
+      // gallops a bigger step the other way, so they pass; Measure 7, a small gallop back joins them
+      // into the couples line again. `side` is L's offset east of the line in piece radii (F mirrors
+      // it), and the pair keeps the line spot's middle, L a quarter couple-spacing behind, F in front.
+      const line = frame("Measure 3", 1, 0, FIT, forwardLook);
+      const gap = PIECE_RADIUS * 1.92 * FIT;
+      const split = (subtitle, side) => ({
+        count: line.items.length * 2, annotation: { title, subtitle },
+        items: line.items.flatMap((couple) => [["lead", 1, -1], ["follow", -1, 1]].map(([role, east, down]) => ({
+          key: `${couple.number}:${role}`, number: couple.number, role, ring: null, step: null,
+          facingMode: "south", displayMode: "leadFollow", groupColor: "neutral",
+          x: fix(couple.x + east * side * PIECE_RADIUS), y: fix(couple.y + (down * gap) / 4),
+        }))),
+      });
       return [
         { ...structuredClone(end), annotation: { title, subtitle: "Start" } },
         measure1,
-        // Measures 2–3 waltz into the line (halfway, then there), Measures 4–7 hold it (Ariel, 11/16).
+        // Measures 2–3 waltz into the line (halfway, then there).
         frame("Measure 2", 0.5, 0, 1, measure2Look),
-        ...["Measure 3", "Measure 4", "Measure 5", "Measure 6", "Measure 7"]
-          .map((subtitle) => frame(subtitle, 1, 0, FIT, forwardLook)),
+        line,
+        split("Measure 4", 0.8),
+        split("Measure 5", 1.4),
+        split("Measure 6", -1.7),
+        frame("Measure 7", 1, 0, FIT, forwardLook),
       ];
     }
     const bloomsTransitionSnapshots = () => xToLineSnapshots("blooms");
