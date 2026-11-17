@@ -4921,6 +4921,21 @@
         count: end.items.length, annotation: { title, subtitle: "Measure 1" },
         items: end.items.map((item) => ({ ...structuredClone(item), facingMode: item.x < CENTER.x ? "west" : "east" })),
       };
+      // Sections 13 and 14 are seeded in the horizontal line (Ariel, 11/16): 13 starts from 12's
+      // diagonal and turns 2 more tapes onto the horizontal line, ends still on the circle; 14 starts
+      // there. Their choreography is still to come.
+      if (part === "horizontal") {
+        const flowers = "Flower Blooming Diagonal";
+        const swirl = "Swirling Cascade";
+        const named = (shot, title, subtitle) => ({ ...shot, annotation: { title, subtitle } });
+        return {
+          flowers: [
+            named(frame("Start", 1, 2, FIT), flowers, "Start"),
+            named(frame("Measure 1", 1, 4, FIT, forwardLook), flowers, "Measure 1"),
+          ],
+          swirl: [named(frame("Start", 1, 4, FIT, forwardLook), swirl, "Start")],
+        };
+      }
       if (part === "blooms") {
         const blooms = "Transition to the blooms";
         const line = frame("Start", 1, 0, FIT, forwardLook);
@@ -4943,6 +4958,8 @@
       ];
     }
     const bloomsTransitionSnapshots = () => xToLineSnapshots("blooms");
+    const flowerBloomingSnapshots = () => xToLineSnapshots("horizontal").flowers;
+    const swirlingCascadeSnapshots = () => xToLineSnapshots("horizontal").swirl;
     // Waltz section 11B, Cascade (Ariel, 11/16): 3 measures in the vertical line, counted in 6. The
     // cascade runs front to back (from the Honored Guests): one couple a beat through Measures 1–2,
     // each colored in cascade order on its beat and staying colored; the back 4 couples go together
@@ -5266,6 +5283,18 @@
         section: WALTZ,
         name: "12 · Transition to the blooms",
         snapshots: bloomsTransitionSnapshots,
+      },
+      {
+        id: "waltz-flower-blooming",
+        section: WALTZ,
+        name: "13 · Flower Blooming Diagonal",
+        snapshots: flowerBloomingSnapshots,
+      },
+      {
+        id: "waltz-swirling-cascade",
+        section: WALTZ,
+        name: "14 · Swirling Cascade",
+        snapshots: swirlingCascadeSnapshots,
       },
     ];
 
