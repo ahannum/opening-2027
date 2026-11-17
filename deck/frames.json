@@ -1701,6 +1701,19 @@
      "note": ""
     }
    ]
+  },
+  {
+   "id": "waltz-bombastic",
+   "name": "15 · Theme 1: Bombastic",
+   "section": "Waltz",
+   "fingerprint": "16hf7f",
+   "frames": [
+    {
+     "src": "waltz-bombastic/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    }
+   ]
   }
  ]
 }
