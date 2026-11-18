@@ -5005,10 +5005,25 @@
     // as one group on Measure 3. What each couple does on its beat is still to come.
     function lineCascadeSnapshots() {
       const title = "Cascade Vertical Line: Cascade";
-      const end = xToLineSnapshots().at(-1);
-      if (!end) return [];
-      // The line is single file (L and F apart), so each couple is counted once, by its F.
-      const order = [...new Set([...end.items].sort((a, b) => b.y - a.y).map((item) => item.number))];
+      const last = xToLineSnapshots().at(-1);
+      if (!last) return [];
+      // 11A ends single file, L and F apart; here each couple is drawn as one piece again, midway
+      // between its L and F, F toward the Honored Guests (the lead's half to the north), so the
+      // cascade reads couple by couple (Ariel, 11/17).
+      const couples = new Map();
+      last.items.forEach((item) => {
+        const couple = couples.get(item.number);
+        if (couple) {
+          couple.y = Number(((couple.y + item.y) / 2).toFixed(3));
+          return;
+        }
+        couples.set(item.number, {
+          key: String(item.number), number: item.number, role: "couple", ring: null, step: null,
+          facingMode: "north", displayMode: "leadFollow", groupColor: "neutral", x: item.x, y: item.y,
+        });
+      });
+      const end = { ...last, count: couples.size, items: [...couples.values()] };
+      const order = [...end.items].sort((a, b) => b.y - a.y).map((item) => item.number);
       const singles = order.slice(0, 12);
       const group = order.slice(12);
       const shot = (subtitle, gone, groupGoes, note) => ({
