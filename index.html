@@ -4857,9 +4857,9 @@
 
     // Waltz section 11A, Cascade Vertical Line: X → | (Ariel, 11/13). Measure 1 holds the X with the
     // follows backing toward the center line; Measures 2–3 waltz into an up-and-down line through
-    // the middle (halfway, then there; no hold in it). Measure 4 turns each couple F toward the
-    // Honored Guests, Measures 5–6 separate L and F side by side (then swap sides) and Measure 7
-    // gallops back together into the line (11/17).
+    // the middle (halfway, then there; no hold in it). Measure 4 puts everyone in one straight
+    // vertical line (F in front of L), Measures 5–6 separate L and F side by side (then swap sides)
+    // and Measure 7 joins each couple again, F toward the Honored Guests (11/17).
     // Section 12, Transition to the blooms (`bloomsTransitionSnapshots`, Ariel, 11/16), starts from
     // that line: Measures 1 and 2 waltz it 1 tape clockwise each (22.5°), onto the diagonal from the
     // front left (nearest the Honored Guests) to the back right, and Measure 3 holds. The line keeps
@@ -4961,21 +4961,25 @@
         ];
       }
       // Measures 4–7 (Ariel, 11/17), everyone facing the Honored Guests. Measure 4, F turns and L slots
-      // in behind: still a pair on its line spot, F in front, closer to the Honored Guests (the lead's
-      // half to the north). Measures 5–6 separate L and F side by side at the line spot's height:
-      // Measure 5, L steps to their left and F to their right, so from the Honored Guests L is on the
-      // right and F on the left; Measure 6, a bigger gallop the other way, so they swap sides, further
-      // apart. Measure 7, a small gallop back together into the couples line.
-      // `side` is how far L stands east of the line, in piece radii (F mirrors it to the west).
-      const turned = (facingMode) => () => ({ facingMode });
-      const apart = (subtitle, side) => {
+      // in behind: everyone in one straight vertical line, each F a quarter of the couple spacing in
+      // front of their spot (toward the Honored Guests) and their L a quarter behind it. Measures 5–6
+      // separate L and F side by side at the spot's height, a little apart: Measure 5, L steps to
+      // their left and F to their right, so from the Honored Guests L is on the right and F on the
+      // left; Measure 6, a bigger gallop the other way, so they swap sides into the same spots, L and F
+      // flip-flopped. Measure 7, a small gallop
+      // back together: each couple a pair on its spot, F in front, closer to the Honored Guests (the
+      // lead's half to the north). `east` is how far L stands east of the line, in piece radii (F
+      // mirrors it to the west); `behind` is how far L stands behind the spot, in couple spacings (F
+      // mirrors it in front).
+      const gap = PIECE_RADIUS * 1.92 * FIT;
+      const separate = (subtitle, east, behind) => {
         const line = frame(subtitle, 1, 0, FIT);
         return {
           count: line.items.length * 2, annotation: { title, subtitle },
-          items: line.items.flatMap((couple) => [["lead", 1], ["follow", -1]].map(([role, east]) => ({
+          items: line.items.flatMap((couple) => [["lead", 1], ["follow", -1]].map(([role, sign]) => ({
             key: `${couple.number}:${role}`, number: couple.number, role, ring: null, step: null,
             facingMode: "south", displayMode: "leadFollow", groupColor: "neutral",
-            x: fix(couple.x + east * side * PIECE_RADIUS), y: couple.y,
+            x: fix(couple.x + sign * east * PIECE_RADIUS), y: fix(couple.y - sign * behind * gap),
           }))),
         };
       };
@@ -4985,10 +4989,10 @@
         // Measures 2–3 waltz into the line (halfway, then there).
         frame("Measure 2", 0.5, 0, 1, measure2Look),
         frame("Measure 3", 1, 0, FIT, forwardLook),
-        frame("Measure 4", 1, 0, FIT, turned("north")),
-        apart("Measure 5", 1.1),
-        apart("Measure 6", -2),
-        frame("Measure 7", 1, 0, FIT, forwardLook),
+        separate("Measure 4", 0, 0.25),
+        separate("Measure 5", 1.05, 0),
+        separate("Measure 6", -1.05, 0),
+        frame("Measure 7", 1, 0, FIT, () => ({ facingMode: "north" })),
       ];
     }
     const bloomsTransitionSnapshots = () => xToLineSnapshots("blooms");
