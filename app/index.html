@@ -918,8 +918,10 @@
     const guestTurn = () => GUEST_TURNS[store.get("guestSide", "south")] ?? 0;
     function orientBoard(root) {
       const shown = root?.querySelector("svg");
+      if (!shown || shown.querySelector(":scope > .guest-turn")) return;
       const angle = guestTurn();
-      if (!shown || !angle || shown.querySelector(":scope > .guest-turn")) return;
+      orientNumbers(shown, angle);
+      if (!angle) return;
       const turn = document.createElementNS("http://www.w3.org/2000/svg", "g");
       turn.setAttribute("class", "guest-turn");
       turn.setAttribute("transform", `rotate(${angle} ${BOARD_CENTER} ${BOARD_CENTER})`);
@@ -931,6 +933,39 @@
           text.setAttribute("transform", `rotate(180 ${text.getAttribute("x")} ${Number(text.getAttribute("y")) - 6})`);
         });
       }
+    }
+    // Numbers read the right way up on screen whichever side the Honored Guests are on, and dancers on
+    // a ring turn theirs with the circle: near the bottom just tilted (the top toward the center), at
+    // the sides turned on their side, and across the top half the top points outward, so none is ever
+    // upside down. Frames where a number's turn shows which way the dancer faces (Waltz Happy Lines
+    // from Measure 7: upright, upside down or sideways) keep the planner's numbers and turn them with
+    // the floor, so they still face the same way relative to the Honored Guests.
+    const NUMBER_RINGS = [282, 246.5, 211, 175.5, 140, 70];   // the planner's ring radii (outer … center)
+    function orientNumbers(shown, angle) {
+      const pieces = [...shown.querySelectorAll(".piece")];
+      if (pieces.some((piece) => piece.querySelector("text[transform]"))) return;
+      const deg = Math.PI / 180, center = 360;   // the board is 720 × 720, centered on the circle
+      const turn = angle * deg;
+      pieces.forEach((piece) => {
+        const spot = piecePosition(piece);
+        if (!spot) return;
+        // Where the dancer is on screen, after the floor turns for the Honored Guests.
+        const dx = spot.x - center, dy = spot.y - center;
+        const sx = dx * Math.cos(turn) - dy * Math.sin(turn);
+        const sy = dx * Math.sin(turn) + dy * Math.cos(turn);
+        const r = Math.hypot(sx, sy);
+        let tilt = 0;
+        if (NUMBER_RINGS.some((ring) => Math.abs(ring - r) < 6)) {
+          // Degrees clockwise from straight down to the dancer: 0 bottom, 90 left, ±180 top, −90 right.
+          const around = Math.atan2(-sx, sy) / deg;
+          tilt = Math.abs(around) <= 90 ? around : around - Math.sign(around) * 180;
+        }
+        const spin = Math.round(tilt - angle);
+        if (!(((spin % 360) + 360) % 360)) return;
+        piece.querySelectorAll("text").forEach((text) => {
+          text.setAttribute("transform", `rotate(${spin} ${text.getAttribute("x") || 0} ${text.getAttribute("y") || 0})`);
+        });
+      });
     }
     document.querySelectorAll('input[name="guestSide"]').forEach((input) => input.addEventListener("change", () => {
       store.set("guestSide", input.value);
