@@ -751,6 +751,15 @@
         </div>
       </fieldset>
       <fieldset>
+        <legend>Honored Guests side</legend>
+        <div class="segmented" style="--options: 4">
+          <label><input type="radio" name="guestSide" value="north"><span>North</span></label>
+          <label><input type="radio" name="guestSide" value="south"><span>South</span></label>
+          <label><input type="radio" name="guestSide" value="east"><span>East</span></label>
+          <label><input type="radio" name="guestSide" value="west"><span>West</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
         <legend>Dot size</legend>
         <div class="segmented" style="--options: 4">
           <label><input type="radio" name="dotSize" value="0.85"><span>Small</span></label>
@@ -860,6 +869,8 @@
     function syncSettingsForm() {
       const theme = store.get("theme", "auto");
       document.querySelectorAll('input[name="theme"]').forEach((input) => { input.checked = input.value === theme; });
+      const side = store.get("guestSide", "south");
+      document.querySelectorAll('input[name="guestSide"]').forEach((input) => { input.checked = input.value === side; });
       for (const name of ["numberSize", "dotSize"]) {
         const value = store.get(name, "1");
         document.querySelectorAll(`input[name="${name}"]`).forEach((input) => { input.checked = input.value === value; });
@@ -898,7 +909,42 @@
       store.set(input.name, input.value);
       applyLook();
     }));
+    // ---------- Honored Guests side (saved on this device) ----------
+    // The planner draws every frame with the Honored Guests at the bottom (south). Choosing another
+    // side turns the whole floor (guides, dancers, their facing numbers and the travel arrows) around
+    // the center, so every formation keeps its place relative to the Honored Guests. The frame's
+    // corner heading and note stay put, and the "Honored Guests" label stays readable.
+    const GUEST_TURNS = { south: 0, west: 90, north: 180, east: -90 };
+    const guestTurn = () => GUEST_TURNS[store.get("guestSide", "south")] ?? 0;
+    function orientBoard(root) {
+      const shown = root?.querySelector("svg");
+      const angle = guestTurn();
+      if (!shown || !angle || shown.querySelector(":scope > .guest-turn")) return;
+      const turn = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      turn.setAttribute("class", "guest-turn");
+      turn.setAttribute("transform", `rotate(${angle} ${BOARD_CENTER} ${BOARD_CENTER})`);
+      [...shown.children].filter((el) => el.id !== "annotations" && el.tagName.toLowerCase() !== "style").forEach((el) => turn.append(el));
+      shown.insertBefore(turn, shown.querySelector(":scope > #annotations"));
+      // Upside down at the top otherwise; East and West read along their edge as they are.
+      if (angle === 180) {
+        shown.querySelectorAll(".guest-text").forEach((text) => {
+          text.setAttribute("transform", `rotate(180 ${text.getAttribute("x")} ${Number(text.getAttribute("y")) - 6})`);
+        });
+      }
+    }
+    document.querySelectorAll('input[name="guestSide"]').forEach((input) => input.addEventListener("change", () => {
+      store.set("guestSide", input.value);
+      applyLook();
+      renderList();
+      if (current?.frames) showFrame();
+    }));
+
     $("#resetColors").addEventListener("click", () => {
+      if (store.get("guestSide", "south") !== "south") {
+        store.set("guestSide", "south");
+        renderList();
+        if (current?.frames) showFrame();
+      }
       store.set("numberSize", "1");
       store.set("dotSize", "1");
       store.set("leadColor", DEFAULT_COLORS.lead);
@@ -1395,6 +1441,7 @@
       const thumb = card.querySelector(".thumb");
       thumb.classList.add("board");
       thumb.innerHTML = frames[0].svg;
+      orientBoard(thumb);
       card.querySelector(".meta").textContent = `${frames.length} frame${frames.length === 1 ? "" : "s"}`;
     }
 
@@ -1533,6 +1580,7 @@
       const { frames, frameIndex, ids, storyIndex } = current;
       const frame = frames[frameIndex];
       board.innerHTML = frame.svg;
+      orientBoard(board);
       // A frame can opt out of arrows (planner annotation `noArrows`).
       if (showArrows && !frame.noArrows) drawArrows(nextFrameSvg());
       board.setAttribute("aria-label", `${frame.title} — ${frame.subtitle || `frame ${frameIndex + 1}`}`);
@@ -1647,7 +1695,8 @@
       // One layer over every dot, so a neighbor's dot never covers an arrow.
       const layer = document.createElementNS(NS, "g");
       layer.setAttribute("class", "travel-arrows");
-      shown.append(layer);
+      // Inside the turned floor when the Honored Guests aren't south, so arrows turn with the dots.
+      (shown.querySelector(":scope > .guest-turn") || shown).append(layer);
       shown.querySelectorAll(".piece").forEach((piece) => {
         const from = piecePosition(piece);
         if (!from) return;

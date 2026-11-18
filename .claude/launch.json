@@ -11,6 +11,12 @@
       "name": "planner-running",
       "url": "http://localhost:8000",
       "port": 8000
+    },
+    {
+      "name": "planner-alt",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8017", "--directory", "/Users/ariel/Documents/GitHub/opening-2027"],
+      "port": 8017
     }
   ]
 }
