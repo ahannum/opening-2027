@@ -5104,11 +5104,12 @@
         named("Measure 4", couples(false).map((couple) => ({
           ...couple, facingMode: order.indexOf(couple.number) % 2 ? "west" : "east",
         })), "1–3 hold; 4–6 F turns in, on the side they went out"),
-        // Reoriented side-on in frame: F on the left of the line (the lead's half east), except 6 and 9,
-        // whose F turn the other way, onto the right (Ariel, 11/18).
+        // Reoriented side-on in frame, as at the start of 12: the upper half (away from the Honored
+        // Guests) L on the left and F on the right, the lower half F on the left and L on the right.
+        // 6 and 9's F turn the other way to get there (Ariel, 11/18).
         named("Measure 5", couples(false).map((couple) => ({
-          ...couple, facingMode: [6, 9].includes(couple.number) ? "west" : "east",
-        })), "1–3 frame; 4–6 reorient (6 and 9 F turn the other way)"),
+          ...couple, facingMode: couple.y < CENTER.y ? "west" : "east",
+        })), "1–3 frame; 4–6 reorient: top half L left, bottom half F left"),
       ];
     }
 
