@@ -5026,22 +5026,69 @@
       const order = [...end.items].sort((a, b) => b.y - a.y).map((item) => item.number);
       const singles = order.slice(0, 12);
       const group = order.slice(12);
-      const shot = (subtitle, gone, groupGoes, note) => ({
+      // On Measure 2, Beat 6 the back 4 couples (6, 2, 9, 5) step a little to the right (east, the
+      // Honored Guests' right) and stay there for Measure 3, where they go as the purple group
+      // (Ariel, 11/18).
+      const GROUP_SHIFT = PIECE_RADIUS * 0.6;
+      const shot = (subtitle, gone, groupGoes, note, groupShifted = false) => ({
         count: end.items.length, annotation: { title, subtitle, ...(note ? { note } : {}) },
         items: end.items.map((item) => {
           const index = singles.indexOf(item.number);
+          const inGroup = group.includes(item.number);
           const groupColor = index >= 0 && index < gone ? `cascade${index + 1}`
-            : groupGoes && group.includes(item.number) ? "cascade16" : "neutral";
-          return { ...structuredClone(item), groupColor };
+            : groupGoes && inGroup ? "cascade16" : "neutral";
+          const x = groupShifted && inGroup ? Number((item.x + GROUP_SHIFT).toFixed(3)) : item.x;
+          return { ...structuredClone(item), groupColor, x };
         }),
       });
       const beats = singles.map((number, index) => shot(
-        `Measure ${Math.floor(index / 6) + 1}: Beat ${(index % 6) + 1}`, index + 1, false, `Couple ${number} goes`,
+        `Measure ${Math.floor(index / 6) + 1}: Beat ${(index % 6) + 1}`, index + 1, false,
+        index === singles.length - 1 ? `Couple ${number} goes; ${group.join(", ")} step a little to the right` : `Couple ${number} goes`,
+        index === singles.length - 1,
       ));
       return [
         shot("Start", 0, false, `Front to back: ${singles.join(", ")}, then ${group.join(", ")} together`),
         ...beats,
-        shot("Measure 3", 12, true, `Group: ${group.join(", ")}`),
+        shot("Measure 3", 12, true, `Group: ${group.join(", ")}`, true),
+      ];
+    }
+
+    // Waltz section 11C, Cascade Vertical Line: Send Out (Ariel, 11/18). Starts where 11B ends.
+    // Measure 1 is the Bom from 11B. Measure 2: up on 1–3, and on 4–6 F turns out to a send out,
+    // every other F to the opposite side down the line, front to back from the Honored Guests (1 to
+    // the left, 13 to the right, …, so 6 and 9 go left and 2 and 5 go right), while the leads make
+    // one straight center line (the back 4 step back in from 11B's shift). Measure 3: F arm, then hold.
+    // Measure 4: hold, then F turns in, back to their lead. Measure 5: frame, reorient. Measures 6–8
+    // (waltz) are still to come.
+    function lineSendOutSnapshots() {
+      const title = "Cascade Vertical Line: Send Out";
+      const last = lineCascadeSnapshots().at(-1);
+      if (!last) return [];
+      const fix = (value) => Number(value.toFixed(3));
+      const order = [...last.items].sort((a, b) => b.y - a.y).map((item) => item.number);
+      // Arm's length out from the lead, in piece radii.
+      const OUT = 2.6;
+      const named = (subtitle, items, note) => ({
+        count: items.length, annotation: { title, subtitle, ...(note ? { note } : {}) }, items,
+      });
+      const couples = (colored) => last.items.map((item) => ({
+        ...structuredClone(item), x: CENTER.x, ...(colored ? {} : { groupColor: "neutral" }),
+      }));
+      const sentOut = () => last.items.flatMap((item) => {
+        const side = order.indexOf(item.number) % 2 ? 1 : -1;
+        return [["lead", 0], ["follow", side * OUT]].map(([role, out]) => ({
+          key: `${item.number}:${role}`, number: item.number, role, ring: null, step: null,
+          facingMode: "south", displayMode: "leadFollow", groupColor: "neutral",
+          x: fix(CENTER.x + out * PIECE_RADIUS), y: item.y,
+        }));
+      });
+      return [
+        named("Start", structuredClone(last.items)),
+        named("Measure 1", structuredClone(last.items), "Bom (from 11B)"),
+        named("Measure 2", sentOut(), "1–3 up; 4–6 F turns out, every other side; L make one center line"),
+        named("Measure 3", sentOut(), "1–3 F arm; 4–6 hold"),
+        named("Measure 4", couples(false), "1–3 hold; 4–6 F turns in"),
+        named("Measure 5", couples(false), "1–3 frame; 4–6 reorient"),
       ];
     }
 
@@ -5332,6 +5379,12 @@
         section: WALTZ,
         name: "11B · Cascade Vertical Line: Cascade",
         snapshots: lineCascadeSnapshots,
+      },
+      {
+        id: "waltz-line-send-out",
+        section: WALTZ,
+        name: "11C · Cascade Vertical Line: Send Out",
+        snapshots: lineSendOutSnapshots,
       },
       {
         id: "waltz-transition-to-blooms",
