@@ -1756,6 +1756,7 @@
       }
 
       pieceLayer.append(group);
+      markFacing(token);
       updateTokenColor(token);
       updateFacingAway(token);
       setTokenPosition(token, x, y);
@@ -1795,7 +1796,15 @@
       if (token.pairParts) updatePairParts(token);
     }
 
+    // The phone player keeps a dancer's number upright when they stand square to the Honored Guests
+    // (facing north, south, east or west) and only tilts it around the ring otherwise.
+    function markFacing(token) {
+      if (token.facingMode) token.group.setAttribute("data-facing", token.facingMode);
+      else token.group.removeAttribute("data-facing");
+    }
+
     function updateCoupleHalf(token) {
+      markFacing(token);
       if (!token.blackHalf) return;
       token.group.classList.toggle("partner-symbol", token.displayMode === "partner");
       token.group.classList.toggle("lead-follow-symbol", token.displayMode !== "partner");
@@ -5058,7 +5067,8 @@
     // every other F to the opposite side down the line, front to back from the Honored Guests (1 to
     // the left, 13 to the right, …, so 6 and 9 go left and 2 and 5 go right), while the leads make
     // one straight center line (the back 4 step back in from 11B's shift). Measure 3: F arm, then hold.
-    // Measure 4: hold, then F turns in, back to their lead. Measure 5: frame, reorient. Measures 6–8
+    // Measure 4: hold, then F turns in, back to their lead. Measure 5: frame, reorient side-on, F on
+    // the left except 6 and 9 (F on the right). Measures 6–8
     // (waltz) are still to come.
     function lineSendOutSnapshots() {
       const title = "Cascade Vertical Line: Send Out";
@@ -5088,7 +5098,11 @@
         named("Measure 2", sentOut(), "1–3 up; 4–6 F turns out, every other side; L make one center line"),
         named("Measure 3", sentOut(), "1–3 F arm; 4–6 hold"),
         named("Measure 4", couples(false), "1–3 hold; 4–6 F turns in"),
-        named("Measure 5", couples(false), "1–3 frame; 4–6 reorient"),
+        // Reoriented side-on in frame: F on the left of the line (the lead's half east), except 6 and 9,
+        // whose F turn the other way, onto the right (Ariel, 11/18).
+        named("Measure 5", couples(false).map((couple) => ({
+          ...couple, facingMode: [6, 9].includes(couple.number) ? "west" : "east",
+        })), "1–3 frame; 4–6 reorient (6 and 9 F turn the other way)"),
       ];
     }
 
@@ -5439,7 +5453,7 @@
     }
 
     // A short hash of a story's frames (plus how they're drawn), so a saved copy can tell it's out of date.
-    const PRESET_RENDER_VERSION = 4;
+    const PRESET_RENDER_VERSION = 5;
     // The board's styles, as the phone player gets them (see the board-style block in the head).
     const boardCss = () => document.querySelector("#board-style").textContent;
     // Changes whenever a story's frames would look different: its name, its positions or the board's styles.

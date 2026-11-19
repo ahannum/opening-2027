@@ -935,7 +935,7 @@
       }
     }
     // Numbers read the right way up on screen whichever side the Honored Guests are on, and dancers on
-    // a ring turn theirs with the circle: near the bottom just tilted (the top toward the center), at
+    // a ring (unless they stand square to the Honored Guests) turn theirs with the circle: near the bottom just tilted (the top toward the center), at
     // the sides turned on their side, and across the top half the top points outward, so none is ever
     // upside down. Frames where a number's turn shows which way the dancer faces (Waltz Happy Lines
     // from Measure 7: upright, upside down or sideways) keep the planner's numbers and turn them with
@@ -946,6 +946,13 @@
       if (pieces.some((piece) => piece.querySelector("text[transform]"))) return;
       const deg = Math.PI / 180, center = 360;   // the board is 720 × 720, centered on the circle
       const turn = angle * deg;
+      const onRing = (piece) => {
+        const spot = piecePosition(piece);
+        return spot && NUMBER_RINGS.some((ring) => Math.abs(ring - Math.hypot(spot.x - center, spot.y - center)) < 6);
+      };
+      // Only a frame that's mostly on the circle tilts (not a few dancers on the way between shapes
+      // who happen to cross a ring).
+      const circle = pieces.filter(onRing).length * 2 >= pieces.length;
       pieces.forEach((piece) => {
         const spot = piecePosition(piece);
         if (!spot) return;
@@ -953,9 +960,11 @@
         const dx = spot.x - center, dy = spot.y - center;
         const sx = dx * Math.cos(turn) - dy * Math.sin(turn);
         const sy = dx * Math.sin(turn) + dy * Math.cos(turn);
-        const r = Math.hypot(sx, sy);
+        // Square to the Honored Guests (facing north, south, east or west, as in the X or the lines):
+        // upright, even when the spot happens to sit on a ring.
+        const square = ["north", "south", "east", "west"].includes(piece.getAttribute("data-facing"));
         let tilt = 0;
-        if (NUMBER_RINGS.some((ring) => Math.abs(ring - r) < 6)) {
+        if (circle && !square && onRing(piece)) {
           // Degrees clockwise from straight down to the dancer: 0 bottom, 90 left, ±180 top, −90 right.
           const around = Math.atan2(-sx, sy) / deg;
           tilt = Math.abs(around) <= 90 ? around : around - Math.sign(around) * 180;
