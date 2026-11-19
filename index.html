@@ -5038,7 +5038,8 @@
       // On Measure 2, Beat 6 the back 4 couples step a little to the side: 6 and 9 to the right (east,
       // the Honored Guests' right), 2 and 5 to the left. They stay there for Measure 3, where they go
       // as the purple group (Ariel, 11/18); 11C's send out brings the leads back to the center line.
-      const GROUP_SHIFT = PIECE_RADIUS * 0.6;
+      // Far enough that the two sides clear each other (Ariel, 11/18: more separation).
+      const GROUP_SHIFT = PIECE_RADIUS * 1.3;
       const shiftSide = (number) => ([2, 5].includes(number) ? -1 : 1);
       const shot = (subtitle, gone, groupGoes, note, groupShifted = false) => ({
         count: end.items.length, annotation: { title, subtitle, ...(note ? { note } : {}) },
