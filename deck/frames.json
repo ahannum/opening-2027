@@ -1569,7 +1569,7 @@
    "id": "waltz-line-cascade",
    "name": "11B · Cascade Vertical Line: Cascade",
    "section": "Waltz",
-   "fingerprint": "ojzrpk",
+   "fingerprint": "9bw6m0",
    "frames": [
     {
      "src": "waltz-line-cascade/01.jpg",
@@ -1634,7 +1634,7 @@
     {
      "src": "waltz-line-cascade/13.jpg",
      "subtitle": "Measure 2: Beat 6",
-     "note": "Couple 3 goes; 6, 2, 9, 5 step a little to the right"
+     "note": "Couple 3 goes; 6 and 9 step a little right, 2 and 5 a little left"
     },
     {
      "src": "waltz-line-cascade/14.jpg",
@@ -1647,7 +1647,7 @@
    "id": "waltz-line-send-out",
    "name": "11C · Cascade Vertical Line: Send Out",
    "section": "Waltz",
-   "fingerprint": "kenodd",
+   "fingerprint": "1tsys61",
    "frames": [
     {
      "src": "waltz-line-send-out/01.jpg",
