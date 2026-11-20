@@ -3520,6 +3520,19 @@
         ...dancer(place, "couple", x(place), CENTER.y + flip * podSide(place) * distance),
         displayMode: "leadFollow", facingMode: podFacing(facingFlip * podSide(place) > 0),
       }));
+      // The ¾ circle as Ariel counts it for the lines: halfway between the inside and outside circles
+      // (11/19), and "a little beyond" it.
+      const HALF_RING = (INNER_RADIUS + OUTER_RADIUS) / 2;
+      const HALF_RING_OUT = HALF_RING + (OUTER_RADIUS - HALF_RING) * 0.15;
+      // L and F apart in the send out: `outside` (the F, or the L after the swap) on the line tangent
+      // to the outside circle, their partner a little beyond the ¾ circle, each facing the other.
+      const sendOutFrame = (outside) => places.flatMap((place) => ["lead", "follow"].map((role) => {
+        const out = role === outside;
+        return {
+          ...dancer(place, role, x(place), CENTER.y + podSide(place) * (out ? OUTER_RADIUS : HALF_RING_OUT)),
+          displayMode: "leadFollow", facingMode: (podSide(place) > 0) === out ? "north" : "south",
+        };
+      }));
       // It opens on a circle, everyone on a red dot (the 16 full steps of a tape). Each couple has a
       // dot: the away line's couples, in line order, on the dots from the far left over the top, and
       // the other line's on the dots from the left end of the bottom. Going around
@@ -3600,19 +3613,23 @@
         { subtitle: "Measure 5-7", items: sameRoleCircle("inner") },
         // Partner up on the inner tape.
         { subtitle: "Measure 8", items: partnerCircle() },
-        // Unfold the inner circle.
-        { subtitle: "Measure 1", items: unfoldFrame(0.5) },
-        // Pods B, D, F, H toward the Honored Guests, A, C, E, G away, already spread out to the ¾ ring.
-        { subtitle: "Measure 2", items: podFrame(RING_RADII.threeQuarter) },
-        // Measure 3 takes them further apart, out to the outer tape: each line touches it at its top
-        // or bottom dot, square to the spoke through it.
-        { subtitle: "Measure 3", items: podFrame(OUTER_RADIUS) },
-        // Measure 4-6 holds Measure 3's spots.
-        { subtitle: "Measure 4-6", items: podFrame(OUTER_RADIUS) },
-        // Back in toward the overlap, still in pods.
-        { subtitle: "Measure 7", items: podFrame(RING_RADII.threeQuarter / 3) },
-        // Overlap.
-        { subtitle: "Measure 8: Beat 1", note: "2 lines intersect", items: podFrame(0) },
+        // Measures 1–8 (Ariel, 11/19). Here the ¾ circle is halfway between the inside and outside
+        // circles. Measure 1 stays on the inside circle.
+        { subtitle: "Measure 1", items: unfoldFrame(0) },
+        // Measure 2: pods B, D, F, H toward the Honored Guests, A, C, E, G away, in lines at the ¾ circle.
+        { subtitle: "Measure 2", items: podFrame(HALF_RING) },
+        // Measure 3: a little beyond, L and F split for the send out: each F's line tangent to the
+        // outside circle, each L a little beyond the ¾ circle.
+        { subtitle: "Measure 3", items: sendOutFrame("follow") },
+        // Measure 4: F send out hit on 1, then the free spins in swap them, so on Measure 5 the L are
+        // out on the outside circle for the L send out hit.
+        { subtitle: "Measure 4: Beat 1", items: sendOutFrame("follow") },
+        { subtitle: "Measure 5: Beat 3", items: sendOutFrame("lead") },
+        // Measure 6: the same turn back, and frame on 4, between their send out spots.
+        { subtitle: "Measure 6: Beat 4", items: podFrame((HALF_RING_OUT + OUTER_RADIUS) / 2) },
+        // Measure 7 gallops in, still in frame, to a little beyond the ¾ circle, held on Measure 8, Beat 1.
+        { subtitle: "Measure 7", items: podFrame(HALF_RING_OUT) },
+        { subtitle: "Measure 8: Beat 1", items: podFrame(HALF_RING_OUT) },
         // Out to the inner tape: pods A, C, E, G toward the Honored Guests, B, D, F, H away, keeping the
         // lead/follow split they had at the overlap. They're there by beat 4 of Measure 8 and hold it
         // through Measure 13.
