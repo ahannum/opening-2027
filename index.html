@@ -5078,8 +5078,8 @@
     // the left, 13 to the right, …, so 6 and 9 go left and 2 and 5 go right), while the leads make
     // one straight center line (the back 4 step back in from 11B's shift). Measure 3: F arm, then hold.
     // Measure 4: hold, then F turns in, back to their lead. Measure 5: frame, reorient side-on, F on
-    // the left except 6 and 9 (F on the right). Measures 6–8
-    // (waltz) are still to come.
+    // the left except 6 and 9 (F on the right). Measures 6–7 are 12's Measures 1–2 (waltz onto the
+    // diagonal).
     function lineSendOutSnapshots() {
       const title = "Cascade Vertical Line: Send Out";
       const last = lineCascadeSnapshots().at(-1);
@@ -5118,6 +5118,17 @@
         named("Measure 5", couples(false).map((couple) => ({
           ...couple, facingMode: couple.y < CENTER.y ? "west" : "east",
         })), "1–3 frame; 4–6 reorient: top half L left, bottom half F left"),
+        // Measures 6–7 are the start of the transition to the blooms (Ariel, 11/19): Measure 6 is 12's
+        // Measure 1 (the line turns 1 tape) and Measure 7 is 12's Measure 2, the waltz onto the
+        // diagonal. Each couple takes its spot and facing from 12's frame.
+        ...[["Measure 6", 1, "Waltz: the line turns 1 tape (12's Measure 1)"],
+          ["Measure 7", 2, "Waltz onto the diagonal (12's Measure 2)"]].map(([subtitle, index, note]) => {
+          const blooms = new Map((bloomsTransitionSnapshots()[index]?.items || []).map((item) => [item.number, item]));
+          return named(subtitle, couples(false).map((couple) => {
+            const spot = blooms.get(couple.number);
+            return spot ? { ...couple, x: spot.x, y: spot.y, facingMode: spot.facingMode } : couple;
+          }), note);
+        }),
       ];
     }
 
