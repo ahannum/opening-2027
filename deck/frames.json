@@ -38,7 +38,7 @@
    "id": "intro-two-lines",
    "name": "2 · Theme 1 variation: 2 lines",
    "section": "Polka",
-   "fingerprint": "jmy26h",
+   "fingerprint": "hyc3xm",
    "frames": [
     {
      "src": "intro-two-lines/01.jpg",
@@ -87,81 +87,76 @@
     },
     {
      "src": "intro-two-lines/10.jpg",
-     "subtitle": "Measure 8: Beat 4",
-     "note": ""
-    },
-    {
-     "src": "intro-two-lines/11.jpg",
      "subtitle": "Measure 9: Beat 1",
      "note": ""
     },
     {
-     "src": "intro-two-lines/12.jpg",
+     "src": "intro-two-lines/11.jpg",
      "subtitle": "Measure 10",
      "note": ""
     },
     {
-     "src": "intro-two-lines/13.jpg",
+     "src": "intro-two-lines/12.jpg",
      "subtitle": "Measure 11-13",
      "note": ""
     },
     {
-     "src": "intro-two-lines/14.jpg",
+     "src": "intro-two-lines/13.jpg",
      "subtitle": "Measure 14: 1-2",
      "note": ""
     },
     {
-     "src": "intro-two-lines/15.jpg",
+     "src": "intro-two-lines/14.jpg",
      "subtitle": "Measure 14: 3-4",
      "note": ""
     },
     {
-     "src": "intro-two-lines/16.jpg",
+     "src": "intro-two-lines/15.jpg",
      "subtitle": "Measure 15",
      "note": ""
     },
     {
-     "src": "intro-two-lines/17.jpg",
+     "src": "intro-two-lines/16.jpg",
      "subtitle": "Measure 16",
      "note": ""
     },
     {
-     "src": "intro-two-lines/18.jpg",
+     "src": "intro-two-lines/17.jpg",
      "subtitle": "Measure 1 Beats 1-2",
      "note": ""
     },
     {
-     "src": "intro-two-lines/19.jpg",
+     "src": "intro-two-lines/18.jpg",
      "subtitle": "Measure 1 Beats 3-4",
      "note": ""
     },
     {
-     "src": "intro-two-lines/20.jpg",
+     "src": "intro-two-lines/19.jpg",
      "subtitle": "Measure 2 Beats 1-2",
      "note": ""
     },
     {
-     "src": "intro-two-lines/21.jpg",
+     "src": "intro-two-lines/20.jpg",
      "subtitle": "Measure 2 Beats 3-4",
      "note": ""
     },
     {
-     "src": "intro-two-lines/22.jpg",
+     "src": "intro-two-lines/21.jpg",
      "subtitle": "Measure 3 Beats 1-2",
      "note": ""
     },
     {
-     "src": "intro-two-lines/23.jpg",
+     "src": "intro-two-lines/22.jpg",
      "subtitle": "Measure 3 Beats 3-4",
      "note": ""
     },
     {
-     "src": "intro-two-lines/24.jpg",
+     "src": "intro-two-lines/23.jpg",
      "subtitle": "Measure 4 Beats 1-2",
      "note": ""
     },
     {
-     "src": "intro-two-lines/25.jpg",
+     "src": "intro-two-lines/24.jpg",
      "subtitle": "Measure 4 Beats 3-4",
      "note": ""
     }
