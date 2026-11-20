@@ -1647,7 +1647,7 @@
    "id": "waltz-line-send-out",
    "name": "11C · Cascade Vertical Line: Send Out",
    "section": "Waltz",
-   "fingerprint": "470fh0",
+   "fingerprint": "11vsyqb",
    "frames": [
     {
      "src": "waltz-line-send-out/01.jpg",
@@ -1678,6 +1678,16 @@
      "src": "waltz-line-send-out/06.jpg",
      "subtitle": "Measure 5",
      "note": "1–3 frame; 4–6 reorient: top half L left, bottom half F left"
+    },
+    {
+     "src": "waltz-line-send-out/07.jpg",
+     "subtitle": "Measure 6",
+     "note": "Waltz: the line turns 1 tape (12's Measure 1)"
+    },
+    {
+     "src": "waltz-line-send-out/08.jpg",
+     "subtitle": "Measure 7",
+     "note": "Waltz onto the diagonal (12's Measure 2)"
     }
    ]
   },
