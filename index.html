@@ -4925,6 +4925,14 @@
       // Measures 3–5 (Ariel, 11/14): in the line, every follow forward along the line of dance (backing
       // against it).
       const forwardLook = () => ({ facingMode: "ccw" });
+      // Measure 3 (Ariel, 11/19): arriving in the line, each couple keeps the way it faced on Measure 2,
+      // now squared to left or right: the lead's half on whichever side it pointed toward.
+      const measure3Look = (item) => {
+        const at = place(item, 0.5);
+        const radial = Math.atan2(at.y - CENTER.y, at.x - CENTER.x);
+        const angle = radial + (measure2Look(item).facingMode === "cw" ? Math.PI / 2 : -Math.PI / 2);
+        return { facingMode: Math.cos(angle) >= 0 ? "east" : "west" };
+      };
       // Measure 1 (Ariel, 11/14): still on the Start spots, outlines kept, every follow (violet and teal
       // groups alike) backing toward the center line: the follow's half toward it, the lead's half
       // pointing away ("west" left of the line, "east" right of it).
@@ -4996,7 +5004,7 @@
         measure1,
         // Measures 2–3 waltz into the line (halfway, then there).
         frame("Measure 2", 0.5, 0, 1, measure2Look),
-        frame("Measure 3", 1, 0, FIT, forwardLook),
+        frame("Measure 3", 1, 0, FIT, measure3Look),
         separate("Measure 4", 0, 0.25),
         separate("Measure 5", 1.05, 0),
         separate("Measure 6", -1.05, 0),
