@@ -3524,7 +3524,7 @@
       // (11/19), and "a little beyond" it.
       const HALF_RING = (INNER_RADIUS + OUTER_RADIUS) / 2;
       const HALF_RING_OUT = HALF_RING + (OUTER_RADIUS - HALF_RING) * 0.15;
-      const HALF_RING_IN = HALF_RING - (HALF_RING - INNER_RADIUS) * 0.15;
+      const HALF_RING_IN = HALF_RING - (HALF_RING - INNER_RADIUS) * 0.35;
       // L and F apart in the send out: `outside` (the F, or the L after the swap) on the line tangent
       // to the outside circle, their partner a little beyond the ¾ circle, each facing the other.
       const sendOutFrame = (outside) => places.flatMap((place) => ["lead", "follow"].map((role) => {
