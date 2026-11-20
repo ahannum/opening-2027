@@ -783,7 +783,8 @@
 
     .guest-text {
       fill: var(--board-muted, #878178);
-      font-size: 17px;
+      font-size: 28px;
+      font-weight: 600;
       text-anchor: middle;
     }
 
@@ -5125,13 +5126,13 @@
         // Measures 6–7 are the start of the transition to the blooms (Ariel, 11/19): Measure 6 is 12's
         // Measure 1 (the line turns 1 tape) and Measure 7 is 12's Measure 2, the waltz onto the
         // diagonal. Each couple takes its spot and facing from 12's frame.
-        ...[["Measure 6", 1, "Waltz: the line turns 1 tape (12's Measure 1)"],
-          ["Measure 7", 2, "Waltz onto the diagonal (12's Measure 2)"]].map(([subtitle, index, note]) => {
+        // No notes on these two (Ariel, 11/19).
+        ...[["Measure 6", 1], ["Measure 7", 2]].map(([subtitle, index]) => {
           const blooms = new Map((bloomsTransitionSnapshots()[index]?.items || []).map((item) => [item.number, item]));
           return named(subtitle, couples(false).map((couple) => {
             const spot = blooms.get(couple.number);
             return spot ? { ...couple, x: spot.x, y: spot.y, facingMode: spot.facingMode } : couple;
-          }), note);
+          }));
         }),
       ];
     }

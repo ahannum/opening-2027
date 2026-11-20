@@ -930,7 +930,7 @@
       // Upside down at the top otherwise; East and West read along their edge as they are.
       if (angle === 180) {
         shown.querySelectorAll(".guest-text").forEach((text) => {
-          text.setAttribute("transform", `rotate(180 ${text.getAttribute("x")} ${Number(text.getAttribute("y")) - 6})`);
+          text.setAttribute("transform", `rotate(180 ${text.getAttribute("x")} ${Number(text.getAttribute("y")) - 10})`);
         });
       }
     }
