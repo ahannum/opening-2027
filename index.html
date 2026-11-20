@@ -3524,6 +3524,7 @@
       // (11/19), and "a little beyond" it.
       const HALF_RING = (INNER_RADIUS + OUTER_RADIUS) / 2;
       const HALF_RING_OUT = HALF_RING + (OUTER_RADIUS - HALF_RING) * 0.15;
+      const HALF_RING_IN = HALF_RING - (HALF_RING - INNER_RADIUS) * 0.15;
       // L and F apart in the send out: `outside` (the F, or the L after the swap) on the line tangent
       // to the outside circle, their partner a little beyond the ¾ circle, each facing the other.
       const sendOutFrame = (outside) => places.flatMap((place) => ["lead", "follow"].map((role) => {
@@ -3625,12 +3626,12 @@
         // Measures 1–8 (Ariel, 11/19). Here the ¾ circle is halfway between the inside and outside
         // circles. Measure 1 stays on the inside circle, oriented as at the Start.
         { subtitle: "Measure 1", items: partnerCircle() },
-        // Measure 2: pods B, D, F, H toward the Honored Guests, A, C, E, G away, in lines at the ¾ circle.
-        { subtitle: "Measure 2", items: podFrame(HALF_RING) },
-        // Measure 3: a little beyond, L and F split for the send out: each F's line tangent to the
-        // outside circle, each L a little beyond the ¾ circle.
-        { subtitle: "Measure 3", items: sendOutFrame("follow") },
-        // Measure 4: F send out hit on 1, then the free spins in swap them, so on Measure 5 the L are
+        // Measure 2: pods B, D, F, H toward the Honored Guests, A, C, E, G away, in lines a little
+        // inside the ¾ circle; Measure 3 a little beyond it, couples still together (Ariel, 11/19).
+        { subtitle: "Measure 2", items: podFrame(HALF_RING_IN) },
+        { subtitle: "Measure 3", items: podFrame(HALF_RING_OUT) },
+        // Measure 4: L and F split for the F send out hit on 1 (each F's line tangent to the outside
+        // circle, each L a little beyond the ¾ circle), then the free spins in swap them, so on Measure 5 the L are
         // out on the outside circle for the L send out hit.
         { subtitle: "Measure 4: Beat 1", items: sendOutFrame("follow") },
         { subtitle: "Measure 5: Beat 3", items: sendOutFrame("lead") },
