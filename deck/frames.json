@@ -1644,58 +1644,10 @@
    ]
   },
   {
-   "id": "waltz-line-send-out",
-   "name": "11C · Cascade Vertical Line: Send Out",
-   "section": "Waltz",
-   "fingerprint": "p3zjtb",
-   "frames": [
-    {
-     "src": "waltz-line-send-out/01.jpg",
-     "subtitle": "Start",
-     "note": ""
-    },
-    {
-     "src": "waltz-line-send-out/02.jpg",
-     "subtitle": "Measure 1",
-     "note": "Bom (from 11B)"
-    },
-    {
-     "src": "waltz-line-send-out/03.jpg",
-     "subtitle": "Measure 2",
-     "note": "1–3 up; 4–6 F turns out, every other side; L make one center line"
-    },
-    {
-     "src": "waltz-line-send-out/04.jpg",
-     "subtitle": "Measure 3",
-     "note": "1–3 F arm; 4–6 hold"
-    },
-    {
-     "src": "waltz-line-send-out/05.jpg",
-     "subtitle": "Measure 4",
-     "note": "1–3 hold; 4–6 F turns in, on the side they went out"
-    },
-    {
-     "src": "waltz-line-send-out/06.jpg",
-     "subtitle": "Measure 5",
-     "note": "1–3 frame; 4–6 reorient: top half L left, bottom half F left"
-    },
-    {
-     "src": "waltz-line-send-out/07.jpg",
-     "subtitle": "Measure 6",
-     "note": ""
-    },
-    {
-     "src": "waltz-line-send-out/08.jpg",
-     "subtitle": "Measure 7",
-     "note": ""
-    }
-   ]
-  },
-  {
    "id": "waltz-transition-to-blooms",
    "name": "12 · Transition to the blooms",
    "section": "Waltz",
-   "fingerprint": "1poq7vn",
+   "fingerprint": "1ff58ia",
    "frames": [
     {
      "src": "waltz-transition-to-blooms/01.jpg",
@@ -1705,16 +1657,36 @@
     {
      "src": "waltz-transition-to-blooms/02.jpg",
      "subtitle": "Measure 1",
-     "note": ""
+     "note": "Bom (from 11B)"
     },
     {
      "src": "waltz-transition-to-blooms/03.jpg",
      "subtitle": "Measure 2",
-     "note": ""
+     "note": "1–3 up; 4–6 F turns out, every other side; L make one center line"
     },
     {
      "src": "waltz-transition-to-blooms/04.jpg",
      "subtitle": "Measure 3",
+     "note": "1–3 F arm; 4–6 hold"
+    },
+    {
+     "src": "waltz-transition-to-blooms/05.jpg",
+     "subtitle": "Measure 4",
+     "note": "1–3 hold; 4–6 F turns in, on the side they went out"
+    },
+    {
+     "src": "waltz-transition-to-blooms/06.jpg",
+     "subtitle": "Measure 5",
+     "note": "1–3 frame; 4–6 reorient: top half L left, bottom half F left"
+    },
+    {
+     "src": "waltz-transition-to-blooms/07.jpg",
+     "subtitle": "Measure 6",
+     "note": ""
+    },
+    {
+     "src": "waltz-transition-to-blooms/08.jpg",
+     "subtitle": "Measure 7",
      "note": ""
     }
    ]
