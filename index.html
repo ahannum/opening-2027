@@ -3639,12 +3639,15 @@
         // Measure 7 gallops in, still in frame, to a little beyond the ¾ circle, held on Measure 8, Beat 1.
         { subtitle: "Measure 7", items: podFrame(HALF_RING_OUT) },
         { subtitle: "Measure 8: Beat 1", items: podFrame(HALF_RING_OUT) },
-        // Through to the ¾ circle on the other side (Ariel, 11/19): pods A, C, E, G toward the Honored
-        // Guests, B, D, F, H away, keeping the lead/follow split they had in frame, by beat 4 of
-        // Measure 8. Measures 9–13 face out there, each F just in front of their L (not as far apart
-        // as the send outs).
-        { subtitle: "Measure 8: Beat 4", items: podFrame(HALF_RING, -1, 1) },
-        { subtitle: "Measure 9-13", items: facingOutFrame() },
+        // In to the ¾ circle by beat 4 of Measure 8, the lines intersect on Measure 9, Beat 1, and on
+        // Measure 10 they're through to the ¾ circle on the other side (Ariel, 11/19): pods A, C, E, G
+        // toward the Honored Guests, B, D, F, H away, keeping the lead/follow split they had in frame.
+        // Measures 11–13 face out there, each F just in front of their L (not as far apart as the
+        // send outs).
+        { subtitle: "Measure 8: Beat 4", items: podFrame(HALF_RING) },
+        { subtitle: "Measure 9: Beat 1", items: podFrame(0) },
+        { subtitle: "Measure 10", items: podFrame(HALF_RING, -1, 1) },
+        { subtitle: "Measure 11-13", items: facingOutFrame() },
         // Gallop to 1 line, couples again: leads toward the Honored Guests, follows away.
         // On beats 1-2 they're already in the 1 line but keep Measure 9-13's lead/follow split; on 3-4
         // they turn to leads toward the Honored Guests, follows away.
