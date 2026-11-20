@@ -3634,17 +3634,15 @@
         // out on the outside circle for the L send out hit.
         { subtitle: "Measure 4: Beat 1", items: sendOutFrame("follow") },
         { subtitle: "Measure 5: Beat 3", items: sendOutFrame("lead") },
-        // Measure 6: the same turn back, and frame on 4, between their send out spots.
-        { subtitle: "Measure 6: Beat 4", items: podFrame((HALF_RING_OUT + OUTER_RADIUS) / 2) },
+        // Measure 6: the same turn back, and frame on 4, already where Measure 7's frame is (Ariel, 11/19).
+        { subtitle: "Measure 6: Beat 4", items: podFrame(HALF_RING_OUT) },
         // Measure 7 gallops in, still in frame, to a little beyond the ¾ circle, held on Measure 8, Beat 1.
         { subtitle: "Measure 7", items: podFrame(HALF_RING_OUT) },
         { subtitle: "Measure 8: Beat 1", items: podFrame(HALF_RING_OUT) },
-        // In to the ¾ circle by beat 4 of Measure 8, the lines intersect on Measure 9, Beat 1, and on
-        // Measure 10 they're through to the ¾ circle on the other side (Ariel, 11/19): pods A, C, E, G
-        // toward the Honored Guests, B, D, F, H away, keeping the lead/follow split they had in frame.
-        // Measures 11–13 face out there, each F just in front of their L (not as far apart as the
-        // send outs).
-        { subtitle: "Measure 8: Beat 4", items: podFrame(HALF_RING) },
+        // The lines intersect in the middle on Measure 9, Beat 1, and on Measure 10 they're through to
+        // the ¾ circle on the other side (Ariel, 11/19): pods A, C, E, G toward the Honored Guests,
+        // B, D, F, H away, keeping the lead/follow split they had in frame. Measures 11–13 face out
+        // there, each F just in front of their L (not as far apart as the send outs).
         { subtitle: "Measure 9: Beat 1", items: podFrame(0) },
         { subtitle: "Measure 10", items: podFrame(HALF_RING, -1, 1) },
         { subtitle: "Measure 11-13", items: facingOutFrame() },
