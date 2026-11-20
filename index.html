@@ -5054,32 +5054,25 @@
       const order = [...end.items].sort((a, b) => b.y - a.y).map((item) => item.number);
       const singles = order.slice(0, 12);
       const group = order.slice(12);
-      // On Measure 2, Beat 6 the back 4 couples step a little to the side: 6 and 9 to the right (east,
-      // the Honored Guests' right), 2 and 5 to the left. They stay there for Measure 3, where they go
-      // as the purple group (Ariel, 11/18); 11C's send out brings the leads back to the center line.
-      // Far enough that the two sides clear each other (Ariel, 11/18: more separation).
-      const GROUP_SHIFT = PIECE_RADIUS * 1.3;
-      const shiftSide = (number) => ([2, 5].includes(number) ? -1 : 1);
-      const shot = (subtitle, gone, groupGoes, note, groupShifted = false) => ({
+      // The back 4 couples stay in the line and go together as the purple group on Measure 3 (Ariel,
+      // 11/19: no stepping out to the sides on Measure 2, Beat 6).
+      const shot = (subtitle, gone, groupGoes, note) => ({
         count: end.items.length, annotation: { title, subtitle, ...(note ? { note } : {}) },
         items: end.items.map((item) => {
           const index = singles.indexOf(item.number);
           const inGroup = group.includes(item.number);
           const groupColor = index >= 0 && index < gone ? `cascade${index + 1}`
             : groupGoes && inGroup ? "cascade16" : "neutral";
-          const x = groupShifted && inGroup ? Number((item.x + shiftSide(item.number) * GROUP_SHIFT).toFixed(3)) : item.x;
-          return { ...structuredClone(item), groupColor, x };
+          return { ...structuredClone(item), groupColor };
         }),
       });
       const beats = singles.map((number, index) => shot(
-        `Measure ${Math.floor(index / 6) + 1}: Beat ${(index % 6) + 1}`, index + 1, false,
-        index === singles.length - 1 ? `Couple ${number} goes; 6 and 9 step a little right, 2 and 5 a little left` : `Couple ${number} goes`,
-        index === singles.length - 1,
+        `Measure ${Math.floor(index / 6) + 1}: Beat ${(index % 6) + 1}`, index + 1, false, `Couple ${number} goes`,
       ));
       return [
         shot("Start", 0, false, `Front to back: ${singles.join(", ")}, then ${group.join(", ")} together`),
         ...beats,
-        shot("Measure 3", 12, true, `Group: ${group.join(", ")}`, true),
+        shot("Measure 3", 12, true, `Group: ${group.join(", ")}`),
       ];
     }
 
@@ -5087,7 +5080,7 @@
     // Measure 1 is the Bom from 11B. Measure 2: up on 1–3, and on 4–6 F turns out to a send out,
     // every other F to the opposite side down the line, front to back from the Honored Guests (1 to
     // the left, 13 to the right, …, so 6 and 9 go left and 2 and 5 go right), while the leads make
-    // one straight center line (the back 4 step back in from 11B's shift). Measure 3: F arm, then hold.
+    // one straight center line. Measure 3: F arm, then hold.
     // Measure 4: hold, then F turns in, back to their lead. Measure 5: frame, reorient side-on, F on
     // the left except 6 and 9 (F on the right). Measures 6–7 are 12's Measures 1–2 (waltz onto the
     // diagonal).
