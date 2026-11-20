@@ -5077,16 +5077,17 @@
       ];
     }
 
-    // Waltz section 11C, Cascade Vertical Line: Send Out (Ariel, 11/18). Starts where 11B ends.
+    // Waltz section 12, Transition to the blooms: the send out (Ariel, 11/18; it was 11C until 11/19,
+    // when Ariel made it section 12). Starts where 11B ends.
     // Measure 1 is the Bom from 11B. Measure 2: up on 1–3, and on 4–6 F turns out to a send out,
     // every other F to the opposite side down the line, front to back from the Honored Guests (1 to
     // the left, 13 to the right, …, so 6 and 9 go left and 2 and 5 go right), while the leads make
     // one straight center line. Measure 3: F arm, then hold.
     // Measure 4: hold, then F turns in, back to their lead. Measure 5: frame, reorient side-on, F on
-    // the left except 6 and 9 (F on the right). Measures 6–7 are 12's Measures 1–2 (waltz onto the
-    // diagonal).
+    // the left except 6 and 9 (F on the right). Measures 6–7 waltz onto the diagonal, 1 tape each
+    // (the line turns of `xToLineSnapshots("blooms")`).
     function lineSendOutSnapshots() {
-      const title = "Cascade Vertical Line: Send Out";
+      const title = "Transition to the blooms";
       const last = lineCascadeSnapshots().at(-1);
       if (!last) return [];
       const fix = (value) => Number(value.toFixed(3));
@@ -5123,10 +5124,9 @@
         named("Measure 5", couples(false).map((couple) => ({
           ...couple, facingMode: couple.y < CENTER.y ? "west" : "east",
         })), "1–3 frame; 4–6 reorient: top half L left, bottom half F left"),
-        // Measures 6–7 are the start of the transition to the blooms (Ariel, 11/19): Measure 6 is 12's
-        // Measure 1 (the line turns 1 tape) and Measure 7 is 12's Measure 2, the waltz onto the
-        // diagonal. Each couple takes its spot and facing from 12's frame.
-        // No notes on these two (Ariel, 11/19).
+        // Measures 6–7 (Ariel, 11/19): Measure 6 the line turns 1 tape, Measure 7 the waltz onto the
+        // diagonal. Each couple takes its spot and facing from the old 12's Measure 1 and 2 frames.
+        // No notes on these two.
         ...[["Measure 6", 1], ["Measure 7", 2]].map(([subtitle, index]) => {
           const blooms = new Map((bloomsTransitionSnapshots()[index]?.items || []).map((item) => [item.number, item]));
           return named(subtitle, couples(false).map((couple) => {
@@ -5426,16 +5426,10 @@
         snapshots: lineCascadeSnapshots,
       },
       {
-        id: "waltz-line-send-out",
-        section: WALTZ,
-        name: "11C · Cascade Vertical Line: Send Out",
-        snapshots: lineSendOutSnapshots,
-      },
-      {
         id: "waltz-transition-to-blooms",
         section: WALTZ,
         name: "12 · Transition to the blooms",
-        snapshots: bloomsTransitionSnapshots,
+        snapshots: lineSendOutSnapshots,
       },
       {
         id: "waltz-flower-blooming",
