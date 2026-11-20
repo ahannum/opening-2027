@@ -1734,6 +1734,45 @@
      "note": ""
     }
    ]
+  },
+  {
+   "id": "waltz-strings-descent",
+   "name": "16 · Strings Descent",
+   "section": "Waltz",
+   "fingerprint": "6bwqj2",
+   "frames": [
+    {
+     "src": "waltz-strings-descent/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-finale-1",
+   "name": "17 · Finale I",
+   "section": "Waltz",
+   "fingerprint": "19561xj",
+   "frames": [
+    {
+     "src": "waltz-finale-1/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "waltz-epilogue",
+   "name": "18 · Epilogue",
+   "section": "Waltz",
+   "fingerprint": "yfdpuo",
+   "frames": [
+    {
+     "src": "waltz-epilogue/01.jpg",
+     "subtitle": "Start",
+     "note": ""
+    }
+   ]
   }
  ]
 }
