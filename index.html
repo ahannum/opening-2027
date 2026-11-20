@@ -5057,8 +5057,9 @@
       const group = order.slice(12);
       // The back 4 couples stay in the line and go together as the purple group on Measure 3 (Ariel,
       // 11/19: no stepping out to the sides on Measure 2, Beat 6).
-      const shot = (subtitle, gone, groupGoes, note) => ({
-        count: end.items.length, annotation: { title, subtitle, ...(note ? { note } : {}) },
+      // No notes on the frames: the cascade order lives in the WIP Ground Truth table (Ariel, 11/19).
+      const shot = (subtitle, gone, groupGoes) => ({
+        count: end.items.length, annotation: { title, subtitle },
         items: end.items.map((item) => {
           const index = singles.indexOf(item.number);
           const inGroup = group.includes(item.number);
@@ -5068,12 +5069,12 @@
         }),
       });
       const beats = singles.map((number, index) => shot(
-        `Measure ${Math.floor(index / 6) + 1}: Beat ${(index % 6) + 1}`, index + 1, false, `Couple ${number} goes`,
+        `Measure ${Math.floor(index / 6) + 1}: Beat ${(index % 6) + 1}`, index + 1, false,
       ));
       return [
-        shot("Start", 0, false, `Front to back: ${singles.join(", ")}, then ${group.join(", ")} together`),
+        shot("Start", 0, false),
         ...beats,
-        shot("Measure 3", 12, true, `Group: ${group.join(", ")}`),
+        shot("Measure 3", 12, true),
       ];
     }
 
@@ -5094,9 +5095,8 @@
       const order = [...last.items].sort((a, b) => b.y - a.y).map((item) => item.number);
       // Arm's length out from the lead, in piece radii.
       const OUT = 2.6;
-      const named = (subtitle, items, note) => ({
-        count: items.length, annotation: { title, subtitle, ...(note ? { note } : {}) }, items,
-      });
+      // No notes on the frames: the choreo lives in the WIP Ground Truth table (Ariel, 11/19).
+      const named = (subtitle, items) => ({ count: items.length, annotation: { title, subtitle }, items });
       const couples = (colored) => last.items.map((item) => ({
         ...structuredClone(item), x: CENTER.x, ...(colored ? {} : { groupColor: "neutral" }),
       }));
@@ -5110,23 +5110,22 @@
       });
       return [
         named("Start", structuredClone(last.items)),
-        named("Measure 1", structuredClone(last.items), "Bom (from 11B)"),
-        named("Measure 2", sentOut(), "1–3 up; 4–6 F turns out, every other side; L make one center line"),
-        named("Measure 3", sentOut(), "1–3 F arm; 4–6 hold"),
+        named("Measure 1", structuredClone(last.items)),
+        named("Measure 2", sentOut()),
+        named("Measure 3", sentOut()),
         // F turns in and the couple is split side by side, F on the side they were sent out to (1: F
         // left, L right; 13: F right, L left; …) (Ariel, 11/18).
         named("Measure 4", couples(false).map((couple) => ({
           ...couple, facingMode: order.indexOf(couple.number) % 2 ? "west" : "east",
-        })), "1–3 hold; 4–6 F turns in, on the side they went out"),
+        }))),
         // Reoriented side-on in frame, as at the start of 12: the upper half (away from the Honored
         // Guests) L on the left and F on the right, the lower half F on the left and L on the right.
         // 6 and 9's F turn the other way to get there (Ariel, 11/18).
         named("Measure 5", couples(false).map((couple) => ({
           ...couple, facingMode: couple.y < CENTER.y ? "west" : "east",
-        })), "1–3 frame; 4–6 reorient: top half L left, bottom half F left"),
+        }))),
         // Measures 6–7 (Ariel, 11/19): Measure 6 the line turns 1 tape, Measure 7 the waltz onto the
         // diagonal. Each couple takes its spot and facing from the old 12's Measure 1 and 2 frames.
-        // No notes on these two.
         ...[["Measure 6", 1], ["Measure 7", 2]].map(([subtitle, index]) => {
           const blooms = new Map((bloomsTransitionSnapshots()[index]?.items || []).map((item) => [item.number, item]));
           return named(subtitle, couples(false).map((couple) => {
