@@ -5008,8 +5008,19 @@
         separate("Measure 4", 0, 0.25),
         separate("Measure 5", 1.05, 0),
         separate("Measure 6", -1.05, 0),
-        // Measure 7 ends back in the single-file line, F in front of L (Ariel, 11/17); 11B starts there.
-        separate("Measure 7", 0, 0.25),
+        // Measure 7 ends back in the single-file line (Ariel, 11/17), drawn like 11B's Start: each couple
+        // combined into one piece on its spot, F toward the Honored Guests (the lead's half to the
+        // north) (Ariel, 11/19). 11B starts there.
+        (() => {
+          const line = frame("Measure 7", 1, 0, FIT);
+          return {
+            count: line.items.length, annotation: { title, subtitle: "Measure 7" },
+            items: line.items.map((couple) => ({
+              key: String(couple.number), number: couple.number, role: "couple", ring: null, step: null,
+              facingMode: "north", displayMode: "leadFollow", groupColor: "neutral", x: couple.x, y: couple.y,
+            })),
+          };
+        })(),
       ];
     }
     const bloomsTransitionSnapshots = () => xToLineSnapshots("blooms");
