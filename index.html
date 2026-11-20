@@ -5028,6 +5028,10 @@
     const flowerBloomingSnapshots = () => xToLineSnapshots("horizontal").flowers;
     const swirlingCascadeSnapshots = () => xToLineSnapshots("horizontal").swirl;
     const bombasticSnapshots = () => xToLineSnapshots("horizontal").bombastic;
+    // Sections 16–18 are seeded with 15's Start, the horizontal line (Ariel, 11/19); their
+    // choreography is still to come.
+    const seededFromBombastic = (title) => () => bombasticSnapshots().slice(0, 1)
+      .map((shot) => ({ ...structuredClone(shot), annotation: { title, subtitle: "Start" } }));
     // Waltz section 11B, Cascade (Ariel, 11/16): 3 measures in the vertical line, counted in 6. The
     // cascade runs front to back (from the Honored Guests): one couple a beat through Measures 1–2,
     // each colored in cascade order on its beat and staying colored; the back 4 couples go together
@@ -5447,6 +5451,24 @@
         section: WALTZ,
         name: "15 · Theme 1: Bombastic",
         snapshots: bombasticSnapshots,
+      },
+      {
+        id: "waltz-strings-descent",
+        section: WALTZ,
+        name: "16 · Strings Descent",
+        snapshots: seededFromBombastic("Strings Descent"),
+      },
+      {
+        id: "waltz-finale-1",
+        section: WALTZ,
+        name: "17 · Finale I",
+        snapshots: seededFromBombastic("Finale I"),
+      },
+      {
+        id: "waltz-epilogue",
+        section: WALTZ,
+        name: "18 · Epilogue",
+        snapshots: seededFromBombastic("Epilogue"),
       },
     ];
 
