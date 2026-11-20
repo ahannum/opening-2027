@@ -3533,15 +3533,15 @@
           displayMode: "leadFollow", facingMode: (podSide(place) > 0) === out ? "north" : "south",
         };
       }));
-      // Past the other line (sides switched), facing out: each L on the ¾ circle and their F just in
-      // front, toward the outside, a piece's width away.
-      const facingOutFrame = () => places.flatMap((place) => ["lead", "follow"].map((role) => {
+      // Past the other line (sides switched) on the ¾ circle, couples together, each F facing out:
+      // "north" puts the follow's half south, toward the Honored Guests (Ariel, 11/19).
+      const facingOutFrame = () => places.map((place) => {
         const side = -podSide(place);
         return {
-          ...dancer(place, role, x(place), CENTER.y + side * (HALF_RING + (role === "follow" ? PIECE_RADIUS * 2.1 : 0))),
-          displayMode: "leadFollow", facingMode: side > 0 ? "south" : "north",
+          ...dancer(place, "couple", x(place), CENTER.y + side * HALF_RING),
+          displayMode: "leadFollow", facingMode: side > 0 ? "north" : "south",
         };
-      }));
+      });
       // It opens on a circle, everyone on a red dot (the 16 full steps of a tape). Each couple has a
       // dot: the away line's couples, in line order, on the dots from the far left over the top, and
       // the other line's on the dots from the left end of the bottom. Going around
@@ -3642,7 +3642,7 @@
         // The lines intersect in the middle on Measure 9, Beat 1, and on Measure 10 they're through to
         // the ¾ circle on the other side (Ariel, 11/19): pods A, C, E, G toward the Honored Guests,
         // B, D, F, H away, keeping the lead/follow split they had in frame. Measures 11–13 face out
-        // there, each F just in front of their L (not as far apart as the send outs).
+        // there, couples together, each F facing out.
         { subtitle: "Measure 9: Beat 1", items: podFrame(0) },
         { subtitle: "Measure 10", items: podFrame(HALF_RING, -1, 1) },
         { subtitle: "Measure 11-13", items: facingOutFrame() },
