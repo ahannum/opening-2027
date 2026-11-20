@@ -5,7 +5,7 @@
    "id": "intro-circle",
    "name": "1 · Intro Theme 1: circle → inside circle",
    "section": "Polka",
-   "fingerprint": "12xdy9",
+   "fingerprint": "1gfcd9k",
    "frames": [
     {
      "src": "intro-circle/01.jpg",
@@ -38,7 +38,7 @@
    "id": "intro-two-lines",
    "name": "2 · Theme 1 variation: 2 lines",
    "section": "Polka",
-   "fingerprint": "1izgzf0",
+   "fingerprint": "1nhvg51",
    "frames": [
     {
      "src": "intro-two-lines/01.jpg",
@@ -151,7 +151,7 @@
    "id": "intro-brass-x",
    "name": "3 · Big brass X",
    "section": "Polka",
-   "fingerprint": "1uxtl9y",
+   "fingerprint": "m88tc3",
    "frames": [
     {
      "src": "intro-brass-x/01.jpg",
@@ -184,7 +184,7 @@
    "id": "intro-x-to-circle",
    "name": "4 · From X to circle",
    "section": "Polka",
-   "fingerprint": "1jk7mh9",
+   "fingerprint": "1lv5ado",
    "frames": [
     {
      "src": "intro-x-to-circle/01.jpg",
@@ -217,7 +217,7 @@
    "id": "hearts-adrift",
    "name": "5 · Hearts adrift",
    "section": "Polka",
-   "fingerprint": "aucqux",
+   "fingerprint": "lb1g0g",
    "frames": [
     {
      "src": "hearts-adrift/01.jpg",
@@ -310,7 +310,7 @@
    "id": "hearts-adrift-to-line",
    "name": "6 · Hearts adrift → turn cascade",
    "section": "Polka",
-   "fingerprint": "1p9332m",
+   "fingerprint": "vbhwaz",
    "frames": [
     {
      "src": "hearts-adrift-to-line/01.jpg",
@@ -368,7 +368,7 @@
    "id": "turn-cascade",
    "name": "7 · Turn cascade",
    "section": "Polka",
-   "fingerprint": "49vmux",
+   "fingerprint": "ar9sk0",
    "frames": [
     {
      "src": "turn-cascade/01.jpg",
@@ -386,7 +386,7 @@
    "id": "line-x-grid-prep",
    "name": "8 · Line → X → grid prep",
    "section": "Polka",
-   "fingerprint": "1ax7rz1",
+   "fingerprint": "znpwbg",
    "frames": [
     {
      "src": "line-x-grid-prep/01.jpg",
@@ -444,7 +444,7 @@
    "id": "triumphant-crossing",
    "name": "9 · Triumphant grid crossing",
    "section": "Polka",
-   "fingerprint": "1t5cxsc",
+   "fingerprint": "12cj9kl",
    "frames": [
     {
      "src": "triumphant-crossing/01.jpg",
@@ -552,7 +552,7 @@
    "id": "block-to-pyramid",
    "name": "10 · 4×4 grid cascades → unfurling pyramid",
    "section": "Polka",
-   "fingerprint": "7qyy8p",
+   "fingerprint": "ieuxv4",
    "frames": [
     {
      "src": "block-to-pyramid/01.jpg",
@@ -575,7 +575,7 @@
    "id": "unfurling-pyramid-v2",
    "name": "11 · Unfurling pyramid",
    "section": "Polka",
-   "fingerprint": "1uqzrtk",
+   "fingerprint": "9ipau1",
    "frames": [
     {
      "src": "unfurling-pyramid-v2/01.jpg",
@@ -608,7 +608,7 @@
    "id": "pyramid-to-v",
    "name": "11 · Unfurling pyramid → gallop to V",
    "section": "Polka",
-   "fingerprint": "1jzsohy",
+   "fingerprint": "1mbr68j",
    "frames": [
     {
      "src": "pyramid-to-v/01.jpg",
@@ -636,7 +636,7 @@
    "id": "final-v",
    "name": "12 · V finale",
    "section": "Polka",
-   "fingerprint": "1rmut5a",
+   "fingerprint": "4ee1l7",
    "frames": [
     {
      "src": "final-v/01.jpg",
@@ -729,7 +729,7 @@
    "id": "waltz-intro",
    "name": "1 · Introduction",
    "section": "Waltz",
-   "fingerprint": "dn01ic",
+   "fingerprint": "k7g42l",
    "frames": [
     {
      "src": "waltz-intro/01.jpg",
@@ -772,7 +772,7 @@
    "id": "waltz-contraction-expansion",
    "name": "2 · Theme 2: Contraction and Expansion",
    "section": "Waltz",
-   "fingerprint": "1723llw",
+   "fingerprint": "2yekv1",
    "frames": [
     {
      "src": "waltz-contraction-expansion/01.jpg",
@@ -825,7 +825,7 @@
    "id": "waltz-theme-1",
    "name": "3 · Theme 1: Solo Strings",
    "section": "Waltz",
-   "fingerprint": "1946ish",
+   "fingerprint": "11r8mw8",
    "frames": [
     {
      "src": "waltz-theme-1/01.jpg",
@@ -863,7 +863,7 @@
    "id": "waltz-follows-escape",
    "name": "4 · Hijinks Skit",
    "section": "Waltz",
-   "fingerprint": "1gimdzs",
+   "fingerprint": "imvowp",
    "frames": [
     {
      "src": "waltz-follows-escape/01.jpg",
@@ -911,7 +911,7 @@
    "id": "waltz-turning-gears",
    "name": "5 · Theme 2: Turning Gears",
    "section": "Waltz",
-   "fingerprint": "1xnz8t4",
+   "fingerprint": "1f1p0wp",
    "frames": [
     {
      "src": "waltz-turning-gears/01.jpg",
@@ -959,7 +959,7 @@
    "id": "waltz-big-strings",
    "name": "6 · Theme 1: Big Strings",
    "section": "Waltz",
-   "fingerprint": "1rwmfmb",
+   "fingerprint": "xaerk6",
    "frames": [
     {
      "src": "waltz-big-strings/01.jpg",
@@ -1007,7 +1007,7 @@
    "id": "waltz-box-skit",
    "name": "7 · Box Skit",
    "section": "Waltz",
-   "fingerprint": "by28bs",
+   "fingerprint": "ua4wx5",
    "frames": [
     {
      "src": "waltz-box-skit/01.jpg",
@@ -1090,7 +1090,7 @@
    "id": "waltz-happy-transition-in",
    "name": "8A · Hide and Seek: Part 1",
    "section": "Waltz",
-   "fingerprint": "1sgn0ne",
+   "fingerprint": "3xqpcv",
    "frames": [
     {
      "src": "waltz-happy-transition-in/01.jpg",
@@ -1173,7 +1173,7 @@
    "id": "waltz-happy-section",
    "name": "8B · Hide and Seek: Part 2",
    "section": "Waltz",
-   "fingerprint": "1erlsqx",
+   "fingerprint": "2mz8rk",
    "frames": [
     {
      "src": "waltz-happy-section/01.jpg",
@@ -1231,7 +1231,7 @@
    "id": "waltz-happy-to-peaceful",
    "name": "8C · Hide and Seek: Part 3",
    "section": "Waltz",
-   "fingerprint": "1lisplp",
+   "fingerprint": "q42om4",
    "frames": [
     {
      "src": "waltz-happy-to-peaceful/01.jpg",
@@ -1284,7 +1284,7 @@
    "id": "waltz-peaceful-frolicking",
    "name": "9 · Theme 1: Peaceful Frolicking",
    "section": "Waltz",
-   "fingerprint": "m9haaj",
+   "fingerprint": "du20f2",
    "frames": [
     {
      "src": "waltz-peaceful-frolicking/01.jpg",
@@ -1377,7 +1377,7 @@
    "id": "waltz-getting-to-spiral",
    "name": "10A · Unfurling Spiral: Part 1 – Getting to Spiral",
    "section": "Waltz",
-   "fingerprint": "1wbd2l1",
+   "fingerprint": "1yb7bk4",
    "frames": [
     {
      "src": "waltz-getting-to-spiral/01.jpg",
@@ -1425,7 +1425,7 @@
    "id": "waltz-unfurling-spiral",
    "name": "10B · Unfurling Spiral: Part 2 – Unfurling",
    "section": "Waltz",
-   "fingerprint": "1h6aw1c",
+   "fingerprint": "p4wrz5",
    "frames": [
     {
      "src": "waltz-unfurling-spiral/01.jpg",
@@ -1468,7 +1468,7 @@
    "id": "waltz-spiral-to-x",
    "name": "10C · Unfurling Spiral: Part 3 – Spiral → X",
    "section": "Waltz",
-   "fingerprint": "7o9b9i",
+   "fingerprint": "ic0h3n",
    "frames": [
     {
      "src": "waltz-spiral-to-x/01.jpg",
@@ -1521,7 +1521,7 @@
    "id": "waltz-x-to-line",
    "name": "11A · Cascade Vertical Line: X → |",
    "section": "Waltz",
-   "fingerprint": "vmksl0",
+   "fingerprint": "qy6cdp",
    "frames": [
     {
      "src": "waltz-x-to-line/01.jpg",
@@ -1569,7 +1569,7 @@
    "id": "waltz-line-cascade",
    "name": "11B · Cascade Vertical Line: Cascade",
    "section": "Waltz",
-   "fingerprint": "1cujjle",
+   "fingerprint": "p6v8t3",
    "frames": [
     {
      "src": "waltz-line-cascade/01.jpg",
@@ -1647,7 +1647,7 @@
    "id": "waltz-line-send-out",
    "name": "11C · Cascade Vertical Line: Send Out",
    "section": "Waltz",
-   "fingerprint": "1upita3",
+   "fingerprint": "p3zjtb",
    "frames": [
     {
      "src": "waltz-line-send-out/01.jpg",
@@ -1682,12 +1682,12 @@
     {
      "src": "waltz-line-send-out/07.jpg",
      "subtitle": "Measure 6",
-     "note": "Waltz: the line turns 1 tape (12's Measure 1)"
+     "note": ""
     },
     {
      "src": "waltz-line-send-out/08.jpg",
      "subtitle": "Measure 7",
-     "note": "Waltz onto the diagonal (12's Measure 2)"
+     "note": ""
     }
    ]
   },
@@ -1695,7 +1695,7 @@
    "id": "waltz-transition-to-blooms",
    "name": "12 · Transition to the blooms",
    "section": "Waltz",
-   "fingerprint": "mqxxxy",
+   "fingerprint": "1poq7vn",
    "frames": [
     {
      "src": "waltz-transition-to-blooms/01.jpg",
@@ -1723,7 +1723,7 @@
    "id": "waltz-flower-blooming",
    "name": "13 · Flower Blooming Diagonal",
    "section": "Waltz",
-   "fingerprint": "lskn3x",
+   "fingerprint": "y2kny4",
    "frames": [
     {
      "src": "waltz-flower-blooming/01.jpg",
@@ -1741,7 +1741,7 @@
    "id": "waltz-swirling-cascade",
    "name": "14 · Swirling Cascade",
    "section": "Waltz",
-   "fingerprint": "yyyb4n",
+   "fingerprint": "1kcvlc2",
    "frames": [
     {
      "src": "waltz-swirling-cascade/01.jpg",
@@ -1754,7 +1754,7 @@
    "id": "waltz-bombastic",
    "name": "15 · Theme 1: Bombastic",
    "section": "Waltz",
-   "fingerprint": "fzsmmc",
+   "fingerprint": "1dojwvx",
    "frames": [
     {
      "src": "waltz-bombastic/01.jpg",
