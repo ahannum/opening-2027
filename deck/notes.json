@@ -1901,6 +1901,159 @@
      "J hook on 1 for the free spin, then kinda track the F as they spin, and when their back is turned to you, you can catch their waist as they turn, starting to form the hold for the dip, and they’ll just keep turning into it."
     ]
    ]
+  },
+  {
+   "dance": "Waltz",
+   "number": 11,
+   "part": "A",
+   "title": "11A · Cascade Vertical Line: X → |",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 1",
+     "123- Up from dip, F backing towards center line (F get up from dip and over to Ls right side for Group 2)\n456- Alligator frame F backing towards Center line\n“Up-2-3-Frame-5-6”",
+     "",
+     ""
+    ],
+    [
+     "Measure 2",
+     "The arms of the X waltz 1 tape towards each other but don’t yet meet\n● Teal, Group 1: waltz toward LOD\n● Violet, Group 2: reverse waltz against LOD",
+     "",
+     ""
+    ],
+    [
+     "Measure 3",
+     "The 2 arms of the X meet in 1 long vertical line\n123:\n● Teal, Group 1: waltz toward LOD\n● Violet, Group 2: reverse waltz against LOD",
+     "",
+     ""
+    ],
+    [
+     "Measure 4",
+     "123 F turn and L slot in behind\n456 pause",
+     "Outside Turn if Forward Waltz, Inside Turn if Reverse Waltz",
+     ""
+    ],
+    [
+     "Measure 5",
+     "L go to their left step\nF go to their right step",
+     "",
+     ""
+    ],
+    [
+     "Measure 6",
+     "L gallop step to right (bigger)\nF gallop step to left (bigger)",
+     "",
+     ""
+    ],
+    [
+     "Measure 7",
+     "L gallop step to left (small)\nF gallop step to right (small)\nInto Line",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "dance": "Waltz",
+   "number": 11,
+   "part": "B",
+   "title": "11B · Cascade Vertical Line: Cascade",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 1",
+     "Cascade Counts:\n1\n2\n3\n5\n6\nFront to back, one couple a beat: 1, 13, 14, 10, 15, 11",
+     "Right Arm",
+     "Left Arm"
+    ],
+    [
+     "Measure 2",
+     "Cascade Counts:\n7\n8\n9\n10\n11\n12 → you will just do up arm then straight down\n\nOn beat 6, 13B is going down and 13A is prep for side dip\nOne couple a beat: 12, 8, 4, 16, 7, 3",
+     "Right Arm",
+     "Left Arm"
+    ],
+    [
+     "Bom",
+     "13A: trust fall dip, couples 6 (to your left) and 2 (to your right), see notes above\n13B: step-to-the-side-ballet lift, couples 9 (to your left) and 5 (to your right), see notes above\nExpression: Smiling ha we gotcha\n\nOthers: drop to a crouch on the 1. Arms are low floating for all. Expression: surprise. You did not see that coming wow. Hold for the whole measure.",
+     "Crouch with knees to right",
+     "Crouch with knees to left"
+    ]
+   ]
+  },
+  {
+   "dance": "Waltz",
+   "number": 12,
+   "part": "",
+   "title": "12 · Transition to the blooms",
+   "overview": "",
+   "columns": [
+    "Counts",
+    "Choreo",
+    "F notes",
+    "L notes"
+   ],
+   "rows": [
+    [
+     "Measure 1",
+     "Bom (from previous section)",
+     "",
+     ""
+    ],
+    [
+     "Measure 2",
+     "123 Everyone comes up\n456 F turn out to sendout",
+     "456 every other F to the opposite side, front to back (1 left, 13 right, …)",
+     "456 make one center line"
+    ],
+    [
+     "Measure 3",
+     "123 F arm up\n456 F arm side",
+     "123 Left or Right arm up\n456 Left or right arm out (fingers tips at shoulder height)",
+     ""
+    ],
+    [
+     "Measure 4",
+     "123 hold\n456 F turn in",
+     "456 turn in on the side you went out",
+     ""
+    ],
+    [
+     "Measure 5",
+     "123 frame\n456 reorient",
+     "456 top half F on the right, bottom half F on the left",
+     "456 top half L on the left, bottom half L on the right"
+    ],
+    [
+     "Measure 6",
+     "Waltz against LOD, alligator",
+     "",
+     ""
+    ],
+    [
+     "Measure 7",
+     "Waltz against LOD, alligator",
+     "",
+     ""
+    ],
+    [
+     "Measure 8",
+     "",
+     "",
+     ""
+    ]
+   ]
   }
  ],
  "extras": [
@@ -2063,6 +2216,20 @@
    "dance": "Waltz",
    "number": 10,
    "formation": "outside circle → inside circle",
+   "notes": [],
+   "links": []
+  },
+  {
+   "dance": "Waltz",
+   "number": 11,
+   "formation": "X → |",
+   "notes": [],
+   "links": []
+  },
+  {
+   "dance": "Waltz",
+   "number": 12,
+   "formation": "| → diagonal line",
    "notes": [],
    "links": []
   }
