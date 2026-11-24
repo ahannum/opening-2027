@@ -5007,6 +5007,20 @@
               });
               return named(line, swirl, "Groups");
             })(),
+            // "Test 2" (Ariel, 11/23): same spots and outlines; the green and rose couples split with
+            // the follows facing right (the lead's half to the east), the amber and blue couples with
+            // the follows facing left (the lead's half to the west).
+            (() => {
+              const line = frame("Test 2", 1, 4, FIT);
+              const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
+              line.items.forEach((item) => {
+                const front = byX.indexOf(item.number) % 2 === 0;
+                const left = item.x < CENTER.x;
+                item.groupColor = front ? (left ? "amber" : "blue") : (left ? "green" : "rose");
+                item.facingMode = front ? "west" : "east";
+              });
+              return named(line, swirl, "Test 2");
+            })(),
           ],
           // Section 15 is seeded in the same horizontal line (Ariel, 11/16), every other couple
           // facing the Honored Guests the other way round: from couple 1 at the left end, the lead
