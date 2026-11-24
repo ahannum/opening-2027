@@ -1728,7 +1728,7 @@
    "id": "waltz-swirling-cascade",
    "name": "14 · Swirling Cascade",
    "section": "Waltz",
-   "fingerprint": "1cyz2gw",
+   "fingerprint": "1cvo0l6",
    "frames": [
     {
      "src": "waltz-swirling-cascade/01.jpg",
@@ -1737,32 +1737,32 @@
     },
     {
      "src": "waltz-swirling-cascade/02.jpg",
-     "subtitle": "Test frame",
+     "subtitle": "Measure 1",
      "note": ""
     },
     {
      "src": "waltz-swirling-cascade/03.jpg",
-     "subtitle": "Groups",
+     "subtitle": "Measure 2",
      "note": ""
     },
     {
      "src": "waltz-swirling-cascade/04.jpg",
-     "subtitle": "Test 2",
+     "subtitle": "Measure 3",
      "note": ""
     },
     {
      "src": "waltz-swirling-cascade/05.jpg",
-     "subtitle": "Test 3",
+     "subtitle": "Measure 4",
      "note": ""
     },
     {
      "src": "waltz-swirling-cascade/06.jpg",
-     "subtitle": "Test 4",
+     "subtitle": "Measure 5",
      "note": ""
     },
     {
      "src": "waltz-swirling-cascade/07.jpg",
-     "subtitle": "Test 5",
+     "subtitle": "Measure 6",
      "note": ""
     }
    ]

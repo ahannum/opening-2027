@@ -4984,13 +4984,13 @@
           const radius = Math.hypot(item.x - CENTER.x, item.y - CENTER.y);
           return { x: fix(CENTER.x + radius * Math.cos(angle)), y: fix(CENTER.y + radius * Math.sin(angle)) };
         };
-        // "Test 3" (Ariel, 11/23): amber and rose go out to the outside circle, one couple a tape.
+        // "Measure 4" (Ariel, 11/23): amber and rose go out to the outside circle, one couple a tape.
         // Amber takes the 4 tapes left of the south cardinal (nearest the Honored Guests), going up
         // the left side: 1, 14, 15, 12 (12 on the west cardinal). Rose takes the 4 tapes right of the
         // north cardinal, going down the right side: 5, 2, 3, 16 (16 on the east cardinal). Green and
         // blue make two short centered lines a little apart: green nearer the Honored Guests, blue
-        // just behind, each keeping its order across. Facings as in Test 2. Tests 4 and 5 start here.
-        const test3 = (subtitle = "Test 3") => {
+        // just behind, each keeping its order across. Facings as in Measure 3. Measures 5 and 6 start here.
+        const swirlMeasure4 = (subtitle = "Measure 4") => {
           const line = frame(subtitle, 1, 4, FIT);
           const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
           const tape = Math.PI / 8;
@@ -5027,20 +5027,20 @@
           ],
           swirl: [
             named(frame("Start", 1, 4, FIT, forwardLook), swirl, "Start"),
-            // "Test frame" (Ariel, 11/23): the same line, every other couple from the left end with
+            // "Measure 1" (Ariel, 11/23): the same line, every other couple from the left end with
             // the follow facing the Honored Guests (the lead's half to the south), the couples between
             // them with the lead facing them (the lead's half to the north).
             (() => {
-              const line = frame("Test frame", 1, 4, FIT);
+              const line = frame("Measure 1", 1, 4, FIT);
               const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
               line.items.forEach((item) => { item.facingMode = byX.indexOf(item.number) % 2 ? "north" : "south"; });
-              return named(line, swirl, "Test frame");
+              return named(line, swirl, "Measure 1");
             })(),
-            // "Groups" (Ariel, 11/23): the test frame's line outlined in four groups: follows facing
+            // "Measure 2" (Ariel, 11/23): the Measure 1 line outlined in four groups: follows facing
             // the Honored Guests on the left (amber) and on the right (blue), then the back-facing
             // couples (lead facing the Honored Guests) on the left (green) and on the right (rose).
             (() => {
-              const line = frame("Groups", 1, 4, FIT);
+              const line = frame("Measure 2", 1, 4, FIT);
               const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
               line.items.forEach((item) => {
                 const front = byX.indexOf(item.number) % 2 === 0;
@@ -5048,13 +5048,13 @@
                 item.facingMode = front ? "south" : "north";
                 item.groupColor = front ? (left ? "amber" : "blue") : (left ? "green" : "rose");
               });
-              return named(line, swirl, "Groups");
+              return named(line, swirl, "Measure 2");
             })(),
-            // "Test 2" (Ariel, 11/23, flipped the same day): same spots and outlines; the amber and blue
+            // "Measure 3" (Ariel, 11/23, flipped the same day): same spots and outlines; the amber and blue
             // couples split with the follows facing right (the lead's half to the east), the green and
             // rose couples with the follows facing left (the lead's half to the west).
             (() => {
-              const line = frame("Test 2", 1, 4, FIT);
+              const line = frame("Measure 3", 1, 4, FIT);
               const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
               line.items.forEach((item) => {
                 const front = byX.indexOf(item.number) % 2 === 0;
@@ -5062,16 +5062,16 @@
                 item.groupColor = front ? (left ? "amber" : "blue") : (left ? "green" : "rose");
                 item.facingMode = front ? "east" : "west";
               });
-              return named(line, swirl, "Test 2");
+              return named(line, swirl, "Measure 3");
             })(),
-            test3(),
-            // "Test 4" (Ariel, 11/23): amber and rose travel 1 tape along the line of dance
+            swirlMeasure4(),
+            // "Measure 5" (Ariel, 11/23): amber and rose travel 1 tape along the line of dance
             // (counterclockwise) on the outside circle; green and blue spread onto the inside circle,
             // one couple every other tape (cardinals and diagonals), green and blue alternating, each
-            // couple taking the nearest such spot it can. Every couple's facing is flipped from Test 3
+            // couple taking the nearest such spot it can. Every couple's facing is flipped from Measure 4
             // (amber and blue follows now face left, green and rose follows right).
             ...(() => {
-              const shot = test3("Test 4");
+              const shot = swirlMeasure4("Measure 5");
               const tape = Math.PI / 8;
               const at = (angle, radius) => ({ x: CENTER.x + radius * Math.cos(angle), y: CENTER.y + radius * Math.sin(angle) });
               const perms = (list) => (list.length < 2 ? [list] : list.flatMap((x, i) => perms([...list.slice(0, i), ...list.slice(i + 1)]).map((rest) => [x, ...rest])));
@@ -5097,9 +5097,9 @@
               shot.items.forEach((item) => { item.facingMode = flipped[item.facingMode] ?? item.facingMode; });
               // Except couple 1 (Ariel, 11/23): F backing the line of dance.
               shot.items.find((item) => item.number === 1).facingMode = "cw";
-              // "Test 5" (Ariel, 11/23), the next measure: everyone travels 1 more tape along the line
+              // "Measure 6" (Ariel, 11/23), the next measure: everyone travels 1 more tape along the line
               // of dance, each on their own circle.
-              const next = named({ ...structuredClone(shot), items: shot.items.map((item) => ({ ...item, ...turnLod(item, 1) })) }, swirl, "Test 5");
+              const next = named({ ...structuredClone(shot), items: shot.items.map((item) => ({ ...item, ...turnLod(item, 1) })) }, swirl, "Measure 6");
               return [shot, next];
             })(),
           ],
