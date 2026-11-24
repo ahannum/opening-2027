@@ -5046,7 +5046,7 @@
               line.items.forEach((item) => {
                 const front = byX.indexOf(item.number) % 2 === 0;
                 const left = item.x < CENTER.x;
-                item.facingMode = front ? "south" : "north";
+                item.facingMode = front ? "north" : "south"; // flipped (Ariel, 11/23)
                 item.groupColor = front ? (left ? "amber" : "blue") : (left ? "green" : "rose");
               });
               return named(line, swirl, "Measure 2");
