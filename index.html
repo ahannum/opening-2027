@@ -5007,9 +5007,9 @@
               });
               return named(line, swirl, "Groups");
             })(),
-            // "Test 2" (Ariel, 11/23): same spots and outlines; the green and rose couples split with
-            // the follows facing right (the lead's half to the east), the amber and blue couples with
-            // the follows facing left (the lead's half to the west).
+            // "Test 2" (Ariel, 11/23, flipped the same day): same spots and outlines; the amber and blue
+            // couples split with the follows facing right (the lead's half to the east), the green and
+            // rose couples with the follows facing left (the lead's half to the west).
             (() => {
               const line = frame("Test 2", 1, 4, FIT);
               const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
@@ -5017,7 +5017,7 @@
                 const front = byX.indexOf(item.number) % 2 === 0;
                 const left = item.x < CENTER.x;
                 item.groupColor = front ? (left ? "amber" : "blue") : (left ? "green" : "rose");
-                item.facingMode = front ? "west" : "east";
+                item.facingMode = front ? "east" : "west";
               });
               return named(line, swirl, "Test 2");
             })(),
