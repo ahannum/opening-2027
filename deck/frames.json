@@ -1728,11 +1728,21 @@
    "id": "waltz-swirling-cascade",
    "name": "14 · Swirling Cascade",
    "section": "Waltz",
-   "fingerprint": "1kcvlc2",
+   "fingerprint": "c4xx1v",
    "frames": [
     {
      "src": "waltz-swirling-cascade/01.jpg",
      "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "waltz-swirling-cascade/02.jpg",
+     "subtitle": "Test frame",
+     "note": ""
+    },
+    {
+     "src": "waltz-swirling-cascade/03.jpg",
+     "subtitle": "Groups",
      "note": ""
     }
    ]

@@ -4982,7 +4982,32 @@
             named(frame("Start", 1, 2, FIT), flowers, "Start"),
             named(frame("Measure 1", 1, 4, FIT, forwardLook), flowers, "Measure 1"),
           ],
-          swirl: [named(frame("Start", 1, 4, FIT, forwardLook), swirl, "Start")],
+          swirl: [
+            named(frame("Start", 1, 4, FIT, forwardLook), swirl, "Start"),
+            // "Test frame" (Ariel, 11/23): the same line, every other couple from the left end with
+            // the follow facing the Honored Guests (the lead's half to the south), the couples between
+            // them with the lead facing them (the lead's half to the north).
+            (() => {
+              const line = frame("Test frame", 1, 4, FIT);
+              const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
+              line.items.forEach((item) => { item.facingMode = byX.indexOf(item.number) % 2 ? "north" : "south"; });
+              return named(line, swirl, "Test frame");
+            })(),
+            // "Groups" (Ariel, 11/23): the test frame's line outlined in four groups: follows facing
+            // the Honored Guests on the left (amber) and on the right (blue), then the back-facing
+            // couples (lead facing the Honored Guests) on the left (green) and on the right (rose).
+            (() => {
+              const line = frame("Groups", 1, 4, FIT);
+              const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
+              line.items.forEach((item) => {
+                const front = byX.indexOf(item.number) % 2 === 0;
+                const left = item.x < CENTER.x;
+                item.facingMode = front ? "south" : "north";
+                item.groupColor = front ? (left ? "amber" : "blue") : (left ? "green" : "rose");
+              });
+              return named(line, swirl, "Groups");
+            })(),
+          ],
           // Section 15 is seeded in the same horizontal line (Ariel, 11/16), every other couple
           // facing the Honored Guests the other way round: from couple 1 at the left end, the lead
           // faces the Honored Guests (the lead's half to the north), then the follow (the lead's half
