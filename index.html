@@ -5322,7 +5322,7 @@
     // one straight center line. Measure 3: F arm, then hold.
     // Measure 4: hold, then F turns in, back to their lead. Measure 5: frame, reorient side-on, F on
     // the left except 6 and 9 (F on the right). Measures 6–7 waltz onto the diagonal, 1 tape each
-    // (the line turns of `xToLineSnapshots("blooms")`).
+    // (the line turns of `xToLineSnapshots("blooms")`); Measure 8 holds there for now.
     function lineSendOutSnapshots() {
       const title = "Transition to the blooms";
       const last = lineCascadeSnapshots().at(-1);
@@ -5362,7 +5362,8 @@
         }))),
         // Measures 6–7 (Ariel, 11/19): Measure 6 the line turns 1 tape, Measure 7 the waltz onto the
         // diagonal. Each couple takes its spot and facing from the old 12's Measure 1 and 2 frames.
-        ...[["Measure 6", 1], ["Measure 7", 2]].map(([subtitle, index]) => {
+        // Measure 8 (Ariel, 11/23): for now the same as Measure 7, its choreo still to come.
+        ...[["Measure 6", 1], ["Measure 7", 2], ["Measure 8", 2]].map(([subtitle, index]) => {
           const blooms = new Map((bloomsTransitionSnapshots()[index]?.items || []).map((item) => [item.number, item]));
           return named(subtitle, couples(false).map((couple) => {
             const spot = blooms.get(couple.number);
