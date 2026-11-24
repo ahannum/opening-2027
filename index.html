@@ -5021,29 +5021,38 @@
               });
               return named(line, swirl, "Test 2");
             })(),
-            // "Test 3" (Ariel, 11/23): amber and rose go out to the outside circle, every other tape:
-            // 1 on the tape nearest the Honored Guests, then up the left side 14, 15, 12, 5 on the
-            // north cardinal, then down the right side 2, 3, 16. The horizontal line splits: green steps
-            // toward the Honored Guests and blue away, each staying on its spot across. Facings as in
-            // Test 2.
+            // "Test 3" (Ariel, 11/23): amber and rose go out to the outside circle, one couple a tape.
+            // Amber takes the 4 tapes left of the south cardinal (nearest the Honored Guests), going
+            // up the left side: 1, 14, 15, 12 (12 on the west cardinal). Rose takes the 4 tapes right
+            // of the north cardinal, going down the right side: 5, 2, 3, 16 (16 on the east cardinal).
+            // Green and blue make two short centered lines, close together: green nearer the Honored
+            // Guests, blue just behind, each keeping its order across. Facings as in Test 2.
             (() => {
               const line = frame("Test 3", 1, 4, FIT);
               const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
-              const ring = [1, 14, 15, 12, 5, 2, 3, 16];
-              const split = PIECE_RADIUS * 2.5;
+              const tape = Math.PI / 8;
+              const ring = { 1: 1, 14: 2, 15: 3, 12: 4 };
+              const ringRose = { 5: 1, 2: 2, 3: 3, 16: 4 };
+              const rows = { green: [], blue: [] };
               line.items.forEach((item) => {
                 const front = byX.indexOf(item.number) % 2 === 0;
                 const left = item.x < CENTER.x;
                 item.groupColor = front ? (left ? "amber" : "blue") : (left ? "green" : "rose");
                 item.facingMode = front ? "east" : "west";
-                const tape = ring.indexOf(item.number);
-                if (tape >= 0) {
-                  const angle = Math.PI / 2 + (tape * Math.PI) / 4;
+                const angle = ring[item.number] ? Math.PI / 2 + ring[item.number] * tape
+                  : ringRose[item.number] ? (3 * Math.PI) / 2 + ringRose[item.number] * tape : null;
+                if (angle !== null) {
                   item.x = fix(CENTER.x + OUTER_RADIUS * Math.cos(angle));
                   item.y = fix(CENTER.y + OUTER_RADIUS * Math.sin(angle));
-                } else {
-                  item.y = fix(item.y + (item.groupColor === "green" ? split : -split));
-                }
+                } else rows[item.groupColor].push(item);
+              });
+              // Each row centered, neighbours just apart; the two rows just clear of each other.
+              const across = PIECE_RADIUS * 2.2, apart = PIECE_RADIUS * 1.15;
+              Object.entries(rows).forEach(([color, row]) => {
+                row.sort((a, b) => a.x - b.x).forEach((item, index) => {
+                  item.x = fix(CENTER.x + (index - (row.length - 1) / 2) * across);
+                  item.y = fix(CENTER.y + (color === "green" ? apart : -apart));
+                });
               });
               return named(line, swirl, "Test 3");
             })(),
