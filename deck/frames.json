@@ -1662,7 +1662,7 @@
    "id": "waltz-transition-to-blooms",
    "name": "12 · Transition to the blooms",
    "section": "Waltz",
-   "fingerprint": "w5gzx",
+   "fingerprint": "16i9fvd",
    "frames": [
     {
      "src": "waltz-transition-to-blooms/01.jpg",
@@ -1702,6 +1702,11 @@
     {
      "src": "waltz-transition-to-blooms/08.jpg",
      "subtitle": "Measure 7",
+     "note": ""
+    },
+    {
+     "src": "waltz-transition-to-blooms/09.jpg",
+     "subtitle": "Measure 8",
      "note": ""
     }
    ]
