@@ -5046,8 +5046,9 @@
                   item.y = fix(CENTER.y + OUTER_RADIUS * Math.sin(angle));
                 } else rows[item.groupColor].push(item);
               });
-              // Each row centered, neighbours just apart; the two rows just clear of each other.
-              const across = PIECE_RADIUS * 2.2, apart = PIECE_RADIUS * 1.15;
+              // Each row centered, neighbours a little apart, the two rows a little apart (Ariel, 11/23:
+              // spread a touch from just touching).
+              const across = PIECE_RADIUS * 2.6, apart = PIECE_RADIUS * 1.45;
               Object.entries(rows).forEach(([color, row]) => {
                 row.sort((a, b) => a.x - b.x).forEach((item, index) => {
                   item.x = fix(CENTER.x + (index - (row.length - 1) / 2) * across);
