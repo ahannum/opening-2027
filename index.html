@@ -4984,13 +4984,13 @@
           const radius = Math.hypot(item.x - CENTER.x, item.y - CENTER.y);
           return { x: fix(CENTER.x + radius * Math.cos(angle)), y: fix(CENTER.y + radius * Math.sin(angle)) };
         };
-        // "Measure 4" (Ariel, 11/23): amber and rose go out to the outside circle, one couple a tape.
+        // "Measure 6" (Ariel, 11/23): amber and rose go out to the outside circle, one couple a tape.
         // Amber takes the 4 tapes left of the south cardinal (nearest the Honored Guests), going up
         // the left side: 1, 14, 15, 12 (12 on the west cardinal). Rose takes the 4 tapes right of the
         // north cardinal, going down the right side: 5, 2, 3, 16 (16 on the east cardinal). Green and
         // blue make two short centered lines a little apart: blue nearer the Honored Guests, green
-        // just behind, each keeping its order across. Facings as in Measure 3. Measures 5 and 6 start here.
-        const swirlMeasure4 = (subtitle = "Measure 4") => {
+        // just behind, each keeping its order across. Facings as in Measure 3. Measures 7 and 8 start here; Measures 4–5 lead into it.
+        const swirlRings = (subtitle = "Measure 6") => {
           const line = frame(subtitle, 1, 4, FIT);
           const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
           const tape = Math.PI / 8;
@@ -5018,6 +5018,45 @@
               // Green behind blue: blue nearer the Honored Guests (Ariel, 11/23).
               item.y = fix(CENTER.y + (color === "green" ? -apart : apart));
             });
+          });
+          return named(line, swirl, subtitle);
+        };
+        // "Measure 4" and "Measure 5" (Ariel, 11/23): amber and rose peel off the line ends onto the
+        // outside circle while green and blue head in toward their Measure 6 rows. Each measure every
+        // amber or rose couple already on the circle travels 1 tape along the line of dance, the next
+        // one in the line steps onto the end tape (west for amber, east for rose), and the rest of
+        // amber and rose shift out along the line into the spots just left. Measure 4: 1 and 5 one
+        // tape on, 14 and 2 on the end tapes; Measure 5: 1, 14, 2 and 5 one more tape, 15 and 3 on
+        // the end tapes. Green and blue step off the line (green behind, blue in front) and go a
+        // third, then two thirds, of the way across to their row spots. The third step is Measure
+        // 6. Facings as in Measure 3.
+        const swirlPeel = (subtitle, step) => {
+          const line = frame(subtitle, 1, 4, FIT);
+          const target = new Map(swirlRings().items.map((item) => [item.number, item]));
+          const slots = [...line.items].sort((a, b) => a.x - b.x).map((item) => ({ x: item.x, y: item.y }));
+          const ends = {
+            amber: { order: [1, 14, 15, 12], slots: [0, 2, 4, 6], endTape: 8 },
+            rose: { order: [5, 2, 3, 16], slots: [15, 13, 11, 9], endTape: 16 },
+          };
+          line.items.forEach((item) => {
+            const to = target.get(item.number);
+            item.groupColor = to.groupColor;
+            item.facingMode = to.facingMode;
+            const side = ends[item.groupColor];
+            if (side) {
+              const i = side.order.indexOf(item.number);
+              if (i >= step) Object.assign(item, slots[side.slots[i - step]]);
+              else {
+                const angle = ((side.endTape - (step - i)) * Math.PI) / 8;
+                item.x = fix(CENTER.x + OUTER_RADIUS * Math.cos(angle));
+                item.y = fix(CENTER.y + OUTER_RADIUS * Math.sin(angle));
+              }
+            } else {
+              // Stepped right off the line (green behind, blue in front) so amber and rose can
+              // shift past, sliding across toward their row spots; the rows close in at Measure 6.
+              item.x = fix(lerp(item.x, to.x, step / 3));
+              item.y = fix(CENTER.y + Math.sign(to.y - CENTER.y) * PIECE_RADIUS * 2.3);
+            }
           });
           return named(line, swirl, subtitle);
         };
@@ -5065,15 +5104,17 @@
               });
               return named(line, swirl, "Measure 3");
             })(),
-            swirlMeasure4(),
-            // "Measure 5" (Ariel, 11/23): amber and rose travel 1 tape along the line of dance
+            swirlPeel("Measure 4", 1),
+            swirlPeel("Measure 5", 2),
+            swirlRings(),
+            // "Measure 7" (Ariel, 11/23): amber and rose travel 1 tape along the line of dance
             // (counterclockwise) on the outside circle; green and blue spread onto the inside circle,
             // every other tape: green fills the north half and blue the south half (the tapes either
             // side of the cardinals, so the 8 sit evenly round, each half keeping its row's order
-            // west to east). Every couple's facing is flipped from Measure 4 (amber and blue follows
+            // west to east). Every couple's facing is flipped from Measure 6 (amber and blue follows
             // now face left, green and rose follows right).
             ...(() => {
-              const shot = swirlMeasure4("Measure 5");
+              const shot = swirlRings("Measure 7");
               const tape = Math.PI / 8;
               const at = (angle, radius) => ({ x: CENTER.x + radius * Math.cos(angle), y: CENTER.y + radius * Math.sin(angle) });
               const perms = (list) => (list.length < 2 ? [list] : list.flatMap((x, i) => perms([...list.slice(0, i), ...list.slice(i + 1)]).map((rest) => [x, ...rest])));
@@ -5093,9 +5134,9 @@
               shot.items.forEach((item) => { item.facingMode = flipped[item.facingMode] ?? item.facingMode; });
               // Except couple 1 (Ariel, 11/23): F backing the line of dance.
               shot.items.find((item) => item.number === 1).facingMode = "cw";
-              // "Measure 6" (Ariel, 11/23), the next measure: everyone travels along the line of dance on
+              // "Measure 8" (Ariel, 11/23), the next measure: everyone travels along the line of dance on
               // their own circle, 1 tape on the outside, 2 on the inside (green and blue).
-              const next = named({ ...structuredClone(shot), items: shot.items.map((item) => ({ ...item, ...turnLod(item, item.groupColor === "green" || item.groupColor === "blue" ? 2 : 1) })) }, swirl, "Measure 6");
+              const next = named({ ...structuredClone(shot), items: shot.items.map((item) => ({ ...item, ...turnLod(item, item.groupColor === "green" || item.groupColor === "blue" ? 2 : 1) })) }, swirl, "Measure 8");
               return [shot, next];
             })(),
           ],
