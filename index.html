@@ -5064,12 +5064,13 @@
           // The bloom (Ariel, 11/23): on the diagonal, every other couple from couple 1 faces along /
           // against the line of dance. Then the line opens from its ends in, one group of 4 a half
           // measure, each couple waltzing ½ tape a half measure against the line of dance on its own
-          // circle (clockwise on the board): the ends (1, 13, 9, 5, amber) go first, then 14, 10, 6, 2
-          // (blue), then 15, 11, 7, 3 (green); at Measure 2 everyone, the middle four (12, 8, 4, 16,
-          // rose) too, is in the horizontal line, 2 tapes on from the diagonal.
+          // circle (clockwise on the board): the ends (1, 13, 9, 5, teal) go first, then 14, 10, 6, 2
+          // (violet), then 15, 11, 7, 3 (orange); at Measure 2 everyone, the middle four (12, 8, 4, 16,
+          // pink) too, is in the horizontal line, 2 tapes on from the diagonal. Colors kept apart
+          // from 14's amber / blue / green / rose (Ariel, 11/23).
           flowers: (() => {
             const groups = [[1, 13, 9, 5], [14, 10, 6, 2], [15, 11, 7, 3], [12, 8, 4, 16]];
-            const colors = ["amber", "blue", "green", "rose"];
+            const colors = ["teal", "violet", "orange", "pink"];
             const groupOf = (number) => groups.findIndex((g) => g.includes(number));
             const diagonal = frame("Start", 1, 2, FIT);
             const byX = [...diagonal.items].sort((a, b) => a.x - b.x).map((item) => item.number);
