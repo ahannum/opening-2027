@@ -5065,32 +5065,41 @@
               return named(line, swirl, "Test 2");
             })(),
             test3(),
-            // "Test 4" (Ariel, 11/23): amber and rose travel 1 tape along the line of dance
-            // (counterclockwise) on the outside circle; green and blue spread onto the inside
-            // circle, one couple every other tape (cardinals and diagonals), green and blue
-            // alternating, each couple taking the nearest such spot it can.
+            // "Test 4" (Ariel, 11/23): the circles swap. Amber and rose come in to the inside circle,
+            // one couple every other tape (cardinals and diagonals), amber and rose alternating. Green
+            // and blue go out to the outside circle onto the 4 tapes of each empty quarter: green the
+            // bottom right, from 1 tape below the east cardinal to the south cardinal; blue the top
+            // left, from 1 tape above the west cardinal to the north cardinal. Each couple takes the
+            // nearest spot it can in its set.
             ...(() => {
               const shot = test3("Test 4");
-              const rows = shot.items.filter((item) => item.groupColor === "green" || item.groupColor === "blue");
-              const spots = Array.from({ length: 8 }, (_, k) => (k * Math.PI) / 4);
-              const at = (angle) => ({ x: CENTER.x + INNER_RADIUS * Math.cos(angle), y: CENTER.y + INNER_RADIUS * Math.sin(angle) });
+              const tape = Math.PI / 8;
+              const at = (angle, radius) => ({ x: CENTER.x + radius * Math.cos(angle), y: CENTER.y + radius * Math.sin(angle) });
               const perms = (list) => (list.length < 2 ? [list] : list.flatMap((x, i) => perms([...list.slice(0, i), ...list.slice(i + 1)]).map((rest) => [x, ...rest])));
-              const cost = (items, angles) => items.reduce((sum, item, i) => {
-                const p = at(angles[i]);
+              const cost = (items, angles, radius) => items.reduce((sum, item, i) => {
+                const p = at(angles[i], radius);
                 return sum + (item.x - p.x) ** 2 + (item.y - p.y) ** 2;
               }, 0);
-              const best = (items, angles) => perms(angles).reduce((a, b) => (cost(items, b) < cost(items, a) ? b : a));
-              let choice = null;
-              [0, 1].forEach((parity) => {
-                const green = rows.filter((item) => item.groupColor === "green");
-                const blue = rows.filter((item) => item.groupColor === "blue");
-                const gAngles = best(green, spots.filter((_, k) => k % 2 === parity));
-                const bAngles = best(blue, spots.filter((_, k) => k % 2 !== parity));
-                const total = cost(green, gAngles) + cost(blue, bAngles);
-                if (!choice || total < choice.total) choice = { total, pairs: [...green.map((item, i) => [item, gAngles[i]]), ...blue.map((item, i) => [item, bAngles[i]])] };
-              });
-              choice.pairs.forEach(([item, angle]) => { const p = at(angle); item.x = fix(p.x); item.y = fix(p.y); });
-              shot.items.forEach((item) => { if (!rows.includes(item)) Object.assign(item, turnLod(item, 1)); });
+              const best = (items, angles, radius) => perms(angles).reduce((a, b) => (cost(items, b, radius) < cost(items, a, radius) ? b : a));
+              const group = (color) => shot.items.filter((item) => item.groupColor === color);
+              const place = (items, angles, radius) => items.forEach((item, i) => { const p = at(angles[i], radius); item.x = fix(p.x); item.y = fix(p.y); });
+              // Outside circle, tape k at k × 22.5° clockwise from east (4 = south, 12 = north).
+              const quarter = (from) => [0, 1, 2, 3].map((k) => (from + k) * tape);
+              const green = group("green"), blue = group("blue");
+              const greenAngles = best(green, quarter(1), OUTER_RADIUS);
+              const blueAngles = best(blue, quarter(9), OUTER_RADIUS);
+              // Inside circle: amber on every other spot, rose between, whichever way round is nearer.
+              const amber = group("amber"), rose = group("rose");
+              const spots = Array.from({ length: 8 }, (_, k) => (k * Math.PI) / 4);
+              const choice = [0, 1].map((parity) => {
+                const a = best(amber, spots.filter((_, k) => k % 2 === parity), INNER_RADIUS);
+                const r = best(rose, spots.filter((_, k) => k % 2 !== parity), INNER_RADIUS);
+                return { a, r, total: cost(amber, a, INNER_RADIUS) + cost(rose, r, INNER_RADIUS) };
+              }).reduce((x, y) => (y.total < x.total ? y : x));
+              place(green, greenAngles, OUTER_RADIUS);
+              place(blue, blueAngles, OUTER_RADIUS);
+              place(amber, choice.a, INNER_RADIUS);
+              place(rose, choice.r, INNER_RADIUS);
               // "Test 5" (Ariel, 11/23), the next measure: everyone travels 1 more tape along the line
               // of dance, each on their own circle.
               const next = named({ ...structuredClone(shot), items: shot.items.map((item) => ({ ...item, ...turnLod(item, 1) })) }, swirl, "Test 5");
