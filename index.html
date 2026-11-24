@@ -5021,6 +5021,32 @@
               });
               return named(line, swirl, "Test 2");
             })(),
+            // "Test 3" (Ariel, 11/23): amber and rose go out to the outside circle, every other tape:
+            // 1 on the tape nearest the Honored Guests, then up the left side 14, 15, 12, 5 on the
+            // north cardinal, then down the right side 2, 3, 16. The horizontal line splits: green steps
+            // toward the Honored Guests and blue away, each staying on its spot across. Facings as in
+            // Test 2.
+            (() => {
+              const line = frame("Test 3", 1, 4, FIT);
+              const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
+              const ring = [1, 14, 15, 12, 5, 2, 3, 16];
+              const split = PIECE_RADIUS * 2.5;
+              line.items.forEach((item) => {
+                const front = byX.indexOf(item.number) % 2 === 0;
+                const left = item.x < CENTER.x;
+                item.groupColor = front ? (left ? "amber" : "blue") : (left ? "green" : "rose");
+                item.facingMode = front ? "east" : "west";
+                const tape = ring.indexOf(item.number);
+                if (tape >= 0) {
+                  const angle = Math.PI / 2 + (tape * Math.PI) / 4;
+                  item.x = fix(CENTER.x + OUTER_RADIUS * Math.cos(angle));
+                  item.y = fix(CENTER.y + OUTER_RADIUS * Math.sin(angle));
+                } else {
+                  item.y = fix(item.y + (item.groupColor === "green" ? split : -split));
+                }
+              });
+              return named(line, swirl, "Test 3");
+            })(),
           ],
           // Section 15 is seeded in the same horizontal line (Ariel, 11/16), every other couple
           // facing the Honored Guests the other way round: from couple 1 at the left end, the lead
