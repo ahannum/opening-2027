@@ -1308,6 +1308,11 @@
       teal: "#7fcfc4",
       violet: "#b9a3e3",
       pink: "#e9a6d3",
+      // Four inferno-colormap stops, yellow to deep purple, for the four groups of 13's bloom (Ariel, 11/23).
+      bloom1: "#fac228",
+      bloom2: "#e5583a",
+      bloom3: "#a52c60",
+      bloom4: "#4f0d6c",
       // Sixteen colors in order, red through violet, for showing when each couple goes in a cascade.
       ...Object.fromEntries(Array.from({ length: 16 }, (_, index) => [
         `cascade${index + 1}`, `hsl(${Math.round((index * 285) / 15)}, 78%, 66%)`,
@@ -5064,13 +5069,13 @@
           // The bloom (Ariel, 11/23): on the diagonal, every other couple from couple 1 faces along /
           // against the line of dance. Then the line opens from its ends in, one group of 4 a half
           // measure, each couple waltzing ½ tape a half measure against the line of dance on its own
-          // circle (clockwise on the board): the ends (1, 13, 9, 5, teal) go first, then 14, 10, 6, 2
-          // (violet), then 15, 11, 7, 3 (orange); at Measure 2 everyone, the middle four (12, 8, 4, 16,
-          // pink) too, is in the horizontal line, 2 tapes on from the diagonal. Colors kept apart
-          // from 14's amber / blue / green / rose (Ariel, 11/23).
+          // circle (clockwise on the board): the ends (1, 13, 9, 5) go first, then 14, 10, 6, 2, then
+          // 15, 11, 7, 3; at Measure 2 everyone, the middle four (12, 8, 4, 16) too, is in the
+          // horizontal line, 2 tapes on from the diagonal. The groups run along the inferno colormap,
+          // yellow at the ends to deep purple in the middle (Ariel, 11/23).
           flowers: (() => {
             const groups = [[1, 13, 9, 5], [14, 10, 6, 2], [15, 11, 7, 3], [12, 8, 4, 16]];
-            const colors = ["teal", "violet", "orange", "pink"];
+            const colors = ["bloom1", "bloom2", "bloom3", "bloom4"];
             const groupOf = (number) => groups.findIndex((g) => g.includes(number));
             const diagonal = frame("Start", 1, 2, FIT);
             const byX = [...diagonal.items].sort((a, b) => a.x - b.x).map((item) => item.number);
