@@ -4977,6 +4977,49 @@
         const flowers = "Flower Blooming Diagonal";
         const swirl = "Swirling Cascade";
         const named = (shot, title, subtitle) => ({ ...shot, annotation: { title, subtitle } });
+        // Turned `tapes` along the line of dance (counterclockwise on the board, 22.5° a tape) about
+        // the center, keeping its ring.
+        const turnLod = (item, tapes) => {
+          const angle = Math.atan2(item.y - CENTER.y, item.x - CENTER.x) - (tapes * Math.PI) / 8;
+          const radius = Math.hypot(item.x - CENTER.x, item.y - CENTER.y);
+          return { x: fix(CENTER.x + radius * Math.cos(angle)), y: fix(CENTER.y + radius * Math.sin(angle)) };
+        };
+        // "Test 3" (Ariel, 11/23): amber and rose go out to the outside circle, one couple a tape.
+        // Amber takes the 4 tapes left of the south cardinal (nearest the Honored Guests), going up
+        // the left side: 1, 14, 15, 12 (12 on the west cardinal). Rose takes the 4 tapes right of the
+        // north cardinal, going down the right side: 5, 2, 3, 16 (16 on the east cardinal). Green and
+        // blue make two short centered lines a little apart: green nearer the Honored Guests, blue
+        // just behind, each keeping its order across. Facings as in Test 2. Tests 4 and 5 start here.
+        const test3 = (subtitle = "Test 3") => {
+          const line = frame(subtitle, 1, 4, FIT);
+          const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
+          const tape = Math.PI / 8;
+          const ring = { 1: 1, 14: 2, 15: 3, 12: 4 };
+          const ringRose = { 5: 1, 2: 2, 3: 3, 16: 4 };
+          const rows = { green: [], blue: [] };
+          line.items.forEach((item) => {
+            const front = byX.indexOf(item.number) % 2 === 0;
+            const left = item.x < CENTER.x;
+            item.groupColor = front ? (left ? "amber" : "blue") : (left ? "green" : "rose");
+            item.facingMode = front ? "east" : "west";
+            const angle = ring[item.number] ? Math.PI / 2 + ring[item.number] * tape
+              : ringRose[item.number] ? (3 * Math.PI) / 2 + ringRose[item.number] * tape : null;
+            if (angle !== null) {
+              item.x = fix(CENTER.x + OUTER_RADIUS * Math.cos(angle));
+              item.y = fix(CENTER.y + OUTER_RADIUS * Math.sin(angle));
+            } else rows[item.groupColor].push(item);
+          });
+          // Each row centered, neighbours a little apart, the two rows a little apart (Ariel, 11/23:
+          // spread a touch from just touching).
+          const across = PIECE_RADIUS * 2.6, apart = PIECE_RADIUS * 1.45;
+          Object.entries(rows).forEach(([color, row]) => {
+            row.sort((a, b) => a.x - b.x).forEach((item, index) => {
+              item.x = fix(CENTER.x + (index - (row.length - 1) / 2) * across);
+              item.y = fix(CENTER.y + (color === "green" ? apart : -apart));
+            });
+          });
+          return named(line, swirl, subtitle);
+        };
         return {
           flowers: [
             named(frame("Start", 1, 2, FIT), flowers, "Start"),
@@ -5021,41 +5064,37 @@
               });
               return named(line, swirl, "Test 2");
             })(),
-            // "Test 3" (Ariel, 11/23): amber and rose go out to the outside circle, one couple a tape.
-            // Amber takes the 4 tapes left of the south cardinal (nearest the Honored Guests), going
-            // up the left side: 1, 14, 15, 12 (12 on the west cardinal). Rose takes the 4 tapes right
-            // of the north cardinal, going down the right side: 5, 2, 3, 16 (16 on the east cardinal).
-            // Green and blue make two short centered lines, close together: green nearer the Honored
-            // Guests, blue just behind, each keeping its order across. Facings as in Test 2.
-            (() => {
-              const line = frame("Test 3", 1, 4, FIT);
-              const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
-              const tape = Math.PI / 8;
-              const ring = { 1: 1, 14: 2, 15: 3, 12: 4 };
-              const ringRose = { 5: 1, 2: 2, 3: 3, 16: 4 };
-              const rows = { green: [], blue: [] };
-              line.items.forEach((item) => {
-                const front = byX.indexOf(item.number) % 2 === 0;
-                const left = item.x < CENTER.x;
-                item.groupColor = front ? (left ? "amber" : "blue") : (left ? "green" : "rose");
-                item.facingMode = front ? "east" : "west";
-                const angle = ring[item.number] ? Math.PI / 2 + ring[item.number] * tape
-                  : ringRose[item.number] ? (3 * Math.PI) / 2 + ringRose[item.number] * tape : null;
-                if (angle !== null) {
-                  item.x = fix(CENTER.x + OUTER_RADIUS * Math.cos(angle));
-                  item.y = fix(CENTER.y + OUTER_RADIUS * Math.sin(angle));
-                } else rows[item.groupColor].push(item);
+            test3(),
+            // "Test 4" (Ariel, 11/23): amber and rose travel 1 tape along the line of dance
+            // (counterclockwise) on the outside circle; green and blue spread onto the inside
+            // circle, one couple every other tape (cardinals and diagonals), green and blue
+            // alternating, each couple taking the nearest such spot it can.
+            ...(() => {
+              const shot = test3("Test 4");
+              const rows = shot.items.filter((item) => item.groupColor === "green" || item.groupColor === "blue");
+              const spots = Array.from({ length: 8 }, (_, k) => (k * Math.PI) / 4);
+              const at = (angle) => ({ x: CENTER.x + INNER_RADIUS * Math.cos(angle), y: CENTER.y + INNER_RADIUS * Math.sin(angle) });
+              const perms = (list) => (list.length < 2 ? [list] : list.flatMap((x, i) => perms([...list.slice(0, i), ...list.slice(i + 1)]).map((rest) => [x, ...rest])));
+              const cost = (items, angles) => items.reduce((sum, item, i) => {
+                const p = at(angles[i]);
+                return sum + (item.x - p.x) ** 2 + (item.y - p.y) ** 2;
+              }, 0);
+              const best = (items, angles) => perms(angles).reduce((a, b) => (cost(items, b) < cost(items, a) ? b : a));
+              let choice = null;
+              [0, 1].forEach((parity) => {
+                const green = rows.filter((item) => item.groupColor === "green");
+                const blue = rows.filter((item) => item.groupColor === "blue");
+                const gAngles = best(green, spots.filter((_, k) => k % 2 === parity));
+                const bAngles = best(blue, spots.filter((_, k) => k % 2 !== parity));
+                const total = cost(green, gAngles) + cost(blue, bAngles);
+                if (!choice || total < choice.total) choice = { total, pairs: [...green.map((item, i) => [item, gAngles[i]]), ...blue.map((item, i) => [item, bAngles[i]])] };
               });
-              // Each row centered, neighbours a little apart, the two rows a little apart (Ariel, 11/23:
-              // spread a touch from just touching).
-              const across = PIECE_RADIUS * 2.6, apart = PIECE_RADIUS * 1.45;
-              Object.entries(rows).forEach(([color, row]) => {
-                row.sort((a, b) => a.x - b.x).forEach((item, index) => {
-                  item.x = fix(CENTER.x + (index - (row.length - 1) / 2) * across);
-                  item.y = fix(CENTER.y + (color === "green" ? apart : -apart));
-                });
-              });
-              return named(line, swirl, "Test 3");
+              choice.pairs.forEach(([item, angle]) => { const p = at(angle); item.x = fix(p.x); item.y = fix(p.y); });
+              shot.items.forEach((item) => { if (!rows.includes(item)) Object.assign(item, turnLod(item, 1)); });
+              // "Test 5" (Ariel, 11/23), the next measure: everyone travels 1 more tape along the line
+              // of dance, each on their own circle.
+              const next = named({ ...structuredClone(shot), items: shot.items.map((item) => ({ ...item, ...turnLod(item, 1) })) }, swirl, "Test 5");
+              return [shot, next];
             })(),
           ],
           // Section 15 is seeded in the same horizontal line (Ariel, 11/16), every other couple

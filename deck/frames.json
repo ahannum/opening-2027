@@ -1728,7 +1728,7 @@
    "id": "waltz-swirling-cascade",
    "name": "14 · Swirling Cascade",
    "section": "Waltz",
-   "fingerprint": "l6kpyp",
+   "fingerprint": "pydhy8",
    "frames": [
     {
      "src": "waltz-swirling-cascade/01.jpg",
@@ -1753,6 +1753,16 @@
     {
      "src": "waltz-swirling-cascade/05.jpg",
      "subtitle": "Test 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-swirling-cascade/06.jpg",
+     "subtitle": "Test 4",
+     "note": ""
+    },
+    {
+     "src": "waltz-swirling-cascade/07.jpg",
+     "subtitle": "Test 5",
      "note": ""
     }
    ]
