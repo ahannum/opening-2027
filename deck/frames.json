@@ -1728,7 +1728,7 @@
    "id": "waltz-swirling-cascade",
    "name": "14 · Swirling Cascade",
    "section": "Waltz",
-   "fingerprint": "wmz1js",
+   "fingerprint": "1uqnexd",
    "frames": [
     {
      "src": "waltz-swirling-cascade/01.jpg",
@@ -1739,41 +1739,6 @@
      "src": "waltz-swirling-cascade/02.jpg",
      "subtitle": "Measure 1",
      "note": ""
-    },
-    {
-     "src": "waltz-swirling-cascade/03.jpg",
-     "subtitle": "Measure 2",
-     "note": ""
-    },
-    {
-     "src": "waltz-swirling-cascade/04.jpg",
-     "subtitle": "Measure 3",
-     "note": ""
-    },
-    {
-     "src": "waltz-swirling-cascade/05.jpg",
-     "subtitle": "Measure 4",
-     "note": ""
-    },
-    {
-     "src": "waltz-swirling-cascade/06.jpg",
-     "subtitle": "Measure 5",
-     "note": ""
-    },
-    {
-     "src": "waltz-swirling-cascade/07.jpg",
-     "subtitle": "Measure 6",
-     "note": ""
-    },
-    {
-     "src": "waltz-swirling-cascade/08.jpg",
-     "subtitle": "Measure 7",
-     "note": ""
-    },
-    {
-     "src": "waltz-swirling-cascade/09.jpg",
-     "subtitle": "Measure 8",
-     "note": ""
     }
    ]
   },
@@ -1781,11 +1746,41 @@
    "id": "waltz-bombastic",
    "name": "15 · Theme 1: Bombastic",
    "section": "Waltz",
-   "fingerprint": "1dojwvx",
+   "fingerprint": "1xc3kzv",
    "frames": [
     {
      "src": "waltz-bombastic/01.jpg",
      "subtitle": "Start",
+     "note": ""
+    },
+    {
+     "src": "waltz-bombastic/02.jpg",
+     "subtitle": "Orphan 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-bombastic/03.jpg",
+     "subtitle": "Measure 1",
+     "note": ""
+    },
+    {
+     "src": "waltz-bombastic/04.jpg",
+     "subtitle": "Measure 2",
+     "note": ""
+    },
+    {
+     "src": "waltz-bombastic/05.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-bombastic/06.jpg",
+     "subtitle": "Measure 4",
+     "note": ""
+    },
+    {
+     "src": "waltz-bombastic/07.jpg",
+     "subtitle": "Measure 5",
      "note": ""
     }
    ]

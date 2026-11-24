@@ -5144,7 +5144,9 @@
           // facing the Honored Guests the other way round: from couple 1 at the left end, the lead
           // faces the Honored Guests (the lead's half to the north), then the follow (the lead's half
           // to the south), and so on.
-          bombastic: (() => {
+          // Sections 16–18 are still seeded from this plain line (Ariel, 11/19); Bombastic itself now
+          // starts from the swirl frames (see bombasticSnapshots).
+          seed: (() => {
             const line = frame("Start", 1, 4, FIT);
             const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
             line.items.forEach((item) => { item.facingMode = byX.indexOf(item.number) % 2 ? "south" : "north"; });
@@ -5212,11 +5214,20 @@
     }
     const bloomsTransitionSnapshots = () => xToLineSnapshots("blooms");
     const flowerBloomingSnapshots = () => xToLineSnapshots("horizontal").flowers;
-    const swirlingCascadeSnapshots = () => xToLineSnapshots("horizontal").swirl;
-    const bombasticSnapshots = () => xToLineSnapshots("horizontal").bombastic;
+    // The swirl frames run on into 15 · Theme 1: Bombastic (Ariel, 11/23): 14 keeps its Start and
+    // Measure 1; its old Measure 2 (the outlined groups) is Bombastic's Start, Measure 3 is Orphan 3,
+    // and Measure 4 onwards are Bombastic's Measure 1 onwards. The swirl code above still numbers
+    // them as one run (its "Measure N" is Bombastic's Measure N − 3).
+    const SWIRL_FRAMES = 2;
+    const swirlingCascadeSnapshots = () => xToLineSnapshots("horizontal").swirl.slice(0, SWIRL_FRAMES);
+    const bombasticSnapshots = () => xToLineSnapshots("horizontal").swirl.slice(SWIRL_FRAMES).map((shot, index) => ({
+      ...shot,
+      annotation: { title: "Theme 1: Bombastic", subtitle: index === 0 ? "Start" : index === 1 ? "Orphan 3" : `Measure ${index - 1}` },
+    }));
+    const bombasticSeed = () => xToLineSnapshots("horizontal").seed;
     // Sections 16–18 are seeded with 15's Start, the horizontal line (Ariel, 11/19); their
     // choreography is still to come.
-    const seededFromBombastic = (title) => () => bombasticSnapshots().slice(0, 1)
+    const seededFromBombastic = (title) => () => bombasticSeed().slice(0, 1)
       .map((shot) => ({ ...structuredClone(shot), annotation: { title, subtitle: "Start" } }));
     // Waltz section 11B, Cascade (Ariel, 11/16): 3 measures in the vertical line, counted in 6. The
     // cascade runs front to back (from the Honored Guests): one couple a beat through Measures 1–2,
