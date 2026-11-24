@@ -5034,7 +5034,7 @@
             (() => {
               const line = frame("Measure 1", 1, 4, FIT);
               const byX = [...line.items].sort((a, b) => a.x - b.x).map((item) => item.number);
-              line.items.forEach((item) => { item.facingMode = byX.indexOf(item.number) % 2 ? "north" : "south"; });
+              line.items.forEach((item) => { item.facingMode = byX.indexOf(item.number) % 2 ? "south" : "north"; }); // flipped (Ariel, 11/23)
               return named(line, swirl, "Measure 1");
             })(),
             // "Measure 2" (Ariel, 11/23): the Measure 1 line outlined in four groups: follows facing
@@ -5093,9 +5093,9 @@
               shot.items.forEach((item) => { item.facingMode = flipped[item.facingMode] ?? item.facingMode; });
               // Except couple 1 (Ariel, 11/23): F backing the line of dance.
               shot.items.find((item) => item.number === 1).facingMode = "cw";
-              // "Measure 6" (Ariel, 11/23), the next measure: everyone travels 1 more tape along the line
-              // of dance, each on their own circle.
-              const next = named({ ...structuredClone(shot), items: shot.items.map((item) => ({ ...item, ...turnLod(item, 1) })) }, swirl, "Measure 6");
+              // "Measure 6" (Ariel, 11/23), the next measure: everyone travels along the line of dance on
+              // their own circle, 1 tape on the outside, 2 on the inside (green and blue).
+              const next = named({ ...structuredClone(shot), items: shot.items.map((item) => ({ ...item, ...turnLod(item, item.groupColor === "green" || item.groupColor === "blue" ? 2 : 1) })) }, swirl, "Measure 6");
               return [shot, next];
             })(),
           ],
