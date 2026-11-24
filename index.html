@@ -5065,12 +5065,11 @@
               return named(line, swirl, "Test 2");
             })(),
             test3(),
-            // "Test 4" (Ariel, 11/23): the circles swap. Amber and rose come in to the inside circle,
-            // one couple every other tape (cardinals and diagonals), amber and rose alternating. Green
-            // and blue go out to the outside circle onto the 4 tapes of each empty quarter: green the
-            // bottom right, from 1 tape below the east cardinal to the south cardinal; blue the top
-            // left, from 1 tape above the west cardinal to the north cardinal. Each couple takes the
-            // nearest spot it can in its set.
+            // "Test 4" (Ariel, 11/23): amber and rose travel 1 tape along the line of dance
+            // (counterclockwise) on the outside circle; green and blue spread onto the inside circle,
+            // one couple every other tape (cardinals and diagonals), green and blue alternating, each
+            // couple taking the nearest such spot it can. Every couple's facing is flipped from Test 3
+            // (amber and blue follows now face left, green and rose follows right).
             ...(() => {
               const shot = test3("Test 4");
               const tape = Math.PI / 8;
@@ -5083,23 +5082,21 @@
               const best = (items, angles, radius) => perms(angles).reduce((a, b) => (cost(items, b, radius) < cost(items, a, radius) ? b : a));
               const group = (color) => shot.items.filter((item) => item.groupColor === color);
               const place = (items, angles, radius) => items.forEach((item, i) => { const p = at(angles[i], radius); item.x = fix(p.x); item.y = fix(p.y); });
-              // Outside circle, tape k at k × 22.5° clockwise from east (4 = south, 12 = north).
-              const quarter = (from) => [0, 1, 2, 3].map((k) => (from + k) * tape);
+              // Inside circle: green on every other spot, blue between, whichever way round is nearer.
               const green = group("green"), blue = group("blue");
-              const greenAngles = best(green, quarter(1), OUTER_RADIUS);
-              const blueAngles = best(blue, quarter(9), OUTER_RADIUS);
-              // Inside circle: amber on every other spot, rose between, whichever way round is nearer.
-              const amber = group("amber"), rose = group("rose");
               const spots = Array.from({ length: 8 }, (_, k) => (k * Math.PI) / 4);
               const choice = [0, 1].map((parity) => {
-                const a = best(amber, spots.filter((_, k) => k % 2 === parity), INNER_RADIUS);
-                const r = best(rose, spots.filter((_, k) => k % 2 !== parity), INNER_RADIUS);
-                return { a, r, total: cost(amber, a, INNER_RADIUS) + cost(rose, r, INNER_RADIUS) };
+                const g = best(green, spots.filter((_, k) => k % 2 === parity), INNER_RADIUS);
+                const b = best(blue, spots.filter((_, k) => k % 2 !== parity), INNER_RADIUS);
+                return { g, b, total: cost(green, g, INNER_RADIUS) + cost(blue, b, INNER_RADIUS) };
               }).reduce((x, y) => (y.total < x.total ? y : x));
-              place(green, greenAngles, OUTER_RADIUS);
-              place(blue, blueAngles, OUTER_RADIUS);
-              place(amber, choice.a, INNER_RADIUS);
-              place(rose, choice.r, INNER_RADIUS);
+              place(green, choice.g, INNER_RADIUS);
+              place(blue, choice.b, INNER_RADIUS);
+              [...group("amber"), ...group("rose")].forEach((item) => Object.assign(item, turnLod(item, 1)));
+              const flipped = { east: "west", west: "east" };
+              shot.items.forEach((item) => { item.facingMode = flipped[item.facingMode] ?? item.facingMode; });
+              // Except couple 1 (Ariel, 11/23): F backing the line of dance.
+              shot.items.find((item) => item.number === 1).facingMode = "cw";
               // "Test 5" (Ariel, 11/23), the next measure: everyone travels 1 more tape along the line
               // of dance, each on their own circle.
               const next = named({ ...structuredClone(shot), items: shot.items.map((item) => ({ ...item, ...turnLod(item, 1) })) }, swirl, "Test 5");
