@@ -4988,7 +4988,7 @@
         // Amber takes the 4 tapes left of the south cardinal (nearest the Honored Guests), going up
         // the left side: 1, 14, 15, 12 (12 on the west cardinal). Rose takes the 4 tapes right of the
         // north cardinal, going down the right side: 5, 2, 3, 16 (16 on the east cardinal). Green and
-        // blue make two short centered lines a little apart: green nearer the Honored Guests, blue
+        // blue make two short centered lines a little apart: blue nearer the Honored Guests, green
         // just behind, each keeping its order across. Facings as in Measure 3. Measures 5 and 6 start here.
         const swirlMeasure4 = (subtitle = "Measure 4") => {
           const line = frame(subtitle, 1, 4, FIT);
@@ -5015,7 +5015,8 @@
           Object.entries(rows).forEach(([color, row]) => {
             row.sort((a, b) => a.x - b.x).forEach((item, index) => {
               item.x = fix(CENTER.x + (index - (row.length - 1) / 2) * across);
-              item.y = fix(CENTER.y + (color === "green" ? apart : -apart));
+              // Green behind blue: blue nearer the Honored Guests (Ariel, 11/23).
+              item.y = fix(CENTER.y + (color === "green" ? -apart : apart));
             });
           });
           return named(line, swirl, subtitle);
@@ -5067,9 +5068,10 @@
             swirlMeasure4(),
             // "Measure 5" (Ariel, 11/23): amber and rose travel 1 tape along the line of dance
             // (counterclockwise) on the outside circle; green and blue spread onto the inside circle,
-            // one couple every other tape (cardinals and diagonals), green and blue alternating, each
-            // couple taking the nearest such spot it can. Every couple's facing is flipped from Measure 4
-            // (amber and blue follows now face left, green and rose follows right).
+            // every other tape: green fills the north half and blue the south half (the tapes either
+            // side of the cardinals, so the 8 sit evenly round, each half keeping its row's order
+            // west to east). Every couple's facing is flipped from Measure 4 (amber and blue follows
+            // now face left, green and rose follows right).
             ...(() => {
               const shot = swirlMeasure4("Measure 5");
               const tape = Math.PI / 8;
@@ -5082,16 +5084,10 @@
               const best = (items, angles, radius) => perms(angles).reduce((a, b) => (cost(items, b, radius) < cost(items, a, radius) ? b : a));
               const group = (color) => shot.items.filter((item) => item.groupColor === color);
               const place = (items, angles, radius) => items.forEach((item, i) => { const p = at(angles[i], radius); item.x = fix(p.x); item.y = fix(p.y); });
-              // Inside circle: green on every other spot, blue between, whichever way round is nearer.
-              const green = group("green"), blue = group("blue");
-              const spots = Array.from({ length: 8 }, (_, k) => (k * Math.PI) / 4);
-              const choice = [0, 1].map((parity) => {
-                const g = best(green, spots.filter((_, k) => k % 2 === parity), INNER_RADIUS);
-                const b = best(blue, spots.filter((_, k) => k % 2 !== parity), INNER_RADIUS);
-                return { g, b, total: cost(green, g, INNER_RADIUS) + cost(blue, b, INNER_RADIUS) };
-              }).reduce((x, y) => (y.total < x.total ? y : x));
-              place(green, choice.g, INNER_RADIUS);
-              place(blue, choice.b, INNER_RADIUS);
+              // Inside circle, west to east: green over the top (north), blue along the bottom.
+              const byX = (items) => [...items].sort((a, b) => a.x - b.x);
+              place(byX(group("green")), [9, 11, 13, 15].map((k) => k * tape), INNER_RADIUS);
+              place(byX(group("blue")), [7, 5, 3, 1].map((k) => k * tape), INNER_RADIUS);
               [...group("amber"), ...group("rose")].forEach((item) => Object.assign(item, turnLod(item, 1)));
               const flipped = { east: "west", west: "east" };
               shot.items.forEach((item) => { item.facingMode = flipped[item.facingMode] ?? item.facingMode; });
