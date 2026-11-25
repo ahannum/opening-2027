@@ -5012,6 +5012,9 @@
             if (angle !== null) {
               item.x = fix(CENTER.x + OUTER_RADIUS * Math.cos(angle));
               item.y = fix(CENTER.y + OUTER_RADIUS * Math.sin(angle));
+              // Rule of thumb (Ariel, 11/24): on the outside circle, F backing the line of dance
+              // unless a measure says otherwise.
+              item.facingMode = "cw";
             } else rows[item.groupColor].push(item);
           });
           // Each row centered, neighbours a little apart, the two rows a little apart (Ariel, 11/23:
@@ -5050,7 +5053,9 @@
             const side = ends[item.groupColor];
             if (side) {
               const i = side.order.indexOf(item.number);
-              if (i >= step) Object.assign(item, slots[side.slots[i - step]]);
+              // Still in the line: the Measure 3 line facings (amber east, rose west). On the circle:
+              // F backing the line of dance, from swirlRings.
+              if (i >= step) Object.assign(item, slots[side.slots[i - step]], { facingMode: item.groupColor === "amber" ? "east" : "west" });
               else {
                 const angle = ((side.endTape - (step - i)) * Math.PI) / 8;
                 item.x = fix(CENTER.x + OUTER_RADIUS * Math.cos(angle));
@@ -5142,16 +5147,18 @@
             swirlPeel("Measure 4", 1),
             swirlPeel("Measure 5", 2),
             swirlRings(),
-            // Bombastic Measures 4–6 (Ariel, 11/24) hold the Measure 3 spots: Measure 4 as Measure 3;
-            // Measure 5 the couples on the outside circle (amber and rose) turn F forward along the line
-            // of dance, L backing it; Measure 6 they turn F backing the line of dance. Green and blue
-            // keep their Measure 3 facings. The old Measures 4 and 5 follow as Measures 7 and 8.
-            swirlRings("Measure 6b"),
-            ...[["Measure 6c", "ccw"], ["Measure 6d", "cw"]].map(([subtitle, facing]) => {
-              const shot = swirlRings(subtitle);
-              shot.items.forEach((item) => { if (item.groupColor === "amber" || item.groupColor === "rose") item.facingMode = facing; });
+            // Bombastic Measures 4–5 (Ariel, 11/24) hold the Measure 3 spots. Measure 4: the couples on
+            // the outside circle (amber and rose) turn F forward along the line of dance, L backing it;
+            // green follows face north and blue follows face south (the lead's half north for green,
+            // south for blue). Measure 5: the outside couples F backing the line of dance again; green
+            // and blue as in Measure 3. Bombastic Measures 6 and 7 follow (swirl "Measure 7" / "8").
+            (() => {
+              const shot = swirlRings("Measure 6b");
+              const look = { amber: "ccw", rose: "ccw", green: "north", blue: "south" };
+              shot.items.forEach((item) => { item.facingMode = look[item.groupColor] ?? item.facingMode; });
               return shot;
-            }),
+            })(),
+            swirlRings("Measure 6c"),
             // "Measure 7" (Ariel, 11/23): amber and rose travel 1 tape along the line of dance
             // (counterclockwise) on the outside circle; green and blue spread onto the inside circle,
             // every other tape: green fills the north half and blue the south half (the tapes either
@@ -5182,7 +5189,15 @@
               // "Measure 8" (Ariel, 11/23), the next measure: everyone travels along the line of dance on
               // their own circle, 1 tape on the outside, 2 on the inside (green and blue).
               const next = named({ ...structuredClone(shot), items: shot.items.map((item) => ({ ...item, ...turnLod(item, item.groupColor === "green" || item.groupColor === "blue" ? 2 : 1) })) }, swirl, "Measure 8");
-              return [shot, next];
+              // Bombastic Measure 8 (Ariel, 11/24): the inside circle (green and blue) turns 2 more
+              // tapes along the line of dance; on the outside circle 12 and 16 plant on their spots
+              // while 15, 14, 1 and 5, 2, 3 travel 1 more tape.
+              const inside = (item) => item.groupColor === "green" || item.groupColor === "blue";
+              const planted = [12, 16];
+              const after = named({ ...structuredClone(next), items: next.items.map((item) => ({
+                ...item, ...(inside(item) ? turnLod(item, 2) : planted.includes(item.number) ? {} : turnLod(item, 1)),
+              })) }, swirl, "Measure 9");
+              return [shot, next, after];
             })(),
           ],
           // Section 15 is seeded in the same horizontal line (Ariel, 11/16), every other couple
@@ -5262,8 +5277,8 @@
     // The swirl frames run on into 15 · Theme 1: Bombastic (Ariel, 11/23): 14 keeps its Start and
     // Measure 1; its old Measure 2 (the outlined groups) is Bombastic's Start, Measure 3 is Orphan 3,
     // and Measure 4 onwards are Bombastic's Measure 1 onwards. The swirl code above still numbers
-    // them as one run (its "Measure N" is Bombastic's Measure N − 3, with Bombastic's Measures 4–6,
-    // added 11/24, in between as 6b–6d, so swirl Measures 7–8 are Bombastic's 7–8).
+    // them as one run (its "Measure N" is Bombastic's Measure N − 3 up to Measure 3; Bombastic's
+    // Measures 4–5, added 11/24, sit in between as 6b–6c, so swirl Measures 7–9 are Bombastic's 6–8).
     const SWIRL_FRAMES = 2;
     const swirlingCascadeSnapshots = () => xToLineSnapshots("horizontal").swirl.slice(0, SWIRL_FRAMES);
     const bombasticSnapshots = () => xToLineSnapshots("horizontal").swirl.slice(SWIRL_FRAMES).map((shot, index) => ({
