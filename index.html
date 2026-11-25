@@ -5142,6 +5142,16 @@
             swirlPeel("Measure 4", 1),
             swirlPeel("Measure 5", 2),
             swirlRings(),
+            // Bombastic Measures 4–6 (Ariel, 11/24) hold the Measure 3 spots: Measure 4 as Measure 3;
+            // Measure 5 the couples on the outside circle (amber and rose) turn F forward along the line
+            // of dance, L backing it; Measure 6 they turn F backing the line of dance. Green and blue
+            // keep their Measure 3 facings. The old Measures 4 and 5 follow as Measures 7 and 8.
+            swirlRings("Measure 6b"),
+            ...[["Measure 6c", "ccw"], ["Measure 6d", "cw"]].map(([subtitle, facing]) => {
+              const shot = swirlRings(subtitle);
+              shot.items.forEach((item) => { if (item.groupColor === "amber" || item.groupColor === "rose") item.facingMode = facing; });
+              return shot;
+            }),
             // "Measure 7" (Ariel, 11/23): amber and rose travel 1 tape along the line of dance
             // (counterclockwise) on the outside circle; green and blue spread onto the inside circle,
             // every other tape: green fills the north half and blue the south half (the tapes either
@@ -5252,7 +5262,8 @@
     // The swirl frames run on into 15 · Theme 1: Bombastic (Ariel, 11/23): 14 keeps its Start and
     // Measure 1; its old Measure 2 (the outlined groups) is Bombastic's Start, Measure 3 is Orphan 3,
     // and Measure 4 onwards are Bombastic's Measure 1 onwards. The swirl code above still numbers
-    // them as one run (its "Measure N" is Bombastic's Measure N − 3).
+    // them as one run (its "Measure N" is Bombastic's Measure N − 3, with Bombastic's Measures 4–6,
+    // added 11/24, in between as 6b–6d, so swirl Measures 7–8 are Bombastic's 7–8).
     const SWIRL_FRAMES = 2;
     const swirlingCascadeSnapshots = () => xToLineSnapshots("horizontal").swirl.slice(0, SWIRL_FRAMES);
     const bombasticSnapshots = () => xToLineSnapshots("horizontal").swirl.slice(SWIRL_FRAMES).map((shot, index) => ({
