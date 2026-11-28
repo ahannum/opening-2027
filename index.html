@@ -5106,10 +5106,11 @@
                 };
               }),
             }, flowers, subtitle);
-            // One frame a half measure, beats 1–3 then 4–6 (Ariel, 11/28). The Start is the colored
-            // diagonal before anyone travels; the bloom starts on Measure 5 (Measures 1–4 still to come).
+            // One frame a half measure, beats 1–3 then 4–6 (Ariel, 11/28). Measure 4 is the colored
+            // diagonal before anyone travels; the bloom starts on Measure 5. Bloom 1–3 and Measures 1–3
+            // come first (see flowerBloomingSnapshots).
             return [
-              bloom("Start", 0),
+              bloom("Measure 4", 0),
               bloom("Measure 5 Beat 123", 1),
               bloom("Measure 5 Beat 456", 2),
               bloom("Measure 6 Beat 123", 3),
@@ -5291,7 +5292,27 @@
       ];
     }
     const bloomsTransitionSnapshots = () => xToLineSnapshots("blooms");
-    const flowerBloomingSnapshots = () => xToLineSnapshots("horizontal").flowers;
+    // 13 opens (Ariel, 11/28) on the Measure 4 diagonal spots: Bloom 1 and 2 with 12's Measure 8
+    // facings, then Bloom 3 and Measures 1–3 with every couple's F to the left and L to the right
+    // (the lead's half east), still on the diagonal.
+    const flowerBloomingSnapshots = () => {
+      const frames = xToLineSnapshots("horizontal").flowers;
+      const diagonal = frames[0];
+      if (!diagonal) return frames;
+      const end12 = new Map((lineSendOutSnapshots().at(-1)?.items || []).map((item) => [item.number, item.facingMode]));
+      const held = (subtitle, look) => ({
+        ...structuredClone(diagonal),
+        annotation: { ...diagonal.annotation, subtitle },
+        items: diagonal.items.map((item) => ({ ...structuredClone(item), facingMode: look(item) })),
+      });
+      const as12 = (item) => end12.get(item.number) ?? item.facingMode;
+      const split = () => "east";
+      return [
+        held("Bloom 1", as12), held("Bloom 2", as12), held("Bloom 3", split),
+        held("Measure 1", split), held("Measure 2", split), held("Measure 3", split),
+        ...frames,
+      ];
+    };
     // The swirl frames run on into 15 · Theme 1: Bombastic (Ariel, 11/23): 14 keeps its Start and
     // Measure 1; its old Measure 2 (the outlined groups) is Bombastic's Start, Measure 3 is Orphan 3,
     // and Measure 4 onwards are Bombastic's Measure 1 onwards. The swirl code above still numbers
