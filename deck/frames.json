@@ -1662,7 +1662,7 @@
    "id": "waltz-transition-to-blooms",
    "name": "12 · Transition to the blooms",
    "section": "Waltz",
-   "fingerprint": "1gxw609",
+   "fingerprint": "kgudox",
    "frames": [
     {
      "src": "waltz-transition-to-blooms/01.jpg",
@@ -1715,7 +1715,7 @@
    "id": "waltz-flower-blooming",
    "name": "13 · Flower Blooming Diagonal",
    "section": "Waltz",
-   "fingerprint": "kbreb8",
+   "fingerprint": "fywjee",
    "frames": [
     {
      "src": "waltz-flower-blooming/01.jpg",
@@ -1724,22 +1724,22 @@
     },
     {
      "src": "waltz-flower-blooming/02.jpg",
-     "subtitle": "Measure 1 Beat 123",
+     "subtitle": "Measure 5 Beat 123",
      "note": ""
     },
     {
      "src": "waltz-flower-blooming/03.jpg",
-     "subtitle": "Measure 1 Beat 456",
+     "subtitle": "Measure 5 Beat 456",
      "note": ""
     },
     {
      "src": "waltz-flower-blooming/04.jpg",
-     "subtitle": "Measure 2 Beat 123",
+     "subtitle": "Measure 6 Beat 123",
      "note": ""
     },
     {
      "src": "waltz-flower-blooming/05.jpg",
-     "subtitle": "Measure 2 Beat 456",
+     "subtitle": "Measure 6 Beat 456",
      "note": ""
     }
    ]
