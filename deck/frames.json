@@ -1715,30 +1715,60 @@
    "id": "waltz-flower-blooming",
    "name": "13 · Flower Blooming Diagonal",
    "section": "Waltz",
-   "fingerprint": "1grol0m",
+   "fingerprint": "atqj9x",
    "frames": [
     {
      "src": "waltz-flower-blooming/01.jpg",
-     "subtitle": "Start",
+     "subtitle": "Bloom 1",
      "note": ""
     },
     {
      "src": "waltz-flower-blooming/02.jpg",
-     "subtitle": "Measure 5 Beat 123",
+     "subtitle": "Bloom 2",
      "note": ""
     },
     {
      "src": "waltz-flower-blooming/03.jpg",
-     "subtitle": "Measure 5 Beat 456",
+     "subtitle": "Bloom 3",
      "note": ""
     },
     {
      "src": "waltz-flower-blooming/04.jpg",
-     "subtitle": "Measure 6 Beat 123",
+     "subtitle": "Measure 1",
      "note": ""
     },
     {
      "src": "waltz-flower-blooming/05.jpg",
+     "subtitle": "Measure 2",
+     "note": ""
+    },
+    {
+     "src": "waltz-flower-blooming/06.jpg",
+     "subtitle": "Measure 3",
+     "note": ""
+    },
+    {
+     "src": "waltz-flower-blooming/07.jpg",
+     "subtitle": "Measure 4",
+     "note": ""
+    },
+    {
+     "src": "waltz-flower-blooming/08.jpg",
+     "subtitle": "Measure 5 Beat 123",
+     "note": ""
+    },
+    {
+     "src": "waltz-flower-blooming/09.jpg",
+     "subtitle": "Measure 5 Beat 456",
+     "note": ""
+    },
+    {
+     "src": "waltz-flower-blooming/10.jpg",
+     "subtitle": "Measure 6 Beat 123",
+     "note": ""
+    },
+    {
+     "src": "waltz-flower-blooming/11.jpg",
      "subtitle": "Measure 6 Beat 456",
      "note": ""
     }
