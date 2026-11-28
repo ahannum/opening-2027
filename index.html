@@ -1313,7 +1313,7 @@
       bloom2: "#e5583a",
       bloom3: "#a52c60",
       bloom4: "#4f0d6c",
-      // 12's Measure 8: the lower half of the diagonal that reorients (Ariel, 11/28).
+      // 12's Measure 7: the lower half of the diagonal that reorients (Ariel, 11/28).
       lowerDiagonal: "#3a5bd9",
       // Sixteen colors in order, red through violet, for showing when each couple goes in a cascade.
       ...Object.fromEntries(Array.from({ length: 16 }, (_, index) => [
@@ -5300,16 +5300,19 @@
       const diagonal = frames[0];
       if (!diagonal) return frames;
       const end12 = new Map((lineSendOutSnapshots().at(-1)?.items || []).map((item) => [item.number, item.facingMode]));
-      const held = (subtitle, look) => ({
+      const held = (subtitle, look, plain = false) => ({
         ...structuredClone(diagonal),
         annotation: { ...diagonal.annotation, subtitle },
-        items: diagonal.items.map((item) => ({ ...structuredClone(item), facingMode: look(item) })),
+        items: diagonal.items.map((item) => ({
+          ...structuredClone(item), facingMode: look(item), ...(plain ? { groupColor: "neutral" } : {}),
+        })),
       });
       const as12 = (item) => end12.get(item.number) ?? item.facingMode;
       const split = () => "east";
       return [
         held("Bloom 1", as12), held("Bloom 2", as12), held("Bloom 3", split),
-        held("Measure 1", split), held("Measure 2", split), held("Measure 3", split),
+        // Measures 1–3 without the bloom outlines (Ariel, 11/28).
+        held("Measure 1", split, true), held("Measure 2", split, true), held("Measure 3", split, true),
         ...frames,
       ];
     };
@@ -5430,11 +5433,12 @@
         }))),
         // Measures 6–7 (Ariel, 11/19): Measure 6 the line turns 1 tape, Measure 7 the waltz onto the
         // diagonal. Each couple takes its spot and facing from the old 12's Measure 1 and 2 frames.
-        // Measure 8 (Ariel, 11/28): on the Measure 7 spots; the lower half of the diagonal (1, 13, 14,
-        // 10, 15, 11, 12, 8) reorients so its follows face the same way as the upper half's (4, 16, 7,
-        // 3, …): those leads back the line of dance ("cw"). The reorienting couples are colored
-        // "lowerDiagonal" (Ariel, 11/28).
-        ...[["Measure 6", 1], ["Measure 7", 2], ["Measure 8", 2, [1, 13, 14, 10, 15, 11, 12, 8]]].map(([subtitle, index, backing = []]) => {
+        // Measure 7 (Ariel, 11/28): on beats 4–6 the lower half of the diagonal (1, 13, 14, 10, 15,
+        // 11, 12, 8) reorients, step step step, so its follows face the same way as the upper half's
+        // (4, 16, 7, 3, …): those leads back the line of dance ("cw"). They're colored "lowerDiagonal"
+        // in Measure 7, where they reorient. Measure 8 holds the Measure 7 spots and facings.
+        ...[["Measure 6", 1], ["Measure 7", 2, true], ["Measure 8", 2]].map(([subtitle, index, color]) => {
+          const backing = index === 2 ? [1, 13, 14, 10, 15, 11, 12, 8] : [];
           const blooms = new Map((bloomsTransitionSnapshots()[index]?.items || []).map((item) => [item.number, item]));
           return named(subtitle, couples(false).map((couple) => {
             const spot = blooms.get(couple.number);
@@ -5442,7 +5446,7 @@
             const lower = backing.includes(couple.number);
             return {
               ...couple, x: spot.x, y: spot.y, facingMode: lower ? "cw" : spot.facingMode,
-              ...(lower ? { groupColor: "lowerDiagonal" } : {}),
+              ...(lower && color ? { groupColor: "lowerDiagonal" } : {}),
             };
           }));
         }),
