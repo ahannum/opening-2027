@@ -1715,7 +1715,7 @@
    "id": "waltz-flower-blooming",
    "name": "13 · Flower Blooming Diagonal",
    "section": "Waltz",
-   "fingerprint": "16vxagb",
+   "fingerprint": "kbreb8",
    "frames": [
     {
      "src": "waltz-flower-blooming/01.jpg",
@@ -1740,11 +1740,6 @@
     {
      "src": "waltz-flower-blooming/05.jpg",
      "subtitle": "Measure 2 Beat 456",
-     "note": ""
-    },
-    {
-     "src": "waltz-flower-blooming/06.jpg",
-     "subtitle": "Measure 3",
      "note": ""
     }
    ]
