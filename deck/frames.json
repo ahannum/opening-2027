@@ -1715,7 +1715,7 @@
    "id": "waltz-flower-blooming",
    "name": "13 · Flower Blooming Diagonal",
    "section": "Waltz",
-   "fingerprint": "1lmeotx",
+   "fingerprint": "16vxagb",
    "frames": [
     {
      "src": "waltz-flower-blooming/01.jpg",
@@ -1724,27 +1724,27 @@
     },
     {
      "src": "waltz-flower-blooming/02.jpg",
-     "subtitle": "Frame 1 (temp)",
+     "subtitle": "Measure 1 Beat 123",
      "note": ""
     },
     {
      "src": "waltz-flower-blooming/03.jpg",
-     "subtitle": "Measure ½",
+     "subtitle": "Measure 1 Beat 456",
      "note": ""
     },
     {
      "src": "waltz-flower-blooming/04.jpg",
-     "subtitle": "Measure 1",
+     "subtitle": "Measure 2 Beat 123",
      "note": ""
     },
     {
      "src": "waltz-flower-blooming/05.jpg",
-     "subtitle": "Measure 1½",
+     "subtitle": "Measure 2 Beat 456",
      "note": ""
     },
     {
      "src": "waltz-flower-blooming/06.jpg",
-     "subtitle": "Measure 2",
+     "subtitle": "Measure 3",
      "note": ""
     }
    ]
