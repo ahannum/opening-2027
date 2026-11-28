@@ -5310,8 +5310,8 @@
       const as12 = (item) => end12.get(item.number) ?? item.facingMode;
       const split = () => "east";
       return [
-        held("Bloom 1", as12), held("Bloom 2", as12), held("Bloom 3", split),
-        // Measures 1–3 without the bloom outlines (Ariel, 11/28).
+        // Bloom 1–3 and Measures 1–3 without the bloom outlines (Ariel, 11/28).
+        held("Bloom 1", as12, true), held("Bloom 2", as12, true), held("Bloom 3", split, true),
         held("Measure 1", split, true), held("Measure 2", split, true), held("Measure 3", split, true),
         ...frames,
       ];
