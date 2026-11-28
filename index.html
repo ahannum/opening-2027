@@ -5292,14 +5292,13 @@
       ];
     }
     const bloomsTransitionSnapshots = () => xToLineSnapshots("blooms");
-    // 13 opens (Ariel, 11/28) on the Measure 4 diagonal spots: Bloom 1 and 2 with 12's Measure 8
-    // facings, then Bloom 3 and Measures 1–3 with every couple's F to the left and L to the right
-    // (the lead's half east), still on the diagonal.
+    // 13 opens (Ariel, 11/28) with Bloom 1 and 2 as 12's Measure 8 (L and F split apart), then Bloom 3
+    // and Measures 1–3 back on the Measure 4 diagonal spots with every couple's F to the left and L to
+    // the right (the lead's half east).
     const flowerBloomingSnapshots = () => {
       const frames = xToLineSnapshots("horizontal").flowers;
       const diagonal = frames[0];
       if (!diagonal) return frames;
-      const end12 = new Map((lineSendOutSnapshots().at(-1)?.items || []).map((item) => [item.number, item.facingMode]));
       const held = (subtitle, look, plain = false) => ({
         ...structuredClone(diagonal),
         annotation: { ...diagonal.annotation, subtitle },
@@ -5307,11 +5306,13 @@
           ...structuredClone(item), facingMode: look(item), ...(plain ? { groupColor: "neutral" } : {}),
         })),
       });
-      const as12 = (item) => end12.get(item.number) ?? item.facingMode;
       const split = () => "east";
+      // Bloom 1 and 2 hold 12's Measure 8 split (L and F apart on two diagonals) (Ariel, 11/28).
+      const end = lineSendOutSnapshots().at(-1);
+      const apart = (subtitle) => ({ ...structuredClone(end), annotation: { ...diagonal.annotation, subtitle } });
       return [
         // Bloom 1–3 and Measures 1–3 without the bloom outlines (Ariel, 11/28).
-        held("Bloom 1", as12, true), held("Bloom 2", as12, true), held("Bloom 3", split, true),
+        ...(end ? [apart("Bloom 1"), apart("Bloom 2")] : []), held("Bloom 3", split, true),
         held("Measure 1", split, true), held("Measure 2", split, true), held("Measure 3", split, true),
         ...frames,
       ];
@@ -5436,11 +5437,11 @@
         // Measure 7 (Ariel, 11/28): on beats 4–6 the lower half of the diagonal (1, 13, 14, 10, 15,
         // 11, 12, 8) reorients, step step step, so its follows face the same way as the upper half's
         // (4, 16, 7, 3, …): those leads back the line of dance ("cw"). They're colored "lowerDiagonal"
-        // in Measure 7, where they reorient. Measure 8 holds the Measure 7 spots and facings.
+        // in Measure 7, where they reorient. Measure 8 splits each couple apart from the Measure 7 spots (below).
         ...[["Measure 6", 1], ["Measure 7", 2, true], ["Measure 8", 2]].map(([subtitle, index, color]) => {
           const backing = index === 2 ? [1, 13, 14, 10, 15, 11, 12, 8] : [];
           const blooms = new Map((bloomsTransitionSnapshots()[index]?.items || []).map((item) => [item.number, item]));
-          return named(subtitle, couples(false).map((couple) => {
+          const shot = named(subtitle, couples(false).map((couple) => {
             const spot = blooms.get(couple.number);
             if (!spot) return couple;
             const lower = backing.includes(couple.number);
@@ -5448,6 +5449,19 @@
               ...couple, x: spot.x, y: spot.y, facingMode: lower ? "cw" : spot.facingMode,
               ...(lower && color ? { groupColor: "lowerDiagonal" } : {}),
             };
+          }));
+          if (subtitle !== "Measure 8") return shot;
+          // Measure 8 (Ariel, 11/28): partners turn away and separate, splitting the diagonal in two:
+          // each lead steps out on the side its half was drawn on, the follow on the other, as far apart
+          // as the send-out. Leads anti LOD, follows facing the Honored Guests.
+          return named(subtitle, shot.items.flatMap((couple) => {
+            const angle = blackDirectionAngle(couple);
+            const dx = Math.cos(angle) * (OUT / 2) * PIECE_RADIUS, dy = Math.sin(angle) * (OUT / 2) * PIECE_RADIUS;
+            return [["lead", 1], ["follow", -1]].map(([role, sign]) => ({
+              key: `${couple.number}:${role}`, number: couple.number, role, ring: null, step: null,
+              facingMode: role === "lead" ? couple.facingMode : "south", displayMode: "leadFollow", groupColor: "neutral",
+              x: fix(couple.x + sign * dx), y: fix(couple.y + sign * dy),
+            }));
           }));
         }),
       ];
