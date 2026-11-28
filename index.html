@@ -5398,12 +5398,15 @@
         }))),
         // Measures 6–7 (Ariel, 11/19): Measure 6 the line turns 1 tape, Measure 7 the waltz onto the
         // diagonal. Each couple takes its spot and facing from the old 12's Measure 1 and 2 frames.
-        // Measure 8 (Ariel, 11/23): for now the same as Measure 7, its choreo still to come.
-        ...[["Measure 6", 1], ["Measure 7", 2], ["Measure 8", 2]].map(([subtitle, index]) => {
+        // Measure 8 (Ariel, 11/28): on the Measure 7 spots; the lower half of the diagonal (1, 13, 14,
+        // 10, 15, 11, 12, 8) reorients so its follows face the same way as the upper half's (4, 16, 7,
+        // 3, …): those leads back the line of dance ("cw").
+        ...[["Measure 6", 1], ["Measure 7", 2], ["Measure 8", 2, [1, 13, 14, 10, 15, 11, 12, 8]]].map(([subtitle, index, backing = []]) => {
           const blooms = new Map((bloomsTransitionSnapshots()[index]?.items || []).map((item) => [item.number, item]));
           return named(subtitle, couples(false).map((couple) => {
             const spot = blooms.get(couple.number);
-            return spot ? { ...couple, x: spot.x, y: spot.y, facingMode: spot.facingMode } : couple;
+            if (!spot) return couple;
+            return { ...couple, x: spot.x, y: spot.y, facingMode: backing.includes(couple.number) ? "cw" : spot.facingMode };
           }));
         }),
       ];
