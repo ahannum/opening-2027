@@ -5197,7 +5197,14 @@
               const after = named({ ...structuredClone(next), items: next.items.map((item) => ({
                 ...item, ...(inside(item) ? turnLod(item, 2) : planted.includes(item.number) ? {} : turnLod(item, 1)),
               })) }, swirl, "Measure 9");
-              return [shot, next, after];
+              // Bombastic Measure 9 (Ariel, 11/28): 14, 1, 2 and 5 travel 1 more tape along the line of
+              // dance; everyone else holds. Measure 10: 1 and 5 travel 1 more tape; everyone else holds.
+              const travel = (shot, numbers, subtitle) => named({ ...structuredClone(shot), items: shot.items.map((item) => ({
+                ...item, ...(numbers.includes(item.number) ? turnLod(item, 1) : {}),
+              })) }, swirl, subtitle);
+              const m9 = travel(after, [14, 1, 2, 5], "Measure 10");
+              const m10 = travel(m9, [1, 5], "Measure 11");
+              return [shot, next, after, m9, m10];
             })(),
           ],
           // Section 15 is seeded in the same horizontal line (Ariel, 11/16), every other couple
@@ -5278,7 +5285,7 @@
     // Measure 1; its old Measure 2 (the outlined groups) is Bombastic's Start, Measure 3 is Orphan 3,
     // and Measure 4 onwards are Bombastic's Measure 1 onwards. The swirl code above still numbers
     // them as one run (its "Measure N" is Bombastic's Measure N − 3 up to Measure 3; Bombastic's
-    // Measures 4–5, added 11/24, sit in between as 6b–6c, so swirl Measures 7–9 are Bombastic's 6–8).
+    // Measures 4–5, added 11/24, sit in between as 6b–6c, so swirl Measures 7–11 are Bombastic's 6–10).
     const SWIRL_FRAMES = 2;
     const swirlingCascadeSnapshots = () => xToLineSnapshots("horizontal").swirl.slice(0, SWIRL_FRAMES);
     const bombasticSnapshots = () => xToLineSnapshots("horizontal").swirl.slice(SWIRL_FRAMES).map((shot, index) => ({
@@ -5286,7 +5293,10 @@
       annotation: { title: "Theme 1: Bombastic", subtitle: index === 0 ? "Start" : index === 1 ? "Orphan 3" : `Measure ${index - 1}` },
     }));
     const bombasticSeed = () => xToLineSnapshots("horizontal").seed;
-    // Sections 16–18 are seeded with 15's Start, the horizontal line (Ariel, 11/19); their
+    // Section 16, Strings Descent, starts where Bombastic ends (its last measure, Ariel, 11/28).
+    const stringsDescentSnapshots = () => bombasticSnapshots().slice(-1)
+      .map((shot) => ({ ...structuredClone(shot), annotation: { title: "Strings Descent", subtitle: "Start" } }));
+    // Sections 17–18 are seeded with 15's Start, the horizontal line (Ariel, 11/19); their
     // choreography is still to come.
     const seededFromBombastic = (title) => () => bombasticSeed().slice(0, 1)
       .map((shot) => ({ ...structuredClone(shot), annotation: { title, subtitle: "Start" } }));
@@ -5715,7 +5725,7 @@
         id: "waltz-strings-descent",
         section: WALTZ,
         name: "16 · Strings Descent",
-        snapshots: seededFromBombastic("Strings Descent"),
+        snapshots: stringsDescentSnapshots,
       },
       {
         id: "waltz-finale-1",
