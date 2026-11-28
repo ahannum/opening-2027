@@ -5103,14 +5103,14 @@
                 };
               }),
             }, flowers, subtitle);
-            // One frame a half measure, beats 1–3 then 4–6 (Ariel, 11/28).
+            // One frame a half measure, beats 1–3 then 4–6 (Ariel, 11/28). The Start is the colored
+            // diagonal before anyone travels; Measure 1 Beat 123 is the ends' first half measure.
             return [
-              named(diagonal, flowers, "Start"),
-              bloom("Measure 1 Beat 123", 0),
-              bloom("Measure 1 Beat 456", 1),
-              bloom("Measure 2 Beat 123", 2),
-              bloom("Measure 2 Beat 456", 3),
-              bloom("Measure 3", 4),
+              bloom("Start", 0),
+              bloom("Measure 1 Beat 123", 1),
+              bloom("Measure 1 Beat 456", 2),
+              bloom("Measure 2 Beat 123", 3),
+              bloom("Measure 2 Beat 456", 4),
             ];
           })(),
           swirl: [
