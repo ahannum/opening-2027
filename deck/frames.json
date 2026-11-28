@@ -1771,7 +1771,7 @@
    "id": "waltz-bombastic",
    "name": "15 · Theme 1: Bombastic",
    "section": "Waltz",
-   "fingerprint": "5cl6ca",
+   "fingerprint": "19vxs9p",
    "frames": [
     {
      "src": "waltz-bombastic/01.jpg",
@@ -1822,6 +1822,16 @@
      "src": "waltz-bombastic/10.jpg",
      "subtitle": "Measure 8",
      "note": ""
+    },
+    {
+     "src": "waltz-bombastic/11.jpg",
+     "subtitle": "Measure 9",
+     "note": ""
+    },
+    {
+     "src": "waltz-bombastic/12.jpg",
+     "subtitle": "Measure 10",
+     "note": ""
     }
    ]
   },
@@ -1829,7 +1839,7 @@
    "id": "waltz-strings-descent",
    "name": "16 · Strings Descent",
    "section": "Waltz",
-   "fingerprint": "6bwqj2",
+   "fingerprint": "1tbzwtw",
    "frames": [
     {
      "src": "waltz-strings-descent/01.jpg",
