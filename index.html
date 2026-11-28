@@ -5086,23 +5086,31 @@
             const byX = [...diagonal.items].sort((a, b) => a.x - b.x).map((item) => item.number);
             // Tapes moved so far by each group after `halves` half measures.
             const moved = (group, halves) => (halves >= 4 ? 2 : Math.max(0, halves - group) * 0.5);
+            // Facings (Ariel, 11/28): yellow F backing the line of dance (L forward, "ccw"), orange L
+            // backing it ("cw"), pink F backing it ("ccw"), purple L forward ("ccw"). Every frame
+            // (3 beats) a couple travels in, it flips.
+            const startFacing = ["ccw", "cw", "ccw", "ccw"];
+            const flips = (group, halves) => Array.from({ length: halves }, (_, i) => i + 1)
+              .filter((h) => moved(group, h) > moved(group, h - 1)).length;
             const bloom = (subtitle, halves) => named({
               ...diagonal,
               items: diagonal.items.map((item) => {
                 const group = groupOf(item.number);
+                const facing = startFacing[group];
                 return {
                   ...item, ...turnLod(item, -moved(group, halves)), groupColor: colors[group],
-                  facingMode: byX.indexOf(item.number) % 2 ? "cw" : "ccw",
+                  facingMode: flips(group, halves) % 2 ? (facing === "cw" ? "ccw" : "cw") : facing,
                 };
               }),
             }, flowers, subtitle);
+            // One frame a half measure, beats 1–3 then 4–6 (Ariel, 11/28).
             return [
               named(diagonal, flowers, "Start"),
-              bloom("Frame 1 (temp)", 0),
-              bloom("Measure ½", 1),
-              bloom("Measure 1", 2),
-              bloom("Measure 1½", 3),
-              bloom("Measure 2", 4),
+              bloom("Measure 1 Beat 123", 0),
+              bloom("Measure 1 Beat 456", 1),
+              bloom("Measure 2 Beat 123", 2),
+              bloom("Measure 2 Beat 456", 3),
+              bloom("Measure 3", 4),
             ];
           })(),
           swirl: [
